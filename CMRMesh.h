@@ -11,6 +11,9 @@ class CMRMesh2DAccessor
 	public:
 		CMRMesh2DAccessor(unsigned int width,unsigned int height,T * cells);
 		T & getLeft(void);
+		const T & getLeft(void) const;
+		T & getTop(void);
+		const T & getTop(void) const;
 	private:
 		unsigned int x;
 		unsigned int y;
@@ -29,7 +32,7 @@ class CMRMesh2D
 		virtual ~CMRMesh2D(void);
 		unsigned int getWidth(void) const;
 		unsigned int getHeight(void) const;
-		void apply(void (*func)(T & cell_out,const T & cell_in,CMRMesh2DAccessor<T> & accessor));
+		void apply(void (*func)(T & cell_out,CMRMesh2DAccessor<T> & accessor_out,const T & cell_in,const CMRMesh2DAccessor<T> & accessor_in));
 		void apply(void (*func)(T & cell,CMRMesh2DAccessor<T> & accessor));
 	private:
 		CMRMesh2D(const CMRMesh2D<T> & orig);
@@ -74,7 +77,7 @@ CMRMesh2D<T>::~CMRMesh2D(void)
 }
 
 template <class T>
-void CMRMesh2D<T>::apply(void (*func)(T & cell_out,const T & cell_in,CMRMesh2DAccessor<T> & accessor))
+void CMRMesh2D<T>::apply(void (*func)(T & cell_out,CMRMesh2DAccessor<T> & accessor_out,const T & cell_in,const CMRMesh2DAccessor<T> & accessor_in))
 {
 	//vars
 	T * in;
@@ -89,14 +92,20 @@ void CMRMesh2D<T>::apply(void (*func)(T & cell_out,const T & cell_in,CMRMesh2DAc
 	else
 		out = cells1;
 
+	//setup accessors
+	CMRMesh2DAccessor<T> accessor_in(width,height,in);
+	CMRMesh2DAccessor<T> accessor_out(width,height,out);
+
 	//loop
-	for (unsigned int y = ghost ; y < height - ghost ; y++)
+	for (accessor_in.y = ghost ; accessor_in.y < height - ghost ; accessor_in.y++)
 	{
-		local_in = in + y * width;
-		local_out = out + y * width;
+		accessor_out.y = accessor_in.y;
+		local_in = in + accessor_in.y * width;
+		local_out = out + accessor_out.y * width;
 		for (unsigned int x = ghost ; x < width - ghost ; x++)
 		{
-			func(local_out[x],local_in[x]);
+			accessor_out.x = accessor_in.x;
+			func(local_out[x],accessor_out,local_in[x],accessor_in);
 		}
 	}
 
@@ -137,6 +146,24 @@ template <class T>
 T & CMRMesh2DAccessor<T>::getLeft(void)
 {
 	return cells[y * width + x - 1];
+}
+
+template <class T>
+const T & CMRMesh2DAccessor<T>::getLeft(void) const
+{
+	return cells[y * width + x - 1];
+}
+
+template <class T>
+T & CMRMesh2DAccessor<T>::getTop(void)
+{
+	return cells[(y-1) * width + x];
+}
+
+template <class T>
+const T & CMRMesh2DAccessor<T>::getTop(void) const
+{
+	return cells[(y-1) * width + x];
 }
 
 #endif //CMR_MESH_H

@@ -34,6 +34,15 @@ void test3(Cell & cell,CMRMesh2DAccessor<Cell> & accessor)
 	left.c = 2.0;
 }
 
+void test4(Cell & cell_out,CMRMesh2DAccessor<Cell> & accessor_out,const Cell & cell_in,const CMRMesh2DAccessor<Cell> & accessor_in)
+{
+	const Cell & left = accessor_in.getLeft();
+
+	cell_out.a = cell_in.a + left.a;
+/*	cell_out.c = cell_in.b;// + left.b;
+	cell_out.b = cell_in.c;// + left.c;*/
+}
+
 int main(int argc, char **argv)
 {
 	std::cout << "Hello, world!" << std::endl;
@@ -43,6 +52,7 @@ int main(int argc, char **argv)
 	mesh.apply(test1);
 	mesh.apply(test2);
 	mesh.apply(test3);
+	mesh.apply(test4);
 
 	return 0;
 }
