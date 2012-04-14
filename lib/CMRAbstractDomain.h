@@ -11,10 +11,12 @@
 
 /********************  HEADERS  *********************/
 #include <stdlib.h>
+#include "CMRCommon.h"
 
 /*********************  CLASS  **********************/
 class CMRCommunicator;
 class CMRCommSchem;
+class CMRRect2D;
 
 /********************  ENUM  ************************/
 enum CMRUpdateStatus
@@ -44,12 +46,13 @@ class CMRAbstractDomain
 	public:
 		CMRAbstractDomain(int typeSize,int width,int height,int ghostDepth,int originX,int originY);
 		virtual ~CMRAbstractDomain(void);
-		virtual bool isContiguousGhost(int axis,CMROrientation orientation,int ghostDepth) const = 0;
-		virtual size_t getGhostSize(int axis,CMROrientation orientation,int ghostDepth) const = 0;
-		virtual int copyGhostToBuffer(void * buffer,size_t size,int axis,CMROrientation orientation,int ghostDepth) const = 0;
-		virtual int copyGhostFromBuffer(const void * buffer,size_t size,int axis,CMROrientation orientation,int ghostDepth) = 0;
+		virtual bool isContiguousGhost(const CMRRect2D & rect) const = 0;
+		virtual size_t getGhostSize(const CMRRect2D & rect) const = 0;
+		virtual int copyGhostToBuffer(const CMRRect2D & rect) const = 0;
+		virtual int copyGhostFromBuffer(const CMRRect2D & rect) = 0;
+		virtual void * getContiguousGhost(const CMRRect2D & rect) = 0;
 		virtual void setCommunicator(int x,int y,CMRCommunicator * communicator);
-		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y) const;
+		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int ghostDepthStart,int ghostDepthEnd,CMRCommType commType) const;
 		int getTypeSize(void) const;
 		int getDimensions(void) const;
 		int getSize(int axis) const;
@@ -57,6 +60,13 @@ class CMRAbstractDomain
 		int getGhostDepth(void) const;
 		CMRUpdateStatus getGhostStatus(int x,int y) const;
 		void setGhostStatus(int x,int y,CMRUpdateStatus status);
+	protected:
+		virtual void fillWithUpdateCommCorner(CMRCommSchem & commSchema,int x,int y,int ghostDepthStart,int ghostDepthEnd,CMRCommType commType) const;
+		virtual void fillWithUpdateCommBorder(CMRCommSchem & commSchema,int x,int y,int ghostDepthStart,int ghostDepthEnd,CMRCommType commType) const;
+	private:
+		//copy is forbidden so ensure compile error by making related function private
+		CMRAbstractDomain(const CMRAbstractDomain & orig);
+		CMRAbstractDomain & operator = (const CMRAbstractDomain & orig);
 	private:
 		/** Size of the type used to describe each cells of the mesh. **/
 		int typeSize;
