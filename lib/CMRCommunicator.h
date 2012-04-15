@@ -23,7 +23,7 @@ class CMRCommunicator
 {
 	public:
 		virtual ~CMRCommunicator(void);
-		virtual CMRCommunication * createBufferedCommunication(CMRAbstractDomain * domain,const CMRRect2D & rect,CMRCommType commType) = 0;
+		virtual CMRCommunication * createCommunication(CMRAbstractDomain * domain,const CMRRect2D & rect,CMRCommType commType) = 0;
 };
 
 #endif // CMR_COMMUNICATOR_H

@@ -3,6 +3,7 @@
              VERSION  : 0.0.0
              DATE     : 06/2012
              AUTHOR   : Valat Sébastien
+                      : Jean-Baptiste Besnard
              LICENSE  : CeCILL-C
 *****************************************************/
 
@@ -11,7 +12,11 @@
 
 /********************  HEADERS  *********************/
 #include <stdlib.h>
+#include <stddef.h>
+#include <vector>
+#include <iostream>
 #include "CMRCommon.h"
+#include "CMRGeometry.h"
 
 /*********************  CLASS  **********************/
 class CMRCommunicator;
@@ -40,11 +45,34 @@ enum CMRAxisId
 	CMR_AXIS_Y = 1
 };
 
+//TODO remove
+class CMRCommSchem
+{
+	public:
+	void print()
+	{
+		for( int i = 0 ; i < commList.size() ; i++ )
+		{
+			std::cout << "Rect -> x : " << commList[i].x 
+			          << " , y : " <<  commList[i].y 
+			          << " , w : " <<  commList[i].width 
+			          << " , h : " << commList[i].height << std::endl;
+		}
+	}
+
+
+	public :
+		std::vector<CMRRect2D> commList;
+};
+
+
+
+
 /*********************  CLASS  **********************/
 class CMRAbstractDomain
 {
 	public:
-		CMRAbstractDomain(int typeSize,int width,int height,int ghostDepth,int originX,int originY);
+		CMRAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY);
 		virtual ~CMRAbstractDomain(void);
 		virtual bool isContiguousGhost(const CMRRect2D & rect) const = 0;
 		virtual size_t getGhostSize(const CMRRect2D & rect) const = 0;
@@ -52,24 +80,21 @@ class CMRAbstractDomain
 		virtual int copyGhostFromBuffer(const CMRRect2D & rect) = 0;
 		virtual void * getContiguousGhost(const CMRRect2D & rect) = 0;
 		virtual void setCommunicator(int x,int y,CMRCommunicator * communicator);
-		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int ghostDepthStart,int ghostDepthEnd,CMRCommType commType) const;
-		int getTypeSize(void) const;
+		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int requestedDepth,CMRCommType commType) const;
+		size_t getTypeSize(void) const;
 		int getDimensions(void) const;
 		int getSize(int axis) const;
 		int getOrigin(int axis) const;
 		int getGhostDepth(void) const;
 		CMRUpdateStatus getGhostStatus(int x,int y) const;
 		void setGhostStatus(int x,int y,CMRUpdateStatus status);
-	protected:
-		virtual void fillWithUpdateCommCorner(CMRCommSchem & commSchema,int x,int y,int ghostDepthStart,int ghostDepthEnd,CMRCommType commType) const;
-		virtual void fillWithUpdateCommBorder(CMRCommSchem & commSchema,int x,int y,int ghostDepthStart,int ghostDepthEnd,CMRCommType commType) const;
 	private:
 		//copy is forbidden so ensure compile error by making related function private
 		CMRAbstractDomain(const CMRAbstractDomain & orig);
 		CMRAbstractDomain & operator = (const CMRAbstractDomain & orig);
 	private:
 		/** Size of the type used to describe each cells of the mesh. **/
-		int typeSize;
+		size_t typeSize;
 		/** Dimensions (only 2 is supported up to now). **/
 		int dimensions;
 		/** Size along each dimensions. **/
@@ -79,7 +104,7 @@ class CMRAbstractDomain
 		/** Number of ghost cells to add arround each dimensions. **/
 		int ghostDepth;
 		/** Current update status of each ghost cells. **/
-		CMRUpdateStatus ghostStaus[3][3];
+		CMRUpdateStatus ghostStatus[3][3];
 		/** Communicator to sync the ghost cells. **/
 		CMRCommunicator * communicators[3][3];
 };
