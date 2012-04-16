@@ -127,7 +127,7 @@ size_t CMRAbstractDomain::getTypeSize ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRAbstractDomain::setCommFactory ( int x, int y, CMRCommunicator * commFactory )
+void CMRAbstractDomain::setCommunicator ( int x, int y, CMRCommunicator * commFactory )
 {
 	//errors
 	assert(this->dimensions == 2);
@@ -153,10 +153,10 @@ void CMRAbstractDomain::fillWithUpdateComm ( CMRCommSchem& commSchema, int x, in
 	assert(x != 0 || y != 0);
 
 	//if no comm factory, no communication to add
-	if (commFactories[x][y] != NULL)
+	if (commFactories[x+1][y+1] != NULL)
 	{
 		rect = computeGhostCommRect(x,y,requestedDepth,commType);
-		commSchema.addComm(commFactories[x][y]->createComm(this,rect,commType));
+		commSchema.addComm(commFactories[x+1][y+1]->createComm(this,rect,commType));
 	}
 }
 

@@ -53,10 +53,10 @@ class CMRAbstractDomain
 		virtual ~CMRAbstractDomain(void);
 		virtual bool isContiguousGhost(const CMRRect2D & rect) const = 0;
 		virtual size_t getGhostSize(const CMRRect2D & rect) const = 0;
-		virtual int copyGhostToBuffer(const CMRRect2D & rect) const = 0;
-		virtual int copyGhostFromBuffer(const CMRRect2D & rect) = 0;
+		virtual int copyGhostToBuffer(void * buffer,size_t size,const CMRRect2D & rect) const = 0;
+		virtual int copyGhostFromBuffer(const void * buffer,size_t size,const CMRRect2D & rect) = 0;
 		virtual void * getContiguousGhost(const CMRRect2D & rect) = 0;
-		virtual void setCommFactory(int x,int y,CMRCommunicator * commFactory);
+		virtual void setCommunicator(int x,int y,CMRCommunicator * commFactory);
 		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int requestedDepth,CMRCommType commType);
 		size_t getTypeSize(void) const;
 		int getDimensions(void) const;

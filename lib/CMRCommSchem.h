@@ -22,9 +22,12 @@ typedef std::vector<CMRCommunication * > CMRCommList;
 class CMRCommSchem
 {
 	public:
+		CMRCommSchem(void);
 		virtual ~CMRCommSchem(void);
 		void addComm(CMRCommunication * comm);
 		void clear(void);
+		int count(void) const;
+		CMRCommunication * getComm(int id);
 	private:
 		//clone is forbidden
 		CMRCommSchem(const CMRCommSchem & orig);

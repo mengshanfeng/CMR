@@ -12,6 +12,12 @@
 #include "CMRCommunication.h"
 
 /*******************  FUNCTION  *********************/
+CMRCommSchem::CMRCommSchem ( void )
+{
+
+}
+
+/*******************  FUNCTION  *********************/
 CMRCommSchem::~CMRCommSchem ( void )
 {
 	this->clear();
@@ -36,4 +42,19 @@ void CMRCommSchem::clear ( void )
 		delete *it;
 	}
 	comms.clear();
+}
+
+/*******************  FUNCTION  *********************/
+CMRCommunication* CMRCommSchem::getComm ( int id )
+{
+	if (id >= comms.size())
+		return NULL;
+	else
+		return comms[id];
+}
+
+/*******************  FUNCTION  *********************/
+int CMRCommSchem::count ( void ) const
+{
+	return comms.size();
 }
