@@ -9,6 +9,9 @@
 #ifndef CMRGEOMETRY_H
 #define CMRGEOMETRY_H
 
+/********************  HEADERS  *********************/
+#include <ostream>
+
 /*********************  CLASS  **********************/
 struct CMRRect2D
 {
@@ -18,5 +21,9 @@ struct CMRRect2D
 	int width;
 	int height;
 };
+
+/*******************  FUNCTION  *********************/
+std::ostream & operator << (std::ostream & out,const CMRRect2D & rect);
+bool operator == (const CMRRect2D & rect1 , const CMRRect2D & rect2);
 
 #endif // CMRGEOMETRY_H
