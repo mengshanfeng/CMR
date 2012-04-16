@@ -6,24 +6,31 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_COMMUNICATOR_H
-#define CMR_COMMUNICATOR_H
+#ifndef CMR_COMM_SCHEM_H
+#define CMR_COMM_SCHEM_H
 
 /********************  HEADERS  *********************/
-#include <stdlib.h>
-#include "CMRCommon.h"
+#include <vector>
 
 /*********************  CLASS  **********************/
 class CMRCommunication;
-class CMRAbstractDomain;
-class CMRRect2D;
+
+/*********************  TYPES  **********************/
+typedef std::vector<CMRCommunication * > CMRCommList;
 
 /*********************  CLASS  **********************/
-class CMRCommunicator
+class CMRCommSchem
 {
 	public:
-		virtual ~CMRCommunicator(void);
-		virtual CMRCommunication * createComm(CMRAbstractDomain * domain,const CMRRect2D & rect,CMRCommType commType) = 0;
+		virtual ~CMRCommSchem(void);
+		void addComm(CMRCommunication * comm);
+		void clear(void);
+	private:
+		//clone is forbidden
+		CMRCommSchem(const CMRCommSchem & orig);
+		CMRCommSchem & operator = (const CMRCommSchem & orig);
+	private:
+		CMRCommList comms;
 };
 
-#endif // CMR_COMMUNICATOR_H
+#endif // CMRCOMMSCHEM_H

@@ -45,29 +45,6 @@ enum CMRAxisId
 	CMR_AXIS_Y = 1
 };
 
-//TODO remove
-class CMRCommSchem
-{
-	public:
-	void print()
-	{
-		for( int i = 0 ; i < commList.size() ; i++ )
-		{
-			std::cout << "Rect -> x : " << commList[i].x 
-			          << " , y : " <<  commList[i].y 
-			          << " , w : " <<  commList[i].width 
-			          << " , h : " << commList[i].height << std::endl;
-		}
-	}
-
-
-	public :
-		std::vector<CMRRect2D> commList;
-};
-
-
-
-
 /*********************  CLASS  **********************/
 class CMRAbstractDomain
 {
@@ -79,8 +56,8 @@ class CMRAbstractDomain
 		virtual int copyGhostToBuffer(const CMRRect2D & rect) const = 0;
 		virtual int copyGhostFromBuffer(const CMRRect2D & rect) = 0;
 		virtual void * getContiguousGhost(const CMRRect2D & rect) = 0;
-		virtual void setCommunicator(int x,int y,CMRCommunicator * communicator);
-		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int requestedDepth,CMRCommType commType) const;
+		virtual void setCommFactory(int x,int y,CMRCommunicator * commFactory);
+		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int requestedDepth,CMRCommType commType);
 		size_t getTypeSize(void) const;
 		int getDimensions(void) const;
 		int getSize(int axis) const;
@@ -92,6 +69,7 @@ class CMRAbstractDomain
 		//copy is forbidden so ensure compile error by making related function private
 		CMRAbstractDomain(const CMRAbstractDomain & orig);
 		CMRAbstractDomain & operator = (const CMRAbstractDomain & orig);
+		CMRRect2D computeGhostCommRect(int x,int y,int requestedDepth,CMRCommType commType) const;
 	private:
 		/** Size of the type used to describe each cells of the mesh. **/
 		size_t typeSize;
@@ -106,7 +84,7 @@ class CMRAbstractDomain
 		/** Current update status of each ghost cells. **/
 		CMRUpdateStatus ghostStatus[3][3];
 		/** Communicator to sync the ghost cells. **/
-		CMRCommunicator * communicators[3][3];
+		CMRCommunicator * commFactories[3][3];
 };
 
 #endif //CMR_ABSTRACT_DOMAIN_H

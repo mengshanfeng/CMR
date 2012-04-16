@@ -44,16 +44,16 @@ void test4(Cell & cell_out,CMRMesh2DAccessor<Cell> & accessor_out,const Cell & c
 	cell_out.b = cell_in.c;// + left.c;*/
 }
 
-class TestAbstractDomain : public CMRAbstractDomain
-{
-	public:
-		TestAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY) : CMRAbstractDomain(typeSize,width,height,ghostDepth,originX,originY){};
-		virtual bool isContiguousGhost(const CMRRect2D & rect) const {};
-		virtual size_t getGhostSize(const CMRRect2D & rect) const  {};
-		virtual int copyGhostToBuffer(const CMRRect2D & rect) const {};
-		virtual int copyGhostFromBuffer(const CMRRect2D & rect)  {};
-		virtual void * getContiguousGhost(const CMRRect2D & rect)  {};
-};
+// class TestAbstractDomain : public CMRAbstractDomain
+// {
+// 	public:
+// 		TestAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY) : CMRAbstractDomain(typeSize,width,height,ghostDepth,originX,originY){};
+// 		virtual bool isContiguousGhost(const CMRRect2D & rect) const {};
+// 		virtual size_t getGhostSize(const CMRRect2D & rect) const  {};
+// 		virtual int copyGhostToBuffer(const CMRRect2D & rect) const {};
+// 		virtual int copyGhostFromBuffer(const CMRRect2D & rect)  {};
+// 		virtual void * getContiguousGhost(const CMRRect2D & rect)  {};
+// };
 
 int main(int argc, char **argv)
 {
@@ -66,44 +66,44 @@ int main(int argc, char **argv)
 	mesh.apply(test3);
 	mesh.apply(test4);*/
 
-	std::cout << "Test on 800 x 600 (+1) sync +1" << std::endl;
-	TestAbstractDomain domain(8,800,600,1,0,0);
-	CMRCommSchem schem;
-	std::cout << "CORNER TOP LEFT" << std::endl;
-	domain.fillWithUpdateComm(schem,-1,-1,1,CMR_COMM_RECV);
-	domain.fillWithUpdateComm(schem,-1,-1,1,CMR_COMM_SEND);
-	std::cout << "LEFT" << std::endl;
-	domain.fillWithUpdateComm(schem,-1,0,1,CMR_COMM_RECV);
-	domain.fillWithUpdateComm(schem,-1,0,1,CMR_COMM_SEND);
-	std::cout << "CORNER BOTTOM RIGHT" << std::endl;
-	domain.fillWithUpdateComm(schem,1,1,1,CMR_COMM_RECV);
-	domain.fillWithUpdateComm(schem,1,1,1,CMR_COMM_SEND);
-	
-	std::cout << "Test on 800 x 600 (+2) sync +1" << std::endl;
-	TestAbstractDomain domain2(8,800,600,2,0,0);
-	CMRCommSchem schem2;
-	std::cout << "CORNER TOP LEFT" << std::endl;
-	domain2.fillWithUpdateComm(schem2,-1,-1,1,CMR_COMM_RECV);
-	domain2.fillWithUpdateComm(schem2,-1,-1,1,CMR_COMM_SEND);
-	std::cout << "LEFT" << std::endl;
-	domain2.fillWithUpdateComm(schem2,-1,0,1,CMR_COMM_RECV);
-	domain2.fillWithUpdateComm(schem2,-1,0,1,CMR_COMM_SEND);
-	std::cout << "CORNER BOTTOM RIGHT" << std::endl;
-	domain2.fillWithUpdateComm(schem2,1,1,1,CMR_COMM_RECV);
-	domain2.fillWithUpdateComm(schem2,1,1,1,CMR_COMM_SEND);
-	
-	std::cout << "Test on 800 x 600 (+2) sync +2" << std::endl;
-	TestAbstractDomain domain3(8,800,600,2,0,0);
-	CMRCommSchem schem3;
-	std::cout << "CORNER TOP LEFT" << std::endl;
-	domain3.fillWithUpdateComm(schem3,-1,-1,2,CMR_COMM_RECV);
-	domain3.fillWithUpdateComm(schem3,-1,-1,2,CMR_COMM_SEND);
-	std::cout << "LEFT" << std::endl;
-	domain3.fillWithUpdateComm(schem3,-1,0,2,CMR_COMM_RECV);
-	domain3.fillWithUpdateComm(schem3,-1,0,2,CMR_COMM_SEND);
-	std::cout << "CORNER BOTTOM RIGHT" << std::endl;
-	domain3.fillWithUpdateComm(schem3,1,1,2,CMR_COMM_RECV);
-	domain3.fillWithUpdateComm(schem3,1,1,2,CMR_COMM_SEND);
+// 	std::cout << "Test on 800 x 600 (+1) sync +1" << std::endl;
+// 	TestAbstractDomain domain(8,800,600,1,0,0);
+// 	CMRCommSchem schem;
+// 	std::cout << "CORNER TOP LEFT" << std::endl;
+// 	domain.fillWithUpdateComm(schem,-1,-1,1,CMR_COMM_RECV);
+// 	domain.fillWithUpdateComm(schem,-1,-1,1,CMR_COMM_SEND);
+// 	std::cout << "LEFT" << std::endl;
+// 	domain.fillWithUpdateComm(schem,-1,0,1,CMR_COMM_RECV);
+// 	domain.fillWithUpdateComm(schem,-1,0,1,CMR_COMM_SEND);
+// 	std::cout << "CORNER BOTTOM RIGHT" << std::endl;
+// 	domain.fillWithUpdateComm(schem,1,1,1,CMR_COMM_RECV);
+// 	domain.fillWithUpdateComm(schem,1,1,1,CMR_COMM_SEND);
+// 	
+// 	std::cout << "Test on 800 x 600 (+2) sync +1" << std::endl;
+// 	TestAbstractDomain domain2(8,800,600,2,0,0);
+// 	CMRCommSchem schem2;
+// 	std::cout << "CORNER TOP LEFT" << std::endl;
+// 	domain2.fillWithUpdateComm(schem2,-1,-1,1,CMR_COMM_RECV);
+// 	domain2.fillWithUpdateComm(schem2,-1,-1,1,CMR_COMM_SEND);
+// 	std::cout << "LEFT" << std::endl;
+// 	domain2.fillWithUpdateComm(schem2,-1,0,1,CMR_COMM_RECV);
+// 	domain2.fillWithUpdateComm(schem2,-1,0,1,CMR_COMM_SEND);
+// 	std::cout << "CORNER BOTTOM RIGHT" << std::endl;
+// 	domain2.fillWithUpdateComm(schem2,1,1,1,CMR_COMM_RECV);
+// 	domain2.fillWithUpdateComm(schem2,1,1,1,CMR_COMM_SEND);
+// 	
+// 	std::cout << "Test on 800 x 600 (+2) sync +2" << std::endl;
+// 	TestAbstractDomain domain3(8,800,600,2,0,0);
+// 	CMRCommSchem schem3;
+// 	std::cout << "CORNER TOP LEFT" << std::endl;
+// 	domain3.fillWithUpdateComm(schem3,-1,-1,2,CMR_COMM_RECV);
+// 	domain3.fillWithUpdateComm(schem3,-1,-1,2,CMR_COMM_SEND);
+// 	std::cout << "LEFT" << std::endl;
+// 	domain3.fillWithUpdateComm(schem3,-1,0,2,CMR_COMM_RECV);
+// 	domain3.fillWithUpdateComm(schem3,-1,0,2,CMR_COMM_SEND);
+// 	std::cout << "CORNER BOTTOM RIGHT" << std::endl;
+// 	domain3.fillWithUpdateComm(schem3,1,1,2,CMR_COMM_RECV);
+// 	domain3.fillWithUpdateComm(schem3,1,1,2,CMR_COMM_SEND);
 
 	return 0;
 }

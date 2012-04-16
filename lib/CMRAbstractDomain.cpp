@@ -12,6 +12,7 @@
 #include "CMRAbstractDomain.h"
 #include "CMRCommunicator.h"
 #include "CMRGeometry.h"
+#include "CMRCommSchem.h"
 
 /*******************  FUNCTION  *********************/
 CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, int width, int height, int ghostDepth , int originX , int originY )
@@ -38,7 +39,7 @@ CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, int width, int height, i
 		for (int y = 0 ; y < 3 ; y++)
 		{
 			ghostStatus[x][y] = CMR_UPDATE_STATUS_UPDATED;
-			communicators[x][y] = NULL;
+			commFactories[x][y] = NULL;
 		}
 	}
 }
@@ -54,10 +55,10 @@ CMRAbstractDomain::~CMRAbstractDomain ( void )
 	{
 		for ( int y = 0 ; y < 3 ; y++)
 		{
-			if (this->communicators[x][y] != NULL)
+			if (this->commFactories[x][y] != NULL)
 			{
-				delete this->communicators[x][y];
-				this->communicators[x][y] = NULL;
+				delete this->commFactories[x][y];
+				this->commFactories[x][y] = NULL;
 			}
 		}
 	}
@@ -126,7 +127,7 @@ size_t CMRAbstractDomain::getTypeSize ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRAbstractDomain::setCommunicator ( int x, int y, CMRCommunicator* communicator )
+void CMRAbstractDomain::setCommFactory ( int x, int y, CMRCommunicator * commFactory )
 {
 	//errors
 	assert(this->dimensions == 2);
@@ -134,7 +135,29 @@ void CMRAbstractDomain::setCommunicator ( int x, int y, CMRCommunicator* communi
 	assert(y >= -1 && y <= -1);
 
 	//replace the value
-	this->communicators[x+1][y+1] = communicator;
+	this->commFactories[x+1][y+1] = commFactory;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRAbstractDomain::fillWithUpdateComm ( CMRCommSchem& commSchema, int x, int y, int requestedDepth, CMRCommType commType )
+{
+	//vars
+	CMRRect2D rect;
+
+	//errors
+	assert(this->dimensions == 2);
+	assert(x >= -1 && x <= 1);
+	assert(y >= -1 && y <= 1);
+	assert(requestedDepth >= 0);
+	assert(requestedDepth <= this->ghostDepth);
+	assert(x != 0 || y != 0);
+
+	//if no comm factory, no communication to add
+	if (commFactories[x][y] != NULL)
+	{
+		rect = computeGhostCommRect(x,y,requestedDepth,commType);
+		commSchema.addComm(commFactories[x][y]->createComm(this,rect,commType));
+	}
 }
 
 /*******************  FUNCTION  *********************/
@@ -151,7 +174,7 @@ void CMRAbstractDomain::setCommunicator ( int x, int y, CMRCommunicator* communi
   # # # # # # # # # #                     # # #  # # # # # # #
   Y                                       Y
 */
-void CMRAbstractDomain::fillWithUpdateComm ( CMRCommSchem& commSchema, int x, int y, int requestedDepth, CMRCommType commType ) const
+CMRRect2D CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedDepth, CMRCommType commType ) const
 {
 	//vars
 	CMRRect2D rect;
@@ -199,29 +222,22 @@ void CMRAbstractDomain::fillWithUpdateComm ( CMRCommSchem& commSchema, int x, in
 		else if( y == 0 )
 			rect.y = this->ghostDepth - requestedDepth;
 	}
-	
+
 	//setup size
-	
 	if( x == 0 )
 	{
 		rect.width = this->sizes[CMR_AXIS_X] - 2 * this->ghostDepth;
 	} else {
 		rect.width = requestedDepth;
 	}
-	
+
 	if( y == 0 )
 	{
 		rect.height = this->sizes[CMR_AXIS_Y] - 2 * this->ghostDepth;
 	} else {
 		rect.height = requestedDepth;
 	}
-	
-	
-	std::cout << "Rect -> x : " << rect.x 
-			          << " , y : " <<  rect.y 
-			          << " , w : " <<  rect.width 
-			          << " , h : " <<  rect.height << std::endl;
-	
-	commSchema.commList.push_back(rect);
+
+	return rect;
 }
 
