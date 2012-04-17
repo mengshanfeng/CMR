@@ -11,6 +11,7 @@ endif(SVUNITTEST_FOUND)
 
 #setup directories
 include_directories(${UNITTEST_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}/mocks)
+add_definitions(-DUNITTEST)
 
 #test list
 set(ALLOC_TEST_LIST TestAbstractDomain)

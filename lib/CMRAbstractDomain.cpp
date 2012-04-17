@@ -202,7 +202,7 @@ CMRRect2D CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedD
 		else if (x == 1)// right receive
 			rect.x = this->sizes[CMR_AXIS_X] - this->ghostDepth;
 		else if( x == 0 )
-			rect.x = this->ghostDepth - requestedDepth;
+			rect.x = this->ghostDepth;
 	}
 
 	//ON Y
@@ -220,7 +220,7 @@ CMRRect2D CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedD
 		else if (y == 1)// right receive
 			rect.y = this->sizes[CMR_AXIS_Y] - this->ghostDepth;
 		else if( y == 0 )
-			rect.y = this->ghostDepth - requestedDepth;
+			rect.y = this->ghostDepth;
 	}
 
 	//setup size

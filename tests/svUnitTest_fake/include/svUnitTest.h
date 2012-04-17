@@ -593,6 +593,8 @@ class svutTestCase
 		inline bool runTestCase(void);
 		inline std::string getName(void) const;
 		inline void setErrorMessage(svutExAssertFake & e);
+		inline virtual void setUp(void);
+		inline virtual void tearDown(void);
 	protected:
 		inline void markStatus(void);
 		inline void markStartTest(std::string name);
@@ -714,6 +716,18 @@ static inline int fakeRegisterTestCase(svUnitTest::svutTestCaseBuilder & builder
 		__fake_svut_test_cases_registry__ = new std::vector<svutTestCaseBuilder *>;
 	svUnitTest::__fake_svut_test_cases_registry__->push_back(&builder);
 	return 0;
+}
+
+/*******************  FUNCTION  *********************/
+inline void svutTestCase::setUp ( void )
+{
+
+}
+
+/*******************  FUNCTION  *********************/
+inline void svutTestCase::tearDown ( void )
+{
+
 }
 
 }

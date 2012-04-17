@@ -48,6 +48,7 @@ enum CMRAxisId
 /*********************  CLASS  **********************/
 class CMRAbstractDomain
 {
+	ASSIST_UNIT_TEST( TestAbstractDomain );
 	public:
 		CMRAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY);
 		virtual ~CMRAbstractDomain(void);
@@ -66,10 +67,10 @@ class CMRAbstractDomain
 		CMRUpdateStatus getGhostStatus(int x,int y) const;
 		void setGhostStatus(int x,int y,CMRUpdateStatus status);
 	private:
+		CMRRect2D computeGhostCommRect(int x,int y,int requestedDepth,CMRCommType commType) const;
 		//copy is forbidden so ensure compile error by making related function private
 		CMRAbstractDomain(const CMRAbstractDomain & orig);
 		CMRAbstractDomain & operator = (const CMRAbstractDomain & orig);
-		CMRRect2D computeGhostCommRect(int x,int y,int requestedDepth,CMRCommType commType) const;
 	private:
 		/** Size of the type used to describe each cells of the mesh. **/
 		size_t typeSize;
