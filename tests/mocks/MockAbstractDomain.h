@@ -10,6 +10,7 @@
 #define MOCK_ABSTRACT_DOMAIN_H
 
 /********************  HEADERS  *********************/
+#include <stdlib.h>
 #include <CMRAbstractDomain.h>
 
 /*********************  CLASS  **********************/
@@ -24,7 +25,7 @@ class MockAbstractDomain : public CMRAbstractDomain
 		virtual void * getContiguousGhost(const CMRRect2D & rect);
 		bool contiguous;
 		void * buffer;
-		int ghostSize;
+		size_t ghostSize;
 };
 
 #endif // MOCKABSTRACTDOMAIN_H

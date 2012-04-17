@@ -48,7 +48,7 @@ enum CMRAxisId
 /*********************  CLASS  **********************/
 class CMRAbstractDomain
 {
-	ASSIST_UNIT_TEST( TestAbstractDomain );
+	ASSIST_UNIT_TEST( TestAbstractDomain )
 	public:
 		CMRAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY);
 		virtual ~CMRAbstractDomain(void);

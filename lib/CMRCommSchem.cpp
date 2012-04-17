@@ -47,7 +47,7 @@ void CMRCommSchem::clear ( void )
 /*******************  FUNCTION  *********************/
 CMRCommunication* CMRCommSchem::getComm ( int id )
 {
-	if (id >= comms.size())
+	if ((size_t)id >= comms.size())
 		return NULL;
 	else
 		return comms[id];
