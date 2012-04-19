@@ -10,7 +10,7 @@
 /********************  HEADERS  *********************/
 #include <assert.h>
 #include "CMRAbstractDomain.h"
-#include "CMRCommunicator.h"
+#include "CMRCommFactory.h"
 #include "CMRGeometry.h"
 #include "CMRCommSchem.h"
 
@@ -127,7 +127,7 @@ size_t CMRAbstractDomain::getTypeSize ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRAbstractDomain::setCommunicator ( int x, int y, CMRCommunicator * commFactory )
+void CMRAbstractDomain::setCommunicator ( int x, int y, CMRCommFactory * commFactory )
 {
 	//errors
 	assert(this->dimensions == 2);

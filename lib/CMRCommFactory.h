@@ -14,16 +14,16 @@
 #include "CMRCommon.h"
 
 /*********************  CLASS  **********************/
-class CMRCommunication;
+class CMRComm;
 class CMRAbstractDomain;
 class CMRRect2D;
 
 /*********************  CLASS  **********************/
-class CMRCommunicator
+class CMRCommFactory
 {
 	public:
-		virtual ~CMRCommunicator(void);
-		virtual CMRCommunication * createComm(CMRAbstractDomain * domain,const CMRRect2D & rect,CMRCommType commType) = 0;
+		virtual ~CMRCommFactory(void);
+		virtual CMRComm * createComm(CMRAbstractDomain * domain,const CMRRect2D & rect,CMRCommType commType) = 0;
 };
 
 #endif // CMR_COMMUNICATOR_H

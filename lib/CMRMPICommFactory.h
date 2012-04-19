@@ -10,14 +10,14 @@
 #define CMR_MPI_COMMUNICATOR_H
 
 /********************  HEADERS  *********************/
-#include "CMRCommunicator.h"
+#include "CMRCommFactory.h"
 
 /*********************  CLASS  **********************/
-class CMRMPICommunicator : public CMRCommunicator
+class CMRMPICommFactory : public CMRCommFactory
 {
 	public:
-		CMRMPICommunicator(int targetId,int sendId,int receiveId);
-		virtual CMRCommunication* createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType );
+		CMRMPICommFactory(int targetId,int sendId,int receiveId);
+		virtual CMRComm* createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType );
 		int getTargetId(void) const;
 		int getSendId(void) const;
 		int getReceiveId(void) const;

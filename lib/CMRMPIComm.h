@@ -12,23 +12,23 @@
 /********************  HEADERS  *********************/
 #include "CMRCommon.h"
 #include "CMRGeometry.h"
-#include "CMRCommunication.h"
+#include "CMRComm.h"
 
 /*********************  CLASS  **********************/
 class CMRAbstractDomain;
-class CMRMPICommunicator;
+class CMRMPICommFactory;
 
 /*********************  CLASS  **********************/
-class CMRMPICommunication : public CMRCommunication
+class CMRMPIComm : public CMRComm
 {
 	public:
-		CMRMPICommunication(CMRMPICommunicator * communicator,CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType);
+		CMRMPIComm(CMRMPICommFactory * communicator,CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType);
 		virtual void run(void );
 	protected:
 		void runSend(void);
 		void runReceive(void);
 	private:
-		CMRMPICommunicator * communicator;
+		CMRMPICommFactory * communicator;
 		CMRAbstractDomain* domain;
 		CMRRect2D rect;
 		CMRCommType commType;

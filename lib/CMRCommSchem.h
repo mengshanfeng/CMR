@@ -13,10 +13,10 @@
 #include <vector>
 
 /*********************  CLASS  **********************/
-class CMRCommunication;
+class CMRComm;
 
 /*********************  TYPES  **********************/
-typedef std::vector<CMRCommunication * > CMRCommList;
+typedef std::vector<CMRComm * > CMRCommList;
 
 /*********************  CLASS  **********************/
 class CMRCommSchem
@@ -24,10 +24,10 @@ class CMRCommSchem
 	public:
 		CMRCommSchem(void);
 		virtual ~CMRCommSchem(void);
-		void addComm(CMRCommunication * comm);
+		void addComm(CMRComm * comm);
 		void clear(void);
 		int count(void) const;
-		CMRCommunication * getComm(int id);
+		CMRComm * getComm(int id);
 	private:
 		//clone is forbidden
 		CMRCommSchem(const CMRCommSchem & orig);

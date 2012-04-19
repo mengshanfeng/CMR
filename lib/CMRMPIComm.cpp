@@ -10,12 +10,12 @@
 #include <cassert>
 #include <cstdlib>
 #include <mpi.h>
-#include "CMRMPICommunication.h"
+#include "CMRMPIComm.h"
 #include "CMRAbstractDomain.h"
-#include "CMRMPICommunicator.h"
+#include "CMRMPICommFactory.h"
 
 /*******************  FUNCTION  *********************/
-CMRMPICommunication::CMRMPICommunication ( CMRMPICommunicator * communicator, CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType ) 
+CMRMPIComm::CMRMPIComm ( CMRMPICommFactory * communicator, CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType ) 
 {
 	//errors
 	assert(communicator != NULL);
@@ -30,7 +30,7 @@ CMRMPICommunication::CMRMPICommunication ( CMRMPICommunicator * communicator, CM
 }
 
 /*******************  FUNCTION  *********************/
-void CMRMPICommunication::run ( void )
+void CMRMPIComm::run ( void )
 {
 	//errors
 	assert(this->commStatus != CMR_COMM_STATUS_INIT);
@@ -56,7 +56,7 @@ void CMRMPICommunication::run ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRMPICommunication::runReceive ( void )
+void CMRMPIComm::runReceive ( void )
 {
 	//vars
 	char * buffer = NULL;
@@ -90,7 +90,7 @@ void CMRMPICommunication::runReceive ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRMPICommunication::runSend ( void )
+void CMRMPIComm::runSend ( void )
 {
 	//vars
 	char * buffer = NULL;

@@ -10,12 +10,12 @@
 #define MOCK_COMMUNICATOR_H
 
 /*********************  CLASS  **********************/
-#include <CMRCommunicator.h>
-#include <CMRCommunication.h>
+#include <CMRCommFactory.h>
+#include <CMRComm.h>
 #include <CMRGeometry.h>
 
 /*********************  CLASS  **********************/
-class MockCommunication : public CMRCommunication
+class MockCommunication : public CMRComm
 {
 	public:
     virtual void run(void );
@@ -26,10 +26,10 @@ class MockCommunication : public CMRCommunication
 };
 
 /*********************  CLASS  **********************/
-class MockCommunicator : public CMRCommunicator
+class MockCommunicator : public CMRCommFactory
 {
 	public:
-		virtual CMRCommunication* createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType );
+		virtual CMRComm* createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType );
 		int dest;
 		int id;
 };

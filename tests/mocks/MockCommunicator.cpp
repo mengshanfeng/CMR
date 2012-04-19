@@ -10,7 +10,7 @@
 #include "MockCommunicator.h"
 
 /*******************  FUNCTION  *********************/
-CMRCommunication* MockCommunicator::createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType )
+CMRComm* MockCommunicator::createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType )
 {
 	MockCommunication * comm = new MockCommunication;
 	comm->rect = rect;

@@ -18,10 +18,10 @@ enum CMRCommStatus
 };
 
 /*********************  CLASS  **********************/
-class CMRCommunication
+class CMRComm
 {
 	public:
-		virtual ~CMRCommunication(void);
+		virtual ~CMRComm(void);
 		virtual void run(void) = 0;
 };
 

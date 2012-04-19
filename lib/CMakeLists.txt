@@ -1,1 +1,1 @@
-add_library(cmr CMRMPICommunication.cpp CMRMPICommunicator.cpp CMRCommunication.cpp CMRCommSchem.cpp CMRGeometry.cpp CMRCommunicator.cpp CMRAbstractDomain.cpp)
+add_library(cmr CMRMPIComm.cpp CMRMPICommFactory.cpp CMRComm.cpp CMRCommSchem.cpp CMRGeometry.cpp CMRCommFactory.cpp CMRAbstractDomain.cpp)

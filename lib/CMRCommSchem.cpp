@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <assert.h>
 #include "CMRCommSchem.h"
-#include "CMRCommunication.h"
+#include "CMRComm.h"
 
 /*******************  FUNCTION  *********************/
 CMRCommSchem::CMRCommSchem ( void )
@@ -24,7 +24,7 @@ CMRCommSchem::~CMRCommSchem ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRCommSchem::addComm ( CMRCommunication * comm )
+void CMRCommSchem::addComm ( CMRComm * comm )
 {
 	//errors
 	assert(comm != NULL);
@@ -45,7 +45,7 @@ void CMRCommSchem::clear ( void )
 }
 
 /*******************  FUNCTION  *********************/
-CMRCommunication* CMRCommSchem::getComm ( int id )
+CMRComm* CMRCommSchem::getComm ( int id )
 {
 	if ((size_t)id >= comms.size())
 		return NULL;

@@ -19,7 +19,7 @@
 #include "CMRGeometry.h"
 
 /*********************  CLASS  **********************/
-class CMRCommunicator;
+class CMRCommFactory;
 class CMRCommSchem;
 class CMRRect2D;
 
@@ -57,7 +57,7 @@ class CMRAbstractDomain
 		virtual int copyGhostToBuffer(void * buffer,size_t size,const CMRRect2D & rect) const = 0;
 		virtual int copyGhostFromBuffer(const void * buffer,size_t size,const CMRRect2D & rect) = 0;
 		virtual void * getContiguousGhost(const CMRRect2D & rect) = 0;
-		virtual void setCommunicator(int x,int y,CMRCommunicator * commFactory);
+		virtual void setCommunicator(int x,int y,CMRCommFactory * commFactory);
 		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int requestedDepth,CMRCommType commType);
 		size_t getTypeSize(void) const;
 		int getDimensions(void) const;
@@ -85,7 +85,7 @@ class CMRAbstractDomain
 		/** Current update status of each ghost cells. **/
 		CMRUpdateStatus ghostStatus[3][3];
 		/** Communicator to sync the ghost cells. **/
-		CMRCommunicator * commFactories[3][3];
+		CMRCommFactory * commFactories[3][3];
 };
 
 #endif //CMR_ABSTRACT_DOMAIN_H

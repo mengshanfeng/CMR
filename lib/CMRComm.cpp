@@ -7,11 +7,10 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "CMRCommunicator.h"
+#include "CMRComm.h"
 
 /*******************  FUNCTION  *********************/
-CMRCommunicator::~CMRCommunicator ( void )
+CMRComm::~CMRComm ( void )
 {
 
 }
-
