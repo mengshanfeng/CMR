@@ -1,6 +1,7 @@
 #include <iostream>
 #include "CMRMesh.h"
 #include "lib/CMRAbstractDomain.h"
+#include "lib/CMRDebug.h"
 
 struct Cell
 {
@@ -48,6 +49,11 @@ int main(int argc, char **argv)
 {
 	std::cout << "Hello, world!" << std::endl;
 
+	warning("Coucou = %d",10);
+	wassume(false,"Coucou");
+	debug("coucouc : %d",22);
+	assume(false,"coucou"),
+	fatal("coucouc");
 	CMRMesh2D<Cell> mesh(4096,16,1);
 	mesh.apply(test0);
 	mesh.apply(test1);

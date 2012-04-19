@@ -4,6 +4,8 @@ project(CartesianMeshRuntime)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/)
 
+add_definitions(-DCMR_ENABLE_COLOR)
+
 add_executable(cartesianmeshruntime main.cpp)
 target_link_libraries(cartesianmeshruntime cmr)
 

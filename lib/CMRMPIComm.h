@@ -10,29 +10,22 @@
 #define CMR_MPI_COMMUNICATION_H
 
 /********************  HEADERS  *********************/
-#include "CMRCommon.h"
-#include "CMRGeometry.h"
-#include "CMRComm.h"
+#include "CMRBufferedComm.h"
 
 /*********************  CLASS  **********************/
 class CMRAbstractDomain;
 class CMRMPICommFactory;
 
 /*********************  CLASS  **********************/
-class CMRMPIComm : public CMRComm
+class CMRMPIComm : public CMRBufferedComm
 {
 	public:
 		CMRMPIComm(CMRMPICommFactory * communicator,CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType);
-		virtual void run(void );
 	protected:
-		void runSend(void);
-		void runReceive(void);
+		virtual void runReceive ( void* buffer, size_t size );
+		virtual void runSend ( void* buffer, size_t size );
 	private:
 		CMRMPICommFactory * communicator;
-		CMRAbstractDomain* domain;
-		CMRRect2D rect;
-		CMRCommType commType;
-		enum CMRCommStatus commStatus;
 };
 
 #endif // CMR_MPI_COMMUNICATION_H
