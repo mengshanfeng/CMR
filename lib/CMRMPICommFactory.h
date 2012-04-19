@@ -16,15 +16,15 @@
 class CMRMPICommFactory : public CMRCommFactory
 {
 	public:
-		CMRMPICommFactory(int targetId,int sendId,int receiveId);
+		CMRMPICommFactory(int sendToRank,int recvFromRank,int tagBase);
 		virtual CMRComm* createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType );
-		int getTargetId(void) const;
-		int getSendId(void) const;
-		int getReceiveId(void) const;
+		int getTagBase(void) const;
+		int getSendRank(void) const;
+		int getRecvRank(void) const;
 	private:
-		int targetId;
-		int sendId;
-		int receiveId;
+		int sendRank;
+		int recvRank;
+		int tagBase;
 };
 
 #endif // CMR_MPI_COMMUNICATOR_H

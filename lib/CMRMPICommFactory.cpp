@@ -11,11 +11,11 @@
 #include "CMRMPIComm.h"
 
 /*******************  FUNCTION  *********************/
-CMRMPICommFactory::CMRMPICommFactory ( int targetId ,int sendId, int receiveId)
+CMRMPICommFactory::CMRMPICommFactory ( int sendToRank, int recvFromRank, int tagBase ) 
 {
-	this->targetId = targetId;
-	this->sendId = sendId;
-	this->receiveId = receiveId;
+	this->sendRank = sendToRank;
+	this->recvRank = recvFromRank;
+	this->tagBase = tagBase;
 }
 
 /*******************  FUNCTION  *********************/
@@ -25,19 +25,19 @@ CMRComm* CMRMPICommFactory::createComm ( CMRAbstractDomain* domain, const CMRRec
 }
 
 /*******************  FUNCTION  *********************/
-int CMRMPICommFactory::getTargetId ( void ) const
+int CMRMPICommFactory::getRecvRank ( void ) const
 {
-	return this->targetId;
+	return recvRank;
 }
 
 /*******************  FUNCTION  *********************/
-int CMRMPICommFactory::getReceiveId ( void ) const
+int CMRMPICommFactory::getSendRank ( void ) const
 {
-	return this->receiveId;
+	return sendRank;
 }
 
 /*******************  FUNCTION  *********************/
-int CMRMPICommFactory::getSendId ( void ) const
+int CMRMPICommFactory::getTagBase ( void ) const
 {
-	return this->sendId;
+	return tagBase;
 }

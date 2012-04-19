@@ -27,6 +27,7 @@ class CMRCommSchem
 		void addComm(CMRComm * comm);
 		void clear(void);
 		int count(void) const;
+		void run(void);
 		CMRComm * getComm(int id);
 	private:
 		//clone is forbidden

@@ -24,3 +24,6 @@ foreach(i ${ALLOC_TEST_LIST})
 endforeach(i)
 
 add_subdirectory(mocks)
+
+add_executable(sandbox sandbox.cpp)
+target_link_libraries(sandbox cmr cmr_mocks)

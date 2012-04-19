@@ -12,7 +12,9 @@
 #include <cassert>
 #include <cstdarg>
 #include <cstdlib>
+#include <mpi.h>
 #include "CMRDebug.h"
+#include "CMRCommon.h"
 
 /*********************  CONSTS  *********************/
 #ifdef CMR_ENABLE_COLOR
@@ -52,10 +54,16 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 
 	//print
 	if (condition == NULL)
-		fprintf(stderr,"%s%s (%s:%d) : %s%s\n",CMR_MESG_COLOR[level],title,basename(fname),line,buffer,CMR_MESG_COLOR[CMR_DEBUG_NORMAL]);
+		fprintf(stderr,"%s%-7s [rank=%d] (%s:%d) : %s%s\n",CMR_MESG_COLOR[level],title,cmrGetMPIRank(),basename(fname),line,buffer,CMR_MESG_COLOR[CMR_DEBUG_NORMAL]);
 	else
-		fprintf(stderr,"%s%s (%s:%d) : %s\n%s%s\n",CMR_MESG_COLOR[level],title,basename(fname),line,condition,buffer,CMR_MESG_COLOR[CMR_DEBUG_NORMAL]);
+		fprintf(stderr,"%s%-7s [rank=%d] (%s:%d) : %s\n        %s%s\n",CMR_MESG_COLOR[level],title,cmrGetMPIRank(),basename(fname),line,condition,buffer,CMR_MESG_COLOR[CMR_DEBUG_NORMAL]);
 
 	//free buffers
 	delete [] buffer;
+
+	//if error, abort
+	if (level >= CMR_DEBUG_ERROR)
+		abort();
 }
+
+

@@ -1,3 +1,11 @@
+/*****************************************************
+             PROJECT  : CartesinMeshRuntime
+             VERSION  : 0.0.0
+             DATE     : 06/2012
+             AUTHOR   : Valat Sébastien
+             LICENSE  : CeCILL-C
+*****************************************************/
+
 #ifndef CMR_COMMON_H
 #define CMR_COMMON_H
 
@@ -9,11 +17,19 @@
 #define ASSIST_UNIT_TEST( __class__ )
 #endif
 
+/********************  MACRO  ***********************/
+#define CMR_MPI_MASTER 0
+
 /********************  ENUM  ************************/
 enum CMRCommType
 {
 	CMR_COMM_SEND,
 	CMR_COMM_RECV
 };
+
+/*******************  FUNCTION  *********************/
+bool cmrIsMPIMaster(void);
+int cmrGetMPIRank(void);
+int cmrGetMPISize(void);
 
 #endif //CMR_COMMON_H

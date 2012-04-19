@@ -58,3 +58,12 @@ int CMRCommSchem::count ( void ) const
 {
 	return comms.size();
 }
+
+/*******************  FUNCTION  *********************/
+void CMRCommSchem::run ( void )
+{
+	for (CMRCommList::iterator it = comms.begin() ; it != comms.end() ; ++it)
+	{
+		(*it)->run();
+	}
+}

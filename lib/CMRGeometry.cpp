@@ -15,8 +15,8 @@
 CMRRect2D::CMRRect2D ( int x, int y, int width, int height )
 {
 	//errors
-	assert(width > 0);
-	assert(height > 0);
+	assert(width >= 0);
+	assert(height >= 0);
 
 	//set default
 	this->x = x;

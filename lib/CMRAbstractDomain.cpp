@@ -131,8 +131,8 @@ void CMRAbstractDomain::setCommunicator ( int x, int y, CMRCommFactory * commFac
 {
 	//errors
 	assert(this->dimensions == 2);
-	assert(x >= -1 && x <= -1);
-	assert(y >= -1 && y <= -1);
+	assert(x >= -1 && x <= 1);
+	assert(y >= -1 && y <= 1);
 
 	//replace the value
 	this->commFactories[x+1][y+1] = commFactory;
