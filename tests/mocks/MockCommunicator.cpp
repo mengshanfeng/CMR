@@ -18,3 +18,9 @@ CMRCommunication* MockCommunicator::createComm ( CMRAbstractDomain* domain, cons
 	comm->dest = dest;
 	return comm;
 }
+
+/*********************  CLASS  **********************/
+void MockCommunication::run(void )
+{
+	this->hasRun = true;
+}

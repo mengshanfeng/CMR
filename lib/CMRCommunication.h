@@ -6,14 +6,23 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMRCOMMUNICATION_H
-#define CMRCOMMUNICATION_H
+#ifndef CMR_COMMUNICATION_H
+#define CMR_COMMUNICATION_H
+
+/********************  ENUM  ************************/
+enum CMRCommStatus
+{
+	CMR_COMM_STATUS_INIT    = 0,
+	CMR_COMM_STATUS_STARTED = 1,
+	CMR_COMM_STATUS_DONE    = 2,
+};
 
 /*********************  CLASS  **********************/
 class CMRCommunication
 {
 	public:
 		virtual ~CMRCommunication(void);
+		virtual void run(void) = 0;
 };
 
-#endif // CMRCOMMUNICATION_H
+#endif // CMR_COMMUNICATION_H

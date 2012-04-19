@@ -18,9 +18,11 @@
 class MockCommunication : public CMRCommunication
 {
 	public:
+    virtual void run(void );
 		CMRRect2D rect;
 		int dest;
 		int id;
+		bool hasRun;
 };
 
 /*********************  CLASS  **********************/
