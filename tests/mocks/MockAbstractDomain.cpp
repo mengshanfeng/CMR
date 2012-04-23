@@ -61,3 +61,9 @@ int MockAbstractDomain::copyGhostToBuffer ( void* buffer, size_t size, const CMR
 
 	return this->ghostSize;
 }
+
+/*******************  FUNCTION  *********************/
+void* MockAbstractDomain::getCell ( int x, int y )
+{
+	return NULL;
+}

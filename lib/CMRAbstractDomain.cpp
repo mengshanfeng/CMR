@@ -26,8 +26,8 @@ CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, int width, int height, i
 
 	//init values
 	this->typeSize = typeSize;
-	this->sizes[CMR_AXIS_X] = width + 2 * ghostDepth;
-	this->sizes[CMR_AXIS_Y] = height + 2 * ghostDepth;
+	this->sizes[CMR_AXIS_X] = width;
+	this->sizes[CMR_AXIS_Y] = height;
 	this->dimensions = 2;
 	this->origin[CMR_AXIS_X] = originX;
 	this->origin[CMR_AXIS_Y] = originY;
@@ -187,53 +187,53 @@ CMRRect2D CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedD
 	assert(requestedDepth <= this->ghostDepth);
 	assert(x != 0 || y != 0);
 
-	//ON X
+	//on X axis
 	if (commType == CMR_COMM_SEND)
 	{
 		if (x == -1)// left send
-			rect.x = this->ghostDepth;
+			rect.x = 0;
 		else if (x == 1)// right send
-			rect.x = this->sizes[CMR_AXIS_X] - this->ghostDepth - requestedDepth;
+			rect.x = this->sizes[CMR_AXIS_X] - requestedDepth;
 		else if( x == 0 )
-			rect.x = this->ghostDepth;
+			rect.x = 0;
 	} else if(commType == CMR_COMM_RECV) {
 		if (x == -1)// left receive
-			rect.x = this->ghostDepth - requestedDepth;
+			rect.x = - requestedDepth;
 		else if (x == 1)// right receive
-			rect.x = this->sizes[CMR_AXIS_X] - this->ghostDepth;
+			rect.x = this->sizes[CMR_AXIS_X];
 		else if( x == 0 )
-			rect.x = this->ghostDepth;
+			rect.x = 0;
 	}
 
 	//ON Y
 	if (commType == CMR_COMM_SEND)
 	{
 		if (y == -1)// left send
-			rect.y = this->ghostDepth;
+			rect.y = 0;
 		else if (y == 1)// right send
-			rect.y = this->sizes[CMR_AXIS_Y] - this->ghostDepth - requestedDepth;
+			rect.y = this->sizes[CMR_AXIS_Y] - requestedDepth;
 		else if( y == 0 )
-			rect.y = this->ghostDepth;
+			rect.y = 0;
 	} else if(commType == CMR_COMM_RECV) {
 		if (y == -1)// left receive
-			rect.y = this->ghostDepth - requestedDepth;
+			rect.y = - requestedDepth;
 		else if (y == 1)// right receive
-			rect.y = this->sizes[CMR_AXIS_Y] - this->ghostDepth;
+			rect.y = this->sizes[CMR_AXIS_Y];
 		else if( y == 0 )
-			rect.y = this->ghostDepth;
+			rect.y = 0;
 	}
 
 	//setup size
 	if( x == 0 )
 	{
-		rect.width = this->sizes[CMR_AXIS_X] - 2 * this->ghostDepth;
+		rect.width = this->sizes[CMR_AXIS_X];
 	} else {
 		rect.width = requestedDepth;
 	}
 
 	if( y == 0 )
 	{
-		rect.height = this->sizes[CMR_AXIS_Y] - 2 * this->ghostDepth;
+		rect.height = this->sizes[CMR_AXIS_Y];
 	} else {
 		rect.height = requestedDepth;
 	}
@@ -241,3 +241,16 @@ CMRRect2D CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedD
 	return rect;
 }
 
+/*******************  FUNCTION  *********************/
+bool CMRAbstractDomain::isFullyInDomain ( const CMRRect2D& rect ) const
+{
+	return (rect.x >= 0 && rect.width + rect.x <= this->sizes[CMR_AXIS_X])
+		&& (rect.y >= 0 && rect.height + rect.y <= this->sizes[CMR_AXIS_Y]);
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRAbstractDomain::isFullyInDomainMemory ( const CMRRect2D& rect ) const
+{
+	return (rect.x >= -this->ghostDepth && rect.width + rect.x <= this->sizes[CMR_AXIS_X] + this->ghostDepth)
+		&& (rect.y >= -this->ghostDepth && rect.height + rect.y <= this->sizes[CMR_AXIS_Y] + this->ghostDepth);
+}

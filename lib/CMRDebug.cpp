@@ -63,7 +63,7 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 
 	//if error, abort
 	if (level >= CMR_DEBUG_ERROR)
-		abort();
+		MPI_Abort(MPI_COMM_WORLD,-1);
 }
 
 

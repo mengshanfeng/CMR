@@ -23,6 +23,7 @@ class MockAbstractDomain : public CMRAbstractDomain
 		virtual int copyGhostFromBuffer ( const void* buffer, size_t size, const CMRRect2D& rect );
 		virtual int copyGhostToBuffer ( void* buffer, size_t size, const CMRRect2D& rect ) const;
 		virtual void * getContiguousGhost(const CMRRect2D & rect);
+		virtual void* getCell ( int x, int y );
 		bool contiguous;
 		void * buffer;
 		size_t ghostSize;

@@ -57,6 +57,7 @@ class CMRAbstractDomain
 		virtual int copyGhostToBuffer(void * buffer,size_t size,const CMRRect2D & rect) const = 0;
 		virtual int copyGhostFromBuffer(const void * buffer,size_t size,const CMRRect2D & rect) = 0;
 		virtual void * getContiguousGhost(const CMRRect2D & rect) = 0;
+		virtual void * getCell(int x,int y) = 0;
 		virtual void setCommunicator(int x,int y,CMRCommFactory * commFactory);
 		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int requestedDepth,CMRCommType commType);
 		size_t getTypeSize(void) const;
@@ -66,12 +67,14 @@ class CMRAbstractDomain
 		int getGhostDepth(void) const;
 		CMRUpdateStatus getGhostStatus(int x,int y) const;
 		void setGhostStatus(int x,int y,CMRUpdateStatus status);
+		bool isFullyInDomain(const CMRRect2D & rect) const;
+		bool isFullyInDomainMemory(const CMRRect2D & rect) const;
 	private:
 		CMRRect2D computeGhostCommRect(int x,int y,int requestedDepth,CMRCommType commType) const;
 		//copy is forbidden so ensure compile error by making related function private
 		CMRAbstractDomain(const CMRAbstractDomain & orig);
 		CMRAbstractDomain & operator = (const CMRAbstractDomain & orig);
-	private:
+	protected:
 		/** Size of the type used to describe each cells of the mesh. **/
 		size_t typeSize;
 		/** Dimensions (only 2 is supported up to now). **/
