@@ -7,7 +7,8 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <assert.h>
+#include <cstdlib>
+#include <cassert>
 #include "CMRCommSchem.h"
 #include "CMRComm.h"
 

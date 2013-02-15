@@ -7,6 +7,8 @@ find_package(MPI REQUIRED)
 
 add_definitions(-DCMR_ENABLE_COLOR)
 
+enable_testing()
+
 set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
 
 add_executable(cartesianmeshruntime main.cpp)
