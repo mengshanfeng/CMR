@@ -21,6 +21,7 @@ class CMRMPIComm : public CMRBufferedComm
 {
 	public:
 		CMRMPIComm(CMRMPICommFactory * communicator,CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType);
+		virtual std::string getDebugString ( void ) const;
 	protected:
 		virtual void runReceive ( void* buffer, size_t size );
 		virtual void runSend ( void* buffer, size_t size );

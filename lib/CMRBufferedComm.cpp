@@ -57,6 +57,15 @@ void CMRBufferedComm::freeBuffer ( void* buffer, size_t size )
 }
 
 /*******************  FUNCTION  *********************/
+size_t CMRBufferedComm::getBufferSize ( void ) const
+{
+	if (buffer == NULL)
+		return this->domain->getGhostSize(rect);
+	else
+		return this->bufferSize;
+}
+
+/*******************  FUNCTION  *********************/
 void CMRBufferedComm::setupBuffer ( void )
 {
 	//nothing to do
@@ -120,3 +129,8 @@ void CMRBufferedComm::run ( void )
 	commStatus = CMR_COMM_STATUS_DONE;
 }
 
+/*******************  FUNCTION  *********************/
+CMRCommType CMRBufferedComm::getCommType ( void ) const
+{
+	return this->commType;
+}

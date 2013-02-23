@@ -11,6 +11,7 @@
 
 /********************  HEADERS  *********************/
 #include <vector>
+#include <string>
 
 /*********************  CLASS  **********************/
 class CMRComm;
@@ -22,19 +23,22 @@ typedef std::vector<CMRComm * > CMRCommList;
 class CMRCommSchem
 {
 	public:
-		CMRCommSchem(void);
+		CMRCommSchem(const std::string & name = "Unknwon");
 		virtual ~CMRCommSchem(void);
 		void addComm(CMRComm * comm);
 		void clear(void);
 		int count(void) const;
 		void run(void);
 		CMRComm * getComm(int id);
+		std::string getName(void) const;
+		void printDebug(void) const;
 	private:
 		//clone is forbidden
 		CMRCommSchem(const CMRCommSchem & orig);
 		CMRCommSchem & operator = (const CMRCommSchem & orig);
 	private:
 		CMRCommList comms;
+		std::string name;
 };
 
 #endif // CMRCOMMSCHEM_H

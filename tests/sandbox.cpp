@@ -7,6 +7,8 @@
 #include <MockAbstractDomain.h>
 #include <CMRMPICommFactory.h>
 #include <CMRCommSchem.h>
+#include <CMRDomainStorage.h>
+#include <CMRSpaceSplitter.h>
 
 using namespace std;
 
@@ -17,23 +19,30 @@ int main(int argc, char * argv[])
 	info_on_master("Start with np = %d",cmrGetMPISize());
 	MPI_Barrier(MPI_COMM_WORLD);
 
+	CMRDomainStorage domain(8,800,600,1,0,0);
+	
+	CMRBasicSpaceSplitter splitter(0,0,800,600,cmrGetMPISize(),0);
+	splitter.printDebug(CMR_MPI_MASTER);
+	
 	assert(cmrGetMPISize() == 2);
-	MockAbstractDomain domain(8,800,600,2,0,0);
-	char buffer[1024];
-	domain.buffer = buffer;
-	domain.ghostSize = 1024;
-
-	CMRCommSchem schem;
-	if (cmrGetMPIRank() == 0)
+	
+	CMRCommSchem schem("sync_left_right");
+	switch (cmrGetMPIRank())
 	{
-		domain.setCommunicator(1,0,new CMRMPICommFactory(1,0,1));
-		domain.fillWithUpdateComm(schem,1,0,2,CMR_COMM_SEND);
-	} else {
-		domain.setCommunicator(-1,0,new CMRMPICommFactory(1,0,1));
-		domain.fillWithUpdateComm(schem,-1,0,2,CMR_COMM_RECV);
+		case 0:
+			domain.setCommunicator(1,0,new CMRMPICommFactory(1,1,1));
+			domain.fillWithUpdateComm(schem,1,0,1,CMR_COMM_SEND);
+			break;
+		case 1:
+			domain.setCommunicator(-1,0,new CMRMPICommFactory(0,0,1));
+			domain.fillWithUpdateComm(schem,-1,0,1,CMR_COMM_RECV);
+			break;
+		default:
+			fatal("This test only work with exactly 2 MPI tasks.");
 	}
 
 	//to comm
+	schem.printDebug();
 	schem.run();
 
 	//Finish

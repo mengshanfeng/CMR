@@ -30,6 +30,8 @@ class CMRBufferedComm : public CMRComm
 		virtual void runReceive(void * buffer,size_t size) = 0;
 		virtual void * allocateBuffer(size_t size);
 		virtual void freeBuffer(void * buffer,size_t size);
+		CMRCommType getCommType(void) const;
+		size_t getBufferSize(void) const;
 	private:
 		void setupBuffer(void);
 	private:

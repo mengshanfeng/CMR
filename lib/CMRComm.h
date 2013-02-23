@@ -9,6 +9,9 @@
 #ifndef CMR_COMMUNICATION_H
 #define CMR_COMMUNICATION_H
 
+/********************  HEADERS  *********************/
+#include <string>
+
 /********************  ENUM  ************************/
 enum CMRCommStatus
 {
@@ -22,6 +25,7 @@ class CMRComm
 {
 	public:
 		virtual ~CMRComm(void);
+		virtual std::string getDebugString(void) const;
 		virtual void run(void) = 0;
 };
 

@@ -12,6 +12,29 @@
 #include "CMRGeometry.h"
 
 /*******************  FUNCTION  *********************/
+CMRVect2D::CMRVect2D ( int x, int y )
+{
+	this->x = x;
+	this->y = y;
+}
+
+/*******************  FUNCTION  *********************/
+std::ostream& operator<< ( std::ostream& out, const CMRVect2D& vect )
+{
+	char buffer[256];
+	int res = sprintf(buffer,"CMRVect2D [ %5d , %5d ]",vect.x,vect.y);
+	assert(res < 256);
+	out << buffer;
+	return out;
+}
+
+/*******************  FUNCTION  *********************/
+bool operator== ( const CMRVect2D& v1, const CMRVect2D& v2 )
+{
+	return ((v1.x == v2.x) && (v1.y == v2.y));
+}
+
+/*******************  FUNCTION  *********************/
 CMRRect2D::CMRRect2D ( int x, int y, int width, int height )
 {
 	//errors

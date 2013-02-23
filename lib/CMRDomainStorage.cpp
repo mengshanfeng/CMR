@@ -128,3 +128,9 @@ size_t CMRDomainStorage::getGhostSize ( const CMRRect2D& rect ) const
 	//return
 	return rect.height * rect.width * typeSize;
 }
+
+/*******************  FUNCTION  *********************/
+bool CMRDomainStorage::isContiguous ( int directionID ) const
+{
+	return (directionID == 0);
+}

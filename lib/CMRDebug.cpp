@@ -44,7 +44,7 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 	assert(title != NULL);
 
 	//allocate buffer for message
-	size = strlen(format) * 4;
+	size = strlen(format) * 4 + 1024;
 	buffer = new char[size];
 	va_list param;
 	va_start (param, format);

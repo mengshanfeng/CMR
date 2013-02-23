@@ -33,3 +33,16 @@ int cmrGetMPISize ( void )
 	MPI_Comm_size(MPI_COMM_WORLD,&size);
 	return size;
 }
+
+/*******************  FUNCTION  *********************/
+int cmrPGCD(int a, int b)
+{
+	int c;
+	while(b!=0)
+	{
+		c = a % b;
+		a = b;
+		b = c;
+	}
+	return a;
+}

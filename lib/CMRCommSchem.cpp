@@ -11,11 +11,12 @@
 #include <cassert>
 #include "CMRCommSchem.h"
 #include "CMRComm.h"
+#include "CMRDebug.h"
 
 /*******************  FUNCTION  *********************/
-CMRCommSchem::CMRCommSchem ( void )
+CMRCommSchem::CMRCommSchem ( const std::string & name )
 {
-
+	this->name = name;
 }
 
 /*******************  FUNCTION  *********************/
@@ -66,5 +67,16 @@ void CMRCommSchem::run ( void )
 	for (CMRCommList::iterator it = comms.begin() ; it != comms.end() ; ++it)
 	{
 		(*it)->run();
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRCommSchem::printDebug ( void ) const
+{
+	debug("Communication schem '%s' : ",this->name.c_str());
+	for (CMRCommList::const_iterator it = comms.begin() ; it != comms.end() ; ++it)
+	{
+		std::string tmp = (*it)->getDebugString();
+		debug("    - : %s",tmp.c_str());
 	}
 }

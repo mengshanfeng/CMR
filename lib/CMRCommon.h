@@ -19,7 +19,9 @@
 
 /********************  MACRO  ***********************/
 #define CMR_MPI_MASTER 0
+#define CMR_MPI_ALL -1
 
+class tm;
 /********************  ENUM  ************************/
 enum CMRCommType
 {
@@ -31,5 +33,18 @@ enum CMRCommType
 bool cmrIsMPIMaster(void);
 int cmrGetMPIRank(void);
 int cmrGetMPISize(void);
+int cmrPGCD(int a, int b);
+
+/*******************  FUNCTION  *********************/
+/**
+ * @TODO move implementation in _impl.h file
+**/
+template<class T>
+void cmrPermut(T & v1,T & v2)
+{
+	T tmp = v1;
+	v1 = v2;
+	v2 = tmp;
+}
 
 #endif //CMR_COMMON_H

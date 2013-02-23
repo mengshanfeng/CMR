@@ -67,3 +67,10 @@ void* MockAbstractDomain::getCell ( int x, int y )
 {
 	return NULL;
 }
+
+/*******************  FUNCTION  *********************/
+bool MockAbstractDomain::isContiguous ( int directionID ) const
+{
+	return (directionID == 0);
+}
+

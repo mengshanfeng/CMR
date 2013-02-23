@@ -6,11 +6,19 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMRGEOMETRY_H
-#define CMRGEOMETRY_H
+#ifndef CMR_GEOMETRY_H
+#define CMR_GEOMETRY_H
 
 /********************  HEADERS  *********************/
 #include <ostream>
+
+/*********************  CLASS  **********************/
+struct CMRVect2D
+{
+	CMRVect2D(int x = 0, int y = 0);
+	int x;
+	int y;
+};
 
 /*********************  CLASS  **********************/
 struct CMRRect2D
@@ -24,6 +32,8 @@ struct CMRRect2D
 
 /*******************  FUNCTION  *********************/
 std::ostream & operator << (std::ostream & out,const CMRRect2D & rect);
+std::ostream & operator << (std::ostream & out,const CMRVect2D & vect);
 bool operator == (const CMRRect2D & rect1 , const CMRRect2D & rect2);
+bool operator == (const CMRVect2D & v1 , const CMRVect2D & v2);
 
-#endif // CMRGEOMETRY_H
+#endif // CMR_GEOMETRY_H

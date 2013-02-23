@@ -9,6 +9,7 @@
 /********************  HEADERS  *********************/
 #include <cassert>
 #include <cstdlib>
+#include <cstdio>
 #include <mpi.h>
 #include "CMRDebug.h"
 #include "CMRMPIComm.h"
@@ -41,4 +42,27 @@ void CMRMPIComm::runSend ( void* buffer, size_t size )
 	debug("Start MPI_Send( %2d --> %2d [tag = %d , size = %lu] )",cmrGetMPIRank(),communicator->getSendRank(),communicator->getTagBase(),size);
 	int res = MPI_Send(buffer,size,MPI_CHAR,communicator->getSendRank(),communicator->getTagBase(),MPI_COMM_WORLD);
 	assume(res == 0,"MPI_Send failure : %d",res);
+}
+
+/*******************  FUNCTION  *********************/
+std::string CMRMPIComm::getDebugString ( void ) const
+{
+	char buffer[1024];
+	size_t size;
+
+	switch(this->getCommType())
+	{
+		case CMR_COMM_SEND:
+			size = sprintf(buffer,"MPI_Send( %2d --> %2d [tag = %d , size = %lu] )",cmrGetMPIRank(),communicator->getSendRank(),communicator->getTagBase(),this->getBufferSize());
+			assert(size < sizeof(buffer));
+			break;
+		case CMR_COMM_RECV:
+			size = sprintf(buffer,"MPI_Recv( %2d <-- %2d [tag = %d , size = %lu] )",cmrGetMPIRank(),communicator->getRecvRank(),communicator->getTagBase(),this->getBufferSize());
+			assert(size < sizeof(buffer));
+			break;
+		default:
+			fatal("Invalid communication type : %d\n",this->getCommType());
+	}
+	
+	return buffer;
 }

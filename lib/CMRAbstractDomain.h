@@ -53,6 +53,7 @@ class CMRAbstractDomain
 		CMRAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY);
 		virtual ~CMRAbstractDomain(void);
 		virtual bool isContiguousGhost(const CMRRect2D & rect) const = 0;
+		virtual bool isContiguous(int directionID) const = 0;
 		virtual size_t getGhostSize(const CMRRect2D & rect) const = 0;
 		virtual int copyGhostToBuffer(void * buffer,size_t size,const CMRRect2D & rect) const = 0;
 		virtual int copyGhostFromBuffer(const void * buffer,size_t size,const CMRRect2D & rect) = 0;

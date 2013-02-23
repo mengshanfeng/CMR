@@ -24,6 +24,7 @@ class CMRDomainStorage : public CMRAbstractDomain
 		virtual bool isContiguousGhost ( const CMRRect2D& rect ) const;
 		virtual size_t getGhostSize ( const CMRRect2D& rect ) const;
 		virtual void* getCell ( int x, int y );
+		virtual bool isContiguous ( int directionID ) const;
 	protected:
 		int getCoord(int x,int y) const;
 	private:

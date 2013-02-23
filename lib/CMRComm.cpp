@@ -14,3 +14,9 @@ CMRComm::~CMRComm ( void )
 {
 
 }
+
+/*******************  FUNCTION  *********************/
+std::string CMRComm::getDebugString ( void ) const
+{
+	return "No info";
+}
