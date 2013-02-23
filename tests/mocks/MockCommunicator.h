@@ -10,9 +10,9 @@
 #define MOCK_COMMUNICATOR_H
 
 /*********************  CLASS  **********************/
-#include <CMRCommFactory.h>
-#include <CMRComm.h>
-#include <CMRGeometry.h>
+#include <communication/CMRCommFactory.h>
+#include <communication/CMRComm.h>
+#include <common/CMRGeometry.h>
 
 /*********************  CLASS  **********************/
 class MockCommunication : public CMRComm

@@ -9,9 +9,9 @@
 /********************  HEADERS  *********************/
 #include <cassert>
 #include <cstdlib>
-#include "CMRDebug.h"
+#include "../common/CMRDebug.h"
 #include "CMRBufferedComm.h"
-#include "CMRAbstractDomain.h"
+#include "../domain/CMRAbstractDomain.h"
 
 /*******************  FUNCTION  *********************/
 CMRBufferedComm::CMRBufferedComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType )

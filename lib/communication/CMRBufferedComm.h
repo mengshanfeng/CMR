@@ -10,8 +10,8 @@
 #define CMR_BUFFERED_COMM_H
 
 /********************  HEADERS  *********************/
-#include "CMRGeometry.h"
-#include "CMRCommon.h"
+#include "../common/CMRGeometry.h"
+#include "../common/CMRCommon.h"
 #include "CMRComm.h"
 
 

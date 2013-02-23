@@ -11,7 +11,7 @@
 
 /********************  HEADERS  *********************/
 #include <stdlib.h>
-#include <CMRAbstractDomain.h>
+#include <domain/CMRAbstractDomain.h>
 
 /*********************  CLASS  **********************/
 class MockAbstractDomain : public CMRAbstractDomain

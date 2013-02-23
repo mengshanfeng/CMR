@@ -10,9 +10,9 @@
 /********************  HEADERS  *********************/
 #include <assert.h>
 #include "CMRAbstractDomain.h"
-#include "CMRCommFactory.h"
-#include "CMRGeometry.h"
-#include "CMRCommSchem.h"
+#include "../communication/CMRCommFactory.h"
+#include "../common/CMRGeometry.h"
+#include "../communication/CMRCommSchem.h"
 
 /*******************  FUNCTION  *********************/
 CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, int width, int height, int ghostDepth , int originX , int originY )

@@ -11,7 +11,7 @@
 
 /********************  HEADERS  *********************/
 #include <stdlib.h>
-#include "CMRCommon.h"
+#include "../common/CMRCommon.h"
 
 /*********************  CLASS  **********************/
 class CMRComm;

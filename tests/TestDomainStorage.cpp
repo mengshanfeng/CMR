@@ -8,10 +8,10 @@
 
 /********************  HEADERS  *********************/
 #include <svUnitTest.h>
-#include <CMRDomainStorage.h>
-#include <CMRCommSchem.h>
+#include <domain/CMRDomainStorage.h>
+#include <communication/CMRCommSchem.h>
 #include <MockCommunicator.h>
-#include <CMRDomainStorage.h>
+#include <domain/CMRDomainStorage.h>
 #include <mpi.h>
 
 /**********************  USING  *********************/

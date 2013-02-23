@@ -15,8 +15,8 @@
 #include <stddef.h>
 #include <vector>
 #include <iostream>
-#include "CMRCommon.h"
-#include "CMRGeometry.h"
+#include "../common/CMRCommon.h"
+#include "../common/CMRGeometry.h"
 
 /*********************  CLASS  **********************/
 class CMRCommFactory;

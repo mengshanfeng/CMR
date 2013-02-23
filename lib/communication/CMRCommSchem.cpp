@@ -11,7 +11,7 @@
 #include <cassert>
 #include "CMRCommSchem.h"
 #include "CMRComm.h"
-#include "CMRDebug.h"
+#include "../common/CMRDebug.h"
 
 /*******************  FUNCTION  *********************/
 CMRCommSchem::CMRCommSchem ( const std::string & name )

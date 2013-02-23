@@ -1,1 +1,3 @@
-add_library(cmr CMRSpaceSplitter.cpp CMRComposedDomain.cpp CMRDomainStorage.cpp CMRDebug.cpp CMRBufferedComm.cpp CMRMPIComm.cpp CMRMPICommFactory.cpp CMRComm.cpp CMRCommSchem.cpp CMRGeometry.cpp CMRCommFactory.cpp CMRAbstractDomain.cpp CMRCommon.cpp)
+add_library(cmr common/CMRSpaceSplitter.cpp common/CMRGeometry.cpp common/CMRDebug.cpp common/CMRCommon.cpp
+	domain/CMRComposedDomain.cpp domain/CMRDomainStorage.cpp domain/CMRAbstractDomain.cpp
+	communication/CMRBufferedComm.cpp communication/CMRMPIComm.cpp communication/CMRMPICommFactory.cpp communication/CMRComm.cpp communication/CMRCommSchem.cpp communication/CMRCommFactory.cpp )

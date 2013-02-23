@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <cassert>
 #include "CMRDomainStorage.h"
-#include "CMRDebug.h"
+#include "../common/CMRDebug.h"
 
 /*******************  FUNCTION  *********************/
 CMRDomainStorage::CMRDomainStorage ( size_t typeSize, int width, int height, int ghostDepth, int originX, int originY )

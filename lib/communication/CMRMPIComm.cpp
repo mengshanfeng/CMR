@@ -11,10 +11,10 @@
 #include <cstdlib>
 #include <cstdio>
 #include <mpi.h>
-#include "CMRDebug.h"
+#include "../common/CMRDebug.h"
 #include "CMRMPIComm.h"
-#include "CMRCommon.h"
-#include "CMRAbstractDomain.h"
+#include "../common/CMRCommon.h"
+#include "../domain/CMRAbstractDomain.h"
 #include "CMRMPICommFactory.h"
 
 /*******************  FUNCTION  *********************/

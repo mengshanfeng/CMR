@@ -2,13 +2,13 @@
 #include <cstdlib>
 #include <mpi.h>
 #include <cassert>
-#include <CMRDebug.h>
-#include <CMRMPIComm.h>
+#include <common/CMRDebug.h>
+#include <communication/CMRMPIComm.h>
 #include <MockAbstractDomain.h>
-#include <CMRMPICommFactory.h>
-#include <CMRCommSchem.h>
-#include <CMRDomainStorage.h>
-#include <CMRSpaceSplitter.h>
+#include <communication/CMRMPICommFactory.h>
+#include <communication/CMRCommSchem.h>
+#include <domain/CMRDomainStorage.h>
+#include <common/CMRSpaceSplitter.h>
 
 using namespace std;
 

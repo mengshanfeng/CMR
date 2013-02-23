@@ -8,8 +8,8 @@
 
 /********************  HEADERS  *********************/
 #include <svUnitTest.h>
-#include <CMRAbstractDomain.h>
-#include <CMRCommSchem.h>
+#include <domain/CMRAbstractDomain.h>
+#include <communication/CMRCommSchem.h>
 #include <MockAbstractDomain.h>
 #include <MockCommunicator.h>
 
