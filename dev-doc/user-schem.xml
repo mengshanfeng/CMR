@@ -1,25 +1,90 @@
 <schema>
+	<includes>
+		<include>math.h</includes>
+	</includes>
+	<parameters>
+		<!--Ici ce sont des constantes -->
+		<param name="size" unit="cm" estimated_min="0" estimated_max="1.3" value="" comment=""/>
+		<const name="C" unit="m/s" value="299792458" comment="Vitesse de la lumère."/>
+	</parameters>
+	<globals>
+		<!-- Pour des résultats de réduction éventuelles -->
+		<global name="dt" unit="seconds"/>
+	</globals>
 	<system>
 		<scalar short_name="v" long_name="viscosity" type="float" unit="poiseuil" estimated_min="0" estimated_max="1.3" definition_url="http://www.wikipedia.org/....." comment=""/>
-		<scalar short_name="d" long_name="density" type="float" unit="none"/>
+		<scalar short_name="d" long_name="density" type="float" unit="none" estimated_min="-inf" estimated_max="inf"/>
 		<vector short_name="D" long_name="directions" type="float" unit="none" size="10"/>
+		<!--<sub name="....">
+			<scalar short_name="U" long_name="viscosity" type="float" unit="poiseuil" estimated_min="0" estimated_max="1.3" definition_url="http://www.wikipedia.org/....." comment=""/>
+			<scalar short_name="H" long_name="density" type="float" unit="none"/>
+		</sub>-->
 	</system>
 	<definitions>
+		<!-- Un example de definition d'eq à réutiliser -->
+		<eqdef>
+			<name></name>
+			<equation>E = v_{i,j}/2</equation>
+		</eqdef>
+		<!-- Une operation du tout le maillage -->
 		<operation>
 			<name>propagation</name>
 			<comment></comment>
+			<type>forall</type>
 			<action>
 				<!--<code></code>-->
-				<equation>v'_{i,j} = v_{i,j}+d_{i,j}</equation>
+				<eqref name=""/>
+				<equation>P = v_{i,j}^{2}</equation>
+				<!--<equation type='double'>P = v_{i,j}^{2}</equation>-->
+				<equation>v'_{i,j} = v_{i,j}+d_{i,j} * P</equation>
 				<!--<equation>v'_{i,j} = v_{i-1,j}+v_{i+1,j}</equation>-->
 			</action>
 		</operation>
-		<!--Ajouter operation type reduction -->
+		<!-- une reduction -->
+		<operation>
+			<name>compute_dt</name>
+			<comment></comment>
+			<type>reduceall</type><!--localreduce...,-->
+			<reduce>
+				<function>max</function>
+				<data>v_{i,j} / d_{i,j}</data>
+				<finalop>dt = res</finalop>
+			</reduce>
+		</operation>
+		<!-- Operation type matrice -->
+		<operation>
+			<!--......-->
+			<type>forall</type>
+			<action>
+				<cell_vector>
+					<item>v</item>
+					<item>d</item>
+					<item>D</item>
+				</cell_vector>
+				<matrix file="tt.txt"/>
+			</action>
+		</operation>
+		<!-- Custom steps-->
+		<operation>
+			<name>my_own</name>
+			<type>custom</type>
+			<class>Test</class>
+			<accept_split>true</accept_split>
+			<deps>
+				<dep>v'_{i,j}</dep>
+				<dep>v_{i,j}</dep>
+			</deps>
+		</operation>
 	</definitions>
-	<main>
+	<pre>
+	</pre>
+	<mainloop until="t == dtmax">
 		<!--trouver un notation pour des conditions-->
 		<step name="propagation"/>
-		<step name="mpi_sync_v"/>
+		<!--<step name="mpi_sync_v"/> comms may be insert at compile time if we have all deps of steps-->
 		<step name="..."/>
-	</main>
+		<step name="compute_dt"/>
+	</mainloop>
+	<post>
+	</post>
 </schema>
