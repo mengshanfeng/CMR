@@ -47,20 +47,27 @@ void* CMRDomainStorage::getContiguousGhost ( const CMRRect2D& rect )
 }
 
 /*******************  FUNCTION  *********************/
+int CMRDomainStorage::getMemoryWidth ( void ) const
+{
+	return (sizes[CMR_AXIS_X] + 2*ghostDepth) * typeSize;
+}
+
+/*******************  FUNCTION  *********************/
 int CMRDomainStorage::getCoord ( int x, int y ) const
 {
 	//vars
 	int w;
+	int ghostDept = this->ghostDepth;
 
 	//errors
-	assert(x >= - this->ghostDepth && x < this->sizes[CMR_AXIS_X] + 2 * this->ghostDepth);
-	assert(y >= - this->ghostDepth && y < this->sizes[CMR_AXIS_Y] + 2 * this->ghostDepth);
+	assert(x >= - ghostDepth && x < this->sizes[CMR_AXIS_X] + 2 * ghostDepth);
+	assert(y >= - ghostDepth && y < this->sizes[CMR_AXIS_Y] + 2 * ghostDepth);
 	assert(dimensions == 2);
 
 	//fix coords for ghost
-	x += this->ghostDepth;
-	y += this->ghostDepth;
-	w = sizes[CMR_AXIS_X] + 2*this->ghostDepth;
+	x += ghostDepth;
+	y += ghostDepth;
+	w = sizes[CMR_AXIS_X] + 2*ghostDepth;
 
 	//return
 	return (x + y * w) * typeSize;
@@ -96,6 +103,8 @@ int CMRDomainStorage::copyGhostFromBuffer ( const void* buffer, size_t size, con
 				data_base[k] = buffer_base[k];
 		}
 	}
+	
+	return rect.width * rect.height * typeSize;
 }
 
 /*******************  FUNCTION  *********************/
@@ -116,6 +125,8 @@ int CMRDomainStorage::copyGhostToBuffer ( void* buffer, size_t size, const CMRRe
 				buffer_base[k] = data_base[k];
 		}
 	}
+	
+	return rect.width * rect.height * typeSize;
 }
 
 /*******************  FUNCTION  *********************/

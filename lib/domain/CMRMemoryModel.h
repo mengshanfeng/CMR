@@ -13,7 +13,7 @@
 #include <vector>
 #include <cassert>
 #include "CMRAbstractDomain.h"
-#include "CMRDebug.h"
+#include "../common/CMRDebug.h"
 
 /*********************  CLASS  **********************/
 class CMRMemoryModel
@@ -23,12 +23,30 @@ class CMRMemoryModel
 		virtual int getTypeSize(void) = 0;
 		virtual bool isContiguous(int directionId) = 0;
 		virtual void * getCell(void * baseAddr,int x,int y,int width,int height) = 0;
+		//virtual int copyGhostFromBuffer ( void * mesh, const void* buffer, size_t size, const CMRRect2D& rect ) = 0;
+		//virtual int copyGhostToBuffer ( const void * mesh,void* buffer, size_t size, const CMRRect2D& rect ) = 0;
 };
 
 /*********************  CLASS  **********************/
 template <class T>
 class CMRMemoryModelRowMajor : public CMRMemoryModel
 {
+	class Accessor
+	{
+		public:
+			Accessor(T * baseAddr,int width,int absX,int absY) {this->baseAddr = baseAddr; this->width = width;assert(width > 0);this->absX = absX; this->absY = absY;};
+			Accessor(const Accessor & orig,int relX,int relY) {this->width = orig.width; this->baseAddr = &orig.getCell(relX,relY); this->absX = orig.absX + relX; this->absY = orig.absY +relY;};
+			T & getCell(int dx,int dy) {return baseAddr[dx + dy * width];};
+			Vect2D getCoord(void) const;
+		private:
+			T * baseAddr;
+			int width;
+			int absX;
+			int absY;
+			///@TODO add max dx/dy to debug
+			///@TODO add origX/origY in debug mode to help but of course, not necessary for normal run
+	};
+	
 	public:
 		virtual int getTypeSize ( void ) {return sizeof(T);};
 		virtual int getCellId(int x,int y,int width,int height) {return (x+y*width);};

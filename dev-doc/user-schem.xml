@@ -1,0 +1,25 @@
+<schema>
+	<system>
+		<scalar short_name="v" long_name="viscosity" type="float" unit="poiseuil" estimated_min="0" estimated_max="1.3" definition_url="http://www.wikipedia.org/....." comment=""/>
+		<scalar short_name="d" long_name="density" type="float" unit="none"/>
+		<vector short_name="D" long_name="directions" type="float" unit="none" size="10"/>
+	</system>
+	<definitions>
+		<operation>
+			<name>propagation</name>
+			<comment></comment>
+			<action>
+				<!--<code></code>-->
+				<equation>v'_{i,j} = v_{i,j}+d_{i,j}</equation>
+				<!--<equation>v'_{i,j} = v_{i-1,j}+v_{i+1,j}</equation>-->
+			</action>
+		</operation>
+		<!--Ajouter operation type reduction -->
+	</definitions>
+	<main>
+		<!--trouver un notation pour des conditions-->
+		<step name="propagation"/>
+		<step name="mpi_sync_v"/>
+		<step name="..."/>
+	</main>
+</schema>

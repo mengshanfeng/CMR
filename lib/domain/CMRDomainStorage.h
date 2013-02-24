@@ -10,6 +10,8 @@
 #define CMR_DOMAIN_STORAGE_H
 
 /********************  HEADERS  *********************/
+#include <cassert>
+#include "../common/CMRDebug.h"
 #include "CMRAbstractDomain.h"
 
 /*********************  CLASS  **********************/
@@ -25,10 +27,35 @@ class CMRDomainStorage : public CMRAbstractDomain
 		virtual size_t getGhostSize ( const CMRRect2D& rect ) const;
 		virtual void* getCell ( int x, int y );
 		virtual bool isContiguous ( int directionID ) const;
+		int getMemoryWidth(void) const;
 	protected:
 		int getCoord(int x,int y) const;
 	private:
 		char * data;
+};
+
+/*********************  CLASS  **********************/
+//TODO cleanup this test code
+template <class T>
+class CMRTypedDomainStorage : public CMRDomainStorage
+{
+	public:
+		class CellAccessor
+		{
+			public:
+				CellAccessor(T * baseAddr,int width) {this->baseAddr = baseAddr; this->width = width;assert(width > 0);};
+				CellAccessor(CellAccessor & orig,int relX,int relY) {this->width = orig.width; this->baseAddr = &orig.getCell(relX,relY);};
+				T & getCell(int dx,int dy) {return baseAddr[dx + dy * width];};
+			private:
+				T * baseAddr;
+				int width;
+				///@TODO add max dx/dy to debug
+				///@TODO add origX/origY in debug mode to help but of course, not necessary for normal run
+		};
+
+	public:
+		CMRTypedDomainStorage ( int width, int height, int ghostDepth, int originX, int originY ):CMRDomainStorage(sizeof(T),width,height,ghostDepth,originX,originY){};
+		CellAccessor getCellAccessor(int x,int y){CMRTypedDomainStorage<T>::CellAccessor acc((T*)getCell(x,y),getMemoryWidth()/sizeof(T));return acc;};
 };
 
 #endif // CMR_DOMAIN_STORAGE_H

@@ -12,8 +12,8 @@
 /********************  HEADERS  *********************/
 #include <vector>
 #include <cassert>
-#include "CMRAbstractDomain.h"
-#include "CMRDebug.h"
+#include "domain/CMRAbstractDomain.h"
+#include "common/CMRDebug.h"
 
 /*********************  CLASS  **********************/
 class CMROperation;
@@ -24,21 +24,21 @@ class CMRRect2D;
 class CMRMeshOperation
 {
 	public:
-		CMROperation(void);
-		virtual ~CMROperation(void);
-		virtual void run(const CMRRect2D & zone);
+		CMRMeshOperation(void){}
+		virtual ~CMRMeshOperation(void){}
+		virtual void run(const CMRRect2D & zone) = 0;
 };
 
 /*********************  CLASS  **********************/
-template <class T>
+template <class T,class U>
 class CMRMeshOperationSimpleLoop : public CMRMeshOperation
 {
 	public:
-		CMRMeshOperationSimpleLoop(CMRAbstractDomain* in, CMRAbstractDomain* out);
+		CMRMeshOperationSimpleLoop(T * in, T * out);
 		virtual void run (const CMRRect2D& zone );
 	private:
-		CMRAbstractDomain* domainIn;
-		CMRAbstractDomain* domainOut;
+		T * in;
+		T * out;
 };
 
 /*******************  FUNCTION  *********************/
@@ -47,38 +47,46 @@ class CellAccessor
 };
 
 /*******************  FUNCTION  *********************/
-template <class T>
-CMRMeshOperationSimpleLoop<T>::CMRMeshOperationSimpleLoop ( CMRAbstractDomain* in, CMRAbstractDomain* out )
+template <class T,class U>
+CMRMeshOperationSimpleLoop<T,U>::CMRMeshOperationSimpleLoop ( T * in, T * out )
 {
 	//errors
 	assert(in != NULL);
 	assert(out != NULL);
 	
 	//setup
-	this->domainIn = in;
-	this->domainOut = out;
+	this->in = in;
+	this->out = out;
 }
 
 /*******************  FUNCTION  *********************/
-template <class T>
-void CMRMeshOperationSimpleLoop<T>::run ( const CMRRect2D & zone )
+template <class T,class U>
+void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect2D & zone )
 {
 	//errors
-	assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
-	assume(domainOut->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
+	//assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
+	//assume(domainOut->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
 	//TODO : to check if the computation accept local calculation (same somaines)
 	//assert(domainIn != domainOut || T::acceptLocalCompute());
 	
 	//errors if no contiguous on X axis
-	if (!domainIn->isContiguous(0) && ! domainOut->isContiguous(0))
-		warning("Caution, you loop on two domain with inner loop on X but the two domains are contiguous on Y !");
+	//if (!domainIn->isContiguous(0) && ! domainOut->isContiguous(0))
+	//	warning("Caution, you loop on two domain with inner loop on X but the two domains are contiguous on Y !");
 	
 	//local copy to avoid deref
 	CMRRect2D localZone = zone;
+	typename T::CellAccessor cellIn(*in,localZone.x,localZone.y);
+	typename T::CellAccessor cellOut(*out,localZone.x,localZone.y);
 	
-	for(int y = localZone.y ; y < localZone.height ; y++)
-		for(int x = localZone.x ; x < localZone.width ; x++)
-			T::cellAction(cell);
+	for(int y = 0 ; y < localZone.height ; y++)
+	{
+		for(int x = 0 ; x < localZone.width ; x++)
+		{
+			typename T::CellAccessor cellLocalIn(cellIn,x,y);
+			typename T::CellAccessor cellLocalOut(cellOut,x,y);
+			U::cellAction(cellLocalIn,cellLocalOut);
+		}
+	}
 }
 
 #endif // CMR_SPACE_SPLITTER_H
