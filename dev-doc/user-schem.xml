@@ -12,9 +12,9 @@
 		<global name="dt" unit="seconds"/>
 	</globals>
 	<system>
-		<scalar short_name="v" long_name="viscosity" type="float" unit="poiseuil" estimated_min="0" estimated_max="1.3" definition_url="http://www.wikipedia.org/....." comment=""/>
-		<scalar short_name="d" long_name="density" type="float" unit="none" estimated_min="-inf" estimated_max="inf"/>
-		<vector short_name="D" long_name="directions" type="float" unit="none" size="10"/>
+		<scalar short_name="v" long_name="viscosity" type="float" unit="poiseuil" estimated_min="0" estimated_max="1.3" definition_url="http://www.wikipedia.org/....." comment="" mode='cell'/>
+		<scalar short_name="d" long_name="density" type="float" unit="none" estimated_min="-inf" estimated_max="inf" mode='cell'/>
+		<vector short_name="D" long_name="directions" type="float" unit="none" size="10" mode='cell'/>
 		<!--<sub name="....">
 			<scalar short_name="U" long_name="viscosity" type="float" unit="poiseuil" estimated_min="0" estimated_max="1.3" definition_url="http://www.wikipedia.org/....." comment=""/>
 			<scalar short_name="H" long_name="density" type="float" unit="none"/>
