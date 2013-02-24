@@ -19,11 +19,11 @@ set(ALLOC_TEST_LIST TestAbstractDomain TestDomainStorage)
 #Now you can build your tests
 foreach(i ${ALLOC_TEST_LIST})
 	add_executable(${i} ${i}.cpp)
-	target_link_libraries(${i} ${UNITTEST_LIBRARY} cmr cmr_mocks)
+	target_link_libraries(${i} ${UNITTEST_LIBRARY} cmr cmr_mocks  ${MPI_LIBRARY})
 	add_test(${i} ${i})
 endforeach(i)
 
 add_subdirectory(mocks)
 
 add_executable(sandbox sandbox.cpp)
-target_link_libraries(sandbox cmr cmr_mocks)
+target_link_libraries(sandbox cmr cmr_mocks  ${MPI_LIBRARY})
