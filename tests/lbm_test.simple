@@ -1,0 +1,96 @@
+package LBM
+
+//<!--========================= INCLUDES==========================-->
+#include "lbm_cell_types.h"
+
+//<!--========================= PARAMS ===========================-->
+def Params
+{
+	//Paramètre de relaxation
+	double relax_param("R")
+	//max velocity at middle of the tube
+	double inflow_max_velocity("V_{max}")
+}
+
+//<!--========================= CONSTS ===========================-->
+def Consts
+{
+	//Matrice de correspondance des directions.
+	double[][] direction_matrix("D") = {
+		{+0.0 , +0.0},
+		{+1.0 , +0.0},
+		{+0.0 , +1.0},
+		{-1.0 , +0.0},
+		{+0.0 , -1.0},
+		{+1.0 , +1.0},
+		{-1.0 , +1.0},
+		{-1.0 , -1.0},
+		{+1.0 , -1.0}
+	}
+	//Point d'équilibrage des directions.
+	double[] equil_weight("W") = {
+		4.0/9.0 ,
+		1.0/9.0 , 1.0/9.0 , 1.0/9.0 , 1.0/9.0,
+		1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0
+	}
+}
+
+//<!--========================= SYSTEM ==========================-->
+def System
+{
+	LBMCellType cell_type("T");
+	double[9] directions("D");
+}
+
+//<!--******************* COLLISION *************************-->
+def compute_collision : Forall
+{
+	//local vars
+	def double density("d")
+	def double[2] velocity("v")
+	
+	//iterators
+	def iterator k => 1..9
+	def iterator l => 0..1
+	
+	//Compute local density (sum all flux on directions).
+	d = \sum_{l=1}^{9} (D_{i,j,k})
+	//Sum all directions
+	v_{l} = \frac{\sum_{k}{v_{i,j,k} * D_{l,k}}}{d}
+	
+	debug(v_{l})
+	
+	//loop on all
+	foreach(k)
+	{
+		double p = D_{k} * v
+		double f_eq = (1.0 + (3 * p) + ((9/2) * p^2 - (3/2) * v^2) * W_{k} * d
+		D'_{i,j,k} = D_{i,j,k} - R * (D_{i,j,k} - f_eq)
+	}
+	
+	//to use C++ :
+	---------------------------------------------
+	printf("Hello world");
+	---------------------------------------------
+}
+
+//********************* PROPAGATION ***********************
+def compute_propagation : Forall
+{
+	def iterator k => 1..9
+	
+	int I = D_{k,0}
+	int J = D_{k,1}
+	if Checker.cellExist(V'_{i+I,j+J})
+		V'_{i+I,j+J,k} = v_{i,j,k}
+		
+	//force deps
+	Deps.requireAll(1)
+	Deps.forceFullDomain()
+}
+
+def TimeLoop
+{
+	compute_collision()
+	compute_collision([0,0,100,1]) //sur une sous-zone
+}
