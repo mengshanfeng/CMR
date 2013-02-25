@@ -31,12 +31,16 @@
 			<name>propagation</name>
 			<comment></comment>
 			<type>forall</type>
+			<precompute>
+				<temp name='dt^3'>dt*dt*dt</temp>
+			</precompute>
 			<action>
 				<!--<code></code>-->
 				<eqref name=""/>
 				<equation>P = v_{i,j}^{2}</equation>
 				<!--<equation type='double'>P = v_{i,j}^{2}</equation>-->
 				<equation>v'_{i,j} = v_{i,j}+d_{i,j} * P</equation>
+				<equation contition="v'_{i,j} == CELL_FLUID">v'_{i,j} = v_{i,j}+d_{i,j} * P</equation>
 				<!--<equation>v'_{i,j} = v_{i-1,j}+v_{i+1,j}</equation>-->
 			</action>
 		</operation>

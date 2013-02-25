@@ -17,7 +17,7 @@
 class MockAbstractDomain : public CMRAbstractDomain
 {
 	public:
-		MockAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY);
+		MockAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY,int globalWidth = -1,int globalHeight = -1);
 		virtual bool isContiguousGhost(const CMRRect2D & rect) const;
 		virtual size_t getGhostSize(const CMRRect2D & rect) const;
 		virtual int copyGhostFromBuffer ( const void* buffer, size_t size, const CMRRect2D& rect );

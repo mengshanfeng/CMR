@@ -12,8 +12,8 @@
 #include "../common/CMRDebug.h"
 
 /*******************  FUNCTION  *********************/
-CMRDomainStorage::CMRDomainStorage ( size_t typeSize, int width, int height, int ghostDepth, int originX, int originY )
-	: CMRAbstractDomain ( typeSize, width, height, ghostDepth, originX, originY )
+CMRDomainStorage::CMRDomainStorage ( size_t typeSize, int width, int height, int ghostDepth, int originX, int originY ,int globalWidth,int globalHeight)
+	: CMRAbstractDomain ( typeSize, width, height, ghostDepth, originX, originY ,globalWidth,globalHeight)
 {
 	//errors
 	assert(width > 0);

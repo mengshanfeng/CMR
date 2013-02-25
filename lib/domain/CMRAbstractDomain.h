@@ -50,7 +50,7 @@ class CMRAbstractDomain
 {
 	ASSIST_UNIT_TEST( TestAbstractDomain )
 	public:
-		CMRAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY);
+		CMRAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY,int globalWidth,int globalHeight);
 		virtual ~CMRAbstractDomain(void);
 		virtual bool isContiguousGhost(const CMRRect2D & rect) const = 0;
 		virtual bool isContiguous(int directionID) const = 0;
@@ -70,6 +70,10 @@ class CMRAbstractDomain
 		void setGhostStatus(int x,int y,CMRUpdateStatus status);
 		bool isFullyInDomain(const CMRRect2D & rect) const;
 		bool isFullyInDomainMemory(const CMRRect2D & rect) const;
+		CMRVect2D getAbsPos(int x = 0,int y = 0) const;
+		CMRVect2D getGlobalSize(void) const;
+		CMRRect2D getLocalRect(void) const;
+		CMRRect2D getGlobalRect(void) const;
 	private:
 		CMRRect2D computeGhostCommRect(int x,int y,int requestedDepth,CMRCommType commType) const;
 		//copy is forbidden so ensure compile error by making related function private
@@ -90,6 +94,8 @@ class CMRAbstractDomain
 		CMRUpdateStatus ghostStatus[3][3];
 		/** Communicator to sync the ghost cells. **/
 		CMRCommFactory * commFactories[3][3];
+		/** Size of global mesh. **/
+		CMRRect2D globalRect;
 };
 
 #endif //CMR_ABSTRACT_DOMAIN_H

@@ -1,0 +1,88 @@
+<schema>
+	<!--========================= INCLUDES==========================-->
+	<includes>
+		<include>lbm_cell_types.h</includes>
+	</includes>
+	<!--========================= PARAMS ===========================-->
+	<parameters>
+		<!--Ici ce sont des constantes -->
+		<param short_name="R" long_name="relax_param" type="double" unit="??" estimated_min="0" estimated_max="1.3" value="1" comment=""/>
+		<param short_name="V_{max}" long_name="inflow_max_velocity" type="double" unit="??" estimated_min="0" estimated_max="1.3" value="1" comment=""/>
+		<matrix short_name="D" long_name="direction_matrix" type="double" comment="Matrice de correspondance des directions.">
+			<raw>
+				+0.0 , +0.0;
+				+1.0 , +0.0;
+				+0.0 , +1.0;
+				-1.0 , +0.0;
+				+0.0 , -1.0;
+				+1.0 , +1.0;
+				-1.0 , +1.0;
+				-1.0 , -1.0;
+				+1.0 , -1.0;
+			</raw>
+		</matrix>
+		<vect short_name="W" long_name="equil_weight" type="double" comment="Point d'équilibrage des directions.">
+			<raw>
+				4.0/9.0 ,
+				1.0/9.0 , 1.0/9.0 , 1.0/9.0 , 1.0/9.0,
+				1.0/36.0, 1.0/36.0, 1.0/36.0, 1.0/36.0
+			</raw>
+		</vect>
+	</parameters>
+	<!--========================= SYSTEM ==========================-->
+	<system>
+		<scalar short_name="T" long_name="cell_type" type="LBMCellType" mode='cell'/>
+		<vector short_name="D" long_name="directions" type="float" unit="none" size="9" mode='cell'/>
+	</system>
+	<!--======================= DEFINITIONS =======================-->
+	<definitions>
+		<!--******************* COLLISION *************************-->
+		<operation>
+			<name>compute_collision</name>
+			<comment></comment>
+			<type>forall</type>
+			<vars>
+				<def short_name="d" long_name="density" type="double"/>
+				<def short_name="v" long_name="velocity" type="double[2]"/>
+			</vars>
+			<action>
+				<!--Some local iterator-->
+				<iterator name='k' min='0' max='9' delta='1'/>
+				<iterator name='l' min='0' max='1' delta='1'/>
+				
+				<!--Some temp values-->
+				<equation comment='Compute local density (sum all flux on directions).'>d = \sum_{l=1}^{9} (D_{i,j,k})</equation>
+				<equation comment='Sum all directions'>v_{l} = \frac{\sum_{k}}{v_{i,j,k} * D_{l,k}}</equation>
+				<equation comment='Normalize.'>v_{l} = v_{l} / d</equation>
+				<debug mode='print'>v_{l}</debug>
+				
+				<!-- Loop on all directions -->
+				<foreach iterator='k'>
+					<equation type="double">p = D_{k} * v</equation>
+					<equation type="double">f_eq = (1.0 + (3 * p) + ((9/2) * p^2 - (3/2) * v^2) * W_{k} * d</equation>
+					<equation>D'_{i,j,k} = D_{i,j,k} - R * (D_{i,j,k} - f_eq)</equation>
+				</for>
+			</action>
+		</operation>
+		<!--******************* PROPAGATION *************************-->
+		<operation>
+			<name>compute_propagation</name>
+			<comment></comment>
+			<type>forall</type>
+			<action>
+				<!--Some local iterator-->
+				<iterator name='k' min='0' max='9' delta='1'/>
+				
+				<!-- Copy on neightboors -->
+				<foreach iterator='k'>
+					<equation type="int">I = D_{k,0}</equation>
+					<equation type="int">J = D_{k,1}</equation>
+					<equation>v'_{i+I,j+J} = v_{i,j,k}</equation>
+				</for>
+			</action>
+			<deps>
+				<all depth='1'/>
+			</deps>
+		</operation>
+	</definitions>
+</schema>

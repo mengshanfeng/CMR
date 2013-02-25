@@ -27,3 +27,6 @@ add_subdirectory(mocks)
 
 add_executable(sandbox sandbox.cpp)
 target_link_libraries(sandbox cmr cmr_mocks  ${MPI_LIBRARY})
+
+add_executable(lbm lbm_test.cpp)
+target_link_libraries(lbm cmr cmr_mocks  ${MPI_LIBRARY})

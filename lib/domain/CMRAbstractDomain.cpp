@@ -15,7 +15,8 @@
 #include "../communication/CMRCommSchem.h"
 
 /*******************  FUNCTION  *********************/
-CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, int width, int height, int ghostDepth , int originX , int originY )
+CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, int width, int height, int ghostDepth , int originX , int originY ,int globalWidth,int globalHeight)
+	:globalRect(0,0,globalWidth,globalHeight)
 {
 	//errors
 	assert(typeSize > 0);
@@ -32,6 +33,10 @@ CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, int width, int height, i
 	this->origin[CMR_AXIS_X] = originX;
 	this->origin[CMR_AXIS_Y] = originY;
 	this->ghostDepth = ghostDepth;
+	
+	//global size
+	if (globalWidth == -1) this->globalRect.width = width;
+	if (globalHeight== -1) this->globalRect.height = height;
 
 	//setup default communicators and ghost status
 	for (int x = 0 ; x < 3 ; x++)
@@ -253,4 +258,31 @@ bool CMRAbstractDomain::isFullyInDomainMemory ( const CMRRect2D& rect ) const
 {
 	return (rect.x >= -this->ghostDepth && rect.width + rect.x <= this->sizes[CMR_AXIS_X] + this->ghostDepth)
 		&& (rect.y >= -this->ghostDepth && rect.height + rect.y <= this->sizes[CMR_AXIS_Y] + this->ghostDepth);
+}
+
+/*******************  FUNCTION  *********************/
+CMRVect2D CMRAbstractDomain::getAbsPos ( int x, int y ) const
+{
+	CMRVect2D res(origin[CMR_AXIS_X] + x,origin[CMR_AXIS_Y]+y);
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+CMRVect2D CMRAbstractDomain::getGlobalSize ( void ) const
+{
+	CMRVect2D res(globalRect.x,globalRect.y);
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+CMRRect2D CMRAbstractDomain::getLocalRect ( void ) const
+{
+	CMRRect2D rect(origin[CMR_AXIS_X],origin[CMR_AXIS_Y],sizes[CMR_AXIS_X],sizes[CMR_AXIS_Y]);
+	return rect;
+}
+
+/*******************  FUNCTION  *********************/
+CMRRect2D CMRAbstractDomain::getGlobalRect ( void ) const
+{
+	return globalRect;
 }

@@ -19,7 +19,7 @@ class CMRDomainStorage : public CMRAbstractDomain
 {
 	ASSIST_UNIT_TEST( TestDomainStorage )
 	public:
-		CMRDomainStorage(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY);
+		CMRDomainStorage(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY,int globalWidth = -1,int globalHeight = -1);
 		virtual int copyGhostFromBuffer ( const void* buffer, size_t size, const CMRRect2D& rect );
 		virtual int copyGhostToBuffer ( void* buffer, size_t size, const CMRRect2D& rect ) const;
 		virtual void* getContiguousGhost ( const CMRRect2D& rect );
