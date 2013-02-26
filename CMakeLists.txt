@@ -17,3 +17,4 @@ target_link_libraries(cartesianmeshruntime cmr ${MPI_LIBRARY})
 
 add_subdirectory(lib)
 add_subdirectory(tests)
+add_subdirectory(texparsor)

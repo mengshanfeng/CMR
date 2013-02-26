@@ -1,0 +1,7 @@
+http://www.mathjax.org/demos/tex-samples/
+http://golem.ph.utexas.edu/~distler/blog/itex2MML.html
+http://muparser.beltoforion.de/index.html
+https://code.google.com/p/mathtex/
+http://www.mpi-forum.org/docs/docs.html
+http://www.cmake.org/cmake/help/documentation.html
+https://github.com/svalat/svUnitTest
