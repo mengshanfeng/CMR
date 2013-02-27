@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>LBM : Lattice Boltzman Method</title>
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			extensions: ["tex2jax.js"],
+			jax: ["input/TeX","output/HTML-CSS"],
+			tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+		});
+	</script>
+	<!-- Import matjex -->
+	<script type="text/javascript" src="../extern-deps/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<!-- Import JPQplot
+	<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="../extern-deps/jpqplot/excanvas.js"></script><![endif]-->
+	<script language="javascript" type="text/javascript" src="../extern-deps/jpqplot/jquery.min.js"></script>
+	<script language="javascript" type="text/javascript" src="../extern-deps/jpqplot/jquery.jqplot.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../extern-deps/jpqplot/jquery.jqplot.css" />
+	<!-- STYLE -->
+	<style type="text/css">
+	body {
+		background-color:#DADCDE;
+	}
+	h1 {
+		text-align:center;
+		font:"Lucida Grande","Lucida Sans Unicode","DejaVu Sans","Lucida,Arial","Helvetica","sans-serif";
+		color:#333333;
+		font-size: 1.4em;
+		font-weight: bold;
+		
+	}
+	.CMREquation {
+		font-size:120%;
+		text-align:left;
+		font-family: "Courier", monospace;
+	}
+	.CMROperation, .CMRConsts {
+		background-color:white;
+		border-radius: 15px;
+		box-shadow: 0px 0px 5px #888888;
+		padding:5px;
+		max-width:1400px;
+		margin:10px;
+		margin-left:auto;
+		margin-right:auto;
+	}
+	h2 {
+		text-align:center;
+		font:"Lucida Grande","Lucida Sans Unicode","DejaVu Sans","Lucida,Arial","Helvetica","sans-serif";
+		color:#333333;
+		font-size: 1.4em;
+		font-weight: bold;
+	}
+	table.CMRAccess {
+		border-collapse:collapse;
+		border:1px solid #333333;
+	}
+	table.CMRAccess tr td{
+		border:1px dotted #333333;
+		width:25px;
+		height:25px;
+		text-align:center;
+	}
+	table.CMRAccess .Write {
+		background-color:#DE8283;
+	}
+	table.CMRAccess .Read {
+		background-color:#C1FFB6;
+	}
+	table.CMRAccess .ReadWrite {
+		background-color:#E7B3FF;
+	}
+	</style>
+</head>
+<body>
+<h1>LBM</h1>
+<div class='CMRConsts'>
+	<h2>Constants</h2>
+	<p class='CMREquation'>
+		\begin{align}
+		D = \begin{pmatrix}
+		+0.0 &amp; +0.0 \\
+		+1.0 &amp; +0.0 \\
+		+0.0 &amp; +1.0 \\
+		-1.0 &amp; +0.0 \\
+		+0.0 &amp; -1.0 \\
+		+1.0 &amp; +1.0 \\
+		-1.0 &amp; +1.0 \\
+		-1.0 &amp; -1.0 \\
+		+1.0 &amp; -1.0
+		\end{pmatrix} \\
+		W = \begin{pmatrix}\frac{4.0}{9.0} &amp;
+		\frac{1.0}{9.0} &amp; \frac{1.0}{9.0} &amp; \frac{1.0}{9.0} &amp; \frac{1.0}{9.0},
+		\frac{1.0}{36.0}&amp; \frac{1.0}{36.0}&amp; \frac{1.0}{36.0}&amp; \frac{1.0}{36.0}\end{pmatrix}
+		\end{align}
+	</p>
+</div>
+
+<div class='CMROperation'>
+	<h2>Operation : Propagation</h2>
+	<p class='CMREquation'>
+		def iterator k => 1..9<br/>
+		<br/>
+		int $I = D_{k,0}$<br/>
+		int $J = D_{k,1}$<br/>
+		if Checker.cellExist($V'_{i+I,j+J}$)<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;$V'_{i+I,j+J,k} = v_{i,j,k}$<br/>
+	</p>
+	<table class='CMRAccess'>
+		<tr>
+			<td class='Write'>W</td>
+			<td class='Write'>W</td>
+			<td class='Write'>W</td>
+		</tr>
+		<tr>
+			<td class='Write'>W</td>
+			<td class='Read'>R</td>
+			<td class='Write'>W</td>
+		</tr>
+		<tr>
+			<td class='Write'>W</td>
+			<td class='Write'>W</td>
+			<td class='Write'>W</td>
+		</tr>
+	</table>
+</div>
+
+
+<div class='CMROperation'>
+	<h2>Operation : Collision</h2>
+	<p class='CMREquation'>
+		//local vars</br>
+		def double density("d")</br>
+		def double[2] velocity("v")</br>
+		</br>
+		//iterators</br>
+		def iterator k => 1..9</br>
+		def iterator l => 0..1</br>
+		</br>
+		//Compute local density (sum all flux on directions).</br>
+		$d = \sum_{l}(D_{i,j,k})$</br>
+		//Sum all directions</br>
+		$v_{l} = \frac{\sum_{k}{v_{i,j,k} * D_{l,k}}}{d}$</br>
+		</br>
+		debug($v_{l}$)</br>
+		</br>
+		//loop on all</br>
+		foreach(k)</br>
+		{</br>
+		&nbsp;&nbsp;&nbsp;&nbsp;double $p = D_{k} * v$</br>
+		&nbsp;&nbsp;&nbsp;&nbsp;double $f_eq = (1.0 + (3 * p) + ((9/2) * p^2 - (3/2) * v^2) * W_{k} * d$</br>
+		&nbsp;&nbsp;&nbsp;&nbsp;$D'_{i,j,k} = D_{i,j,k} - R * (D_{i,j,k} - f_eq)$</br>
+		}</br>
+		</br>
+		//to use C++ :</br>
+		---------------------------------------------</br>
+		printf("Hello world");</br>
+		---------------------------------------------</br>
+	</p>
+	<table class='CMRAccess'>
+		<tr>
+			<td class='NoAccess'></td>
+			<td class='NoAccess'></td>
+			<td class='NoAccess'></td>
+		</tr>
+		<tr>
+			<td class='NoAccess'></td>
+			<td class='ReadWrite'>RW</td>
+			<td class='NoAccess'></td>
+		</tr>
+		<tr>
+			<td class='NoAccess'></td>
+			<td class='NoAccess'></td>
+			<td class='NoAccess'></td>
+		</tr>
+	</table>
+</div>
+
+<div class='CMROperation'>
+	<h2>Show that we can edit in browser</h2>
+	<script>
+	//
+	//  Use a closure to hide the local variables from the
+	//  global namespace
+	//
+	(function () {
+		var QUEUE = MathJax.Hub.queue;  // shorthand for the queue
+		var math = null, box = null;    // the element jax for the math output, and the box it's in
+
+		//
+		//  Hide and show the box (so it doesn't flicker as much)
+		//
+		var HIDEBOX = function () {box.style.visibility = "hidden"}
+		var SHOWBOX = function () {box.style.visibility = "visible"}
+
+		//
+		//  Get the element jax when MathJax has produced it.
+		//
+		QUEUE.Push(function () {
+		math = MathJax.Hub.getAllJax("MathOutput")[0];
+		box = document.getElementById("box");
+		SHOWBOX(); // box is initially hidden so the braces don't show
+		});
+
+		//
+		//  The onchange event handler that typesets the math entered
+		//  by the user.  Hide the box, then typeset, then show it again
+		//  so we don't see a flash as the math is cleared and replaced.
+		//
+		window.UpdateMath = function (TeX) {
+		QUEUE.Push(HIDEBOX,["Text",math,"\\displaystyle{"+TeX+"}"],SHOWBOX);
+		}
+	})();
+	</script>
+	<p>
+	Type some \(\rm\TeX\) code and press RETURN:<br /> 
+	<input id="MathInput" size="80" onchange="UpdateMath(this.value)" />
+	</p>
+
+	<p>You typed:</p>
+	<div class="box" id="box" style="visibility:hidden">
+	<div id="MathOutput" class="output">$${}$$</div>
+	</div>
+
+	<script>
+	//
+	//  IE doesn't fire onchange events for RETURN, so
+	//   use onkeypress to do a blur (and refocus) to
+	//   force the onchange to occur
+	//
+	if (MathJax.Hub.Browser.isMSIE) {
+		MathInput.onkeypress = function () {
+		if (window.event && window.event.keyCode === 13) {this.blur(); this.focus()}
+		}
+	}
+	</script>
+</div>
+
+<div class='CMROperation'>
+	<h2>Ressource usage</h2>
+	<div id='chartdiv'/>
+	<script>
+	
+	$.jqplot('chartdiv',  [[[1, 2],[3,5.12],[5,13.1],[7,33.6],[9,85.9],[11,219.9]]],
+		{ title:'Communications per process',
+			axes:{
+				xaxis:{label:'Processes'},
+				yaxis:{min:-10, max:240}
+			},
+			series:[{color:'#5FAB78'}]
+		}
+	);
+	</script>
+</div>
+
+</body>
+</html>
