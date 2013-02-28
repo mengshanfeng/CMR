@@ -225,13 +225,16 @@ void cmrExtractSubAndSuperScript(const string & value,int & start,CMRLatexEntity
 int cmrRequireParameters(const string & name,const string & value,int pos)
 {
 	if (name[0] != '\\')
+	{
 		return 0;
-	else if (name == "\\frac")
+	} else if (name == "\\frac") {
 		return 2;
-	else if (name == "\\sum")
+	} else if (name == "\\sum") {
 		return 1;
-	else
+	} else {
 		cmrParsorError(value,pos,"Invalid latex command.");
+		return -1;
+	}
 }
 
 /*******************  FUNCTION  *********************/
