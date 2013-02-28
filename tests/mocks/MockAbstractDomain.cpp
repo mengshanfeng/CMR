@@ -12,8 +12,8 @@
 #include "MockAbstractDomain.h"
 
 /*******************  FUNCTION  *********************/
-MockAbstractDomain::MockAbstractDomain ( size_t typeSize, int width, int height, int ghostDepth, int originX, int originY ,int globalWidth,int globalHeight)
-	: CMRAbstractDomain ( typeSize, width, height, ghostDepth, originX, originY ,globalWidth,globalHeight)
+MockAbstractDomain::MockAbstractDomain ( size_t typeSize, const CMRRect & rect, int ghostDepth,int globalWidth,int globalHeight)
+	: CMRAbstractDomain ( typeSize, rect,ghostDepth,globalWidth,globalHeight)
 {
 	this->buffer = NULL;
 	this->contiguous = false;

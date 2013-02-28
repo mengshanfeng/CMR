@@ -105,13 +105,13 @@ bool CMRRect::contains ( const CMRVect2D& point ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRVect2D CMRRect::getPoint1 ( void ) const
+CMRVect2D CMRRect::point1 ( void ) const
 {
 	return CMRVect2D(x,y);
 }
 
 /*******************  FUNCTION  *********************/
-CMRVect2D CMRRect::getPoint2 ( void ) const
+CMRVect2D CMRRect::point2 ( void ) const
 {
 	return CMRVect2D(x+width,y+height);
 }
@@ -142,4 +142,26 @@ void CMRRect::set ( int x, int y, int width, int height )
 	this->y = y;
 	this->width = width;
 	this->height = height;
+}
+
+/*******************  FUNCTION  *********************/
+long unsigned int CMRRect::surface ( void ) const
+{
+	return width*height;
+}
+
+/*******************  FUNCTION  *********************/
+CMRRect& CMRRect::operator+= ( const CMRVect2D& vect )
+{
+	x += vect.x;
+	y += vect.y;
+	return *this;
+}
+
+/*******************  FUNCTION  *********************/
+CMRRect CMRRect::operator+ ( const CMRVect2D& vect ) const
+{
+	CMRRect tmp(*this);
+	tmp+=vect;
+	return tmp;
 }

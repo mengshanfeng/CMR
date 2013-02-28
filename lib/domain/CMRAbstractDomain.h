@@ -38,19 +38,12 @@ enum CMROrientation
 	CMR_ORIENTATION_NEGATIV = -1
 };
 
-/********************  ENUM  ************************/
-enum CMRAxisId
-{
-	CMR_AXIS_X = 0,
-	CMR_AXIS_Y = 1
-};
-
 /*********************  CLASS  **********************/
 class CMRAbstractDomain
 {
 	ASSIST_UNIT_TEST( TestAbstractDomain )
 	public:
-		CMRAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY,int globalWidth,int globalHeight);
+		CMRAbstractDomain(size_t typeSize,const CMRRect & localDomain,int ghostDepth,int globalWidth = -1,int globalHeight = -1);
 		virtual ~CMRAbstractDomain(void);
 		virtual bool isContiguousGhost(const CMRRect & rect) const = 0;
 		virtual bool isContiguous(int directionID) const = 0;
@@ -63,17 +56,16 @@ class CMRAbstractDomain
 		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int requestedDepth,CMRCommType commType);
 		size_t getTypeSize(void) const;
 		int getDimensions(void) const;
-		int getSize(int axis) const;
-		int getOrigin(int axis) const;
+		const CMRRect & getLocalDomainRect(void) const;
+		const CMRRect & getGlobalRect(void) const;
+		const CMRRect & getMemoryRect(void) const;
 		int getGhostDepth(void) const;
 		CMRUpdateStatus getGhostStatus(int x,int y) const;
 		void setGhostStatus(int x,int y,CMRUpdateStatus status);
-		bool isFullyInDomain(const CMRRect & rect) const;
-		bool isFullyInDomainMemory(const CMRRect & rect) const;
 		CMRVect2D getAbsPos(int x = 0,int y = 0) const;
-		CMRVect2D getGlobalSize(void) const;
-		CMRRect getLocalRect(void) const;
-		CMRRect getGlobalRect(void) const;
+		CMRVect2D getAbsPos(const CMRVect2D & vect) const;
+		bool isFullyInLocalDomain(const CMRRect & rect) const;
+		bool isFullyInDomainMemory(const CMRRect & rect) const;
 	private:
 		CMRRect computeGhostCommRect(int x,int y,int requestedDepth,CMRCommType commType) const;
 		//copy is forbidden so ensure compile error by making related function private
@@ -84,10 +76,9 @@ class CMRAbstractDomain
 		size_t typeSize;
 		/** Dimensions (only 2 is supported up to now). **/
 		int dimensions;
-		/** Size along each dimensions. **/
-		int sizes[2];
-		/** Coordinate of the current domain on the global one. **/
-		int origin[2];
+		/** Size of the domain. **/
+		CMRRect localRect;
+		CMRRect memoryRect;
 		/** Number of ghost cells to add arround each dimensions. **/
 		int ghostDepth;
 		/** Current update status of each ghost cells. **/

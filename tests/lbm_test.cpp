@@ -79,15 +79,15 @@ struct VarSystem
 		CMRTypedDomainStorage<float[9]>::CellAccessor directions;
 		CMRTypedDomainStorage<LBMCellType>::CellAccessor cellType;
 	};
-	VarSystem(int width,int height,int ghostDepth,int origX,int origY);
+	VarSystem(const CMRRect & rect, int ghostDepth, int globalWidth = -1, int globalHeight = -1);
 	CMRTypedDomainStorage<float[9]> directions;
 	CMRTypedDomainStorage<LBMCellType> cellType;
 	CMRRect getGlobalRect(void) const {return cellType.getGlobalRect();};
-	CMRRect getLocalRect(void) const {return cellType.getLocalRect();};
+	CMRRect getLocalRect(void) const {return cellType.getLocalDomainRect();};
 };
 
-VarSystem::VarSystem ( int width, int height, int ghostDepth, int origX, int origY )
-	:directions(width,height,ghostDepth,origX,origY),cellType(width,height,ghostDepth,origX,origY)
+VarSystem::VarSystem ( const CMRRect & rect, int ghostDepth, int globalWidth, int globalHeight)
+	:directions(rect,ghostDepth,globalWidth,globalHeight),cellType(rect,ghostDepth,globalWidth,globalHeight)
 {
 }
 
@@ -388,8 +388,8 @@ int main(int argc, char * argv[])
 	MPI_Barrier(MPI_COMM_WORLD);
 	
 	//try system computation
-	VarSystem sys1(800,600,1,0,0);
-	VarSystem sys2(800,600,1,0,0);
+	VarSystem sys1(CMRRect(0,0,800,600),1);
+	VarSystem sys2(CMRRect(0,0,800,600),0);
 	
 	CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys1,&sys2);
 	loop1.run(CMRRect(10,10,40,40));

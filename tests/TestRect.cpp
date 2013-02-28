@@ -94,11 +94,27 @@ SVUT_DECLARE_FLAT_TEST(TestRect,testContainsPartially)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestRect,testGetPoint)
+SVUT_DECLARE_FLAT_TEST(TestRect,testPoint)
 {
 	const CMRRect rect(1,1,10,10);
-	SVUT_ASSERT_EQUAL(CMRVect2D(1,1),rect.getPoint1());
-	SVUT_ASSERT_EQUAL(CMRVect2D(11,11),rect.getPoint2());
+	SVUT_ASSERT_EQUAL(CMRVect2D(1,1),rect.point1());
+	SVUT_ASSERT_EQUAL(CMRVect2D(11,11),rect.point2());
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestRect,testSurface)
+{
+	const CMRRect rect(1,1,10,10);
+	SVUT_ASSERT_EQUAL(100,rect.surface());
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestRect,testOperatorPlus)
+{
+	const CMRRect rect1(1,1,10,10);
+	const CMRRect rect2(11,21,10,10);
+	const CMRVect2D v(10,20);
+	SVUT_ASSERT_EQUAL(rect2,rect1+v);
 }
 
 /********************  MACRO  ***********************/

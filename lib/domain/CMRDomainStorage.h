@@ -19,7 +19,7 @@ class CMRDomainStorage : public CMRAbstractDomain
 {
 	ASSIST_UNIT_TEST( TestDomainStorage )
 	public:
-		CMRDomainStorage(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY,int globalWidth = -1,int globalHeight = -1);
+		CMRDomainStorage(size_t typeSize,const CMRRect & localDomain,int ghostDepth,int globalWidth = -1,int globalHeight = -1);
 		virtual int copyGhostFromBuffer ( const void* buffer, size_t size, const CMRRect& rect );
 		virtual int copyGhostToBuffer ( void* buffer, size_t size, const CMRRect& rect ) const;
 		virtual void* getContiguousGhost ( const CMRRect& rect );
@@ -29,7 +29,7 @@ class CMRDomainStorage : public CMRAbstractDomain
 		virtual bool isContiguous ( int directionID ) const;
 		int getMemoryWidth(void) const;
 	protected:
-		int getCoord(int x,int y) const;
+		int getMemoryCoord(int x,int y) const;
 	private:
 		char * data;
 };
@@ -54,7 +54,7 @@ class CMRTypedDomainStorage : public CMRDomainStorage
 		};
 
 	public:
-		CMRTypedDomainStorage ( int width, int height, int ghostDepth, int originX, int originY ):CMRDomainStorage(sizeof(T),width,height,ghostDepth,originX,originY){};
+		CMRTypedDomainStorage (const CMRRect & localDomain,int ghostDepth,int globalWidth = -1,int globalHeight = -1):CMRDomainStorage(sizeof(T),localDomain,globalWidth,globalHeight){};
 		CellAccessor getCellAccessor(int x,int y){CMRTypedDomainStorage<T>::CellAccessor acc((T*)getCell(x,y),getMemoryWidth()/sizeof(T));return acc;};
 };
 

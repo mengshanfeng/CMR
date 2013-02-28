@@ -22,13 +22,13 @@ struct VarSystem
 		CMRTypedDomainStorage<float>::CellAccessor density;
 		CMRTypedDomainStorage<float>::CellAccessor variation;
 	};
-	VarSystem(int width,int height,int ghostDepth,int origX,int origY);
+	VarSystem(const CMRRect & rect, int ghostDepth, int globalWidth = -1, int globalHeight = -1);
 	CMRTypedDomainStorage<float> density;
 	CMRTypedDomainStorage<float> variation;
 };
 
-VarSystem::VarSystem ( int width, int height, int ghostDepth, int origX, int origY )
-	:density(width,height,ghostDepth,origX,origY),variation(width,height,ghostDepth,origX,origY)
+VarSystem::VarSystem ( const CMRRect & rect, int ghostDepth, int globalWidth, int globalHeight )
+	:density(rect,ghostDepth,globalWidth,globalHeight),variation(rect,ghostDepth,globalWidth,globalHeight)
 {
 }
 
@@ -69,7 +69,7 @@ int main(int argc, char * argv[])
 	splitter.printDebug(CMR_MPI_MASTER);
 
 	//try comm
-	CMRTypedDomainStorage<float> domain(800,600,1,0,0);
+	CMRTypedDomainStorage<float> domain(CMRRect(0,0,800,600),1);
 	
 	assert(cmrGetMPISize() == 2);
 	
@@ -93,7 +93,7 @@ int main(int argc, char * argv[])
 	schem.run();
 	
 	//try system computation
-	VarSystem sys(800,600,1,0,0);
+	VarSystem sys(CMRRect(0,0,800,600),1);
 	CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop(&sys,&sys);
 	loop.run(CMRRect(10,10,40,40));
 

@@ -15,28 +15,29 @@
 #include "../communication/CMRCommSchem.h"
 
 /*******************  FUNCTION  *********************/
-CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, int width, int height, int ghostDepth , int originX , int originY ,int globalWidth,int globalHeight)
-	:globalRect(0,0,globalWidth,globalHeight)
+CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, const CMRRect& localDomain, int ghostDepth, int globalWidth, int globalHeight )
 {
 	//errors
 	assert(typeSize > 0);
-	assert(width > 0);
-	assert(height > 0);
 	assert(ghostDepth > 0);
-	assert(ghostDepth < width && ghostDepth < height);
+	assert(globalWidth >= -1);
+	assert(globalHeight >= -1);
+	
+	//params
+	if (globalWidth == -1) globalWidth = localDomain.width;
+	if (globalHeight == -1) globalHeight = localDomain.height;
 
 	//init values
 	this->typeSize = typeSize;
-	this->sizes[CMR_AXIS_X] = width;
-	this->sizes[CMR_AXIS_Y] = height;
 	this->dimensions = 2;
-	this->origin[CMR_AXIS_X] = originX;
-	this->origin[CMR_AXIS_Y] = originY;
 	this->ghostDepth = ghostDepth;
 	
-	//global size
-	if (globalWidth == -1) this->globalRect.width = width;
-	if (globalHeight== -1) this->globalRect.height = height;
+	//rects
+	this->localRect = localDomain;
+	this->globalRect.set(0,0,globalWidth,globalHeight);
+	this->memoryRect.set(localDomain.x-ghostDepth,localDomain.y-ghostDepth,localDomain.width + 2*ghostDepth,localDomain.height + 2*ghostDepth);
+	assert(globalRect.contains(localDomain));
+	assert(memoryRect.contains(localRect));
 
 	//setup default communicators and ghost status
 	for (int x = 0 ; x < 3 ; x++)
@@ -103,26 +104,6 @@ void CMRAbstractDomain::setGhostStatus ( int x, int y, CMRUpdateStatus status )
 
 	//update the status
 	this->ghostStatus[x+1][y+1] = status;
-}
-
-/*******************  FUNCTION  *********************/
-int CMRAbstractDomain::getOrigin ( int axis ) const
-{
-	//errors
-	assert(axis >= 0 && axis < 2);
-
-	//return value
-	return this->origin[axis];
-}
-
-/*******************  FUNCTION  *********************/
-int CMRAbstractDomain::getSize ( int axis ) const
-{
-	//errors
-	assert(axis >= 0 && axis < 2);
-
-	//return value
-	return this->sizes[axis];
 }
 
 /*******************  FUNCTION  *********************/
@@ -198,14 +179,14 @@ CMRRect CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedDep
 		if (x == -1)// left send
 			rect.x = 0;
 		else if (x == 1)// right send
-			rect.x = this->sizes[CMR_AXIS_X] - requestedDepth;
+			rect.x = localRect.width - requestedDepth;
 		else if( x == 0 )
 			rect.x = 0;
 	} else if(commType == CMR_COMM_RECV) {
 		if (x == -1)// left receive
 			rect.x = - requestedDepth;
 		else if (x == 1)// right receive
-			rect.x = this->sizes[CMR_AXIS_X];
+			rect.x = localRect.width;
 		else if( x == 0 )
 			rect.x = 0;
 	}
@@ -216,14 +197,14 @@ CMRRect CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedDep
 		if (y == -1)// left send
 			rect.y = 0;
 		else if (y == 1)// right send
-			rect.y = this->sizes[CMR_AXIS_Y] - requestedDepth;
+			rect.y = localRect.height - requestedDepth;
 		else if( y == 0 )
 			rect.y = 0;
 	} else if(commType == CMR_COMM_RECV) {
 		if (y == -1)// left receive
 			rect.y = - requestedDepth;
 		else if (y == 1)// right receive
-			rect.y = this->sizes[CMR_AXIS_Y];
+			rect.y = localRect.height;
 		else if( y == 0 )
 			rect.y = 0;
 	}
@@ -231,14 +212,14 @@ CMRRect CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedDep
 	//setup size
 	if( x == 0 )
 	{
-		rect.width = this->sizes[CMR_AXIS_X];
+		rect.width = localRect.width;
 	} else {
 		rect.width = requestedDepth;
 	}
 
 	if( y == 0 )
 	{
-		rect.height = this->sizes[CMR_AXIS_Y];
+		rect.height = localRect.height;
 	} else {
 		rect.height = requestedDepth;
 	}
@@ -247,42 +228,44 @@ CMRRect CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedDep
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRAbstractDomain::isFullyInDomain ( const CMRRect& rect ) const
+CMRVect2D CMRAbstractDomain::getAbsPos ( int x, int y ) const
 {
-	return (rect.x >= 0 && rect.width + rect.x <= this->sizes[CMR_AXIS_X])
-		&& (rect.y >= 0 && rect.height + rect.y <= this->sizes[CMR_AXIS_Y]);
+	CMRVect2D res(localRect.x + x,localRect.y + y);
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+CMRVect2D CMRAbstractDomain::getAbsPos ( const CMRVect2D& vect ) const
+{
+	return localRect.point1() + vect;
+}
+
+/*******************  FUNCTION  *********************/
+const CMRRect& CMRAbstractDomain::getGlobalRect ( void ) const
+{
+	return globalRect;
+}
+
+/*******************  FUNCTION  *********************/
+const CMRRect& CMRAbstractDomain::getLocalDomainRect ( void ) const
+{
+	return localRect;
+}
+
+/*******************  FUNCTION  *********************/
+const CMRRect& CMRAbstractDomain::getMemoryRect ( void ) const
+{
+	return memoryRect;
 }
 
 /*******************  FUNCTION  *********************/
 bool CMRAbstractDomain::isFullyInDomainMemory ( const CMRRect& rect ) const
 {
-	return (rect.x >= -this->ghostDepth && rect.width + rect.x <= this->sizes[CMR_AXIS_X] + this->ghostDepth)
-		&& (rect.y >= -this->ghostDepth && rect.height + rect.y <= this->sizes[CMR_AXIS_Y] + this->ghostDepth);
+	return memoryRect.contains(rect);
 }
 
 /*******************  FUNCTION  *********************/
-CMRVect2D CMRAbstractDomain::getAbsPos ( int x, int y ) const
+bool CMRAbstractDomain::isFullyInLocalDomain ( const CMRRect& rect ) const
 {
-	CMRVect2D res(origin[CMR_AXIS_X] + x,origin[CMR_AXIS_Y]+y);
-	return res;
-}
-
-/*******************  FUNCTION  *********************/
-CMRVect2D CMRAbstractDomain::getGlobalSize ( void ) const
-{
-	CMRVect2D res(globalRect.x,globalRect.y);
-	return res;
-}
-
-/*******************  FUNCTION  *********************/
-CMRRect CMRAbstractDomain::getLocalRect ( void ) const
-{
-	CMRRect rect(origin[CMR_AXIS_X],origin[CMR_AXIS_Y],sizes[CMR_AXIS_X],sizes[CMR_AXIS_Y]);
-	return rect;
-}
-
-/*******************  FUNCTION  *********************/
-CMRRect CMRAbstractDomain::getGlobalRect ( void ) const
-{
-	return globalRect;
+	return localRect.contains(rect);
 }

@@ -32,8 +32,11 @@ struct CMRRect
 	void set(int x,int y,int width,int height);
 	bool contains(const CMRRect & rect,bool partially = false) const;
 	bool contains(const CMRVect2D  & point) const;
-	CMRVect2D getPoint1(void) const;
-	CMRVect2D getPoint2(void) const;
+	CMRVect2D point1(void) const;
+	CMRVect2D point2(void) const;
+	unsigned long surface(void) const;
+	CMRRect & operator+=(const CMRVect2D & vect);
+	CMRRect operator+(const CMRVect2D & vect) const;
 	int x;
 	int y;
 	int width;
@@ -45,5 +48,8 @@ std::ostream & operator << (std::ostream & out,const CMRRect & rect);
 std::ostream & operator << (std::ostream & out,const CMRVect2D & vect);
 bool operator == (const CMRRect & rect1 , const CMRRect & rect2);
 bool operator == (const CMRVect2D & v1 , const CMRVect2D & v2);
+
+/*********************  CONSTS  *********************/
+static const CMRVect2D CMR_VECT2D_NULL(0,0);
 
 #endif // CMR_GEOMETRY_H

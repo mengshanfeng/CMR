@@ -38,7 +38,7 @@ class TestDomainStorage : public svutTestCase
 /*******************  FUNCTION  *********************/
 void TestDomainStorage::setUp ( void )
 {
-	domain = new CMRDomainStorage(8,800,600,2,0,0);
+	domain = new CMRDomainStorage(8,CMRRect(0,0,800,600),2);
 }
 
 /*******************  FUNCTION  *********************/

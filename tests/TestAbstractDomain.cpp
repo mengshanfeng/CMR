@@ -79,7 +79,7 @@ void TestAbstractDomain::testComputeGhostCommRect_1_1_recv ( void )
 	const int expected[cnt][4] = { {-1,-1,1,1} , {-1,0,1,600} , {800,600,1,1}};
 	
 	//create fake domain
-    MockAbstractDomain domain(8,800,600,1,0,0);
+    MockAbstractDomain domain(8,CMRRect(0,0,800,600),1);
 
 	//loop on all
 	for (int i = 0 ; i < cnt ; i++)
@@ -104,7 +104,7 @@ void TestAbstractDomain::testComputeGhostCommRect_1_1_send ( void )
 	const int expected[cnt][4] = { {0,0,1,1} , {0,0,1,600} , {799,599,1,1}};
 
 	//create fake domain
-    MockAbstractDomain domain(8,800,600,1,0,0);
+    MockAbstractDomain domain(8,CMRRect(0,0,800,600),1);
 
 	//loop on all
 	for (int i = 0 ; i < cnt ; i++)
@@ -129,7 +129,7 @@ void TestAbstractDomain::testComputeGhostCommRect_2_1_recv ( void )
 	const int expected[cnt][4] = { {-1,-1,1,1} , {-1,0,1,600} , {800,600,1,1}};
 
 	//create fake domain
-    MockAbstractDomain domain(8,800,600,2,0,0);
+    MockAbstractDomain domain(8,CMRRect(0,0,800,600),2);
 
 	//loop on all
 	for (int i = 0 ; i < cnt ; i++)
@@ -154,7 +154,7 @@ void TestAbstractDomain::testComputeGhostCommRect_2_1_send ( void )
 	const int expected[cnt][4] = { {0,0,1,1} , {0,0,1,600} , {799,599,1,1}};
 
 	//create fake domain
-    MockAbstractDomain domain(8,800,600,2,0,0);
+    MockAbstractDomain domain(8,CMRRect(0,0,800,600),2);
 
 	//loop on all
 	for (int i = 0 ; i < cnt ; i++)
@@ -179,7 +179,7 @@ void TestAbstractDomain::testComputeGhostCommRect_2_2_recv ( void )
 	const int expected[cnt][4] = { {-2,-2,2,2} , {-2,0,2,600} , {800,600,2,2}};
 
 	//create fake domain
-    MockAbstractDomain domain(8,800,600,2,0,0);
+    MockAbstractDomain domain(8,CMRRect(0,0,800,600),2);
 
 	//loop on all
 	for (int i = 0 ; i < cnt ; i++)
@@ -204,7 +204,7 @@ void TestAbstractDomain::testComputeGhostCommRect_2_2_send ( void )
 	const int expected[cnt][4] = { {0,0,2,2} , {0,0,2,600} , {798,598,2,2}};
 
 	//create fake domain
-    MockAbstractDomain domain(8,800,600,2,0,0);
+    MockAbstractDomain domain(8,CMRRect(0,0,800,600),2);
 
 	//loop on all
 	for (int i = 0 ; i < cnt ; i++)
@@ -224,7 +224,7 @@ void TestAbstractDomain::testComputeGhostCommRect_2_2_send ( void )
 void TestAbstractDomain::testFillWithUpdateComm ( void )
 {
 	//create fake domain
-	MockAbstractDomain domain(8,800,600,1,0,0);
+	MockAbstractDomain domain(8,CMRRect(0,0,800,600),1);
 
 	//setup communicator
 	domain.setCommunicator(-1,-1,new MockCommunicator);
@@ -246,22 +246,22 @@ void TestAbstractDomain::testFillWithUpdateComm ( void )
 void TestAbstractDomain::testIsFullyInDomain_true ( void )
 {
 	//create fake domain
-	MockAbstractDomain domain(8,800,600,1,0,0);
+	MockAbstractDomain domain(8,CMRRect(0,0,800,600),1);
 
 	//create some rects to test
 	CMRRect rect1(0,0,800,600);
 	CMRRect rect2(100,100,200,200);
 
 	//check
-	SVUT_ASSERT_TRUE(domain.isFullyInDomain(rect1));
-	SVUT_ASSERT_TRUE(domain.isFullyInDomain(rect2));
+	SVUT_ASSERT_TRUE(domain.isFullyInLocalDomain(rect1));
+	SVUT_ASSERT_TRUE(domain.isFullyInLocalDomain(rect2));
 }
 
 /*******************  FUNCTION  *********************/
 void TestAbstractDomain::testIsFullyInDomain_false ( void )
 {
 		//create fake domain
-	MockAbstractDomain domain(8,800,600,1,0,0);
+	MockAbstractDomain domain(8,CMRRect(0,0,800,600),1);
 
 	//create some rects to test
 	CMRRect rect1(-1,0,800,600);
@@ -270,17 +270,17 @@ void TestAbstractDomain::testIsFullyInDomain_false ( void )
 	CMRRect rect4(0,0,800,601);
 
 	//check
-	SVUT_ASSERT_FALSE(domain.isFullyInDomain(rect1));
-	SVUT_ASSERT_FALSE(domain.isFullyInDomain(rect2));
-	SVUT_ASSERT_FALSE(domain.isFullyInDomain(rect3));
-	SVUT_ASSERT_FALSE(domain.isFullyInDomain(rect4));
+	SVUT_ASSERT_FALSE(domain.isFullyInLocalDomain(rect1));
+	SVUT_ASSERT_FALSE(domain.isFullyInLocalDomain(rect2));
+	SVUT_ASSERT_FALSE(domain.isFullyInLocalDomain(rect3));
+	SVUT_ASSERT_FALSE(domain.isFullyInLocalDomain(rect4));
 }
 
 /*******************  FUNCTION  *********************/
 void TestAbstractDomain::testIsFullyInDomainMemory_true ( void )
 {
 	//create fake domain
-	MockAbstractDomain domain(8,800,600,1,0,0);
+	MockAbstractDomain domain(8,CMRRect(0,0,800,600),1);
 
 	//create some rects to test
 	CMRRect rect1(-1,-1,802,602);
@@ -305,7 +305,7 @@ void TestAbstractDomain::testIsFullyInDomainMemory_true ( void )
 void TestAbstractDomain::testIsFullyInDomainMemory_false ( void )
 {
 		//create fake domain
-	MockAbstractDomain domain(8,800,600,1,0,0);
+	MockAbstractDomain domain(8,CMRRect(0,0,800,600),1);
 
 	//create some rects to test
 	CMRRect rect1(-2,0,800,600);
