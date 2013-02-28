@@ -14,7 +14,7 @@ include_directories(${UNITTEST_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/lib ${CMAKE_CURR
 add_definitions(-DUNITTEST)
 
 #test list
-set(ALLOC_TEST_LIST TestAbstractDomain TestDomainStorage)
+set(ALLOC_TEST_LIST TestAbstractDomain TestDomainStorage TestRect TestVect2D)
 
 #Now you can build your tests
 foreach(i ${ALLOC_TEST_LIST})

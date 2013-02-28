@@ -18,7 +18,7 @@
 /*********************  CLASS  **********************/
 class CMROperation;
 class CMRAbstractDomain;
-class CMRRect2D;
+class CMRRect;
 
 /*********************  CLASS  **********************/
 class CMRMeshOperation
@@ -26,7 +26,7 @@ class CMRMeshOperation
 	public:
 		CMRMeshOperation(void){}
 		virtual ~CMRMeshOperation(void){}
-		virtual void run(const CMRRect2D & zone) = 0;
+		virtual void run(const CMRRect & zone) = 0;
 };
 
 /*********************  CLASS  **********************/
@@ -35,7 +35,7 @@ class CMRMeshOperationSimpleLoop : public CMRMeshOperation
 {
 	public:
 		CMRMeshOperationSimpleLoop(T * in, T * out);
-		virtual void run (const CMRRect2D& zone );
+		virtual void run (const CMRRect& zone );
 	private:
 		T * in;
 		T * out;
@@ -61,7 +61,7 @@ CMRMeshOperationSimpleLoop<T,U>::CMRMeshOperationSimpleLoop ( T * in, T * out )
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect2D & zone )
+void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect & zone )
 {
 	//errors
 	//assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
@@ -74,7 +74,7 @@ void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect2D & zone )
 	//	warning("Caution, you loop on two domain with inner loop on X but the two domains are contiguous on Y !");
 	
 	//local copy to avoid deref
-	CMRRect2D localZone = zone;
+	CMRRect localZone = zone;
 	typename T::CellAccessor cellIn(*in,localZone.x,localZone.y);
 	typename T::CellAccessor cellOut(*out,localZone.x,localZone.y);
 	
@@ -92,19 +92,19 @@ void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect2D & zone )
 /*******************  FUNCTION  *********************/
 struct CMRCellPosition
 {
-	CMRCellPosition(const CMRRect2D & globalMesh,const CMRRect2D & localMesh,const CMRVect2D & cellPos);
-	CMRCellPosition(const CMRRect2D & globalMesh,const CMRRect2D & localMesh,int x,int y);
+	CMRCellPosition(const CMRRect & globalMesh,const CMRRect & localMesh,const CMRVect2D & cellPos);
+	CMRCellPosition(const CMRRect & globalMesh,const CMRRect & localMesh,int x,int y);
 	CMRCellPosition(const CMRCellPosition & orig,int dx,int dy);
 	int getAbsX(int dx = 0) const;
 	int getAbsY(int dy = 0) const;
 	bool cellExist(int dx,int dy,int ghostDepth) const;
-	CMRRect2D localMesh;
-	CMRRect2D globalMesh;
+	CMRRect localMesh;
+	CMRRect globalMesh;
 	CMRVect2D cellPos;
 };
 
 /*******************  FUNCTION  *********************/
-CMRCellPosition::CMRCellPosition ( const CMRRect2D & globalMesh, const CMRRect2D & localMesh, const CMRVect2D & cellPos )
+CMRCellPosition::CMRCellPosition ( const CMRRect & globalMesh, const CMRRect & localMesh, const CMRVect2D & cellPos )
 {
 	this->globalMesh = globalMesh;
 	this->localMesh = localMesh;
@@ -112,7 +112,7 @@ CMRCellPosition::CMRCellPosition ( const CMRRect2D & globalMesh, const CMRRect2D
 }
 
 /*******************  FUNCTION  *********************/
-CMRCellPosition::CMRCellPosition ( const CMRRect2D & globalMesh, const CMRRect2D & localMesh, int x, int y )
+CMRCellPosition::CMRCellPosition ( const CMRRect & globalMesh, const CMRRect & localMesh, int x, int y )
 {
 	this->globalMesh = globalMesh;
 	this->localMesh = localMesh;
@@ -155,7 +155,7 @@ class CMRMeshOperationSimpleLoopWithPos : public CMRMeshOperation
 {
 	public:
 		CMRMeshOperationSimpleLoopWithPos(T * in, T * out);
-		virtual void run (const CMRRect2D& zone );
+		virtual void run (const CMRRect& zone );
 	private:
 		T * in;
 		T * out;
@@ -176,7 +176,7 @@ CMRMeshOperationSimpleLoopWithPos<T,U>::CMRMeshOperationSimpleLoopWithPos ( T * 
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( const CMRRect2D & zone )
+void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( const CMRRect & zone )
 {
 	//errors
 	//assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
@@ -189,7 +189,7 @@ void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( const CMRRect2D & zone )
 	//	warning("Caution, you loop on two domain with inner loop on X but the two domains are contiguous on Y !");
 	
 	//local copy to avoid deref
-	CMRRect2D localZone = zone;
+	CMRRect localZone = zone;
 	typename T::CellAccessor cellIn(*in,localZone.x,localZone.y);
 	typename T::CellAccessor cellOut(*out,localZone.x,localZone.y);
 	CMRCellPosition pos(in->getGlobalRect(),in->getLocalRect(),localZone.x,localZone.y);

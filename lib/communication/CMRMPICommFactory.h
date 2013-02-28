@@ -17,7 +17,7 @@ class CMRMPICommFactory : public CMRCommFactory
 {
 	public:
 		CMRMPICommFactory(int sendToRank,int recvFromRank,int tagBase);
-		virtual CMRComm* createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType );
+		virtual CMRComm* createComm ( CMRAbstractDomain* domain, const CMRRect& rect, CMRCommType commType );
 		int getTagBase(void) const;
 		int getSendRank(void) const;
 		int getRecvRank(void) const;

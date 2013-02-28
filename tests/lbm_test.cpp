@@ -82,8 +82,8 @@ struct VarSystem
 	VarSystem(int width,int height,int ghostDepth,int origX,int origY);
 	CMRTypedDomainStorage<float[9]> directions;
 	CMRTypedDomainStorage<LBMCellType> cellType;
-	CMRRect2D getGlobalRect(void) const {return cellType.getGlobalRect();};
-	CMRRect2D getLocalRect(void) const {return cellType.getLocalRect();};
+	CMRRect getGlobalRect(void) const {return cellType.getGlobalRect();};
+	CMRRect getLocalRect(void) const {return cellType.getLocalRect();};
 };
 
 VarSystem::VarSystem ( int width, int height, int ghostDepth, int origX, int origY )
@@ -392,13 +392,13 @@ int main(int argc, char * argv[])
 	VarSystem sys2(800,600,1,0,0);
 	
 	CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys1,&sys2);
-	loop1.run(CMRRect2D(10,10,40,40));
+	loop1.run(CMRRect(10,10,40,40));
 	
 	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys2,&sys1);
-	loop2.run(CMRRect2D(10,10,40,40));
+	loop2.run(CMRRect(10,10,40,40));
 	
 	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys2,&sys1);
-	loop3.run(CMRRect2D(10,10,40,40));
+	loop3.run(CMRRect(10,10,40,40));
 
 	//Finish
 	MPI_Barrier(MPI_COMM_WORLD);

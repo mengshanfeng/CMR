@@ -22,7 +22,7 @@ class CMRAbstractDomain;
 class CMRBufferedComm : public CMRComm
 {
 	public:
-		CMRBufferedComm(CMRAbstractDomain* domain, const CMRRect2D& rect,CMRCommType commType);
+		CMRBufferedComm(CMRAbstractDomain* domain, const CMRRect& rect,CMRCommType commType);
 		virtual ~CMRBufferedComm ( void );
 		virtual void run ( void );
 	protected:
@@ -35,7 +35,7 @@ class CMRBufferedComm : public CMRComm
 	private:
 		void setupBuffer(void);
 	private:
-		CMRRect2D rect;
+		CMRRect rect;
 		void * buffer;
 		size_t bufferSize;
 		CMRCommType commType;

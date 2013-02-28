@@ -95,7 +95,7 @@ int main(int argc, char * argv[])
 	//try system computation
 	VarSystem sys(800,600,1,0,0);
 	CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop(&sys,&sys);
-	loop.run(CMRRect2D(10,10,40,40));
+	loop.run(CMRRect(10,10,40,40));
 
 	//Finish
 	MPI_Barrier(MPI_COMM_WORLD);

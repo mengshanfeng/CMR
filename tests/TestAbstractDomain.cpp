@@ -88,8 +88,8 @@ void TestAbstractDomain::testComputeGhostCommRect_1_1_recv ( void )
 		SVUT_SET_CONTEXT("x",request[i][0]);
 		SVUT_SET_CONTEXT("y",request[i][1]);
 		//compute
-		CMRRect2D exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
-		CMRRect2D actual = domain.computeGhostCommRect(request[i][0],request[i][1],1,CMR_COMM_RECV);
+		CMRRect exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
+		CMRRect actual = domain.computeGhostCommRect(request[i][0],request[i][1],1,CMR_COMM_RECV);
 		//test
 		SVUT_ASSERT_EQUAL(exp,actual);
 	}
@@ -113,8 +113,8 @@ void TestAbstractDomain::testComputeGhostCommRect_1_1_send ( void )
 		SVUT_SET_CONTEXT("x",request[i][0]);
 		SVUT_SET_CONTEXT("y",request[i][1]);
 		//compute
-		CMRRect2D exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
-		CMRRect2D actual = domain.computeGhostCommRect(request[i][0],request[i][1],1,CMR_COMM_SEND);
+		CMRRect exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
+		CMRRect actual = domain.computeGhostCommRect(request[i][0],request[i][1],1,CMR_COMM_SEND);
 		//test
 		SVUT_ASSERT_EQUAL(exp,actual);
 	}
@@ -138,8 +138,8 @@ void TestAbstractDomain::testComputeGhostCommRect_2_1_recv ( void )
 		SVUT_SET_CONTEXT("x",request[i][0]);
 		SVUT_SET_CONTEXT("y",request[i][1]);
 		//compute
-		CMRRect2D exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
-		CMRRect2D actual = domain.computeGhostCommRect(request[i][0],request[i][1],1,CMR_COMM_RECV);
+		CMRRect exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
+		CMRRect actual = domain.computeGhostCommRect(request[i][0],request[i][1],1,CMR_COMM_RECV);
 		//test
 		SVUT_ASSERT_EQUAL(exp,actual);
 	}
@@ -163,8 +163,8 @@ void TestAbstractDomain::testComputeGhostCommRect_2_1_send ( void )
 		SVUT_SET_CONTEXT("x",request[i][0]);
 		SVUT_SET_CONTEXT("y",request[i][1]);
 		//compute
-		CMRRect2D exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
-		CMRRect2D actual = domain.computeGhostCommRect(request[i][0],request[i][1],1,CMR_COMM_SEND);
+		CMRRect exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
+		CMRRect actual = domain.computeGhostCommRect(request[i][0],request[i][1],1,CMR_COMM_SEND);
 		//test
 		SVUT_ASSERT_EQUAL(exp,actual);
 	}
@@ -188,8 +188,8 @@ void TestAbstractDomain::testComputeGhostCommRect_2_2_recv ( void )
 		SVUT_SET_CONTEXT("x",request[i][0]);
 		SVUT_SET_CONTEXT("y",request[i][1]);
 		//compute
-		CMRRect2D exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
-		CMRRect2D actual = domain.computeGhostCommRect(request[i][0],request[i][1],2,CMR_COMM_RECV);
+		CMRRect exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
+		CMRRect actual = domain.computeGhostCommRect(request[i][0],request[i][1],2,CMR_COMM_RECV);
 		//test
 		SVUT_ASSERT_EQUAL(exp,actual);
 	}
@@ -213,8 +213,8 @@ void TestAbstractDomain::testComputeGhostCommRect_2_2_send ( void )
 		SVUT_SET_CONTEXT("x",request[i][0]);
 		SVUT_SET_CONTEXT("y",request[i][1]);
 		//compute
-		CMRRect2D exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
-		CMRRect2D actual = domain.computeGhostCommRect(request[i][0],request[i][1],2,CMR_COMM_SEND);
+		CMRRect exp(expected[i][0],expected[i][1],expected[i][2],expected[i][3]);
+		CMRRect actual = domain.computeGhostCommRect(request[i][0],request[i][1],2,CMR_COMM_SEND);
 		//test
 		SVUT_ASSERT_EQUAL(exp,actual);
 	}
@@ -234,7 +234,7 @@ void TestAbstractDomain::testFillWithUpdateComm ( void )
 	domain.fillWithUpdateComm(schem,-1,-1,1,CMR_COMM_RECV);
 
 	//setup expected rect
-	CMRRect2D rect(-1,-1,1,1);
+	CMRRect rect(-1,-1,1,1);
 
 	//compare with answer
 	SVUT_ASSERT_EQUAL(1,schem.count());
@@ -249,8 +249,8 @@ void TestAbstractDomain::testIsFullyInDomain_true ( void )
 	MockAbstractDomain domain(8,800,600,1,0,0);
 
 	//create some rects to test
-	CMRRect2D rect1(0,0,800,600);
-	CMRRect2D rect2(100,100,200,200);
+	CMRRect rect1(0,0,800,600);
+	CMRRect rect2(100,100,200,200);
 
 	//check
 	SVUT_ASSERT_TRUE(domain.isFullyInDomain(rect1));
@@ -264,10 +264,10 @@ void TestAbstractDomain::testIsFullyInDomain_false ( void )
 	MockAbstractDomain domain(8,800,600,1,0,0);
 
 	//create some rects to test
-	CMRRect2D rect1(-1,0,800,600);
-	CMRRect2D rect2(0,-1,800,600);
-	CMRRect2D rect3(0,0,801,600);
-	CMRRect2D rect4(0,0,800,601);
+	CMRRect rect1(-1,0,800,600);
+	CMRRect rect2(0,-1,800,600);
+	CMRRect rect3(0,0,801,600);
+	CMRRect rect4(0,0,800,601);
 
 	//check
 	SVUT_ASSERT_FALSE(domain.isFullyInDomain(rect1));
@@ -283,13 +283,13 @@ void TestAbstractDomain::testIsFullyInDomainMemory_true ( void )
 	MockAbstractDomain domain(8,800,600,1,0,0);
 
 	//create some rects to test
-	CMRRect2D rect1(-1,-1,802,602);
-	CMRRect2D rect2(-1,-1,200,200);
-	CMRRect2D rect3(100,100,200,200);
-	CMRRect2D rect4(-1,0,800,600);
-	CMRRect2D rect5(0,-1,800,600);
-	CMRRect2D rect6(0,0,801,600);
-	CMRRect2D rect7(0,0,800,601);
+	CMRRect rect1(-1,-1,802,602);
+	CMRRect rect2(-1,-1,200,200);
+	CMRRect rect3(100,100,200,200);
+	CMRRect rect4(-1,0,800,600);
+	CMRRect rect5(0,-1,800,600);
+	CMRRect rect6(0,0,801,600);
+	CMRRect rect7(0,0,800,601);
 
 	//check
 	SVUT_ASSERT_TRUE(domain.isFullyInDomainMemory(rect1));
@@ -308,10 +308,10 @@ void TestAbstractDomain::testIsFullyInDomainMemory_false ( void )
 	MockAbstractDomain domain(8,800,600,1,0,0);
 
 	//create some rects to test
-	CMRRect2D rect1(-2,0,800,600);
-	CMRRect2D rect2(0,-2,800,600);
-	CMRRect2D rect3(0,0,802,600);
-	CMRRect2D rect4(0,0,800,602);
+	CMRRect rect1(-2,0,800,600);
+	CMRRect rect2(0,-2,800,600);
+	CMRRect rect3(0,0,802,600);
+	CMRRect rect4(0,0,800,602);
 
 	//check
 	SVUT_ASSERT_FALSE(domain.isFullyInDomainMemory(rect1));

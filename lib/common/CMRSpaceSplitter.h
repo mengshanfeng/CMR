@@ -15,17 +15,17 @@
 #include "CMRCommon.h"
 
 /*********************  TYPES  **********************/
-typedef std::vector<CMRRect2D> CMRSpaceSubDomains;
+typedef std::vector<CMRRect> CMRSpaceSubDomains;
 
 /*********************  CLASS  **********************/
 class CMRAbstractSpaceSplitter
 {
 	public:
 		CMRAbstractSpaceSplitter(int x, int y,int width,int height,int nbSubDomains,int firstDim);
-		CMRAbstractSpaceSplitter(CMRRect2D rect,int nbSubDomains,int firstDim);
+		CMRAbstractSpaceSplitter(CMRRect rect,int nbSubDomains,int firstDim);
 		int getNbSubdomains(void) const;
 		virtual void setNbSubdomains(int nbSubDomains);
-		virtual CMRRect2D getLocalDomain(int localId) const = 0;
+		virtual CMRRect getLocalDomain(int localId) const = 0;
 		virtual CMRSpaceSubDomains getAllSubDomains(void) const = 0;
 		virtual int getNeighbour(int localId,int deltaX,int deltaY) const = 0;
 		virtual CMRVect2D getSplittingSize( void ) const = 0;
@@ -33,7 +33,7 @@ class CMRAbstractSpaceSplitter
 	protected:
 		int firstDim;
 		int nbSubDomains;
-		CMRRect2D rect;
+		CMRRect rect;
 };
 
 /*********************  CLASS  **********************/
@@ -41,9 +41,9 @@ class CMRBasicSpaceSplitter : public CMRAbstractSpaceSplitter
 {
 	public:
 		CMRBasicSpaceSplitter ( int x, int y,int width, int height,int nbSubDomains, int firstDim );
-		CMRBasicSpaceSplitter ( CMRRect2D rect, int nbSubDomains, int firstDim );
+		CMRBasicSpaceSplitter ( CMRRect rect, int nbSubDomains, int firstDim );
 		virtual CMRSpaceSubDomains getAllSubDomains ( void ) const;
-		virtual CMRRect2D getLocalDomain ( int localId ) const;
+		virtual CMRRect getLocalDomain ( int localId ) const;
 		virtual int getNeighbour ( int localId, int deltaX, int deltaY ) const;
 		virtual CMRVect2D getSplittingSize ( void ) const;
 };

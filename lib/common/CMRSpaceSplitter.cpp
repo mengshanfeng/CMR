@@ -44,7 +44,7 @@ void CMRAbstractSpaceSplitter::setNbSubdomains ( int nbSubDomains )
 }
 
 /*******************  FUNCTION  *********************/
-CMRAbstractSpaceSplitter::CMRAbstractSpaceSplitter ( CMRRect2D rect, int nbSubDomains,int firstDim )
+CMRAbstractSpaceSplitter::CMRAbstractSpaceSplitter ( CMRRect rect, int nbSubDomains,int firstDim )
 {
 	//errors
 	assert(rect.width >= 1);
@@ -63,7 +63,7 @@ CMRBasicSpaceSplitter::CMRBasicSpaceSplitter ( int x, int y,int width, int heigh
 }
 
 /*******************  FUNCTION  *********************/
-CMRBasicSpaceSplitter::CMRBasicSpaceSplitter ( CMRRect2D rect,int nbSubDomains, int firstDim ) 
+CMRBasicSpaceSplitter::CMRBasicSpaceSplitter ( CMRRect rect,int nbSubDomains, int firstDim ) 
 	: CMRAbstractSpaceSplitter ( rect,nbSubDomains,firstDim )
 {
 }
@@ -127,12 +127,12 @@ CMRSpaceSubDomains CMRBasicSpaceSplitter::getAllSubDomains ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRRect2D CMRBasicSpaceSplitter::getLocalDomain ( int localId ) const
+CMRRect CMRBasicSpaceSplitter::getLocalDomain ( int localId ) const
 {
 	//vars
 	int rankX;
 	int rankY;
-	CMRRect2D res;
+	CMRRect res;
 
 	//errors
 	assert(this->firstDim == 0 || this->firstDim == 1);
@@ -186,7 +186,7 @@ void CMRAbstractSpaceSplitter::printDebug ( int printOnRank  ) const
 	//loop on all
 	for (int i = 0 ; i < this->nbSubDomains ; i++)
 	{
-		CMRRect2D tmp = getLocalDomain(i);
+		CMRRect tmp = getLocalDomain(i);
 		debug("   - Subdomain %-2d : [ %4d , %4d : %4d x %4d ]",i, tmp.x,tmp.y,tmp.width, tmp.height);
 	}
 }

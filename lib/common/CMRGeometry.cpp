@@ -19,6 +19,43 @@ CMRVect2D::CMRVect2D ( int x, int y )
 }
 
 /*******************  FUNCTION  *********************/
+CMRVect2D& CMRVect2D::operator+= ( const CMRVect2D& vect )
+{
+	x += vect.x;
+	y += vect.y;
+	return *this;
+}
+
+/*******************  FUNCTION  *********************/
+CMRVect2D CMRVect2D::operator+ ( const CMRVect2D & vect ) const
+{
+	CMRVect2D tmp(*this);
+	return (tmp+=vect);
+}
+
+/*******************  FUNCTION  *********************/
+CMRVect2D& CMRVect2D::operator-= ( const CMRVect2D& vect )
+{
+	x -= vect.x;
+	y -= vect.y;
+	return *this;
+}
+
+/*******************  FUNCTION  *********************/
+CMRVect2D CMRVect2D::operator- ( const CMRVect2D& vect ) const
+{
+	CMRVect2D tmp(*this);
+	return (tmp-=vect);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRVect2D::set ( int x, int y )
+{
+	this->x = x;
+	this->y = y;
+}
+
+/*******************  FUNCTION  *********************/
 std::ostream& operator<< ( std::ostream& out, const CMRVect2D& vect )
 {
 	char buffer[256];
@@ -35,7 +72,7 @@ bool operator== ( const CMRVect2D& v1, const CMRVect2D& v2 )
 }
 
 /*******************  FUNCTION  *********************/
-CMRRect2D::CMRRect2D ( int x, int y, int width, int height )
+CMRRect::CMRRect ( int x, int y, int width, int height )
 {
 	//errors
 	assert(width >= 0);
@@ -49,7 +86,38 @@ CMRRect2D::CMRRect2D ( int x, int y, int width, int height )
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream& operator<< ( std::ostream& out, const CMRRect2D& rect )
+bool CMRRect::contains ( const CMRRect& rect, bool partially ) const
+{
+	if (partially)
+	{
+		//check if ! outside
+		return !(rect.x >= x + width || rect.x + rect.width <= x || rect.y >= y + height || rect.y + rect.height <= y); 
+	} else {
+		return (rect.x >= this->x && rect.x + rect.width <= this->x + this->width)
+			&& (rect.y >= this->y && rect.y + rect.height <= this->y + this->height);
+	}
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRRect::contains ( const CMRVect2D& point ) const
+{
+	return (point.x >= x && point.x < x + width) && (point.y >= y && point.y < y + height);
+}
+
+/*******************  FUNCTION  *********************/
+CMRVect2D CMRRect::getPoint1 ( void ) const
+{
+	return CMRVect2D(x,y);
+}
+
+/*******************  FUNCTION  *********************/
+CMRVect2D CMRRect::getPoint2 ( void ) const
+{
+	return CMRVect2D(x+width,y+height);
+}
+
+/*******************  FUNCTION  *********************/
+std::ostream& operator<< ( std::ostream& out, const CMRRect& rect )
 {
 	char buffer[256];
 	int res = sprintf(buffer,"CMRRect2D [ %5d , %5d , %5d , %5d ]",rect.x,rect.y,rect.width,rect.height);
@@ -59,10 +127,19 @@ std::ostream& operator<< ( std::ostream& out, const CMRRect2D& rect )
 }
 
 /*******************  FUNCTION  *********************/
-bool operator== ( const CMRRect2D& rect1, const CMRRect2D& rect2 )
+bool operator== ( const CMRRect& rect1, const CMRRect& rect2 )
 {
 	return (rect1.x == rect2.x)
 		&& (rect1.y == rect2.y)
 		&& (rect1.width == rect2.width)
 		&& (rect1.height == rect2.height);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRRect::set ( int x, int y, int width, int height )
+{
+	this->x = x;
+	this->y = y;
+	this->width = width;
+	this->height = height;
 }

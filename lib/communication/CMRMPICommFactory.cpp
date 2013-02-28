@@ -19,7 +19,7 @@ CMRMPICommFactory::CMRMPICommFactory ( int sendToRank, int recvFromRank, int tag
 }
 
 /*******************  FUNCTION  *********************/
-CMRComm* CMRMPICommFactory::createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType )
+CMRComm* CMRMPICommFactory::createComm ( CMRAbstractDomain* domain, const CMRRect& rect, CMRCommType commType )
 {
 	return new CMRMPIComm(this,domain,rect,commType);
 }

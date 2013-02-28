@@ -26,7 +26,7 @@ CMRDomainStorage::CMRDomainStorage ( size_t typeSize, int width, int height, int
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRDomainStorage::isContiguousGhost ( const CMRRect2D& rect ) const
+bool CMRDomainStorage::isContiguousGhost ( const CMRRect& rect ) const
 {
 	//warnings
 	wassume(isFullyInDomainMemory(rect),"You request a memory rect which didn't fit with current domain storage memory : %d , %d ; %d , %d",rect.x,rect.y,rect.width,rect.height);
@@ -36,7 +36,7 @@ bool CMRDomainStorage::isContiguousGhost ( const CMRRect2D& rect ) const
 }
 
 /*******************  FUNCTION  *********************/
-void* CMRDomainStorage::getContiguousGhost ( const CMRRect2D& rect )
+void* CMRDomainStorage::getContiguousGhost ( const CMRRect& rect )
 {
 	//errors
 	assume(isFullyInDomainMemory(rect),"You request a memory rect which didn't fit with current domain storage memory : %d , %d ; %d , %d",rect.x,rect.y,rect.width,rect.height);
@@ -86,7 +86,7 @@ void* CMRDomainStorage::getCell ( int x, int y )
 }
 
 /*******************  FUNCTION  *********************/
-int CMRDomainStorage::copyGhostFromBuffer ( const void* buffer, size_t size, const CMRRect2D& rect )
+int CMRDomainStorage::copyGhostFromBuffer ( const void* buffer, size_t size, const CMRRect& rect )
 {
 	//errors
 	assert(dimensions == 2);
@@ -108,7 +108,7 @@ int CMRDomainStorage::copyGhostFromBuffer ( const void* buffer, size_t size, con
 }
 
 /*******************  FUNCTION  *********************/
-int CMRDomainStorage::copyGhostToBuffer ( void* buffer, size_t size, const CMRRect2D& rect ) const
+int CMRDomainStorage::copyGhostToBuffer ( void* buffer, size_t size, const CMRRect& rect ) const
 {
 	//errors
 	assert(dimensions == 2);
@@ -130,7 +130,7 @@ int CMRDomainStorage::copyGhostToBuffer ( void* buffer, size_t size, const CMRRe
 }
 
 /*******************  FUNCTION  *********************/
-size_t CMRDomainStorage::getGhostSize ( const CMRRect2D& rect ) const
+size_t CMRDomainStorage::getGhostSize ( const CMRRect& rect ) const
 {
 	//errors
 	assert(dimensions == 2);

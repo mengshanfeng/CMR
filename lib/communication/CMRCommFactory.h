@@ -16,14 +16,14 @@
 /*********************  CLASS  **********************/
 class CMRComm;
 class CMRAbstractDomain;
-class CMRRect2D;
+class CMRRect;
 
 /*********************  CLASS  **********************/
 class CMRCommFactory
 {
 	public:
 		virtual ~CMRCommFactory(void);
-		virtual CMRComm * createComm(CMRAbstractDomain * domain,const CMRRect2D & rect,CMRCommType commType) = 0;
+		virtual CMRComm * createComm(CMRAbstractDomain * domain,const CMRRect & rect,CMRCommType commType) = 0;
 };
 
 #endif // CMR_COMMUNICATOR_H

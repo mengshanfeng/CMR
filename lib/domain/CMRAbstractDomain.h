@@ -21,7 +21,7 @@
 /*********************  CLASS  **********************/
 class CMRCommFactory;
 class CMRCommSchem;
-class CMRRect2D;
+class CMRRect;
 
 /********************  ENUM  ************************/
 enum CMRUpdateStatus
@@ -52,12 +52,12 @@ class CMRAbstractDomain
 	public:
 		CMRAbstractDomain(size_t typeSize,int width,int height,int ghostDepth,int originX,int originY,int globalWidth,int globalHeight);
 		virtual ~CMRAbstractDomain(void);
-		virtual bool isContiguousGhost(const CMRRect2D & rect) const = 0;
+		virtual bool isContiguousGhost(const CMRRect & rect) const = 0;
 		virtual bool isContiguous(int directionID) const = 0;
-		virtual size_t getGhostSize(const CMRRect2D & rect) const = 0;
-		virtual int copyGhostToBuffer(void * buffer,size_t size,const CMRRect2D & rect) const = 0;
-		virtual int copyGhostFromBuffer(const void * buffer,size_t size,const CMRRect2D & rect) = 0;
-		virtual void * getContiguousGhost(const CMRRect2D & rect) = 0;
+		virtual size_t getGhostSize(const CMRRect & rect) const = 0;
+		virtual int copyGhostToBuffer(void * buffer,size_t size,const CMRRect & rect) const = 0;
+		virtual int copyGhostFromBuffer(const void * buffer,size_t size,const CMRRect & rect) = 0;
+		virtual void * getContiguousGhost(const CMRRect & rect) = 0;
 		virtual void * getCell(int x,int y) = 0;
 		virtual void setCommunicator(int x,int y,CMRCommFactory * commFactory);
 		virtual void fillWithUpdateComm(CMRCommSchem & commSchema,int x,int y,int requestedDepth,CMRCommType commType);
@@ -68,14 +68,14 @@ class CMRAbstractDomain
 		int getGhostDepth(void) const;
 		CMRUpdateStatus getGhostStatus(int x,int y) const;
 		void setGhostStatus(int x,int y,CMRUpdateStatus status);
-		bool isFullyInDomain(const CMRRect2D & rect) const;
-		bool isFullyInDomainMemory(const CMRRect2D & rect) const;
+		bool isFullyInDomain(const CMRRect & rect) const;
+		bool isFullyInDomainMemory(const CMRRect & rect) const;
 		CMRVect2D getAbsPos(int x = 0,int y = 0) const;
 		CMRVect2D getGlobalSize(void) const;
-		CMRRect2D getLocalRect(void) const;
-		CMRRect2D getGlobalRect(void) const;
+		CMRRect getLocalRect(void) const;
+		CMRRect getGlobalRect(void) const;
 	private:
-		CMRRect2D computeGhostCommRect(int x,int y,int requestedDepth,CMRCommType commType) const;
+		CMRRect computeGhostCommRect(int x,int y,int requestedDepth,CMRCommType commType) const;
 		//copy is forbidden so ensure compile error by making related function private
 		CMRAbstractDomain(const CMRAbstractDomain & orig);
 		CMRAbstractDomain & operator = (const CMRAbstractDomain & orig);
@@ -95,7 +95,7 @@ class CMRAbstractDomain
 		/** Communicator to sync the ghost cells. **/
 		CMRCommFactory * commFactories[3][3];
 		/** Size of global mesh. **/
-		CMRRect2D globalRect;
+		CMRRect globalRect;
 };
 
 #endif //CMR_ABSTRACT_DOMAIN_H

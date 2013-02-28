@@ -21,25 +21,25 @@ MockAbstractDomain::MockAbstractDomain ( size_t typeSize, int width, int height,
 }
 
 /*******************  FUNCTION  *********************/
-bool MockAbstractDomain::isContiguousGhost ( const CMRRect2D& rect ) const
+bool MockAbstractDomain::isContiguousGhost ( const CMRRect& rect ) const
 {
 	return this->contiguous;
 }
 
 /*******************  FUNCTION  *********************/
-void* MockAbstractDomain::getContiguousGhost ( const CMRRect2D& rect )
+void* MockAbstractDomain::getContiguousGhost ( const CMRRect& rect )
 {
 	return buffer;
 }
 
 /*******************  FUNCTION  *********************/
-size_t MockAbstractDomain::getGhostSize ( const CMRRect2D& rect ) const
+size_t MockAbstractDomain::getGhostSize ( const CMRRect& rect ) const
 {
 	return this->ghostSize;
 }
 
 /*******************  FUNCTION  *********************/
-int MockAbstractDomain::copyGhostFromBuffer ( const void* buffer, size_t size, const CMRRect2D& rect )
+int MockAbstractDomain::copyGhostFromBuffer ( const void* buffer, size_t size, const CMRRect& rect )
 {
 	//errors
 	assert(this->ghostSize <= size);
@@ -51,7 +51,7 @@ int MockAbstractDomain::copyGhostFromBuffer ( const void* buffer, size_t size, c
 }
 
 /*******************  FUNCTION  *********************/
-int MockAbstractDomain::copyGhostToBuffer ( void* buffer, size_t size, const CMRRect2D& rect ) const
+int MockAbstractDomain::copyGhostToBuffer ( void* buffer, size_t size, const CMRRect& rect ) const
 {
 	//errors
 	assert(this->ghostSize <= size);

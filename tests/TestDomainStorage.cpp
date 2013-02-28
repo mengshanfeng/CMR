@@ -61,15 +61,15 @@ void TestDomainStorage::testMethodsRegistration ( void )
 /*******************  FUNCTION  *********************/
 void TestDomainStorage::testIsContiguousGhost_true ( void )
 {
-	CMRRect2D rect(0,0,800,1);
+	CMRRect rect(0,0,800,1);
 	SVUT_ASSERT_TRUE(domain->isContiguousGhost(rect));
 }
 
 /*******************  FUNCTION  *********************/
 void TestDomainStorage::testIsContiguousGhost_false ( void )
 {
-	CMRRect2D rect1(0,0,800,2);
-	CMRRect2D rect2(0,0,1,600);
+	CMRRect rect1(0,0,800,2);
+	CMRRect rect2(0,0,1,600);
 	SVUT_ASSERT_FALSE(domain->isContiguousGhost(rect1));
 	SVUT_ASSERT_FALSE(domain->isContiguousGhost(rect2));
 }
@@ -83,7 +83,7 @@ void TestDomainStorage::testGetCell ( void )
 /*******************  FUNCTION  *********************/
 void TestDomainStorage::testGetContiguousGhost ( void )
 {
-	CMRRect2D rect(-2,-2,802,1);
+	CMRRect rect(-2,-2,802,1);
 	SVUT_ASSERT_SAME(domain->data,domain->getContiguousGhost(rect));
 }
 
@@ -103,7 +103,7 @@ void TestDomainStorage::testCopyGhostFromBuffer ( void )
 		}
 	}
 
-	CMRRect2D rect(0,0,10,2);
+	CMRRect rect(0,0,10,2);
 	domain->copyGhostToBuffer(buffer,sizeof(buffer),rect);
 
 	//check res
@@ -136,7 +136,7 @@ void TestDomainStorage::testCopyGhostToBuffer ( void )
 
 	//decl buffer
 	unsigned char buffer[2*8*10];
-	CMRRect2D rect(0,0,10,2);
+	CMRRect rect(0,0,10,2);
 	domain->copyGhostToBuffer(buffer,sizeof(buffer),rect);
 
 	//check res

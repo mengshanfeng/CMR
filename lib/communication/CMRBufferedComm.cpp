@@ -14,7 +14,7 @@
 #include "../domain/CMRAbstractDomain.h"
 
 /*******************  FUNCTION  *********************/
-CMRBufferedComm::CMRBufferedComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType )
+CMRBufferedComm::CMRBufferedComm ( CMRAbstractDomain* domain, const CMRRect& rect, CMRCommType commType )
 {
 	//errors
 	assert(domain != NULL);

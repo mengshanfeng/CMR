@@ -19,7 +19,7 @@ class MockCommunication : public CMRComm
 {
 	public:
     virtual void run(void );
-		CMRRect2D rect;
+		CMRRect rect;
 		int dest;
 		int id;
 		bool hasRun;
@@ -29,7 +29,7 @@ class MockCommunication : public CMRComm
 class MockCommunicator : public CMRCommFactory
 {
 	public:
-		virtual CMRComm* createComm ( CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType );
+		virtual CMRComm* createComm ( CMRAbstractDomain* domain, const CMRRect& rect, CMRCommType commType );
 		int dest;
 		int id;
 };

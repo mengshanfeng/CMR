@@ -18,7 +18,7 @@
 #include "CMRMPICommFactory.h"
 
 /*******************  FUNCTION  *********************/
-CMRMPIComm::CMRMPIComm ( CMRMPICommFactory* communicator, CMRAbstractDomain* domain, const CMRRect2D& rect, CMRCommType commType )
+CMRMPIComm::CMRMPIComm ( CMRMPICommFactory* communicator, CMRAbstractDomain* domain, const CMRRect& rect, CMRCommType commType )
 	: CMRBufferedComm ( domain, rect, commType )
 {
 	//errors

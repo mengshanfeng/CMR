@@ -147,7 +147,7 @@ void CMRAbstractDomain::setCommunicator ( int x, int y, CMRCommFactory * commFac
 void CMRAbstractDomain::fillWithUpdateComm ( CMRCommSchem& commSchema, int x, int y, int requestedDepth, CMRCommType commType )
 {
 	//vars
-	CMRRect2D rect;
+	CMRRect rect;
 
 	//errors
 	assert(this->dimensions == 2);
@@ -179,10 +179,10 @@ void CMRAbstractDomain::fillWithUpdateComm ( CMRCommSchem& commSchema, int x, in
   # # # # # # # # # #                     # # #  # # # # # # #
   Y                                       Y
 */
-CMRRect2D CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedDepth, CMRCommType commType ) const
+CMRRect CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedDepth, CMRCommType commType ) const
 {
 	//vars
-	CMRRect2D rect;
+	CMRRect rect;
 
 	//errors
 	assert(this->dimensions == 2);
@@ -247,14 +247,14 @@ CMRRect2D CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedD
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRAbstractDomain::isFullyInDomain ( const CMRRect2D& rect ) const
+bool CMRAbstractDomain::isFullyInDomain ( const CMRRect& rect ) const
 {
 	return (rect.x >= 0 && rect.width + rect.x <= this->sizes[CMR_AXIS_X])
 		&& (rect.y >= 0 && rect.height + rect.y <= this->sizes[CMR_AXIS_Y]);
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRAbstractDomain::isFullyInDomainMemory ( const CMRRect2D& rect ) const
+bool CMRAbstractDomain::isFullyInDomainMemory ( const CMRRect& rect ) const
 {
 	return (rect.x >= -this->ghostDepth && rect.width + rect.x <= this->sizes[CMR_AXIS_X] + this->ghostDepth)
 		&& (rect.y >= -this->ghostDepth && rect.height + rect.y <= this->sizes[CMR_AXIS_Y] + this->ghostDepth);
@@ -275,14 +275,14 @@ CMRVect2D CMRAbstractDomain::getGlobalSize ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRRect2D CMRAbstractDomain::getLocalRect ( void ) const
+CMRRect CMRAbstractDomain::getLocalRect ( void ) const
 {
-	CMRRect2D rect(origin[CMR_AXIS_X],origin[CMR_AXIS_Y],sizes[CMR_AXIS_X],sizes[CMR_AXIS_Y]);
+	CMRRect rect(origin[CMR_AXIS_X],origin[CMR_AXIS_Y],sizes[CMR_AXIS_X],sizes[CMR_AXIS_Y]);
 	return rect;
 }
 
 /*******************  FUNCTION  *********************/
-CMRRect2D CMRAbstractDomain::getGlobalRect ( void ) const
+CMRRect CMRAbstractDomain::getGlobalRect ( void ) const
 {
 	return globalRect;
 }
