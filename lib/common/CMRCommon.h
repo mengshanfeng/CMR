@@ -23,9 +23,14 @@
 
 class tm;
 /********************  ENUM  ************************/
+/**
+ * Synchronisation types.
+**/
 enum CMRCommType
 {
+	/** Send the data to the remote entity. **/
 	CMR_COMM_SEND,
+	/** Receive the data from the remote entity. **/
 	CMR_COMM_RECV
 };
 
@@ -37,12 +42,14 @@ int cmrPGCD(int a, int b);
 
 /*******************  FUNCTION  *********************/
 /**
+ * Quick template function to permute two values.
+ * It require support of '=' operator and copy constructor.
  * @TODO move implementation in _impl.h file
 **/
 template<class T>
 void cmrPermut(T & v1,T & v2)
 {
-	T tmp = v1;
+	T tmp(v1);
 	v1 = v2;
 	v2 = tmp;
 }

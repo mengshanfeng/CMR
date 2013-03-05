@@ -17,6 +17,9 @@
 #include "CMRCommon.h"
 
 /*********************  CONSTS  *********************/
+/**
+ * Define usage of shell colors if enabled.
+**/
 #ifdef CMR_ENABLE_COLOR
 static const char * CMR_MESG_COLOR[5] = {
 	"\033[40m\033[36m", //debug
@@ -30,6 +33,15 @@ static const char * CMR_MESG_COLOR[5] = { "", "", "" , "" , "" };
 #endif
 
 /*******************  FUNCTION  *********************/
+/**
+ * Main function used by print and debugging system.
+ * @param level Define the type of message.
+ * @param title Define a short name to prefix the message (ERROR, WARNING....)
+ * @param condition The conditions which generate the call of this method.
+ * @param fname The source file which call this function.
+ * @param line The line in source file which call this function.
+ * @param format The string format of the message itself.
+**/
 void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * condition,const char * fname,int line,const char * format,...)
 {
 	//vars

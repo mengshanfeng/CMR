@@ -11,6 +11,10 @@
 #include "CMRCommon.h"
 
 /*******************  FUNCTION  *********************/
+/**
+ * Short wrapper to get the current MPI rank.
+ * @TODO Add communicator as option.
+**/
 int cmrGetMPIRank ( void )
 {
 	int rank;
@@ -19,6 +23,10 @@ int cmrGetMPIRank ( void )
 }
 
 /*******************  FUNCTION  *********************/
+/**
+ * Short wrapper to check if the current process is MPI master.
+ * It implies rank equal to CMR_MPI_MASTER which is arbitrary fixed to 0.
+**/
 bool cmrIsMPIMaster ( void )
 {
 	int rank;
@@ -27,6 +35,9 @@ bool cmrIsMPIMaster ( void )
 }
 
 /*******************  FUNCTION  *********************/
+/**
+ * Return the number of MPI tasks in current communicator.
+**/
 int cmrGetMPISize ( void )
 {
 	int size;
@@ -35,6 +46,9 @@ int cmrGetMPISize ( void )
 }
 
 /*******************  FUNCTION  *********************/
+/**
+ * Short function to get the PGCD of two numbers.
+**/
 int cmrPGCD(int a, int b)
 {
 	int c;
