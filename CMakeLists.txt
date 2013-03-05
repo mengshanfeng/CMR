@@ -44,7 +44,7 @@ endif (NOT DISABLE_TESTS)
 ######################################################
 #build cmr exe (for tests)
 add_executable(cartesianmeshruntime main.cpp)
-target_link_libraries(cartesianmeshruntime cmr ${MPI_LIBRARY})
+target_link_libraries(cartesianmeshruntime cmr ${MPI_CXX_LIBRARIES})
 
 ######################################################
 #INSTALL(TARGETS htopmld
