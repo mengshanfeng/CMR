@@ -10,6 +10,7 @@
 #include <domain/CMRDomainStorage.h>
 #include <common/CMRSpaceSplitter.h>
 #include <CMROperation.h>
+#include <domain/CMRMemoryModel.h>
 
 using namespace std;
 

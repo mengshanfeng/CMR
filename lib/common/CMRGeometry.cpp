@@ -56,6 +56,12 @@ void CMRVect2D::set ( int x, int y )
 }
 
 /*******************  FUNCTION  *********************/
+CMRVect2D CMRVect2D::getRel(int dx, int dy) const
+{
+	return CMRVect2D(x + dx,y + dy);
+}
+
+/*******************  FUNCTION  *********************/
 std::ostream& operator<< ( std::ostream& out, const CMRVect2D& vect )
 {
 	char buffer[256];

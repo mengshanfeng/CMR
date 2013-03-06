@@ -21,6 +21,7 @@ struct CMRVect2D
 	CMRVect2D & operator-=(const CMRVect2D & vect);
 	CMRVect2D operator-(const CMRVect2D & vect) const;
 	void set(int x,int y);
+	CMRVect2D getRel(int dx,int dy) const;
 	int x;
 	int y;
 };
