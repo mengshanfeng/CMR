@@ -11,137 +11,119 @@
 
 /********************  HEADERS  *********************/
 #include <vector>
+#include <cstdlib>
 #include <cassert>
 #include "CMRAbstractDomain.h"
 #include "../common/CMRDebug.h"
 #include "../common/CMRGeometry.h"
+#include "CMRDomainMemory.h"
+
 
 /*********************  CLASS  **********************/
-class CMRMemoryModel
+template <class DataType,class MemoryModel>
+class CMRMemoryAccessor : public CMRDomainMemory
 {
 	public:
-		virtual ~CMRMemoryModel(void) {};
-		virtual int getTypeSize(void) = 0;
-		virtual bool isContiguous(const CMRRect & memoryRect,const CMRRect & rect) = 0;
-		virtual void * getCell(void * baseAddr,int x,int y,int width,int height) = 0;
-		virtual int copyGhostFromBuffer ( void * mesh, const void* buffer, size_t size, const CMRRect & memoryRect, const CMRRect & rect ) = 0;
-		virtual int copyGhostToBuffer ( const void * mesh,void* buffer, size_t size, const CMRRect & memoryRect, const CMRRect & rect ) = 0;
+		CMRMemoryAccessor( const CMRDomainMemory& orig, int dx, int dy );
+		CMRMemoryAccessor(const CMRMemoryAccessor<DataType,MemoryModel> & orig,int dx,int dy);
+		DataType & getCell(int dx,int dy);
+		const DataType & getCell(int dx,int dy) const;
+		int getTypeSize(void) const;
+		bool isContiguous(const CMRRect & rect) const;
 };
 
-/*********************  CLASS  **********************/
-template <class T>
-class CMRMemoryModelRowMajorAccessor
-{
-	public:
-		CMRMemoryModelRowMajorAccessor(T * baseAddr, const CMRRect & memoryRect,const CMRVect2D & absPosition);
-		CMRMemoryModelRowMajorAccessor(const CMRMemoryModelRowMajorAccessor<T> & orig,int relX,int relY);
-		T & getCell(int dx,int dy);
-		CMRVect2D getAbsPosition(int dx = 0,int dy = 0) const;
-	private:
-		T * ptr;
-		CMRRect memoryRect;
-		CMRVect2D absPosition;
-};
 
 /*********************  CLASS  **********************/
-template <class T>
-class CMRMemoryModelRowMajor : public CMRMemoryModel
+struct CMRMemoryModelRowMajor
 {
-	public:
-		typedef CMRMemoryModelRowMajorAccessor<T> Accessor;
-	public:
-		virtual int getTypeSize ( void );
-		virtual int getCellId(int x,int y,int width,int height);
-		virtual bool isContiguous(const CMRRect & memoryRect,const CMRRect& rect);
-		virtual void* getCell ( void* baseAddr, int x, int y, int width, int height);
-		virtual int copyGhostFromBuffer ( void * mesh, const void* buffer, size_t size, const CMRRect & memoryRect, const CMRRect & rect );
-		virtual int copyGhostToBuffer ( const void * mesh,void* buffer, size_t size, const CMRRect & memoryRect, const CMRRect & rect );
-		static T & getTypedCell( void* baseAddr, int x, int y, int width, int height);
+	static inline int getCellId(int x,int y,int width,int height);
+	static inline int getRelCellId(int dx,int dy,int width,int height,int x,int y);
+	static inline bool isContiguous(const CMRRect & memoryRect, const CMRRect & rect);
+	//template <class T> int copyFromBuffer(T * mesh, const void* buffer, size_t size, const CMRRect & memoryRect, const CMRRect & rect);
+	//template <class T> int copyToBuffer( const T * mesh,void* buffer, size_t size, const CMRRect & memoryRect, const CMRRect & rect);
 };
 
 /*******************  FUNCTION  *********************/
-template <class T>
-void* CMRMemoryModelRowMajor<T>::getCell(void* baseAddr, int x, int y, int width, int height)
+int CMRMemoryModelRowMajor::getCellId ( int x, int y, int width, int height )
 {
-	return &CMRMemoryModelRowMajor<T>::getTypedCell(baseAddr,x,y,width,height);
+	//errors
+	assert(x >= 0 && x < width);
+	assert(y >= 0 && y < height);
+	
+	return y * width + x;
 }
 
 /*******************  FUNCTION  *********************/
-template <class T>
-T& CMRMemoryModelRowMajor<T>::getTypedCell(void* baseAddr, int x, int y, int width, int height)
+int CMRMemoryModelRowMajor::getRelCellId ( int dx, int dy, int width, int height, int x, int y )
 {
-	T * ptr = (T*)baseAddr;
-	return ptr[x + y * width];
+	//errors
+	assert(x+dx >= 0 && x+dx < width);
+	assert(y+dy >= 0 && y+dy < height);
+	
+	return dy * width + dx;
 }
 
 /*******************  FUNCTION  *********************/
-template <class T>
-int CMRMemoryModelRowMajor<T>::getCellId(int x, int y, int width, int height)
+bool CMRMemoryModelRowMajor::isContiguous ( const CMRRect& memoryRect, const CMRRect& rect )
 {
-	return x + y * width;
+	debug_warning(memoryRect.contains(rect),"Caution, isContiguous is used with rect which didn't fit in memoryRect !");
+	return (rect.height == 1 || rect.width == memoryRect.width);
 }
 
 /*******************  FUNCTION  *********************/
-template <class T>
-int CMRMemoryModelRowMajor<T>::getTypeSize(void )
+template <class DataType,class MemoryModel>
+CMRMemoryAccessor<DataType,MemoryModel>::CMRMemoryAccessor ( const CMRDomainMemory& orig, int dx, int dy )
+	:CMRDomainMemory(orig)
 {
-	 return sizeof(T);
+	this->ptr = &getCell(dx,dy);
+	this->ptrAbsPosition.x += dx;
+	this->ptrAbsPosition.y += dy;
 }
 
 /*******************  FUNCTION  *********************/
-template <class T>
-CMRMemoryModelRowMajorAccessor<T>::CMRMemoryModelRowMajorAccessor(T* baseAddr, const CMRRect& memoryRect, const CMRVect2D& absPosition)
+template <class DataType,class MemoryModel>
+CMRMemoryAccessor<DataType,MemoryModel>::CMRMemoryAccessor ( const CMRMemoryAccessor< DataType, MemoryModel >& orig, int dx, int dy ) 
+	: CMRDomainMemory(orig)
 {
-	this->ptr = baseAddr;
-	this->memoryRect = memoryRect;
-	this->absPosition = absPosition;
-	//move to position
-	this->ptr = &this->getCell(absPosition.x - memoryRect.x,absPosition.y - memoryRect.y);
+	this->ptr = &getCell(dx,dy);
+	this->ptrAbsPosition.x += dx;
+	this->ptrAbsPosition.y += dy;
 }
 
 /*******************  FUNCTION  *********************/
-template <class T>
-CMRMemoryModelRowMajorAccessor<T>::CMRMemoryModelRowMajorAccessor(const CMRMemoryModelRowMajorAccessor<T>& orig, int relX, int relY)
+template <class DataType,class MemoryModel>
+DataType& CMRMemoryAccessor<DataType,MemoryModel>::getCell ( int dx, int dy )
 {
-	this->ptr = &orig.getCell(relX,relY);
-	this->memoryRect = orig.memoryRect;
-	this->absPosition = orig.absPosition.getRel(relX,relY);
+	//errors
+	assert(ptr != NULL);
+	
+	int id = MemoryModel::getRelCellId(dx,dy,memoryRect.width,memoryRect.height,ptrAbsPosition.x,ptrAbsPosition.y);
+	return ((DataType*)ptr)[id];
 }
 
 /*******************  FUNCTION  *********************/
-template <class T>
-T& CMRMemoryModelRowMajorAccessor<T>::getCell(int dx, int dy)
+template <class DataType,class MemoryModel>
+const DataType& CMRMemoryAccessor<DataType,MemoryModel>::getCell ( int dx, int dy ) const
 {
-	assert(memoryRect.contains(absPosition.getRel(dx,dy)));
-	return ptr[dx + memoryRect.width * dy];
+	//errors
+	assert(ptr != NULL);
+	
+	int id = MemoryModel::getRelCellId(dx,dy,memoryRect.width,memoryRect.height,ptrAbsPosition.x,ptrAbsPosition.y);
+	return ((DataType*)ptr)[id];
 }
 
 /*******************  FUNCTION  *********************/
-template <class T>
-CMRVect2D CMRMemoryModelRowMajorAccessor<T>::getAbsPosition(int dx,int dy) const
+template <class DataType,class MemoryModel>
+int CMRMemoryAccessor<DataType,MemoryModel>::getTypeSize ( void ) const
 {
-	return absPosition.getRel(dx,dy);
+	return sizeof(DataType);
 }
 
 /*******************  FUNCTION  *********************/
-template <class T>
-bool CMRMemoryModelRowMajor<T>::isContiguous(const CMRRect & memoryRect, const CMRRect& rect)
+template <class DataType,class MemoryModel>
+bool CMRMemoryAccessor<DataType,MemoryModel>::isContiguous ( const CMRRect& rect ) const
 {
-	return rect.height == 1 || rect.width == memoryRect.width;
-}
-
-/*******************  FUNCTION  *********************/
-template <class T>
-int CMRMemoryModelRowMajor<T>::copyGhostFromBuffer(void* mesh, const void* buffer, size_t size, const CMRRect& memoryRect, const CMRRect& rect)
-{
-
-}
-
-/*******************  FUNCTION  *********************/
-template <class T>
-int CMRMemoryModelRowMajor<T>::copyGhostToBuffer(const void* mesh, void* buffer, size_t size, const CMRRect& memoryRect, const CMRRect& rect)
-{
-
+	return MemoryModel::isContiguous(memoryRect,rect);
 }
 
 #endif // CMR_SPACE_SPLITTER_H

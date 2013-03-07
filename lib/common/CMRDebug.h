@@ -40,9 +40,11 @@ enum CMRDebugMessageLevel
 #ifndef NDEBUG
 #define debug(...) cmrDebugMessage(CMR_DEBUG_DEBUG,"DEBUG",NULL,__FILE__,__LINE__,__VA_ARGS__)
 #define debug_on_master(...) if(cmrIsMPIMaster()) cmrDebugMessage(CMR_DEBUG_DEBUG,"DEBUG",NULL,__FILE__,__LINE__,__VA_ARGS__)
+#define debug_warning(test,...) if (!(test)) cmrDebugMessage(CMR_DEBUG_WARNING,"WARNING",#test,__FILE__,__LINE__,__VA_ARGS__)
 #else
 #define debug(...) /*cmrDebugMessage(CMR_DEBUG_DEBUG,"DEBUG",NULL,__FILE__,__LINE__,__VA_ARGS__)*/
 #define debug_on_master(...) /*if(cmrIsMPIMaster()) cmrDebugMessage(CMR_DEBUG_DEBUG,"DEBUG",NULL,__FILE__,__LINE__,__VA_ARGS__)*/
+#define debug_warning(test,...) /*if (!(test)) cmrDebugMessage(CMR_DEBUG_WARNING,"WARNING",#test,__FILE__,__LINE__,__VA_ARGS__)*/
 #endif
 
 /*******************  FUNCTION  *********************/
