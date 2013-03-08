@@ -146,26 +146,5 @@ SVUT_DECLARE_FLAT_TEST(TestGenericMemoryAccessor,testSet)
 	SVUT_ASSERT_SAME(&gblBuffer[2][3],mm.getCell(3,2));
 }
 
-/*******************  FUNCTION  *********************/
-int MPI_Comm_rank(MPI_Comm comm, int *rank)
-{
-	*rank = 0;
-	return MPI_SUCCESS;
-}
-
-/*******************  FUNCTION  *********************/
-int MPI_Abort(MPI_Comm comm, int errorcode)
-{
-	abort();
-	return MPI_SUCCESS;
-}
-
-/*******************  FUNCTION  *********************/
-int MPI_Comm_size(MPI_Comm comm, int *size)
-{
-	*size = 1;
-	return MPI_SUCCESS;
-}
-
 /********************  MACRO  ***********************/
 SVUT_USE_DEFAULT_MAIN
