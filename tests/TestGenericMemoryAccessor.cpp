@@ -53,7 +53,7 @@ SVUT_DECLARE_FLAT_TEST(TestGenericMemoryAccessor,testIsContiguous)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestGenericMemoryAccessor,testCopyFromBuffer)
+SVUT_DECLARE_FLAT_TEST(TestGenericMemoryAccessor,testCopyFromBuffer1)
 {
 	CMRMemoryAccessorFRM mm(gblDomainMemory);
 
@@ -72,6 +72,38 @@ SVUT_DECLARE_FLAT_TEST(TestGenericMemoryAccessor,testCopyFromBuffer)
 	
 	//push
 	size_t res = mm.copyFromBuffer(buffer,sizeof(buffer),CMRRect(10,10,10,2));
+	SVUT_ASSERT_EQUAL(sizeof(buffer),res);
+	
+	//check
+	for (int i = 0 ; i < 10 ; i++)
+	{
+		SVUT_SET_CONTEXT("iteration",i);
+		SVUT_ASSERT_EQUAL(i + 10 + (10 * CST_WIDTH),gblBuffer[10][10+i]);
+		SVUT_ASSERT_EQUAL(i + 10 + (11 * CST_WIDTH),gblBuffer[11][10+i]);
+	}
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestGenericMemoryAccessor,testCopyFromBuffer2)
+{
+	CMRDomainMemory domain(gblBuffer,CMRRect(-2,-2,CST_WIDTH,CST_HEIGHT));
+	CMRMemoryAccessorFRM mm(domain);
+
+	//reset
+	memset(gblBuffer,0,sizeof(gblBuffer));
+	
+	//copy
+	float buffer[20];
+	
+	//setup buffer
+	for (int i = 0 ; i < 10 ; i++)
+	{
+		buffer[i] = i + 10 + (10 * CST_WIDTH);
+		buffer[i+10] = i + 10 + (11 * CST_WIDTH);
+	}
+	
+	//push
+	size_t res = mm.copyFromBuffer(buffer,sizeof(buffer),CMRRect(8,8,10,2));
 	SVUT_ASSERT_EQUAL(sizeof(buffer),res);
 	
 	//check

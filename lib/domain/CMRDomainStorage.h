@@ -13,6 +13,7 @@
 #include <cassert>
 #include "../common/CMRDebug.h"
 #include "CMRAbstractDomain.h"
+#include "CMRAbstractMemoryAccessor.h"
 
 /*********************  CLASS  **********************/
 class CMRDomainStorage : public CMRAbstractDomain
@@ -20,42 +21,24 @@ class CMRDomainStorage : public CMRAbstractDomain
 	ASSIST_UNIT_TEST( TestDomainStorage )
 	public:
 		CMRDomainStorage(size_t typeSize,const CMRRect & localDomain,int ghostDepth,int globalWidth = -1,int globalHeight = -1);
+		virtual ~CMRDomainStorage(void);
 		virtual int copyGhostFromBuffer ( const void* buffer, size_t size, const CMRRect& rect );
 		virtual int copyGhostToBuffer ( void* buffer, size_t size, const CMRRect& rect ) const;
 		virtual void* getContiguousGhost ( const CMRRect& rect );
 		virtual bool isContiguousGhost ( const CMRRect& rect ) const;
 		virtual size_t getGhostSize ( const CMRRect& rect ) const;
 		virtual void* getCell ( int x, int y );
-		virtual bool isContiguous ( int directionID ) const;
 		int getMemoryWidth(void) const;
+		CMRAbstractMemoryAccessor & getMemoryAccessor(void);
+		void setMemoryAccessor(CMRAbstractMemoryAccessor * acc, bool autodelete = true);
+		void setMemoryAccessor(CMRAbstractMemoryAccessor & acc);
+		bool hasMemoryAccessor(void) const;
 	protected:
 		int getMemoryCoord(int x,int y) const;
 	private:
-		char * data;
-};
-
-/*********************  CLASS  **********************/
-//TODO cleanup this test code
-template <class T>
-class CMRTypedDomainStorage : public CMRDomainStorage
-{
-	public:
-		class CellAccessor
-		{
-			public:
-				CellAccessor(T * baseAddr,int width) {this->baseAddr = baseAddr; this->width = width;assert(width > 0);};
-				CellAccessor(CellAccessor & orig,int relX,int relY) {this->width = orig.width; this->baseAddr = &orig.getCell(relX,relY);};
-				T & getCell(int dx,int dy) {return baseAddr[dx + dy * width];};
-			private:
-				T * baseAddr;
-				int width;
-				///@TODO add max dx/dy to debug
-				///@TODO add origX/origY in debug mode to help but of course, not necessary for normal run
-		};
-
-	public:
-		CMRTypedDomainStorage (const CMRRect & localDomain,int ghostDepth,int globalWidth = -1,int globalHeight = -1):CMRDomainStorage(sizeof(T),localDomain,globalWidth,globalHeight){};
-		CellAccessor getCellAccessor(int x,int y){CMRTypedDomainStorage<T>::CellAccessor acc((T*)getCell(x,y),getMemoryWidth()/sizeof(T));return acc;};
+		void * data;
+		CMRAbstractMemoryAccessor * acc;
+		bool autodeleteAcc;
 };
 
 #endif // CMR_DOMAIN_STORAGE_H

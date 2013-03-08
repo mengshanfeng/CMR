@@ -15,6 +15,7 @@
 #include "../common/CMRDebug.h"
 #include "../common/CMRGeometry.h"
 #include "CMRAbstractMemoryAccessor.h"
+#include <cstring>
 
 
 /*********************  CLASS  **********************/
@@ -53,12 +54,11 @@ template <class DataType,class MemoryModel>
 void* CMRGenericMemoryAccessor<DataType,MemoryModel>::getCell ( int x, int y )
 {
 	//errors
-	assert(ptrAbsPosition == CMRVect2D(0,0));
 	assert(ptr != NULL);
 	
 	//return cell
 	DataType * typedPtr = (DataType*)ptr;
-	int id = MemoryModel::getCellId(x,y,memoryRect.width,memoryRect.height);
+	int id = MemoryModel::getCellId(x - ptrAbsPosition.x,y - ptrAbsPosition.y,memoryRect.width,memoryRect.height);
 	return typedPtr+id;
 }
 
@@ -93,9 +93,6 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyToBuffer ( void* buff
 	assert(size >= getBufferSize(rect));
 	assert(ptr != NULL);
 	
-	//this is just that unit test does not cover this case
-	debug_warning((ptrAbsPosition == CMRVect2D(0,0)),"Caution, this case wan't validate into test suite !");
-	
 	//local
 	int origX = rect.x - ptrAbsPosition.x;
 	int origY = rect.y - ptrAbsPosition.y;
@@ -108,8 +105,15 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyToBuffer ( void* buff
 	
 	//copy
 	for (int y = 0 ; y < rect.height ; y++)
+	{
 		for (int x = 0 ; x < rect.width ; x++)
-			typedBuffer[y*rect.width + x] = typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,ptrAbsPosition.x,ptrAbsPosition.y)];
+		{
+			void * dest = &typedBuffer[y*rect.width + x];
+			const void * src = &typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,ptrAbsPosition.x +x + origX,ptrAbsPosition.y + y + origY)];
+			/** @TODO optimize small sizes **/
+			memcpy(dest,src,sizeof(DataType));
+		}
+	}
 
 	//return current used size
 	return getBufferSize(rect);
@@ -125,9 +129,6 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyFromBuffer ( const vo
 	assert(size >= getBufferSize(rect));
 	assert(ptr != NULL);
 	
-	//this is just that unit test does not cover this case
-	debug_warning((ptrAbsPosition == CMRVect2D(0,0)),"Caution, this case wan't validate into test suite !");
-	
 	//local
 	int origX = rect.x - ptrAbsPosition.x;
 	int origY = rect.y - ptrAbsPosition.y;
@@ -135,13 +136,20 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyFromBuffer ( const vo
 	int memH = memoryRect.height;
 	
 	//ptrs
-	const DataType * typedBuffer = (DataType*) buffer;
+	const DataType * typedBuffer = (const DataType*) buffer;
 	DataType * typedDomain = (DataType*) ptr;
 	
 	//copy
 	for (int y = 0 ; y < rect.height ; y++)
+	{
 		for (int x = 0 ; x < rect.width ; x++)
-			typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,ptrAbsPosition.x,ptrAbsPosition.y)] = typedBuffer[y*rect.width + x];
+		{
+			void * dest = &typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,ptrAbsPosition.x +x + origX,ptrAbsPosition.y + y + origY)];
+			const void * src = &typedBuffer[y*rect.width + x];
+			/** @TODO optimize small sizes **/
+			memcpy(dest,src,sizeof(DataType));
+		}
+	}
 
 	//return current used size
 	return getBufferSize(rect);

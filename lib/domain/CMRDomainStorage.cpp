@@ -17,6 +17,15 @@ CMRDomainStorage::CMRDomainStorage ( size_t typeSize,const CMRRect & localDomain
 {
 	//allocate the data
 	this->data = new char[memoryRect.surface() * typeSize];
+	this->autodeleteAcc = false;
+	this->acc = NULL;
+}
+
+/*******************  FUNCTION  *********************/
+CMRDomainStorage::~CMRDomainStorage ( void )
+{
+	if (autodeleteAcc && acc != NULL)
+		delete acc;
 }
 
 /*******************  FUNCTION  *********************/
@@ -25,8 +34,9 @@ bool CMRDomainStorage::isContiguousGhost ( const CMRRect& rect ) const
 	//warnings
 	wassume(memoryRect.contains(rect),"You request a memory rect which didn't fit with current domain storage memory : %d , %d ; %d , %d",rect.x,rect.y,rect.width,rect.height);
 	assert(dimensions == 2);
+	assert(acc != NULL);
 	//contiguous only if get one line
-	return (rect.height == 1);
+	return this->acc->isContiguous(rect);
 }
 
 /*******************  FUNCTION  *********************/
@@ -69,8 +79,9 @@ int CMRDomainStorage::getMemoryCoord ( int x, int y ) const
 /*******************  FUNCTION  *********************/
 void* CMRDomainStorage::getCell ( int x, int y )
 {
-	//compute memo loc and return
-	return &this->data[ getMemoryCoord(x,y) ];
+	//errors
+	assert(acc != NULL);
+	return this->acc->getCell(x,y);
 }
 
 /*******************  FUNCTION  *********************/
@@ -80,19 +91,9 @@ int CMRDomainStorage::copyGhostFromBuffer ( const void* buffer, size_t size, con
 	assert(dimensions == 2);
 	assume(memoryRect.contains(rect),"You request a memory rect which didn't fit with current domain storage memory : %d , %d ; %d , %d",rect.x,rect.y,rect.width,rect.height);
 	assume(size >= rect.width * rect.height * typeSize,"Invalid buffer size, too small : %lu.",size);
-
-	for (int y = 0 ; y < rect.height ; y++)
-	{
-		for (int x = 0 ; x < rect.width ; x++)
-		{
-			char * buffer_base = ((char*)buffer) + ( x + y * rect.width ) * typeSize;
-			char * data_base = data + getMemoryCoord(x,y);
-			for (int k = 0 ; k < typeSize ; k++)
-				data_base[k] = buffer_base[k];
-		}
-	}
+	assert(acc != NULL);
 	
-	return rect.width * rect.height * typeSize;
+	return acc->copyFromBuffer(buffer,size,rect);
 }
 
 /*******************  FUNCTION  *********************/
@@ -102,19 +103,9 @@ int CMRDomainStorage::copyGhostToBuffer ( void* buffer, size_t size, const CMRRe
 	assert(dimensions == 2);
 	assume(memoryRect.contains(rect),"You request a memory rect which didn't fit with current domain storage memory : %d , %d ; %d , %d",rect.x,rect.y,rect.width,rect.height);
 	assume(size >= rect.width * rect.height * typeSize,"Invalid buffer size, too small : %lu.",size);
+	assert(acc != NULL);
 
-	for (int y = 0 ; y < rect.height ; y++)
-	{
-		for (int x = 0 ; x < rect.width ; x++)
-		{
-			char * buffer_base = ((char*)buffer) + ( x + y * rect.width ) * typeSize;
-			char * data_base = data + getMemoryCoord(x,y);
-			for (int k = 0 ; k < typeSize ; k++)
-				buffer_base[k] = data_base[k];
-		}
-	}
-	
-	return rect.width * rect.height * typeSize;
+	return acc->copyToBuffer(buffer,size,rect);
 }
 
 /*******************  FUNCTION  *********************/
@@ -123,13 +114,49 @@ size_t CMRDomainStorage::getGhostSize ( const CMRRect& rect ) const
 	//errors
 	assert(dimensions == 2);
 	assume(memoryRect.contains(rect),"You request a memory rect which didn't fit with current domain storage memory : %d , %d ; %d , %d",rect.x,rect.y,rect.width,rect.height);
-
+	//need to rename the function maybe if no equal
+	assert(rect.height * rect.width * typeSize == acc->getBufferSize(rect));
 	//return
-	return rect.height * rect.width * typeSize;
+	return acc->getBufferSize(rect);
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRDomainStorage::isContiguous ( int directionID ) const
+CMRAbstractMemoryAccessor& CMRDomainStorage::getMemoryAccessor ( void )
 {
-	return (directionID == 0);
+	assert(acc != NULL);
+	return *acc;
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRDomainStorage::hasMemoryAccessor ( void ) const
+{
+	return acc != NULL;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRDomainStorage::setMemoryAccessor ( CMRAbstractMemoryAccessor* acc, bool autodelete )
+{
+	//errors
+	assert(acc != NULL);
+	
+	//check compat
+	assume(acc->getTypeSize() == typeSize,"Invalid type size for memory accessor, current is %lu and try to set new : %lu !",typeSize,acc->getTypeSize());
+	warning("Need to check type compat here !");
+	
+	//delete current
+	if (this->autodeleteAcc && this->acc != NULL)
+		delete this->acc;
+	
+	//setup
+	this->acc = acc;
+	this->autodeleteAcc = autodelete;
+	
+	//put data
+	acc->set(data,memoryRect);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRDomainStorage::setMemoryAccessor ( CMRAbstractMemoryAccessor& acc )
+{
+	this->setMemoryAccessor(&acc,false);
 }

@@ -77,11 +77,20 @@ SVUT_DECLARE_FLAT_TEST(TestCellAccessor,testGetCell)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestCellAccessor,testGetCellConst)
+SVUT_DECLARE_FLAT_TEST(TestCellAccessor,testGetCellConst1)
 {
 	const CMRCellAccessorFRM mm(gblDomainMemory,0,0);
 	SVUT_ASSERT_SAME(&gblBuffer[3][2],&mm.getCell(2,3));
 	SVUT_ASSERT_SAME(&gblBuffer[2][3],&mm.getCell(3,2));
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestCellAccessor,testGetCellConst2)
+{
+	CMRDomainMemory domain(gblBuffer,CMRRect(-2,-2,CST_WIDTH,CST_HEIGHT));
+	const CMRCellAccessorFRM mm(domain,0,0,true);
+	SVUT_ASSERT_SAME(&gblBuffer[3][2],&mm.getCell(0,1));
+	SVUT_ASSERT_SAME(&gblBuffer[2][3],&mm.getCell(1,0));
 }
 
 /*******************  FUNCTION  *********************/

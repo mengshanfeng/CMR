@@ -12,6 +12,8 @@
 #include <communication/CMRCommSchem.h>
 #include <MockCommunicator.h>
 #include <domain/CMRDomainStorage.h>
+#include <domain/CMRGenericMemoryAccessor.h>
+#include <domain/CMRMemoryModels.h>
 #include <mpi.h>
 
 /**********************  USING  *********************/
@@ -39,6 +41,7 @@ class TestDomainStorage : public svutTestCase
 void TestDomainStorage::setUp ( void )
 {
 	domain = new CMRDomainStorage(8,CMRRect(0,0,800,600),2);
+	domain->setMemoryAccessor(new CMRGenericMemoryAccessor<unsigned long,CMRMemoryModelRowMajor>());
 }
 
 /*******************  FUNCTION  *********************/

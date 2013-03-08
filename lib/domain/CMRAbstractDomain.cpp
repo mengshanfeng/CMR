@@ -19,7 +19,7 @@ CMRAbstractDomain::CMRAbstractDomain ( size_t typeSize, const CMRRect& localDoma
 {
 	//errors
 	assert(typeSize > 0);
-	assert(ghostDepth > 0);
+	assert(ghostDepth >= 0);
 	assert(globalWidth >= -1);
 	assert(globalHeight >= -1);
 	

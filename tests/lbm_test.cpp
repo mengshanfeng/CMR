@@ -11,6 +11,8 @@
 #include <common/CMRSpaceSplitter.h>
 #include <CMROperation.h>
 #include <domain/CMRMemoryModels.h>
+#include <domain/CMRCellAccessor.h>
+#include <domain/CMRMemoryModels.h>
 
 using namespace std;
 
@@ -75,33 +77,33 @@ struct VarSystem
 {
 	struct CellAccessor
 	{
-		CellAccessor(VarSystem & sys,int x,int y);
-		CellAccessor(CellAccessor & acc,int x,int y);
-		CMRTypedDomainStorage<float[9]>::CellAccessor directions;
-		CMRTypedDomainStorage<LBMCellType>::CellAccessor cellType;
+		CellAccessor(VarSystem & sys,int x,int y,bool absolute = true);
+		CellAccessor(CellAccessor & acc,int x,int y,bool absolute = false);
+		CMRCellAccessor<float[DIRECTIONS],CMRMemoryModelRowMajor> directions;
+		CMRCellAccessor<LBMCellType,CMRMemoryModelRowMajor> cellType;
 	};
 	VarSystem(const CMRRect & rect, int ghostDepth, int globalWidth = -1, int globalHeight = -1);
-	CMRTypedDomainStorage<float[9]> directions;
-	CMRTypedDomainStorage<LBMCellType> cellType;
+	CMRDomainStorage directions;
+	CMRDomainStorage cellType;
 	CMRRect getGlobalRect(void) const {return cellType.getGlobalRect();};
 	CMRRect getLocalRect(void) const {return cellType.getLocalDomainRect();};
 };
 
 VarSystem::VarSystem ( const CMRRect & rect, int ghostDepth, int globalWidth, int globalHeight)
-	:directions(rect,ghostDepth,globalWidth,globalHeight),cellType(rect,ghostDepth,globalWidth,globalHeight)
+	:directions(sizeof(float[DIRECTIONS]),rect,ghostDepth,globalWidth,globalHeight),cellType(sizeof(LBMCellType),rect,ghostDepth,globalWidth,globalHeight)
 {
 }
 
 
 
-VarSystem::CellAccessor::CellAccessor ( VarSystem& sys, int x, int y )
-	:directions(sys.directions.getCellAccessor(x,y)),cellType(sys.cellType.getCellAccessor(x,y))
+VarSystem::CellAccessor::CellAccessor ( VarSystem& sys, int x, int y,bool absolute )
+	:directions(sys.directions,x,y,absolute),cellType(sys.cellType,x,y,absolute)
 {
 	
 }
 
-VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y )
-	:directions(acc.directions,x,y),cellType(acc.cellType,x,y)
+VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y,bool absolute)
+	:directions(acc.directions,x,y,absolute),cellType(acc.cellType,x,y,absolute)
 {
 }
 

@@ -8,6 +8,9 @@
 #include <communication/CMRMPICommFactory.h>
 #include <communication/CMRCommSchem.h>
 #include <domain/CMRDomainStorage.h>
+#include <domain/CMRCellAccessor.h>
+#include <domain/CMRMemoryModels.h>
+#include <domain/CMRGenericMemoryAccessor.h>
 #include <common/CMRSpaceSplitter.h>
 #include <CMROperation.h>
 
@@ -17,31 +20,33 @@ struct VarSystem
 {
 	struct CellAccessor
 	{
-		CellAccessor(VarSystem & sys,int x,int y);
-		CellAccessor(CellAccessor & acc,int x,int y);
-		CMRTypedDomainStorage<float>::CellAccessor density;
-		CMRTypedDomainStorage<float>::CellAccessor variation;
+		CellAccessor(VarSystem & sys,int x,int y,bool absolute = true);
+		CellAccessor(CellAccessor & acc,int x,int y,bool absolute = false);
+		CMRCellAccessor<float,CMRMemoryModelRowMajor> density;
+		CMRCellAccessor<float,CMRMemoryModelRowMajor> variation;
 	};
 	VarSystem(const CMRRect & rect, int ghostDepth, int globalWidth = -1, int globalHeight = -1);
-	CMRTypedDomainStorage<float> density;
-	CMRTypedDomainStorage<float> variation;
+	CMRDomainStorage density;
+	CMRDomainStorage variation;
 };
 
 VarSystem::VarSystem ( const CMRRect & rect, int ghostDepth, int globalWidth, int globalHeight )
-	:density(rect,ghostDepth,globalWidth,globalHeight),variation(rect,ghostDepth,globalWidth,globalHeight)
+	:density(sizeof(float),rect,ghostDepth,globalWidth,globalHeight),variation(sizeof(float),rect,ghostDepth,globalWidth,globalHeight)
 {
+// 	density.setMemoryAccessor(new CMRGenericMemoryAccessor<float,CMRMemoryModelRowMajor>());
+// 	variation.setMemoryAccessor(new CMRGenericMemoryAccessor<float,CMRMemoryModelRowMajor>());
 }
 
 
 
-VarSystem::CellAccessor::CellAccessor ( VarSystem& sys, int x, int y )
-	:density(sys.density.getCellAccessor(x,y)),variation(sys.variation.getCellAccessor(x,y))
+VarSystem::CellAccessor::CellAccessor ( VarSystem& sys, int x, int y ,bool absolute)
+	:density(sys.density,x,y,absolute),variation(sys.variation,x,y,absolute)
 {
 	
 }
 
-VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y )
-	:density(acc.density,x,y),variation(acc.variation,x,y)
+VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y ,bool absolute)
+	:density(acc.density,x,y,absolute),variation(acc.variation,x,y,absolute)
 {
 }
 
@@ -69,7 +74,8 @@ int main(int argc, char * argv[])
 	splitter.printDebug(CMR_MPI_MASTER);
 
 	//try comm
-	CMRTypedDomainStorage<float> domain(CMRRect(0,0,800,600),1);
+	CMRDomainStorage domain(sizeof(float),CMRRect(0,0,800,600),1);
+	domain.setMemoryAccessor(new CMRGenericMemoryAccessor<float,CMRMemoryModelRowMajor>());
 	
 	assert(cmrGetMPISize() == 2);
 	

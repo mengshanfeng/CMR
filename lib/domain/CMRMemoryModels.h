@@ -39,11 +39,11 @@ int CMRMemoryModelRowMajor::getCellId ( int x, int y, int width, int height )
 }
 
 /*******************  FUNCTION  *********************/
-int CMRMemoryModelRowMajor::getRelCellId ( int dx, int dy, int width, int height, int x, int y )
+int CMRMemoryModelRowMajor::getRelCellId ( int dx, int dy, int width, int height, int absX, int absY )
 {
 	//errors
-	assert(x+dx >= 0 && x+dx < width);
-	assert(y+dy >= 0 && y+dy < height);
+	assert(absX >= 0 && absX < width);
+	assert(absY >= 0 && absY < height);
 	
 	return dy * width + dx;
 }

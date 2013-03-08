@@ -17,14 +17,17 @@
 #include "../common/CMRDebug.h"
 #include "../common/CMRGeometry.h"
 #include "CMRDomainMemory.h"
+#include "CMRDomainStorage.h"
+#include "CMRGenericMemoryAccessor.h"
 
 /*********************  CLASS  **********************/
 template <class DataType,class MemoryModel>
 class CMRCellAccessor : public CMRDomainMemory
 {
 	public:
-		CMRCellAccessor( const CMRDomainMemory& orig, int dx, int dy );
-		CMRCellAccessor(const CMRCellAccessor<DataType,MemoryModel> & orig,int dx,int dy);
+		CMRCellAccessor( CMRDomainStorage & orig, int dx, int dy, bool absolute = false);
+		CMRCellAccessor( CMRDomainMemory& orig, int dx, int dy, bool absolute = false);
+		CMRCellAccessor( const CMRCellAccessor<DataType,MemoryModel> & orig,int dx,int dy, bool absolute = false);
 		DataType & getCell(int dx,int dy);
 		const DataType & getCell(int dx,int dy) const;
 		size_t getTypeSize(void) const;
@@ -32,21 +35,52 @@ class CMRCellAccessor : public CMRDomainMemory
 };
 
 /*******************  FUNCTION  *********************/
+//TODO check usage, maybe this is a hack
 template <class DataType,class MemoryModel>
-CMRCellAccessor<DataType,MemoryModel>::CMRCellAccessor ( const CMRDomainMemory& orig, int dx, int dy )
-	:CMRDomainMemory(orig)
+CMRCellAccessor<DataType,MemoryModel>::CMRCellAccessor ( CMRDomainStorage& orig, int dx, int dy, bool absolute)
 {
-	this->ptr = &getCell(dx,dy);
+	//get accessor
+	warning("Provide a compat check system !");
+	
+	//if acc is NULL, setup a new one compatible with current model
+	if (orig.hasMemoryAccessor() == false)
+		orig.setMemoryAccessor(new CMRGenericMemoryAccessor<DataType,MemoryModel>());
+	
+	//setup memory domain
+	CMRAbstractMemoryAccessor * acc = &orig.getMemoryAccessor();
+	this->set(*acc);
+	
+	//setup all
+	if (absolute)
+		this->ptr = &getCell(dx - memoryRect.x,dy - memoryRect.y);
+	else
+		this->ptr = &getCell(dx,dy);
 	this->ptrAbsPosition.x += dx;
 	this->ptrAbsPosition.y += dy;
 }
 
 /*******************  FUNCTION  *********************/
 template <class DataType,class MemoryModel>
-CMRCellAccessor<DataType,MemoryModel>::CMRCellAccessor ( const CMRCellAccessor< DataType, MemoryModel >& orig, int dx, int dy ) 
+CMRCellAccessor<DataType,MemoryModel>::CMRCellAccessor ( CMRDomainMemory& orig, int dx, int dy, bool absolute)
+	:CMRDomainMemory(orig)
+{
+	if (absolute)
+		this->ptr = &getCell(dx - memoryRect.x,dy - memoryRect.y);
+	else
+		this->ptr = &getCell(dx,dy);
+	this->ptrAbsPosition.x += dx;
+	this->ptrAbsPosition.y += dy;
+}
+
+/*******************  FUNCTION  *********************/
+template <class DataType,class MemoryModel>
+CMRCellAccessor<DataType,MemoryModel>::CMRCellAccessor ( const CMRCellAccessor< DataType, MemoryModel >& orig, int dx, int dy , bool absolute) 
 	: CMRDomainMemory(orig)
 {
-	this->ptr = &getCell(dx,dy);
+	if (absolute)
+		this->ptr = &getCell(dx - memoryRect.x,dy - memoryRect.y);
+	else
+		this->ptr = &getCell(dx,dy);
 	this->ptrAbsPosition.x += dx;
 	this->ptrAbsPosition.y += dy;
 }
@@ -58,7 +92,7 @@ DataType& CMRCellAccessor<DataType,MemoryModel>::getCell ( int dx, int dy )
 	//errors
 	assert(ptr != NULL);
 	
-	int id = MemoryModel::getRelCellId(dx,dy,memoryRect.width,memoryRect.height,ptrAbsPosition.x,ptrAbsPosition.y);
+	int id = MemoryModel::getRelCellId(dx,dy,memoryRect.width,memoryRect.height,ptrAbsPosition.x+dx-memoryRect.x,ptrAbsPosition.y+dy-memoryRect.y);
 	return ((DataType*)ptr)[id];
 }
 
@@ -69,7 +103,7 @@ const DataType& CMRCellAccessor<DataType,MemoryModel>::getCell ( int dx, int dy 
 	//errors
 	assert(ptr != NULL);
 	
-	int id = MemoryModel::getRelCellId(dx,dy,memoryRect.width,memoryRect.height,ptrAbsPosition.x,ptrAbsPosition.y);
+	int id = MemoryModel::getRelCellId(dx,dy,memoryRect.width,memoryRect.height,ptrAbsPosition.x+dx-memoryRect.x,ptrAbsPosition.y+dy-memoryRect.y);
 	return ((DataType*)ptr)[id];
 }
 
