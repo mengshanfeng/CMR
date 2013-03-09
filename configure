@@ -19,7 +19,9 @@ PROJECT_NAME='CartesianMeshRuntime'
 # State variables
 PREFIX='/usr/local'
 CMAKE='cmake'
+EXTRA_CC=''
 EXTRA_CXX=''
+EXTRA_CFLAGS=''
 EXTRA_CXXFLAGS=''
 EXTRA_LDFLAGS=''
 BUILD_TYPE='Release'
@@ -82,6 +84,8 @@ To get the generated cmake command :
 Some influential environment variables:
    LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
                nonstandard directory <lib dir>
+   CC          C compiler command
+   CFLAGS      C compiler flags
    CXX         C++ compiler command
    CXXFLAGS    C++ compiler flags"
 
@@ -165,6 +169,12 @@ do
 		--show)
 			ENABLE_DISPLAY_COMMAND='true'
 			;;
+		CC=*)
+			EXTRA_CC="`get_arg_value \"$arg\" CC`"
+			;;
+		CC=*)
+			EXTRA_CFLAGS="`get_arg_value \"$arg\" CFLAGS`"
+			;;
 		CXX=*)
 			EXTRA_CXX="`get_arg_value \"$arg\" CXX`"
 			;;
@@ -200,6 +210,8 @@ fi
 
 ######################################################
 #Gen CC/CXX/LDFLAGS commands
+if [ ! -z "$EXTRA_CC" ];       then EXTRA_CC="-DCMAKE_C_COMPILER=${EXTRA_CC}"                 ; fi
+if [ ! -z "$EXTRA_CFLAGS" ];   then EXTRA_CFLAGS="-DCMAKE_C_COMPILER=${EXTRA_CFLAGS}"         ; fi
 if [ ! -z "$EXTRA_CXX" ];      then EXTRA_CXX="-DCMAKE_CXX_COMPILER=${EXTRA_CXX}"             ; fi
 if [ ! -z "$EXTRA_CXXFLAGS" ]; then EXTRA_CXXFLAGS="-DCMAKE_CXX_FLAGS=${EXTRA_CXXFLAGS}"      ; fi
 if [ ! -z "$EXTRA_LDFLAGS" ];  then EXTRA_LDFLAGS="-DCMAKE_EXE_LINKER_FLAGS=${EXTRA_LDFLAGS}" ; fi
@@ -222,7 +234,7 @@ gen_clean_command()
 ######################################################
 #Gen final command
 COMMAND="`gen_clean_command "${CMAKE}" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" "${PREFIX}" "${EXTRA_CXX}" \
-	"${EXTRA_CXXFLAGS}" "${EXTRA_LDFLAGS}" "${ENABLE_SELF_TEST}" "${ENABLE_JUNIT_OUT}" "${ENABLE_VALGRIND}" \
+	"${EXTRA_CXXFLAGS}" "${EXTRA_LDFLAGS}" "${EXTRA_CC}" "${EXTRA_CFLAGS}" "${ENABLE_SELF_TEST}" "${ENABLE_JUNIT_OUT}" "${ENABLE_VALGRIND}" \
 	"${SVUT_PREFIX}" "${DISABLE_TESTS}" "${DISABLE_CPPUNIT}" "${LIB_SUFFIX}" "${MPI_PREFIX}" "${ENABLE_RPATH}" \
 	"${SOURCE_DIR}"`"
 
