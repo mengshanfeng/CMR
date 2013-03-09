@@ -70,7 +70,7 @@ CMRVariableId CMRVarSystem::addVariable ( std::string name, int typeSize, int gh
 {
 	CMRVariable var(name,typeSize,ghostDepth);
 	variables.push_back(var);
-	return variables.size() - 1;
+	return (int)variables.size() - 1;
 }
 
 /*******************  FUNCTION  *********************/
@@ -78,7 +78,7 @@ void CMRVarSystem::freeDomain ( CMRVariableId varId, int tstep )
 {
 	//errors
 	assert((tstep >= 0 && tstep < CMR_MAX_TSTEPS) || tstep == CMR_ALL);
-	assert((varId >= 0 && varId < variables.size()) || varId == CMR_ALL);
+	assert((varId >= 0 && varId < (int)variables.size()) || varId == CMR_ALL);
 	
 	if (varId == CMR_ALL)
 	{
@@ -98,7 +98,7 @@ CMRDomainStorage* CMRVarSystem::getDomain ( CMRVariableId varId, int tstep )
 	CMRDomainStorage * res;
 
 	//errors
-	assert(varId >= 0 && varId < variables.size());
+	assert(varId >= 0 && varId < (int)variables.size());
 	assert(tstep >= 0 && tstep < CMR_MAX_TSTEPS);
 	
 	//get domain
@@ -116,7 +116,7 @@ CMRDomainStorage* CMRVarSystem::getDomain ( CMRVariableId varId, int tstep )
 void CMRVarSystem::permutVar ( CMRVariableId varId )
 {
 	//errors
-	assert((varId >= 0 && varId < variables.size()) || varId == CMR_ALL);
+	assert((varId >= 0 && varId < (int)variables.size()) || varId == CMR_ALL);
 	
 	if (varId == CMR_ALL)
 	{

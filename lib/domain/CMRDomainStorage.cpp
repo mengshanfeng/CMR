@@ -16,13 +16,15 @@ CMRDomainStorage::CMRDomainStorage ( size_t typeSize,const CMRRect & localDomain
 	: CMRAbstractDomain ( typeSize,localDomain,ghostDepth,globalWidth,globalHeight)
 {
 	//allocate the data
-	this->data = new char[memoryRect.surface() * typeSize];
+	this->data = new unsigned char[memoryRect.surface() * typeSize];
 	this->acc = NULL;
 }
 
 /*******************  FUNCTION  *********************/
 CMRDomainStorage::~CMRDomainStorage ( void )
 {
+	if (data != NULL)
+		delete [] data;
 	if (acc != NULL)
 		delete acc;
 }

@@ -39,7 +39,7 @@ struct CMRVariable
 
 /*********************  CLASS  **********************/
 typedef std::vector<CMRVariable> CMRVariableVector;
-typedef int CMRVariableId;
+typedef unsigned int CMRVariableId;
 
 /*********************  CLASS  **********************/
 class CMRDomainBuilder

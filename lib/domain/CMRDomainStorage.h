@@ -35,7 +35,7 @@ class CMRDomainStorage : public CMRAbstractDomain
 	protected:
 		int getMemoryCoord(int x,int y) const;
 	private:
-		void * data;
+		unsigned char * data;
 		CMRAbstractMemoryAccessor * acc;
 };
 
