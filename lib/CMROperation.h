@@ -18,7 +18,7 @@
 /*********************  CLASS  **********************/
 class CMROperation;
 class CMRAbstractDomain;
-class CMRRect;
+struct CMRRect;
 
 /*********************  CLASS  **********************/
 class CMRMeshOperation

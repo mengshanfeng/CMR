@@ -16,7 +16,7 @@
 /*********************  CLASS  **********************/
 class CMRComm;
 class CMRAbstractDomain;
-class CMRRect;
+struct CMRRect;
 
 /*********************  CLASS  **********************/
 class CMRCommFactory

@@ -20,8 +20,8 @@
 /********************  MACRO  ***********************/
 #define CMR_MPI_MASTER 0
 #define CMR_MPI_ALL -1
+#define CMR_ALL -1
 
-class tm;
 /********************  ENUM  ************************/
 /**
  * Synchronisation types.

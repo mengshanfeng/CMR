@@ -35,6 +35,7 @@ enum CMRDebugMessageLevel
 #define info_on_master(...) if(cmrIsMPIMaster()) cmrDebugMessage(CMR_DEBUG_INFO,"INFO",NULL,__FILE__,__LINE__,__VA_ARGS__)
 /** @TODO rename this with cmr.... prefix **/
 #define assume(test,...) if (!(test)) cmrDebugMessage(CMR_DEBUG_ERROR,"ERROR",#test,__FILE__,__LINE__,__VA_ARGS__)
+#define cmrNotImplemented(...) cmrDebugMessage(CMR_DEBUG_ERROR,"NOIMPL",NULL,__FILE__,__LINE__,__VA_ARGS__)
 
 /********************  MACRO  ***********************/
 #ifndef NDEBUG

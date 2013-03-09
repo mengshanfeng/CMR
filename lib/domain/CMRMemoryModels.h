@@ -24,9 +24,16 @@ struct CMRMemoryModelRowMajor
 	static inline int getCellId(int x,int y,int width,int height);
 	static inline int getRelCellId(int dx,int dy,int width,int height,int x,int y);
 	static inline bool isContiguous(const CMRRect & memoryRect, const CMRRect & rect);
+	static inline const char * getName(void);
 	//template <class T> int copyFromBuffer(T * mesh, const void* buffer, size_t size, const CMRRect & memoryRect, const CMRRect & rect);
 	//template <class T> int copyToBuffer( const T * mesh,void* buffer, size_t size, const CMRRect & memoryRect, const CMRRect & rect);
 };
+
+/*******************  FUNCTION  *********************/
+const char* CMRMemoryModelRowMajor::getName ( void )
+{
+	return "RowMajor";
+}
 
 /*******************  FUNCTION  *********************/
 int CMRMemoryModelRowMajor::getCellId ( int x, int y, int width, int height )

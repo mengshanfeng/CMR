@@ -46,5 +46,11 @@ SVUT_DECLARE_FLAT_TEST(TestMemoryModelRowMajor,testIsContiguous)
 	SVUT_ASSERT_FALSE(CMRMemoryModelRowMajor::isContiguous(CST_MM_RECT,CMRRect(0,0,1,CST_HEIGHT)));
 }
 
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestMemoryModelRowMajor,testGetName)
+{
+	SVUT_ASSERT_EQUAL("RowMajor",CMRMemoryModelRowMajor::getName());
+}
+
 /********************  MACRO  ***********************/
 SVUT_USE_DEFAULT_MAIN

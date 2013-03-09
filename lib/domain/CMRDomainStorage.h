@@ -30,15 +30,13 @@ class CMRDomainStorage : public CMRAbstractDomain
 		virtual void* getCell ( int x, int y );
 		int getMemoryWidth(void) const;
 		CMRAbstractMemoryAccessor & getMemoryAccessor(void);
-		void setMemoryAccessor(CMRAbstractMemoryAccessor * acc, bool autodelete = true);
-		void setMemoryAccessor(CMRAbstractMemoryAccessor & acc);
+		void setMemoryAccessor(CMRAbstractMemoryAccessor * acc);
 		bool hasMemoryAccessor(void) const;
 	protected:
 		int getMemoryCoord(int x,int y) const;
 	private:
 		void * data;
 		CMRAbstractMemoryAccessor * acc;
-		bool autodeleteAcc;
 };
 
 #endif // CMR_DOMAIN_STORAGE_H

@@ -12,41 +12,54 @@
 /********************  HEADERS  *********************/
 #include <vector>
 #include <string>
-#include "CMRMemoryModel.h"
+#include <cstdlib>
+#include "CMRDomainStorage.h"
 
+/********************  MACRO  ***********************/
 #define CMR_MAX_TSTEPS 2
 
 /*********************  CLASS  **********************/
 struct CMRVariable
 {
+	CMRVariable(const std::string & name,size_t typeSize,int ghostDepth);
 	std::string name;
-	CMRMemoryModel * model;
 	int ghostDepth;
-	CMRAbstrctDomain * domain[CMR_MAX_TSTEPS];
-	int maxSteps;
+	size_t typeSize;
+	CMRDomainStorage * domain[CMR_MAX_TSTEPS];
 };
 
 /*********************  CLASS  **********************/
 typedef std::vector<CMRVariable> CMRVariableVector;
+typedef int CMRVariableId;
 
 /*********************  CLASS  **********************/
 class CMRDomainBuilder
 {
 	public:
-		virtual ~CMRDomainBuilder(void);
-		virtual CMRAbstractDomain * buildDomain(const CMRVariable & variable);
+		virtual ~CMRDomainBuilder(void) {};
+		virtual CMRAbstractDomain * buildDomain(const CMRVariable & variable) = 0;
 };
 
 /*********************  CLASS  **********************/
 class CMRVarSystem
 {
 	public:
-		int addVariable(std::string name,CMRMemoryModel * memoryModel,int ghostDepth,int maxSteps);
-		void permutDomin(int varId,CMRMemoryModel * memoryModel);
-		void permutAllDomain(void);
-		CMRAbstractDomain * getDomain(int tstep,int varId);
+		CMRVarSystem(CMRDomainBuilder * domainBuilder);
+		~CMRVarSystem(void);
+		CMRVariableId addVariable(std::string name,int typeSize,int ghostDepth);
+		void permutVar(CMRVariableId varId);
+		void permutAllVars(void);
+		CMRAbstractDomain * getDomain(CMRVariableId varId,int tstep);
+		void freeDomain(CMRVariableId varId,int tstep);
+		void freeAllDomains(int tstep);
+		void printDebug(void) const;
 	private:
-		CMRMemoryModelVector vectors;
+		//never copy such objects
+		CMRVarSystem(const CMRVarSystem & sys);
+		CMRVarSystem & operator =(const CMRVarSystem & sys);
+	private:
+		CMRVariableVector variables;
+		CMRDomainBuilder * domainBuilder;
 };
 
 #endif // CMR_VAR_SYSTEM_H

@@ -152,6 +152,7 @@ CMRRect CMRBasicSpaceSplitter::getLocalDomain ( int localId ) const
 			rankY = localId % split.y;
 			break;
 		default:
+			rankX = rankY = -1;
 			fatal("Invalid value for firstDim : %d",firstDim);
 	}
 	

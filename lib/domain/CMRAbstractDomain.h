@@ -21,7 +21,7 @@
 /*********************  CLASS  **********************/
 class CMRCommFactory;
 class CMRCommSchem;
-class CMRRect;
+struct CMRRect;
 
 /********************  ENUM  ************************/
 enum CMRUpdateStatus

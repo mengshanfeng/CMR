@@ -17,14 +17,13 @@ CMRDomainStorage::CMRDomainStorage ( size_t typeSize,const CMRRect & localDomain
 {
 	//allocate the data
 	this->data = new char[memoryRect.surface() * typeSize];
-	this->autodeleteAcc = false;
 	this->acc = NULL;
 }
 
 /*******************  FUNCTION  *********************/
 CMRDomainStorage::~CMRDomainStorage ( void )
 {
-	if (autodeleteAcc && acc != NULL)
+	if (acc != NULL)
 		delete acc;
 }
 
@@ -59,21 +58,9 @@ int CMRDomainStorage::getMemoryWidth ( void ) const
 /*******************  FUNCTION  *********************/
 int CMRDomainStorage::getMemoryCoord ( int x, int y ) const
 {
-	//vars
-	int w;
-	int ghostDept = this->ghostDepth;
-
-	//errors
-	assert(memoryRect.contains(CMRVect2D(x,y)));
-	assert(dimensions == 2);
-
-	//fix coords for ghost
-	x -= memoryRect.x;
-	y -= memoryRect.y;
-	w = memoryRect.width;
-
-	//return
-	return (x + y * w) * typeSize;
+	cmrNotImplemented("Need implementation of acc->getCellId().");
+	//return this->acc->getCellId(x,y);
+	return -1;
 }
 
 /*******************  FUNCTION  *********************/
@@ -134,7 +121,7 @@ bool CMRDomainStorage::hasMemoryAccessor ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRDomainStorage::setMemoryAccessor ( CMRAbstractMemoryAccessor* acc, bool autodelete )
+void CMRDomainStorage::setMemoryAccessor ( CMRAbstractMemoryAccessor* acc )
 {
 	//errors
 	assert(acc != NULL);
@@ -144,19 +131,12 @@ void CMRDomainStorage::setMemoryAccessor ( CMRAbstractMemoryAccessor* acc, bool 
 	warning("Need to check type compat here !");
 	
 	//delete current
-	if (this->autodeleteAcc && this->acc != NULL)
+	if (this->acc != NULL)
 		delete this->acc;
 	
 	//setup
 	this->acc = acc;
-	this->autodeleteAcc = autodelete;
 	
 	//put data
 	acc->set(data,memoryRect);
-}
-
-/*******************  FUNCTION  *********************/
-void CMRDomainStorage::setMemoryAccessor ( CMRAbstractMemoryAccessor& acc )
-{
-	this->setMemoryAccessor(&acc,false);
 }

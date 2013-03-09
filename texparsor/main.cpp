@@ -599,7 +599,6 @@ int main(int argc,char ** argv)
 	assert(argc == 3);
 	string dep= argv[1];
 	string value = argv[2];
-	int start = 0;
 	CMRLatexFormulas f;
 	/*CMRLatexEntity * entity = cmrParseLatexEntity(value,start);
 	if (entity != NULL)
