@@ -13,12 +13,14 @@
 #include <vector>
 #include <cassert>
 #include "domain/CMRAbstractDomain.h"
+#include "domain/CMRVarSystem.h"
 #include "common/CMRDebug.h"
 
 /*********************  CLASS  **********************/
 class CMROperation;
 class CMRAbstractDomain;
 struct CMRRect;
+class CMRVarSystem;
 
 /*********************  CLASS  **********************/
 class CMRMeshOperation
@@ -34,11 +36,10 @@ template <class T,class U>
 class CMRMeshOperationSimpleLoop : public CMRMeshOperation
 {
 	public:
-		CMRMeshOperationSimpleLoop(T * in, T * out);
+		CMRMeshOperationSimpleLoop(CMRVarSystem * sys);
 		virtual void run (const CMRRect& zone );
 	private:
-		T * in;
-		T * out;
+		CMRVarSystem * sys;
 };
 
 /*******************  FUNCTION  *********************/
@@ -48,15 +49,13 @@ class CellAccessor
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-CMRMeshOperationSimpleLoop<T,U>::CMRMeshOperationSimpleLoop ( T * in, T * out )
+CMRMeshOperationSimpleLoop<T,U>::CMRMeshOperationSimpleLoop (CMRVarSystem * sys)
 {
 	//errors
-	assert(in != NULL);
-	assert(out != NULL);
+	assert(sys != NULL);
 	
 	//setup
-	this->in = in;
-	this->out = out;
+	this->sys = sys;
 }
 
 /*******************  FUNCTION  *********************/
@@ -74,9 +73,11 @@ void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect & zone )
 	//	warning("Caution, you loop on two domain with inner loop on X but the two domains are contiguous on Y !");
 	
 	//local copy to avoid deref
+	debug("Start to compute on [ %d , %d : %d x %d ]",zone.x,zone.y,zone.width,zone.height);
 	CMRRect localZone = zone;
-	typename T::CellAccessor cellIn(*in,localZone.x,localZone.y);
-	typename T::CellAccessor cellOut(*out,localZone.x,localZone.y);
+	assert(sys->getDomain(0,0)->getLocalDomainRect().contains(localZone));
+	typename T::CellAccessor cellIn(*sys,0,localZone.x,localZone.y,true);
+	typename T::CellAccessor cellOut(*sys,1,localZone.x,localZone.y,true);
 	
 	for(int y = 0 ; y < localZone.height ; y++)
 	{
@@ -154,24 +155,21 @@ template <class T,class U>
 class CMRMeshOperationSimpleLoopWithPos : public CMRMeshOperation
 {
 	public:
-		CMRMeshOperationSimpleLoopWithPos(T * in, T * out);
+		CMRMeshOperationSimpleLoopWithPos(CMRVarSystem * sys);
 		virtual void run (const CMRRect& zone );
 	private:
-		T * in;
-		T * out;
+		CMRVarSystem * sys;
 };
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-CMRMeshOperationSimpleLoopWithPos<T,U>::CMRMeshOperationSimpleLoopWithPos ( T * in, T * out )
+CMRMeshOperationSimpleLoopWithPos<T,U>::CMRMeshOperationSimpleLoopWithPos ( CMRVarSystem * sys )
 {
 	//errors
-	assert(in != NULL);
-	assert(out != NULL);
+	assert(sys != NULL);
 	
 	//setup
-	this->in = in;
-	this->out = out;
+	this->sys = sys;
 }
 
 /*******************  FUNCTION  *********************/
@@ -189,10 +187,12 @@ void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( const CMRRect & zone )
 	//	warning("Caution, you loop on two domain with inner loop on X but the two domains are contiguous on Y !");
 	
 	//local copy to avoid deref
+	debug("Start to compute on [ %d , %d : %d x %d ]",zone.x,zone.y,zone.width,zone.height);
 	CMRRect localZone = zone;
-	typename T::CellAccessor cellIn(*in,localZone.x,localZone.y);
-	typename T::CellAccessor cellOut(*out,localZone.x,localZone.y);
-	CMRCellPosition pos(in->getGlobalRect(),in->getLocalRect(),localZone.x,localZone.y);
+	assert(sys->getDomain(0,0)->getLocalDomainRect().contains(localZone));
+	typename T::CellAccessor cellIn(*sys,0,localZone.x,localZone.y);
+	typename T::CellAccessor cellOut(*sys,1,localZone.x,localZone.y);
+	CMRCellPosition pos(sys->getDomain(0,0)->getGlobalRect(),sys->getDomain(0,0)->getLocalDomainRect(),localZone.x,localZone.y);
 	
 	for(int y = 0 ; y < localZone.height ; y++)
 	{

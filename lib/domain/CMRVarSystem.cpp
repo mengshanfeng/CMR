@@ -10,6 +10,7 @@
 #include <cstring>
 #include <cassert>
 #include "CMRVarSystem.h"
+#include "CMRDomainBuilder.h"
 
 /*******************  FUNCTION  *********************/
 CMRVariable::CMRVariable ( const std::string& name, size_t typeSize, int ghostDepth, CMRVarMode mode )

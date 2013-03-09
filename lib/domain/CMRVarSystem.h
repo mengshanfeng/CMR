@@ -40,14 +40,7 @@ struct CMRVariable
 /*********************  CLASS  **********************/
 typedef std::vector<CMRVariable> CMRVariableVector;
 typedef unsigned int CMRVariableId;
-
-/*********************  CLASS  **********************/
-class CMRDomainBuilder
-{
-	public:
-		virtual ~CMRDomainBuilder(void) {};
-		virtual CMRDomainStorage * buildDomain(const CMRVariable & variable) = 0;
-};
+class CMRDomainBuilder;
 
 /*********************  CLASS  **********************/
 class CMRVarSystem

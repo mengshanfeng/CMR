@@ -107,7 +107,49 @@ CMRVect2D CMRBasicSpaceSplitter::getSplittingSize ( void ) const
 /*******************  FUNCTION  *********************/
 int CMRBasicSpaceSplitter::getNeighbour ( int localId, int deltaX, int deltaY ) const
 {
-	assert(false);
+	//vars
+	int id;
+
+	//errors
+	assert(localId >= 0 && localId < nbSubDomains);
+	
+	//trivial
+	if (deltaX == 0 && deltaY == 0)
+		return localId;
+	
+	//get splitting
+	CMRVect2D split = getSplittingSize();
+	CMRVect2D pos = getPosition(localId, split);
+	CMRRect rect(0,0,split.x,split.y);
+	CMRVect2D npos(pos);
+	
+	//compute new id
+	switch(this->firstDim)
+	{
+		case 0:
+			id = localId + deltaX + deltaY * split.x;
+			break;
+		case 1:
+			id = localId + deltaX * split.y + deltaY;
+			break;
+		default:
+			id = -1;
+			fatal("Invalid value for firstDim : %d",firstDim);
+	}
+	
+	//current pos
+	npos.x += deltaX;
+	npos.y += deltaY;
+	
+	//errors
+	if (id >= 0 && localId < nbSubDomains && rect.contains(npos))
+	{
+		//debug("Get neigtboor of %d [ %d , %d ] -> ( %2d , %2d ) -> %d [ %d,  %d ] <-- OK",localId,pos.x,pos.y,deltaX,deltaY,id,npos.x,npos.y);
+		return id;
+	} else {
+		//debug("Get neigtboor of %d [ %d , %d ] -> ( %2d , %2d ) -> %d [ %d,  %d ]",localId,pos.x,pos.y,deltaX,deltaY,id,npos.x,npos.y);
+		return -1;
+	}
 }
 
 /*******************  FUNCTION  *********************/
@@ -127,38 +169,48 @@ CMRSpaceSubDomains CMRBasicSpaceSplitter::getAllSubDomains ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRRect CMRBasicSpaceSplitter::getLocalDomain ( int localId ) const
+CMRVect2D CMRBasicSpaceSplitter::getPosition ( int localId, CMRVect2D& splitting ) const
 {
-	//vars
-	int rankX;
-	int rankY;
-	CMRRect res;
+	CMRVect2D res;
 
 	//errors
 	assert(this->firstDim == 0 || this->firstDim == 1);
-	
-	//get splitting
-	CMRVect2D split = getSplittingSize();
-	
+	assert(localId >= 0 && localId < nbSubDomains);
+
 	//calc current rank position (ID)
 	switch(this->firstDim)
 	{
 		case 0:
-			rankX = localId % split.x;
-			rankY = localId / split.x;
+			res.x = localId % splitting.x;
+			res.y = localId / splitting.x;
 			break;
 		case 1:
-			rankX = localId / split.y;
-			rankY = localId % split.y;
+			res.x = localId / splitting.y;
+			res.y = localId % splitting.y;
 			break;
 		default:
-			rankX = rankY = -1;
 			fatal("Invalid value for firstDim : %d",firstDim);
 	}
+
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+CMRRect CMRBasicSpaceSplitter::getLocalDomain ( int localId ) const
+{
+	//vars
+	CMRRect res;
+	
+	//errors
+	assert(localId >= 0 && localId < nbSubDomains);
+	
+	//get splitting
+	CMRVect2D split = getSplittingSize();
+	CMRVect2D pos = getPosition(localId,split);
 	
 	//compute position
-	res.x = (rect.width * rankX) / split.x;
-	res.y = (rect.height * rankY) / split.y;
+	res.x = (rect.width * pos.x) / split.x;
+	res.y = (rect.height * pos.y) / split.y;
 	res.width = rect.width / split.x;
 	res.height = rect.height / split.y;
 	
@@ -190,4 +242,10 @@ void CMRAbstractSpaceSplitter::printDebug ( int printOnRank  ) const
 		CMRRect tmp = getLocalDomain(i);
 		debug("   - Subdomain %-2d : [ %4d , %4d : %4d x %4d ]",i, tmp.x,tmp.y,tmp.width, tmp.height);
 	}
+}
+
+/*******************  FUNCTION  *********************/
+const CMRRect& CMRAbstractSpaceSplitter::getDomain ( void ) const
+{
+	return rect;
 }

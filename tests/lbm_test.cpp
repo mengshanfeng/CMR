@@ -12,6 +12,8 @@
 #include <CMROperation.h>
 #include <domain/CMRMemoryModels.h>
 #include <domain/CMRCellAccessor.h>
+#include <domain/CMRVarSystem.h>
+#include <domain/CMRMPIDomainBuilder.h>
 #include <domain/CMRMemoryModels.h>
 
 using namespace std;
@@ -73,31 +75,30 @@ const int opposite_of[DIRECTIONS] = { 0, 3, 4, 1, 2, 7, 8, 5, 6 };
 #error Need to defined adapted equibirium distribution function
 #endif
 
-struct VarSystem
+class VarSystem : public CMRVarSystem
 {
-	struct CellAccessor
-	{
-		CellAccessor(VarSystem & sys,int x,int y,bool absolute = true);
-		CellAccessor(CellAccessor & acc,int x,int y,bool absolute = false);
-		CMRCellAccessor<float[DIRECTIONS],CMRMemoryModelRowMajor> directions;
-		CMRCellAccessor<LBMCellType,CMRMemoryModelRowMajor> cellType;
-	};
-	VarSystem(const CMRRect & rect, int ghostDepth, int globalWidth = -1, int globalHeight = -1);
-	CMRDomainStorage directions;
-	CMRDomainStorage cellType;
-	CMRRect getGlobalRect(void) const {return cellType.getGlobalRect();};
-	CMRRect getLocalRect(void) const {return cellType.getLocalDomainRect();};
+	public:
+		struct CellAccessor
+		{
+			CellAccessor(CMRVarSystem & sys,int tstep,int x,int y,bool absolute = true);
+			CellAccessor(CellAccessor & acc,int x,int y,bool absolute = false);
+			CMRCellAccessor<float[DIRECTIONS],CMRMemoryModelRowMajor> directions;
+			CMRCellAccessor<LBMCellType,CMRMemoryModelRowMajor> cellType;
+		};
+		VarSystem(CMRDomainBuilder * builder);
 };
 
-VarSystem::VarSystem ( const CMRRect & rect, int ghostDepth, int globalWidth, int globalHeight)
-	:directions(sizeof(float[DIRECTIONS]),rect,ghostDepth,globalWidth,globalHeight),cellType(sizeof(LBMCellType),rect,ghostDepth,globalWidth,globalHeight)
+VarSystem::VarSystem ( CMRDomainBuilder * builder)
+:CMRVarSystem(builder)
 {
+	this->addVariable("directions",sizeof(float[DIRECTIONS]),1);
+	this->addVariable("cellType",sizeof(LBMCellType),1);
 }
 
 
 
-VarSystem::CellAccessor::CellAccessor ( VarSystem& sys, int x, int y,bool absolute )
-	:directions(sys.directions,x,y,absolute),cellType(sys.cellType,x,y,absolute)
+VarSystem::CellAccessor::CellAccessor (CMRVarSystem & sys,int tstep,int x,int y,bool absolute)
+	:directions(*(sys.getDomain(0,tstep)),x,y,absolute),cellType(*sys.getDomain(0,tstep),x,y,absolute)
 {
 	
 }
@@ -390,17 +391,21 @@ int main(int argc, char * argv[])
 	info_on_master("Start with np = %d",cmrGetMPISize());
 	MPI_Barrier(MPI_COMM_WORLD);
 	
-	//try system computation
-	VarSystem sys1(CMRRect(0,0,800,600),1);
-	VarSystem sys2(CMRRect(0,0,800,600),0);
+	//try space splitter
+	CMRBasicSpaceSplitter splitter(0,0,800,600,cmrGetMPISize(),0);
+	splitter.printDebug(CMR_MPI_MASTER);
 	
-	CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys1,&sys2);
+	//try system computation
+	CMRMPIDomainBuilder builder(&splitter);
+	VarSystem sys(&builder);
+	
+	CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys);
 	loop1.run(CMRRect(10,10,40,40));
 	
-	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys2,&sys1);
+	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys);
 	loop2.run(CMRRect(10,10,40,40));
 	
-	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys2,&sys1);
+	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys);
 	loop3.run(CMRRect(10,10,40,40));
 
 	//Finish

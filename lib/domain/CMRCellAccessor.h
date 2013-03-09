@@ -32,6 +32,8 @@ class CMRCellAccessor : public CMRDomainMemory
 		const DataType & getCell(int dx,int dy) const;
 		size_t getTypeSize(void) const;
 		bool isContiguous(const CMRRect & rect) const;
+	private:
+		void move(int dx,int dy,bool absolute = false);
 };
 
 /*******************  FUNCTION  *********************/
@@ -51,12 +53,7 @@ CMRCellAccessor<DataType,MemoryModel>::CMRCellAccessor ( CMRDomainStorage& orig,
 	this->set(*acc);
 	
 	//setup all
-	if (absolute)
-		this->ptr = &getCell(dx - memoryRect.x,dy - memoryRect.y);
-	else
-		this->ptr = &getCell(dx,dy);
-	this->ptrAbsPosition.x += dx;
-	this->ptrAbsPosition.y += dy;
+	this->move(dx,dy,absolute);
 }
 
 /*******************  FUNCTION  *********************/
@@ -64,12 +61,7 @@ template <class DataType,class MemoryModel>
 CMRCellAccessor<DataType,MemoryModel>::CMRCellAccessor ( CMRDomainMemory& orig, int dx, int dy, bool absolute)
 	:CMRDomainMemory(orig)
 {
-	if (absolute)
-		this->ptr = &getCell(dx - memoryRect.x,dy - memoryRect.y);
-	else
-		this->ptr = &getCell(dx,dy);
-	this->ptrAbsPosition.x += dx;
-	this->ptrAbsPosition.y += dy;
+	this->move(dx,dy,absolute);
 }
 
 /*******************  FUNCTION  *********************/
@@ -77,12 +69,23 @@ template <class DataType,class MemoryModel>
 CMRCellAccessor<DataType,MemoryModel>::CMRCellAccessor ( const CMRCellAccessor< DataType, MemoryModel >& orig, int dx, int dy , bool absolute) 
 	: CMRDomainMemory(orig)
 {
+	this->move(dx,dy,absolute);
+}
+
+/*******************  FUNCTION  *********************/
+template <class DataType,class MemoryModel>
+void CMRCellAccessor<DataType,MemoryModel>::move ( int dx, int dy, bool absolute )
+{
 	if (absolute)
+	{
 		this->ptr = &getCell(dx - memoryRect.x,dy - memoryRect.y);
-	else
+		this->ptrAbsPosition.x = dx;
+		this->ptrAbsPosition.y = dy;
+	} else {
 		this->ptr = &getCell(dx,dy);
-	this->ptrAbsPosition.x += dx;
-	this->ptrAbsPosition.y += dy;
+		this->ptrAbsPosition.x += dx;
+		this->ptrAbsPosition.y += dy;
+	}
 }
 
 /*******************  FUNCTION  *********************/

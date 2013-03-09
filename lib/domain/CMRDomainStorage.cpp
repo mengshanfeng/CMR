@@ -130,7 +130,8 @@ void CMRDomainStorage::setMemoryAccessor ( CMRAbstractMemoryAccessor* acc )
 	
 	//check compat
 	assume(acc->getTypeSize() == typeSize,"Invalid type size for memory accessor, current is %lu and try to set new : %lu !",typeSize,acc->getTypeSize());
-	warning("Need to check type compat here !");
+	if (this->acc != NULL);
+		warning("Need to check type compat here && check if no pending actions !");
 	
 	//delete current
 	if (this->acc != NULL)

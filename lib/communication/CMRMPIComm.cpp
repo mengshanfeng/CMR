@@ -53,11 +53,11 @@ std::string CMRMPIComm::getDebugString ( void ) const
 	switch(this->getCommType())
 	{
 		case CMR_COMM_SEND:
-			size = sprintf(buffer,"MPI_Send( %2d --> %2d [tag = %d , size = %lu] )",cmrGetMPIRank(),communicator->getSendRank(),communicator->getTagBase(),this->getBufferSize());
+			size = sprintf(buffer,"MPI_Send( %2d --> %2d [domain = %p , tag = %d , size = %lu] )",cmrGetMPIRank(),communicator->getSendRank(),domain,communicator->getTagBase(),this->getBufferSize());
 			assert(size < sizeof(buffer));
 			break;
 		case CMR_COMM_RECV:
-			size = sprintf(buffer,"MPI_Recv( %2d <-- %2d [tag = %d , size = %lu] )",cmrGetMPIRank(),communicator->getRecvRank(),communicator->getTagBase(),this->getBufferSize());
+			size = sprintf(buffer,"MPI_Recv( %2d <-- %2d [domain = %p , tag = %d , size = %lu] )",cmrGetMPIRank(),communicator->getRecvRank(),domain,communicator->getTagBase(),this->getBufferSize());
 			assert(size < sizeof(buffer));
 			break;
 		default:

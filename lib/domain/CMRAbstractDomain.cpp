@@ -223,6 +223,10 @@ CMRRect CMRAbstractDomain::computeGhostCommRect ( int x, int y, int requestedDep
 	} else {
 		rect.height = requestedDepth;
 	}
+	
+	//made absolute
+	rect.x += localRect.x;
+	rect.y += localRect.y;
 
 	return rect;
 }
@@ -268,4 +272,27 @@ bool CMRAbstractDomain::isFullyInDomainMemory ( const CMRRect& rect ) const
 bool CMRAbstractDomain::isFullyInLocalDomain ( const CMRRect& rect ) const
 {
 	return localRect.contains(rect);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRAbstractDomain::syncAllGhosts ( CMRCommSchem& commSchema, int depth )
+{
+	for (int dx = -1 ; dx <= 1 ; dx++)
+	{
+		for (int dy = -1 ; dy <= 1 ; dy++)
+		{
+			if (dx != 0 || dy != 0)
+			{
+				fillWithUpdateComm(commSchema,dx,dy,depth,CMR_COMM_SEND);
+				fillWithUpdateComm(commSchema,dx,dy,depth,CMR_COMM_RECV);
+			}
+		}
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRAbstractDomain::syncGhost ( CMRCommSchem& commSchema, int dx, int dy, int depth )
+{
+	fillWithUpdateComm(commSchema,dx,dy,depth,CMR_COMM_SEND);
+	fillWithUpdateComm(commSchema,dx,dy,depth,CMR_COMM_RECV);
 }

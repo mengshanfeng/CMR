@@ -11,6 +11,7 @@
 
 /*********************  CLASS  **********************/
 #include <domain/CMRVarSystem.h>
+#include <domain/CMRDomainBuilder.h>
 
 /*********************  CLASS  **********************/
 class MockDomainStorage : public CMRDomainStorage

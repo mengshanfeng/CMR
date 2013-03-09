@@ -65,6 +65,8 @@ class CMRAbstractDomain
 		CMRVect2D getAbsPos(const CMRVect2D & vect) const;
 		bool isFullyInLocalDomain(const CMRRect & rect) const;
 		bool isFullyInDomainMemory(const CMRRect & rect) const;
+		void syncAllGhosts(CMRCommSchem & commSchema,int depth);
+		void syncGhost(CMRCommSchem & commSchema, int dx,int dy,int depth);
 	private:
 		CMRRect computeGhostCommRect(int x,int y,int requestedDepth,CMRCommType commType) const;
 		//copy is forbidden so ensure compile error by making related function private

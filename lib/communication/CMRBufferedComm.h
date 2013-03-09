@@ -34,12 +34,13 @@ class CMRBufferedComm : public CMRComm
 		size_t getBufferSize(void) const;
 	private:
 		void setupBuffer(void);
+	protected:
+		CMRAbstractDomain* domain;
 	private:
 		CMRRect rect;
 		void * buffer;
 		size_t bufferSize;
 		CMRCommType commType;
-		CMRAbstractDomain* domain;
 		CMRCommStatus commStatus;
 		bool isTempBuffer;
 };

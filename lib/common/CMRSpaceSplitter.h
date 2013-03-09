@@ -30,6 +30,7 @@ class CMRAbstractSpaceSplitter
 		virtual int getNeighbour(int localId,int deltaX,int deltaY) const = 0;
 		virtual CMRVect2D getSplittingSize( void ) const = 0;
 		void printDebug(int printOnRank = CMR_MPI_ALL) const;
+		const CMRRect & getDomain(void) const;
 	protected:
 		int firstDim;
 		int nbSubDomains;
@@ -46,6 +47,8 @@ class CMRBasicSpaceSplitter : public CMRAbstractSpaceSplitter
 		virtual CMRRect getLocalDomain ( int localId ) const;
 		virtual int getNeighbour ( int localId, int deltaX, int deltaY ) const;
 		virtual CMRVect2D getSplittingSize ( void ) const;
+	private:
+		CMRVect2D getPosition(int localId, CMRVect2D & splitting) const;
 };
 
 #endif // CMR_SPACE_SPLITTER_H
