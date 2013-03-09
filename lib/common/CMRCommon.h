@@ -21,6 +21,8 @@
 #define CMR_MPI_MASTER 0
 #define CMR_MPI_ALL -1
 #define CMR_ALL -1
+#define CMR_CURRENT_STEP 0
+#define CMR_PREV_STEP 1
 
 /********************  ENUM  ************************/
 /**

@@ -57,12 +57,20 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 
 	//allocate buffer for message
 	size = strlen(format) * 4 + 1024;
-	buffer = new char[size];
+	buffer = (char*)malloc(size);
 	va_list param;
 	va_start (param, format);
-	res = vsprintf (buffer, format, param);
-	assert(res <= size);
+	res = vsnprintf (buffer,size, format, param);
 	va_end (param);
+	if (res >= size)
+	{
+		size = res + 1;
+		buffer = (char*)realloc(buffer,size);
+		va_start (param, format);
+		res = vsnprintf (buffer,size, format, param);
+		va_end (param);
+	}
+	assert(res <= size);
 
 	//print
 	if (condition == NULL)
@@ -71,7 +79,7 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 		fprintf(stderr,"%s%-7s [rank=%d] (%s:%d) : %s\n        %s%s\n",CMR_MESG_COLOR[level],title,cmrGetMPIRank(),basename(fname),line,condition,buffer,CMR_MESG_COLOR[CMR_DEBUG_NORMAL]);
 
 	//free buffers
-	delete [] buffer;
+	free(buffer);
 
 	//if error, abort
 	if (level >= CMR_DEBUG_ERROR)

@@ -49,17 +49,24 @@ VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y ,bool ab
 {
 }
 
-class ActionInc
+struct ActionInc
 {
-	public:
-		static void cellAction(VarSystem::CellAccessor & in,VarSystem::CellAccessor& out);
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out)
+	{
+		//debug("Update cell : %p",&in.density.getCell(0,0));
+		//out.density.getCell(0,0) += (in.density.getCell(0,0) * 3 + 5) / in.variation.getCell(0,0);
+		out.density.getCell(0,0) = in.density.getCell(0,0) + 1;
+	}
 };
 
-void ActionInc::cellAction ( VarSystem::CellAccessor& in, VarSystem::CellAccessor& out )
+struct ActionInit
 {
-	//debug("Update cell : %p",&in.density.getCell(0,0));
-	out.density.getCell(0,0) += (in.density.getCell(0,0) * 3 + 5) / in.variation.getCell(0,0);
-}
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos)
+	{
+		out.density.getCell(0,0) = pos.cellPos.y;
+		out.variation.getCell(0,0) = 0.0;
+	}
+};
 
 int main(int argc, char * argv[])
 {
@@ -69,47 +76,47 @@ int main(int argc, char * argv[])
 	MPI_Barrier(MPI_COMM_WORLD);
 	
 	//try space splitter
-	CMRBasicSpaceSplitter splitter(0,0,80,60,cmrGetMPISize(),0);
+	CMRBasicSpaceSplitter splitter(0,0,20,20,cmrGetMPISize(),0);
 	splitter.printDebug(CMR_MPI_MASTER);
-
-	//try comm
-	/*CMRDomainStorage domain(sizeof(float),CMRRect(0,0,800,600),1);
-	domain.setMemoryAccessor(new CMRGenericMemoryAccessor<float,CMRMemoryModelRowMajor>());
-	
-	assert(cmrGetMPISize() == 2);
-	
-	CMRCommSchem schem("sync_left_right");
-	switch (cmrGetMPIRank())
-	{
-		case 0:
-			domain.setCommunicator(1,0,new CMRMPICommFactory(1,1,1));
-			domain.fillWithUpdateComm(schem,1,0,1,CMR_COMM_SEND);
-			break;
-		case 1:
-			domain.setCommunicator(-1,0,new CMRMPICommFactory(0,0,1));
-			domain.fillWithUpdateComm(schem,-1,0,1,CMR_COMM_RECV);
-			break;
-		default:
-			fatal("This test only work with exactly 2 MPI tasks.");
-	}
-
-	//to comm
-	schem.printDebug();
-	schem.run();*/
 	
 	//try system computation
 	CMRMPIDomainBuilder builder(&splitter);
 	VarSystem sys(&builder);
-	CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop(&sys);
 	
+	//get rect
 	CMRRect localRect = splitter.getLocalDomain(cmrGetMPIRank());
+	
+	//init the mesh
+	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionInit> loopInit(&sys);
+	
+	//init all steps
+	loopInit.run(localRect.expended(1));
+	
+	//print current state
+	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
+	
+	//permut
+	sys.permutVar(CMR_ALL);
+	
+	//compute
+	CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop(&sys);
 	loop.run(localRect);
 	
+	//print current
+	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
+	
+	//sync
 	CMRCommSchem schem("Sync1");
-	sys.getDomain(0,0)->syncAllGhosts(schem,1);
-	sys.getDomain(1,0)->syncAllGhosts(schem,1);
+	sys.getDomain(0,CMR_CURRENT_STEP)->syncAllGhosts(schem,1);
+	sys.getDomain(1,CMR_CURRENT_STEP)->syncAllGhosts(schem,1);
 	schem.printDebug();
 	schem.run();
+	
+	//print current
+	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
+	
+	//permut
+	sys.permutVar(CMR_ALL);
 
 	//Finish
 	MPI_Barrier(MPI_COMM_WORLD);

@@ -130,7 +130,7 @@ double get_vect_norme_2(const LBMVect vect1,const LBMVect vect2)
  * Calcule la densité macroscopiques de la cellule en sommant ses DIRECTIONS
  * densités microscopiques.
 **/
-double get_cell_density(VarSystem::CellAccessor & in)
+double get_cell_density(const VarSystem::CellAccessor & in)
 {
 	//vars
 	int k;
@@ -150,7 +150,7 @@ double get_cell_density(VarSystem::CellAccessor & in)
  * densités microscopiques.
  * @param cell_density Densité macroscopique de la cellules.
 **/
-void get_cell_velocity(LBMVect v,VarSystem::CellAccessor & in,double cell_density)
+void get_cell_velocity(LBMVect v,const VarSystem::CellAccessor & in,double cell_density)
 {
 	//vars
 	int k,d;
@@ -209,7 +209,7 @@ double compute_equilibrium_profile(LBMVect velocity,double density,int direction
 /**
  * Applique une reflexion sur les différentes directions pour simuler la présence d'un solide.
 **/
-void compute_bounce_back(VarSystem::CellAccessor & in,VarSystem::CellAccessor & out)
+void compute_bounce_back(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out)
 {
 	//vars
 	int k;
@@ -245,7 +245,7 @@ double helper_compute_poiseuille(int i,int size)
  * @param cell Maille à mettre à jour.
  * @param id_y Position en y de la cellule pour savoir comment calculer la vitesse de poiseuille.
 **/
-void compute_inflow_zou_he_poiseuille_distr(VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos)
+void compute_inflow_zou_he_poiseuille_distr(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos)
 {
 	//vars
 	double v;
@@ -260,8 +260,8 @@ void compute_inflow_zou_he_poiseuille_distr(VarSystem::CellAccessor & in,VarSyst
 	//poiseuille distr on X and null on Y
 	//we just want the norm, so v = v_x
 	v = helper_compute_poiseuille(pos.getAbsY(),pos.globalMesh.height);
-	float * cellIn = in.directions.getCell(0,0);
-	float * cellOut = in.directions.getCell(0,0);
+	const float * cellIn = in.directions.getCell(0,0);
+	float * cellOut = out.directions.getCell(0,0);
 
 	//compute rho from u and inner flow on surface
 	density = (cellIn[0] + cellIn[2] + cellIn[4] + 2 * ( cellIn[3] + cellIn[6] + cellIn[7] )) / (1.0 - v) ;
@@ -287,7 +287,7 @@ void compute_inflow_zou_he_poiseuille_distr(VarSystem::CellAccessor & in,VarSyst
  * @param cell Maille à mettre à jour
  * @param id_y Position en y de la cellule pour savoir comment calculer la vitesse de poiseuille.
 **/
-void compute_outflow_zou_he_const_density(VarSystem::CellAccessor & in,VarSystem::CellAccessor & out)
+void compute_outflow_zou_he_const_density(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out)
 {
 	//vars
 	const double density = 1.0;
@@ -298,8 +298,8 @@ void compute_outflow_zou_he_const_density(VarSystem::CellAccessor & in,VarSystem
 	#error Implemented only for 9 directions
 	#endif
 	
-	float * cellIn = in.directions.getCell(0,0);
-	float * cellOut = in.directions.getCell(0,0);
+	const float * cellIn = in.directions.getCell(0,0);
+	float * cellOut = out.directions.getCell(0,0);
 
 	//compute macroscopic v depeding on inner flow going onto the wall
 	v = -1.0 + (1.0 / density) * (cellIn[0] + cellIn[2] + cellIn[4] + 2 * (cellIn[1] + cellIn[5] + cellIn[8]));
@@ -317,7 +317,7 @@ void compute_outflow_zou_he_const_density(VarSystem::CellAccessor & in,VarSystem
 /*******************  FUNCTION  *********************/
 struct ActionPropagation
 {
-	static void cellAction(VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos)
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos)
 	{
 		int k;
 		int ii;
@@ -338,7 +338,7 @@ struct ActionPropagation
 
 struct ActionSpecialCells
 {
-	static void cellAction(VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos)
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos)
 	{
 		switch (in.cellType.getCell(0,0))
 		{
@@ -360,7 +360,7 @@ struct ActionSpecialCells
 /*******************  FUNCTION  *********************/
 struct ActionCollision
 {
-	static void cellAction(VarSystem::CellAccessor & in,VarSystem::CellAccessor & out)
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out)
 	{
 		//vars
 		int k;

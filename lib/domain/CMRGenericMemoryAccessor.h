@@ -16,7 +16,8 @@
 #include "../common/CMRGeometry.h"
 #include "CMRAbstractMemoryAccessor.h"
 #include <cstring>
-
+#include <string>
+#include <sstream>
 
 /*********************  CLASS  **********************/
 template <class DataType,class MemoryModel>
@@ -33,6 +34,7 @@ class CMRGenericMemoryAccessor : public CMRAbstractMemoryAccessor
 		virtual size_t getBufferSize( const CMRRect & rect) const;
 		virtual const void* getCell ( int x, int y ) const;
 		virtual void* getCell ( int x, int y );
+		virtual void printDebug( const CMRRect & rect ) const;
 };
 
 /*******************  FUNCTION  *********************/
@@ -98,6 +100,8 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyToBuffer ( void* buff
 	int origY = rect.y - ptrAbsPosition.y;
 	int memW = memoryRect.width;
 	int memH = memoryRect.height;
+	int absOrigX = rect.x - memoryRect.x;
+	int absOrigY = rect.y - memoryRect.y;
 	
 	//ptrs
 	DataType * typedBuffer = (DataType*) buffer;
@@ -109,7 +113,7 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyToBuffer ( void* buff
 		for (int x = 0 ; x < rect.width ; x++)
 		{
 			void * dest = &typedBuffer[y*rect.width + x];
-			const void * src = &typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,ptrAbsPosition.x +x + origX,ptrAbsPosition.y + y + origY)];
+			const void * src = &typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,absOrigX + x,absOrigY + y)];
 			/** @TODO optimize small sizes **/
 			memcpy(dest,src,sizeof(DataType));
 		}
@@ -134,6 +138,8 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyFromBuffer ( const vo
 	int origY = rect.y - ptrAbsPosition.y;
 	int memW = memoryRect.width;
 	int memH = memoryRect.height;
+	int absOrigX = rect.x - memoryRect.x;
+	int absOrigY = rect.y - memoryRect.y;
 	
 	//ptrs
 	const DataType * typedBuffer = (const DataType*) buffer;
@@ -144,7 +150,7 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyFromBuffer ( const vo
 	{
 		for (int x = 0 ; x < rect.width ; x++)
 		{
-			void * dest = &typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,ptrAbsPosition.x +x + origX,ptrAbsPosition.y + y + origY)];
+			void * dest = &typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,absOrigX + x,absOrigY + y)];
 			const void * src = &typedBuffer[y*rect.width + x];
 			/** @TODO optimize small sizes **/
 			memcpy(dest,src,sizeof(DataType));
@@ -153,6 +159,48 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyFromBuffer ( const vo
 
 	//return current used size
 	return getBufferSize(rect);
+}
+
+/*******************  FUNCTION  *********************/
+template <class T>
+std::string cmrTypeToString(const T & value)
+{
+	std::stringstream buffer;
+	buffer << value;
+	return buffer.str();
+}
+
+/*******************  FUNCTION  *********************/
+template <class DataType,class MemoryModel>
+void CMRGenericMemoryAccessor<DataType,MemoryModel>::printDebug ( const CMRRect& rect ) const
+{
+	//errors
+	assert(memoryRect.contains(rect));
+	assert(ptr != NULL);
+	
+	//fill buffer
+	std::stringstream buffer;
+	const DataType * typedDomain = (const DataType*) ptr;
+	
+	//local
+	int origX = rect.x - ptrAbsPosition.x;
+	int origY = rect.y - ptrAbsPosition.y;
+	int memW = memoryRect.width;
+	int memH = memoryRect.height;
+	int absOrigX = rect.x - memoryRect.x;
+	int absOrigY = rect.y - memoryRect.y;
+	
+	for (int y = 0 ; y < rect.height ; y++)
+	{
+		for (int x = 0 ; x < rect.width ; x++)
+		{
+			const DataType & cell = typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,absOrigX + x,absOrigY + y)];
+			buffer << cmrTypeToString(cell) << " ";
+		}
+		buffer << std::endl;
+	}
+	
+	debug("Memory values in [ %d , %d : %d x %d ]\n-------------------------------------------------\n%s\n--------------------------------------------------",rect.x,rect.y,rect.width,rect.height,buffer.str().c_str());
 }
 
 #endif //CMR_GENERIC_MEMORY_ACCESSOR_H

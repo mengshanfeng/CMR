@@ -73,17 +73,17 @@ void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect & zone )
 	//	warning("Caution, you loop on two domain with inner loop on X but the two domains are contiguous on Y !");
 	
 	//local copy to avoid deref
-	debug("Start to compute on [ %d , %d : %d x %d ]",zone.x,zone.y,zone.width,zone.height);
+	debug("Start to compute on [ %d , %d : %d x %d ] into ",zone.x,zone.y,zone.width,zone.height);
 	CMRRect localZone = zone;
-	assert(sys->getDomain(0,0)->getLocalDomainRect().contains(localZone));
-	typename T::CellAccessor cellIn(*sys,0,localZone.x,localZone.y,true);
-	typename T::CellAccessor cellOut(*sys,1,localZone.x,localZone.y,true);
+	assert(sys->getDomain(0,0)->getMemoryRect().contains(localZone));
+	typename T::CellAccessor cellIn(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
+	typename T::CellAccessor cellOut(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y,true);
 	
 	for(int y = 0 ; y < localZone.height ; y++)
 	{
 		for(int x = 0 ; x < localZone.width ; x++)
 		{
-			typename T::CellAccessor cellLocalIn(cellIn,x,y);
+			const typename T::CellAccessor cellLocalIn(cellIn,x,y);
 			typename T::CellAccessor cellLocalOut(cellOut,x,y);
 			U::cellAction(cellLocalIn,cellLocalOut);
 		}
@@ -189,18 +189,18 @@ void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( const CMRRect & zone )
 	//local copy to avoid deref
 	debug("Start to compute on [ %d , %d : %d x %d ]",zone.x,zone.y,zone.width,zone.height);
 	CMRRect localZone = zone;
-	assert(sys->getDomain(0,0)->getLocalDomainRect().contains(localZone));
-	typename T::CellAccessor cellIn(*sys,0,localZone.x,localZone.y);
-	typename T::CellAccessor cellOut(*sys,1,localZone.x,localZone.y);
+	assert(sys->getDomain(0,0)->getMemoryRect().contains(localZone));
+	typename T::CellAccessor cellIn(*sys,CMR_PREV_STEP,localZone.x,localZone.y);
+	typename T::CellAccessor cellOut(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y);
 	CMRCellPosition pos(sys->getDomain(0,0)->getGlobalRect(),sys->getDomain(0,0)->getLocalDomainRect(),localZone.x,localZone.y);
 	
 	for(int y = 0 ; y < localZone.height ; y++)
 	{
 		for(int x = 0 ; x < localZone.width ; x++)
 		{
-			typename T::CellAccessor cellLocalIn(cellIn,x,y);
+			const typename T::CellAccessor cellLocalIn(cellIn,x,y);
 			typename T::CellAccessor cellLocalOut(cellOut,x,y);
-			CMRCellPosition cellPos(pos,x,y);
+			const CMRCellPosition cellPos(pos,x,y);
 			U::cellAction(cellLocalIn,cellLocalOut,cellPos);
 		}
 	}

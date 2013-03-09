@@ -171,3 +171,24 @@ CMRRect CMRRect::operator+ ( const CMRVect2D& vect ) const
 	tmp+=vect;
 	return tmp;
 }
+
+/*******************  FUNCTION  *********************/
+CMRRect& CMRRect::expend ( int depth )
+{
+	//errors
+	assert(depth >= - width / 2 && depth >= -height / 2);
+
+	x -= depth;
+	y -= depth;
+	width += 2 * depth;
+	height += 2 * depth;
+	
+	return *this;
+}
+
+/*******************  FUNCTION  *********************/
+CMRRect CMRRect::expended ( int depth ) const
+{
+	CMRRect rect(*this);
+	return rect.expend(depth);
+}

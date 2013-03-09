@@ -143,3 +143,17 @@ void CMRDomainStorage::setMemoryAccessor ( CMRAbstractMemoryAccessor* acc )
 	//put data
 	acc->set(data,memoryRect);
 }
+
+/*******************  FUNCTION  *********************/
+void CMRDomainStorage::printDebug ( const CMRRect& rect ) const
+{
+	assert(acc != NULL);
+	acc->printDebug(rect);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRDomainStorage::printDebug ( void ) const
+{
+	assert(acc != NULL);
+	acc->printDebug();
+}

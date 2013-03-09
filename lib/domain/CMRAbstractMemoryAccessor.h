@@ -27,6 +27,14 @@ class CMRAbstractMemoryAccessor : public CMRDomainMemory
 		virtual size_t copyFromBuffer ( const void* buffer, size_t size, const CMRRect & rect ) = 0;
 		virtual size_t copyToBuffer ( void* buffer, size_t size, const CMRRect & rect ) const = 0;
 		virtual size_t getBufferSize( const CMRRect & rect) const = 0;
+		virtual void printDebug( const CMRRect & rect ) const = 0;
+		inline void printDebug(void) const;
 };
+
+/*******************  FUNCTION  *********************/
+inline void CMRAbstractMemoryAccessor::printDebug ( void ) const
+{
+	this->printDebug(memoryRect);
+}
 
 #endif //CMR_ABSTRACT_MEMORY_ACCESSOR_H

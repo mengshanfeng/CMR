@@ -32,6 +32,8 @@ class CMRDomainStorage : public CMRAbstractDomain
 		CMRAbstractMemoryAccessor & getMemoryAccessor(void);
 		void setMemoryAccessor(CMRAbstractMemoryAccessor * acc);
 		bool hasMemoryAccessor(void) const;
+		void printDebug(const CMRRect & rect) const;
+		void printDebug(void) const;
 	protected:
 		int getMemoryCoord(int x,int y) const;
 	private:

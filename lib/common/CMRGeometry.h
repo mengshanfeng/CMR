@@ -33,6 +33,8 @@ struct CMRRect
 	void set(int x,int y,int width,int height);
 	bool contains(const CMRRect & rect,bool partially = false) const;
 	bool contains(const CMRVect2D  & point) const;
+	CMRRect & expend(int depth);
+	CMRRect expended(int depth) const;
 	CMRVect2D point1(void) const;
 	CMRVect2D point2(void) const;
 	unsigned long surface(void) const;
