@@ -13,7 +13,7 @@ Current dependencies for this project are :
          + g++             (tested version 4.6.3)
          + cmake           (tested version 2.8.9)
          + make            (tested version gmake-3.82)
-         + svUnitTest      (tested version 0.4.0) [Optional]
+         + svUnitTest      (tested version 0.4.0)        [Optional]
          + OpenMPI         (tested version 1.6.3)
  - RUN \
          + .. TODO
@@ -43,3 +43,12 @@ Deps websites :
  - svUnitTest : http://github.com/svalat/svUnitTest
  - lcov       : http://ltp.sourceforge.net/coverage/lcov.php
  - OpenMPI    : http://www.open-mpi.org/
+
+Other tools used to manage the project :
+ - Redmine    : http://www.redmine.org/
+ - Git        : http://git-scm.com/
+ - Jenkins    : http://jenkins-ci.org/
+ - CppCheck   : http://cppcheck.sourceforge.net/
+ - Valgrind   : http://valgrind.org/
+ - Kdevelop   : http://www.kdevelop.org/
+ - GDB        : http://www.gnu.org/software/gdb/

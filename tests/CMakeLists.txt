@@ -19,7 +19,7 @@ add_definitions(-DUNITTEST)
 
 ######################################################
 #test list
-set(ALLOC_TEST_LIST TestAbstractDomain TestDomainStorage TestRect TestVect2D TestMemoryModels TestCellAccessor TestGenericMemoryAccessor TestAbstractType)
+set(ALLOC_TEST_LIST TestAbstractDomain TestDomainStorage TestRect TestVect2D TestMemoryModels TestCellAccessor TestGenericMemoryAccessor TestAbstractType TestVarSystem)
 
 ######################################################
 #Now you can build your tests

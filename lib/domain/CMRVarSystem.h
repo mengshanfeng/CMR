@@ -18,14 +18,23 @@
 /********************  MACRO  ***********************/
 #define CMR_MAX_TSTEPS 2
 
+/********************  ENUM  ************************/
+enum CMRVarMode
+{
+	CMR_VARMODE_CELL,
+};
+
 /*********************  CLASS  **********************/
 struct CMRVariable
 {
-	CMRVariable(const std::string & name,size_t typeSize,int ghostDepth);
+	CMRVariable(const std::string & name,size_t typeSize,int ghostDepth,CMRVarMode mode = CMR_VARMODE_CELL);
+	void clearStep(int id);
+	void permut(void);
 	std::string name;
 	int ghostDepth;
 	size_t typeSize;
 	CMRDomainStorage * domain[CMR_MAX_TSTEPS];
+	CMRVarMode mode;
 };
 
 /*********************  CLASS  **********************/
@@ -37,7 +46,7 @@ class CMRDomainBuilder
 {
 	public:
 		virtual ~CMRDomainBuilder(void) {};
-		virtual CMRAbstractDomain * buildDomain(const CMRVariable & variable) = 0;
+		virtual CMRDomainStorage * buildDomain(const CMRVariable & variable) = 0;
 };
 
 /*********************  CLASS  **********************/
@@ -45,13 +54,11 @@ class CMRVarSystem
 {
 	public:
 		CMRVarSystem(CMRDomainBuilder * domainBuilder);
-		~CMRVarSystem(void);
+		virtual ~CMRVarSystem(void);
 		CMRVariableId addVariable(std::string name,int typeSize,int ghostDepth);
 		void permutVar(CMRVariableId varId);
-		void permutAllVars(void);
-		CMRAbstractDomain * getDomain(CMRVariableId varId,int tstep);
+		CMRDomainStorage * getDomain(CMRVariableId varId,int tstep);
 		void freeDomain(CMRVariableId varId,int tstep);
-		void freeAllDomains(int tstep);
 		void printDebug(void) const;
 	private:
 		//never copy such objects

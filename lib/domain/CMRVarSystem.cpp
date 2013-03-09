@@ -8,11 +8,13 @@
 
 /********************  HEADERS  *********************/
 #include <cstring>
+#include <cassert>
 #include "CMRVarSystem.h"
 
 /*******************  FUNCTION  *********************/
-CMRVariable::CMRVariable ( const std::string& name, size_t typeSize, int ghostDepth )
+CMRVariable::CMRVariable ( const std::string& name, size_t typeSize, int ghostDepth, CMRVarMode mode )
 {
+	this->mode = mode;
 	this->name = name;
 	this->typeSize = typeSize;
 	this->ghostDepth = ghostDepth;
@@ -20,9 +22,47 @@ CMRVariable::CMRVariable ( const std::string& name, size_t typeSize, int ghostDe
 }
 
 /*******************  FUNCTION  *********************/
+void CMRVariable::clearStep ( int id )
+{
+	//errors
+	assert((id >= 0 && id < CMR_MAX_TSTEPS) || id == CMR_ALL);
+	
+	//remove all
+	if (id == CMR_ALL)
+	{
+		for (int i = 0 ; i < CMR_MAX_TSTEPS ; i++)
+		{
+			if (domain[i] != NULL)
+			{
+				delete domain[i];
+				domain[i] = NULL;
+			}
+		}
+	} else {
+		if (domain[id] != NULL)
+		{
+			delete domain[id];
+			domain[id] = NULL;
+		}
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRVariable::permut ( void )
+{
+	cmrPermut(domain[0],domain[1]);
+}
+
+/*******************  FUNCTION  *********************/
+CMRVarSystem::CMRVarSystem ( CMRDomainBuilder* domainBuilder )
+{
+	this->domainBuilder = domainBuilder;
+}
+
+/*******************  FUNCTION  *********************/
 CMRVarSystem::~CMRVarSystem ( void )
 {
-	freeAllDomains(CMR_ALL);
+	freeDomain(CMR_ALL,CMR_ALL);
 }
 
 /*******************  FUNCTION  *********************/
@@ -30,8 +70,61 @@ CMRVariableId CMRVarSystem::addVariable ( std::string name, int typeSize, int gh
 {
 	CMRVariable var(name,typeSize,ghostDepth);
 	variables.push_back(var);
-	return variables.size();
+	return variables.size() - 1;
 }
 
 /*******************  FUNCTION  *********************/
+void CMRVarSystem::freeDomain ( CMRVariableId varId, int tstep )
+{
+	//errors
+	assert((tstep >= 0 && tstep < CMR_MAX_TSTEPS) || tstep == CMR_ALL);
+	assert((varId >= 0 && varId < variables.size()) || varId == CMR_ALL);
+	
+	if (varId == CMR_ALL)
+	{
+		for (CMRVariableVector::iterator it = variables.begin() ; it != variables.end() ; ++it)
+		{
+			it->clearStep(tstep);
+		}
+	} else {
+		variables[varId].clearStep(tstep);
+	}
+}
 
+/*******************  FUNCTION  *********************/
+CMRDomainStorage* CMRVarSystem::getDomain ( CMRVariableId varId, int tstep )
+{
+	//vars
+	CMRDomainStorage * res;
+
+	//errors
+	assert(varId >= 0 && varId < variables.size());
+	assert(tstep >= 0 && tstep < CMR_MAX_TSTEPS);
+	
+	//get domain
+	res = variables[varId].domain[tstep];
+	
+	//if NULL create it
+	if (res == NULL)
+		res = variables[varId].domain[tstep] = domainBuilder->buildDomain(variables[varId]);
+	
+	//return
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRVarSystem::permutVar ( CMRVariableId varId )
+{
+	//errors
+	assert((varId >= 0 && varId < variables.size()) || varId == CMR_ALL);
+	
+	if (varId == CMR_ALL)
+	{
+		for (CMRVariableVector::iterator it = variables.begin() ; it != variables.end() ; ++it)
+		{
+			it->permut();
+		}
+	} else {
+		variables[varId].permut();
+	}
+}
