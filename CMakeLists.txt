@@ -32,6 +32,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/enable-options.cmake)
 ######################################################
 #some include dirs
 include_directories(${MPI_INCLUDE_PATH})
+include_directories(extern-deps/from-fftw/)
 
 ######################################################
 #manage subdirs

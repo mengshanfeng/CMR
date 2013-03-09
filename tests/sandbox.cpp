@@ -15,6 +15,7 @@
 #include <domain/CMRMPIDomainBuilder.h>
 #include <common/CMRSpaceSplitter.h>
 #include <CMROperation.h>
+#include <cycle.h>
 
 using namespace std;
 
@@ -59,6 +60,16 @@ struct ActionInc
 	}
 };
 
+struct ActionIncInPlace
+{
+	static void cellAction(VarSystem::CellAccessor & cell)
+	{
+		//debug("Update cell : %p",&in.density.getCell(0,0));
+		//out.density.getCell(0,0) += (in.density.getCell(0,0) * 3 + 5) / in.variation.getCell(0,0);
+		cell.density.getCell(0,0) += 1.0;
+	}
+};
+
 struct ActionInit
 {
 	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos)
@@ -66,6 +77,19 @@ struct ActionInit
 		out.density.getCell(0,0) = pos.cellPos.y;
 		out.variation.getCell(0,0) = 0.0;
 	}
+};
+
+ticks testsimple(const CMRRect rect)
+{
+	float * buffer = new float[rect.surface()];
+	memset(buffer,0,rect.surface() * sizeof(float));
+
+	ticks t0 = getticks();
+	for (int y = 0 ; y < rect.width ; y++)
+		for (int x = 0 ; x < rect.width ; x++)
+			buffer[x + y * rect.width]+=1.0;
+	ticks t1 = getticks();
+	return t1 - t0;
 };
 
 int main(int argc, char * argv[])
@@ -76,7 +100,7 @@ int main(int argc, char * argv[])
 	MPI_Barrier(MPI_COMM_WORLD);
 	
 	//try space splitter
-	CMRBasicSpaceSplitter splitter(0,0,20,20,cmrGetMPISize(),0);
+	CMRBasicSpaceSplitter splitter(0,0,1000,1000,cmrGetMPISize(),0);
 	splitter.printDebug(CMR_MPI_MASTER);
 	
 	//try system computation
@@ -93,17 +117,29 @@ int main(int argc, char * argv[])
 	loopInit.run(localRect.expended(1));
 	
 	//print current state
-	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
+	//sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
 	
 	//permut
-	sys.permutVar(CMR_ALL);
+	//sys.permutVar(CMR_ALL);
 	
 	//compute
-	CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop(&sys);
+	//CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop(&sys);
+	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionIncInPlace> loop(&sys);
+	ticks t0 = getticks();
 	loop.run(localRect);
+	ticks t1 = getticks();
+	info("Time of CMR loop : %f per cell",((float)(t1-t0))/(float)localRect.surface());
+	
+	t0 = getticks();
+	loop.run(localRect);
+	t1 = getticks();
+	info("Time of CMR loop (cached) : %f per cell",((float)(t1-t0))/(float)localRect.surface());
+	
+	t0 = testsimple(localRect);
+	info("Time of std loop (cached) : %f per cell",((float)(t0))/(float)localRect.surface());
 	
 	//print current
-	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
+	//sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
 	
 	//sync
 	CMRCommSchem schem("Sync1");
@@ -113,7 +149,7 @@ int main(int argc, char * argv[])
 	schem.run();
 	
 	//print current
-	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
+	//sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
 	
 	//permut
 	sys.permutVar(CMR_ALL);

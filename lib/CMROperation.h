@@ -43,11 +43,6 @@ class CMRMeshOperationSimpleLoop : public CMRMeshOperation
 };
 
 /*******************  FUNCTION  *********************/
-class CellAccessor
-{
-};
-
-/*******************  FUNCTION  *********************/
 template <class T,class U>
 CMRMeshOperationSimpleLoop<T,U>::CMRMeshOperationSimpleLoop (CMRVarSystem * sys)
 {
@@ -86,6 +81,58 @@ void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect & zone )
 			const typename T::CellAccessor cellLocalIn(cellIn,x,y);
 			typename T::CellAccessor cellLocalOut(cellOut,x,y);
 			U::cellAction(cellLocalIn,cellLocalOut);
+		}
+	}
+}
+
+/*********************  CLASS  **********************/
+template <class T,class U>
+class CMRMeshOperationSimpleLoopInPlace : public CMRMeshOperation
+{
+	public:
+		CMRMeshOperationSimpleLoopInPlace(CMRVarSystem * sys);
+		virtual void run (const CMRRect& zone );
+	private:
+		CMRVarSystem * sys;
+};
+
+/*******************  FUNCTION  *********************/
+template <class T,class U>
+CMRMeshOperationSimpleLoopInPlace<T,U>::CMRMeshOperationSimpleLoopInPlace (CMRVarSystem * sys)
+{
+	//errors
+	assert(sys != NULL);
+	
+	//setup
+	this->sys = sys;
+}
+
+/*******************  FUNCTION  *********************/
+template <class T,class U>
+void CMRMeshOperationSimpleLoopInPlace<T,U>::run ( const CMRRect & zone )
+{
+	//errors
+	//assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
+	//assume(domainOut->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
+	//TODO : to check if the computation accept local calculation (same somaines)
+	//assert(domainIn != domainOut || T::acceptLocalCompute());
+	
+	//errors if no contiguous on X axis
+	//if (!domainIn->isContiguous(0) && ! domainOut->isContiguous(0))
+	//	warning("Caution, you loop on two domain with inner loop on X but the two domains are contiguous on Y !");
+	
+	//local copy to avoid deref
+	debug("Start to compute on [ %d , %d : %d x %d ] into ",zone.x,zone.y,zone.width,zone.height);
+	CMRRect localZone = zone;
+	assert(sys->getDomain(0,0)->getMemoryRect().contains(localZone));
+	typename T::CellAccessor cell(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
+	
+	for(int y = 0 ; y < localZone.height ; y++)
+	{
+		for(int x = 0 ; x < localZone.width ; x++)
+		{
+			typename T::CellAccessor cellLocalOut(cell,x,y);
+			U::cellAction(cell);
 		}
 	}
 }
