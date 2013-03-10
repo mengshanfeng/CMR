@@ -138,7 +138,7 @@ double get_cell_density(const VarSystem::CellAccessor & in,int x,int y)
 
 	//loop on directions
 	for( k = 0 ; k < DIRECTIONS ; k++)
-		res += *in.directions.getCell(x,y)[k];
+		res += *in.directions(x,y)[k];
 
 	//return res
 	return res;
@@ -163,7 +163,7 @@ void get_cell_velocity(LBMVect v,const VarSystem::CellAccessor & in,double cell_
 
 		//sum all directions
 		for ( k = 0 ; k < DIRECTIONS ; k++)
-			v[d] += *in.directions.getCell(x,y)[k] * direction_matrix[k][d];
+			v[d] += *in.directions(x,y)[k] * direction_matrix[k][d];
 
 		//normalize
 		v[d] = v[d] / cell_density;
@@ -217,11 +217,11 @@ void compute_bounce_back(const VarSystem::CellAccessor & in,VarSystem::CellAcces
 
 	//compute bounce back
 	for ( k = 0 ; k < DIRECTIONS ; k++)
-		tmp[k] = *in.directions.getCell(x,y)[opposite_of[k]];
+		tmp[k] = *in.directions(x,y)[opposite_of[k]];
 
 	//compute bounce back
 	for ( k = 0 ; k < DIRECTIONS ; k++)
-		*out.directions.getCell(x,y)[k] = tmp[k];
+		*out.directions(x,y)[k] = tmp[k];
 }
 
 /*******************  FUNCTION  *********************/
@@ -260,8 +260,8 @@ void compute_inflow_zou_he_poiseuille_distr(const VarSystem::CellAccessor & in,V
 	//poiseuille distr on X and null on Y
 	//we just want the norm, so v = v_x
 	v = helper_compute_poiseuille(pos.getAbsY(x),pos.globalMesh.height);
-	const float * cellIn = *in.directions.getCell(x,y);
-	float * cellOut = *out.directions.getCell(x,y);
+	const float * cellIn = *in.directions(x,y);
+	float * cellOut = *out.directions(x,y);
 
 	//compute rho from u and inner flow on surface
 	density = (cellIn[0] + cellIn[2] + cellIn[4] + 2 * ( cellIn[3] + cellIn[6] + cellIn[7] )) / (1.0 - v) ;
@@ -298,8 +298,8 @@ void compute_outflow_zou_he_const_density(const VarSystem::CellAccessor & in,Var
 	#error Implemented only for 9 directions
 	#endif
 	
-	const float * cellIn = *in.directions.getCell(x,y);
-	float * cellOut = *out.directions.getCell(x,y);
+	const float * cellIn = *in.directions(x,y);
+	float * cellOut = *out.directions(x,y);
 
 	//compute macroscopic v depeding on inner flow going onto the wall
 	v = -1.0 + (1.0 / density) * (cellIn[0] + cellIn[2] + cellIn[4] + 2 * (cellIn[1] + cellIn[5] + cellIn[8]));
@@ -331,7 +331,7 @@ struct ActionPropagation
 			jj = y+(direction_matrix[k][1]);
 			//propagate to neighboor nodes
 			if (pos.cellExist(ii,jj,1))
-				*out.directions.getCell(ii,jj)[k] = *in.directions.getCell(x,y)[k];
+				*out.directions(ii,jj)[k] = *in.directions(x,y)[k];
 		}
 	}
 };
@@ -340,7 +340,7 @@ struct ActionSpecialCells
 {
 	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos,int x,int y)
 	{
-		switch (*in.cellType.getCell(x,y))
+		switch (*in.cellType(x,y))
 		{
 			case CELL_FUILD:
 				break;
@@ -378,7 +378,7 @@ struct ActionCollision
 			//compute f at equilibr.
 			feq = compute_equilibrium_profile(v,density,k);
 			//compute fout
-			*out.directions.getCell(x,y)[k] = *in.directions.getCell(x,y)[k] - RELAX_PARAMETER * (*in.directions.getCell(x,y)[k] - feq);
+			*out.directions(x,y)[k] = *in.directions(x,y)[k] - RELAX_PARAMETER * (*in.directions(x,y)[k] - feq);
 		}
 	};
 };

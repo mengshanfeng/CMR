@@ -28,8 +28,8 @@ class CMRCellAccessor : public CMRDomainMemory
 		CMRCellAccessor( CMRDomainStorage & orig, int dx, int dy, bool absolute = false);
 		CMRCellAccessor( CMRDomainMemory& orig, int dx, int dy, bool absolute = false);
 		CMRCellAccessor( CMRCellAccessor<DataType,MemoryModel> & orig,int dx,int dy, bool absolute = false);
-		DataType * getCell(int dx,int dy);
-		const DataType * getCell(int dx,int dy) const;
+		DataType * operator()(int dx,int dy);
+		const DataType * operator()(int dx,int dy) const;
 		size_t getTypeSize(void) const;
 		bool isContiguous(const CMRRect & rect) const;
 		CMRVect2D getAbsPosition(int dx = 0 , int dy = 0) const;
@@ -99,7 +99,7 @@ void CMRCellAccessor<DataType,MemoryModel>::setPosition ( int dx, int dy, bool a
 
 /*******************  FUNCTION  *********************/
 template <class DataType,class MemoryModel>
-DataType * CMRCellAccessor<DataType,MemoryModel>::getCell ( int dx, int dy )
+DataType * CMRCellAccessor<DataType,MemoryModel>::operator() ( int dx, int dy )
 {
 	//errors
 	assert(ptr != NULL);
@@ -110,7 +110,7 @@ DataType * CMRCellAccessor<DataType,MemoryModel>::getCell ( int dx, int dy )
 
 /*******************  FUNCTION  *********************/
 template <class DataType,class MemoryModel>
-const DataType* CMRCellAccessor<DataType,MemoryModel>::getCell ( int dx, int dy ) const
+const DataType* CMRCellAccessor<DataType,MemoryModel>::operator() ( int dx, int dy ) const
 {
 	//errors
 	assert(ptr != NULL);

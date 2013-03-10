@@ -54,9 +54,9 @@ struct ActionInc
 {
 	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,int x,int y)
 	{
-		//debug("Update cell : %p",&in.density.getCell(0,0));
-		//out.density.getCell(0,0) += (in.density.getCell(0,0) * 3 + 5) / in.variation.getCell(0,0);
-		*out.density.getCell(x,y) = *in.density.getCell(x,y) + 1;
+		//debug("Update cell : %p",&in.density(0,0));
+		//out.density(0,0) += (in.density(0,0) * 3 + 5) / in.variation(0,0);
+		*out.density(x,y) = *in.density(x,y) + 1;
 	}
 };
 
@@ -64,16 +64,16 @@ struct ActionIncInPlace
 {
 	static void cellAction(VarSystem::CellAccessor & cell)//,int x,int y)
 	{
-		//debug("Update cell : %p",&in.density.getCell(0,0));
-		//out.density.getCell(0,0) += (in.density.getCell(0,0) * 3 + 5) / in.variation.getCell(0,0);
-		*cell.density.getCell(0,0) += 1.0;
+		//debug("Update cell : %p",&in.density(0,0));
+		//out.density(0,0) += (in.density(0,0) * 3 + 5) / in.variation(0,0);
+		*cell.density(0,0) += 1.0;
 	}
 	
 	static void cellAction(VarSystem::CellAccessor & cell,int x,int y)
 	{
-		//debug("Update cell : %p",&in.density.getCell(0,0));
-		//out.density.getCell(0,0) += (in.density.getCell(0,0) * 3 + 5) / in.variation.getCell(0,0);
-		*cell.density.getCell(x,y) += 1.0;
+		//debug("Update cell : %p",&in.density(0,0));
+		//out.density(0,0) += (in.density(0,0) * 3 + 5) / in.variation(0,0);
+		*cell.density(x,y) += 1.0;
 	}
 };
 
@@ -81,8 +81,8 @@ struct ActionInit
 {
 	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)
 	{
-		*out.density.getCell(x,y) = pos.cellPos.y;
-		*out.variation.getCell(x,y) = 0.0;
+		*out.density(x,y) = pos.cellPos.y;
+		*out.variation(x,y) = 0.0;
 	}
 };
 
@@ -92,7 +92,7 @@ ticks testsimple(const CMRRect rect)
 	memset(buffer,0,rect.surface() * sizeof(float));
 
 	ticks t0 = getticks();
-	for (int y = 0 ; y < rect.width ; y++)
+	for (int y = 0 ; y < rect.height ; y++)
 		for (int x = 0 ; x < rect.width ; x++)
 			buffer[x + y * rect.width]+=1.0;
 	ticks t1 = getticks();
@@ -107,7 +107,7 @@ int main(int argc, char * argv[])
 	MPI_Barrier(MPI_COMM_WORLD);
 	
 	//try space splitter
-	CMRBasicSpaceSplitter splitter(0,0,10,10,cmrGetMPISize(),0);
+	CMRBasicSpaceSplitter splitter(0,0,1000,1000,cmrGetMPISize(),0);
 	splitter.printDebug(CMR_MPI_MASTER);
 	
 	//try system computation
@@ -125,7 +125,7 @@ int main(int argc, char * argv[])
 	
 	//print current state
 	//sys.getDomain(0,CMR_PREV_STEP)->printDebug();
-	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
+// 	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
 	
 	//permut
 	sys.permutVar(CMR_ALL);
@@ -134,25 +134,25 @@ int main(int argc, char * argv[])
 	CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop(&sys);
 	loop.run(localRect);
 	
-	//////////////////////////////////
-	/*CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionIncInPlace> loop(&sys);
+	////////////////////////////////
+	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionIncInPlace> loop2(&sys);
 	ticks t0 = getticks();
-	loop.run(localRect);
+	loop2.run(localRect);
 	ticks t1 = getticks();
 	info("Time of CMR loop : %f per cell",((float)(t1-t0))/(float)localRect.surface());
 	
 	t0 = getticks();
-	loop.run(localRect);
+	loop2.run(localRect);
 	t1 = getticks();
 	info("Time of CMR loop (cached) : %f per cell",((float)(t1-t0))/(float)localRect.surface());
 	
 	t0 = testsimple(localRect);
-	info("Time of std loop (cached) : %f per cell",((float)(t0))/(float)localRect.surface());*/
-	//////////////////////////////////
+	info("Time of std loop (cached) : %f per cell",((float)(t0))/(float)localRect.surface());
+	////////////////////////////////
 	
 	//print current
 	//sys.getDomain(0,CMR_PREV_STEP)->printDebug();
-	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
+// 	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
 	
 	//sync
 	CMRCommSchem schem("Sync1");
@@ -163,7 +163,7 @@ int main(int argc, char * argv[])
 	
 	//print current
 	//sys.getDomain(0,CMR_PREV_STEP)->printDebug();
-	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
+// 	sys.getDomain(0,CMR_CURRENT_STEP)->printDebug();
 	
 	//permut
 	sys.permutVar(CMR_ALL);
