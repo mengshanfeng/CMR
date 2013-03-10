@@ -26,14 +26,14 @@ using namespace std;
 //=>(lbm_gbl_config.relax_parameter)
 #define INFLOW_MAX_VELOCITY 0.1
 //=>(lbm_gbl_config.inflow_max_velocity)
-#define REYNOLDS 100
-#define KINETIC_VISCOSITY (INFLOW_MAX_VELOCITY * 2.0 * OBSTRACLE_R / REYNOLDS)
+#define REYNOLDS 300
+#define KINETIC_VISCOSITY (INFLOW_MAX_VELOCITY * 2.0 * OBSTACLE_R / REYNOLDS)
 #define RELAX_PARAMETER (1.0 / (3.0 * KINETIC_VISCOSITY + 1.0/2.0))
 #define WIDTH 800
 #define HEIGHT 100
-#define OBSTRACLE_R ((HEIGHT)/2.0)
-#define ITERATIONS 100
-#define WRITE_STEP_INTERVAL 4
+#define OBSTACLE_R ((HEIGHT)/8.0)
+#define ITERATIONS 8000
+#define WRITE_STEP_INTERVAL 100
 
 /** Représentation d'un vecteur pour la manipulation des vitesses macroscopiques. **/
 typedef double LBMVect[DIMENSIONS];
@@ -478,6 +478,30 @@ struct ActionUpdateFileout
 	}
 };
 
+struct ActionSetupObstable
+{
+	ActionSetupObstable(float x,float y)
+	{
+		OBSTACLE_X = x;
+		OBSTACLE_Y = y;
+	}
+
+	void cellAction(VarSystem::CellAccessor & cell,int x,int y) const
+	{
+		if ( ( (x-OBSTACLE_X) * (x-OBSTACLE_X) ) + ( (y-OBSTACLE_Y) * (y-OBSTACLE_Y) ) <= OBSTACLE_R * OBSTACLE_R )
+		{
+			(*cell.cellType(x,y)) = CELL_BOUNCE_BACK;
+			LBMVect v = {0.0,0.0};
+			//apply poiseuil for all nodes except on top/bottom border
+			for ( int k = 0 ; k < DIRECTIONS ; k++)
+				((*cell.directions(x,y)))[k] = compute_equilibrium_profile(v,1.0,k);
+		}
+	}
+
+	float OBSTACLE_X;
+	float OBSTACLE_Y;
+};
+
 #define RESULT_MAGICK 0x12345
 #define RESULT_FILENAME "out.raw"
 
@@ -563,6 +587,8 @@ void setup_init_state(VarSystem & sys,const CMRRect & globalRect,const CMRRect &
 	initBounceBack.run(globalRect.expended(1).getBorder(CMR_BOTTOM));
 	
 	//sys.getDomain(1,CMR_PREV_STEP)->printDebug();
+	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionSetupObstable> initObstacle(&sys,new ActionSetupObstable(WIDTH/10.0 + 1.0,HEIGHT/2.0+3.0));
+	initObstacle.run(globalRect);
 }
 
 /*******************  FUNCTION  *********************/
@@ -601,7 +627,7 @@ int main(int argc, char * argv[])
 	for ( int i = 1 ; i < ITERATIONS ; i++ )
 	{
 		//progression
-		info_on_master("Progress [%5d / %5d]\n",i,ITERATIONS);
+		info_on_master("Progress [%5d / %5d]",i,ITERATIONS);
 		
 		//compute special actions (border, obstacle...)
 		//special_cells( &mesh, &mesh_type, &mesh_comm);

@@ -44,7 +44,8 @@ template <class DataType,class MemoryModel>
 CMRCellAccessor<DataType,MemoryModel>::CMRCellAccessor ( CMRDomainStorage& orig, int dx, int dy, bool absolute)
 {
 	//get accessor
-	warning("Provide a compat check system !");
+	//warning("Provide a compat check system !");
+	#warning Provide a compat check system !
 	
 	//if acc is NULL, setup a new one compatible with current model
 	if (orig.hasMemoryAccessor() == false)
