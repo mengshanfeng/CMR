@@ -89,6 +89,26 @@ def compute_propagation : Forall
 	Deps.forceFullDomain()
 }
 
+//**********************************************************
+def setpu_obstacle : Forall
+{
+	def iterator k => 1..9
+	def double[2] velocity("v")
+
+	if ( (i-O_x)^2 + (j - O_y) <= O_r^2 )
+	{
+		T_{i,j} = \mbox{CELL_BOUNCE_BACK}
+		D'_{i,j,k} = p()
+	}
+}
+
+//**********************************************************
+def Init
+{
+	
+}
+
+//**********************************************************
 def TimeLoop
 {
 	compute_collision()

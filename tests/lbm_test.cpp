@@ -33,7 +33,7 @@ using namespace std;
 #define HEIGHT 100
 #define OBSTACLE_R ((HEIGHT)/8.0)
 #define ITERATIONS 8000
-#define WRITE_STEP_INTERVAL 100
+#define WRITE_STEP_INTERVAL 50
 
 /** Représentation d'un vecteur pour la manipulation des vitesses macroscopiques. **/
 typedef double LBMVect[DIMENSIONS];
@@ -623,37 +623,40 @@ int main(int argc, char * argv[])
 	//write to fileo
 	write_to_file(fp,sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
 	
+	CMRBasicSpaceSplitter splitterBlocking(globalRect,1,0);
+	splitterBlocking.printDebug();
+	
 	//time steps
 	for ( int i = 1 ; i < ITERATIONS ; i++ )
 	{
 		//progression
-		info_on_master("Progress [%5d / %5d]",i,ITERATIONS);
+		if (i % 10 == 0)
+			info_on_master("Progress [%5d / %5d]",i,ITERATIONS);
+
+		for (int block = 0 ; block < 1 ; block++)
+		{
+			const CMRRect blockRect = splitterBlocking.getLocalDomain(block);
 		
-		//compute special actions (border, obstacle...)
-		//special_cells( &mesh, &mesh_type, &mesh_comm);
-		CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys);
-		loop2.run(globalRect);
-		sys.permutVar(CMR_ALL);
+			//compute special actions (border, obstacle...)
+			//special_cells( &mesh, &mesh_type, &mesh_comm);
+			CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys);
+			loop2.run(blockRect.expended(1));
+			sys.permutVar(CMR_ALL);
 
-		//compute collision term
-		//collision( &temp, &mesh);
-		CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys);
-		loop1.run(globalRect);
-		sys.permutVar(CMR_ALL);
+			//compute collision term
+			//collision( &temp, &mesh);
+			CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys);
+			loop1.run(blockRect);
+			sys.permutVar(CMR_ALL);
 
-		//need to wait all before doing next step
-		MPI_Barrier(MPI_COMM_WORLD);
-
-		//propagate values from node to neighboors
-		//lbm_comm_ghost_exchange( &mesh_comm, &temp );
-		
-		//prop
-		//propagation( &mesh, &temp);
-		CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys);
-		loop3.run(globalRect);
-
-		//need to wait all before doing next step
-		MPI_Barrier(MPI_COMM_WORLD);
+			//propagate values from node to neighboors
+			//lbm_comm_ghost_exchange( &mesh_comm, &temp );
+			
+			//prop
+			//propagation( &mesh, &temp);
+			CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys);
+			loop3.run(blockRect);
+		}
 
 		//save step
 		if ( i % WRITE_STEP_INTERVAL == 0 )

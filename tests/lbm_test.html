@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>LBM : Lattice Boltzman Method</title>
 	<script type="text/x-mathjax-config">
 		MathJax.Hub.Config({
@@ -34,7 +35,7 @@
 		text-align:left;
 		font-family: "Courier", monospace;
 	}
-	.CMROperation, .CMRConsts {
+	.CMROperation, .CMRConsts, .CMRDefinition {
 		background-color:white;
 		border-radius: 15px;
 		box-shadow: 0px 0px 5px #888888;
@@ -44,6 +45,16 @@
 		margin-left:auto;
 		margin-right:auto;
 	}
+	.CMRConsts {
+		background-color:#F5F5F5;
+	}
+	.CMRDefinition {
+		background-color:#D2E6FF;
+	}
+	.CMRFinalDefinition{
+		border:1px solid gray;
+	}
+	
 	h2 {
 		text-align:center;
 		font:"Lucida Grande","Lucida Sans Unicode","DejaVu Sans","Lucida,Arial","Helvetica","sans-serif";
@@ -78,7 +89,7 @@
 	<h2>Constants</h2>
 	<p class='CMREquation'>
 		\begin{align}
-		D = \begin{pmatrix}
+		M^{dir} = \begin{pmatrix}
 		+0.0 &amp; +0.0 \\
 		+1.0 &amp; +0.0 \\
 		+0.0 &amp; +1.0 \\
@@ -88,43 +99,210 @@
 		-1.0 &amp; +1.0 \\
 		-1.0 &amp; -1.0 \\
 		+1.0 &amp; -1.0
-		\end{pmatrix} \\
+		\end{pmatrix}
+		\end{align}
+		\begin{align}
 		W = \begin{pmatrix}\frac{4.0}{9.0} &amp;
-		\frac{1.0}{9.0} &amp; \frac{1.0}{9.0} &amp; \frac{1.0}{9.0} &amp; \frac{1.0}{9.0},
+		\frac{1.0}{9.0} &amp; \frac{1.0}{9.0} &amp; \frac{1.0}{9.0} &amp; \frac{1.0}{9.0} &amp;
 		\frac{1.0}{36.0}&amp; \frac{1.0}{36.0}&amp; \frac{1.0}{36.0}&amp; \frac{1.0}{36.0}\end{pmatrix}
+		\end{align}
+		\begin{align}
+		r = \begin{pmatrix} 0 &amp; 3 &amp; 4 &amp; 1 &amp; 2 &amp; 7 &amp; 8 &amp; 5 &amp; 6\end{pmatrix}
 		\end{align}
 	</p>
 </div>
+
+<div class='CMRDefinition'>
+	<h2>Definition : $d_{i,j}$ (Densité macroscopique locale)</h2>
+	<p class='CMREquation'>
+		def iterator k => 1..9<br/>
+		<br/>
+		$d_{i,j} = \sum_k{D_{i,j,k}}$<br/>
+	</p>
+</div>
+
+<div class='CMRDefinition'>
+	<h2>Definition : $\vec{v_{i,j}}$ (Vitesse macroscopique locale)</h2>
+	<p class='CMREquation'>
+		def iterator l => 1..2<br/>
+		<br/>
+		$v_{i,j,l} = \frac{\sum_k{D_{i,j,k} M^{dir}_{k,l}}} {d_{i,j}}$<br/>
+	</p>
+</div>
+
+<div class='CMRDefinition'>
+	<h2>Definition : $f^{eq}_{i,j,k}$ (Fonction d'équilibre locale, pour une direction k)</h2>
+	<p class='CMREquation'>
+		def iterator l => 1..2<br/>
+		def double $v^2$<br/>
+		<br/>
+		$v^2 = \langle \vec{v_{i,j}} | \vec{v_{i,j}} \rangle$<br/>
+		$p^2 = \langle \vec{M^{dir}_{k}} | \vec{v_{i,j}} \rangle$<br/>
+		$f^{eq}_{i,j,k} = 1 + 3 p + \frac{9}{2} p^2 - \frac{3}{2} v^2$
+	</p>
+</div>
+
+<div class='CMRDefinition'>
+	<h2>Definition : $p_{i}$ (Fonction de poiseuil pour une hauteur de fluide donnée)</h2>
+	<p class='CMREquation'>
+		$y = i - 1$<br/>
+		$L = H - 1$<br/>
+		$p_{i} = \frac{4V}{L^2} (Ly - y^2)$<br/>
+	</p>
+</div>
+
+<div class='CMROperation'>
+	<h2>Operation : Bounce back</h2>
+	<p class='CMREquation'>
+		def iterator k => 1..9<br/>
+		<br/>
+		foreach ($k$)<br/>
+		{<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;$k'=r_k$<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;$D'_{i,j,k} = D_{i,j,k'}$<br/>
+		}<br/>
+	</p>
+	<table class='CMRAccess'>
+		<tr>
+			<td class='NoAccess'></td>
+			<td class='NoAccess'></td>
+			<td class='NoAccess'></td>
+		</tr>
+		<tr>
+			<td class='NoAccess'></td>
+			<td class='ReadWrite'>RW</td>
+			<td class='NoAccess'></td>
+		</tr>
+		<tr>
+			<td class='NoAccess'></td>
+			<td class='NoAccess'></td>
+			<td class='NoAccess'></td>
+		</tr>
+	</table>
+</div>
+
+<div class='CMROperation'>
+	<h2>Operation : Zou he poiseuille distr</h2>
+	<p class='CMREquation'>
+		def iterator k => 1..9<br/>
+		<br/>
+		$L = D_{i,j}$<br/>
+		$d = \frac{L_0 + L_2 + L_4 + 2 (L_3 + L_6 + L_7)}{1-v_i}$<br/>
+		$D'_{i,j,1} = L_3$<br/>
+		$D'_{i,j,5} = L_7-\frac{1}{2}(L_2 - L_4) + \frac{1}{6}(dv)$<br/>
+		$D'_{i,j,8} = L_6 + \frac{1}{2}(L_2 - L_4) + \frac{1}{6}(dv)$<br/>
+	</p>
+	<table class='CMRAccess'>
+		<tr>
+			<td class=''></td>
+			<td class=''></td>
+			<td class=''></td>
+		</tr>
+		<tr>
+			<td class=''></td>
+			<td class='ReadWrite'>RW</td>
+			<td class=''></td>
+		</tr>
+		<tr>
+			<td class=''></td>
+			<td class=''></td>
+			<td class=''></td>
+		</tr>
+	</table>
+</div>
+
+<div class='CMROperation'>
+	<h2>Operation : Zou he poiseuille const density</h2>
+	<p class='CMREquation'>
+		def iterator k => 1..9<br/>
+		<br/>
+		$L = D_{i,j}$<br/>
+		$d = 1$<br/>
+		$v = -1 + \frac{1}{d} (L_0+L_2+L_4+2(L_1+L_5+L_8))$
+		$D'_{i,j,3} = L_1 - \frac{2}{3} dv$<br/>
+		$D'_{i,j,7} = L_5 - \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv$<br/>
+		$D'_{i,j,6} = L_8 + \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv$<br/>
+	</p>
+	<table class='CMRAccess'>
+		<tr>
+			<td class=''></td>
+			<td class=''></td>
+			<td class=''></td>
+		</tr>
+		<tr>
+			<td class=''></td>
+			<td class='ReadWrite'>RW</td>
+			<td class=''></td>
+		</tr>
+		<tr>
+			<td class=''></td>
+			<td class=''></td>
+			<td class=''></td>
+		</tr>
+	</table>
+</div>
+
+<div class='CMROperation'>
+	<h2>Operation : Special cells</h2>
+	<p class='CMREquation'>
+		switch($T_{i,j}$)<br/>
+		{<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;case CELL_FLUID:<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;case CELL_BOUNCE_BACK:<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;suboperation => bounce_back<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;case CELL_LEFT_IN:<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;suboperation => inflow_zou_he_poiseuille_distr<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;case CELL_RIGHT_OUT:<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;suboperation => outflow_zou_he_const_density<br/>
+		}<br/>
+	</p>
+	<table class='CMRAccess'>
+		<tr>
+			<td class=''></td>
+			<td class=''></td>
+			<td class=''></td>
+		</tr>
+		<tr>
+			<td class=''></td>
+			<td class='ReadWrite'>RW</td>
+			<td class=''></td>
+		</tr>
+		<tr>
+			<td class=''></td>
+			<td class=''></td>
+			<td class=''></td>
+		</tr>
+	</table>
+</div>
+
 
 <div class='CMROperation'>
 	<h2>Operation : Propagation</h2>
 	<p class='CMREquation'>
 		def iterator k => 1..9<br/>
 		<br/>
-		int $I = D_{k,0}$<br/>
-		int $J = D_{k,1}$<br/>
-		if Checker.cellExist($V'_{i+I,j+J}$)<br/>
-		&nbsp;&nbsp;&nbsp;&nbsp;$V'_{i+I,j+J,k} = v_{i,j,k}$<br/>
+		int $I = i-M^{dir}_{k,0}$<br/>
+		int $J = j-M^{dir}_{k,1}$<br/>
+		$D'_{i,j,k} = D_{I,J,k}$<br/>
 	</p>
 	<table class='CMRAccess'>
 		<tr>
-			<td class='Write'>W</td>
-			<td class='Write'>W</td>
-			<td class='Write'>W</td>
+			<td class='Read'>R</td>
+			<td class='Read'>R</td>
+			<td class='Read'>R</td>
 		</tr>
 		<tr>
-			<td class='Write'>W</td>
 			<td class='Read'>R</td>
 			<td class='Write'>W</td>
+			<td class='Read'>R</td>
 		</tr>
 		<tr>
-			<td class='Write'>W</td>
-			<td class='Write'>W</td>
-			<td class='Write'>W</td>
+			<td class='Read'>R</td>
+			<td class='Read'>R</td>
+			<td class='Read'>R</td>
 		</tr>
 	</table>
 </div>
-
 
 <div class='CMROperation'>
 	<h2>Operation : Collision</h2>
