@@ -40,6 +40,8 @@ struct CMRRect
 	unsigned long surface(void) const;
 	CMRRect & operator+=(const CMRVect2D & vect);
 	CMRRect operator+(const CMRVect2D & vect) const;
+	CMRRect relativeTo(const CMRRect & rect) const;
+	CMRRect relativeTo( const CMRVect2D& vect ) const;
 	int x;
 	int y;
 	int width;

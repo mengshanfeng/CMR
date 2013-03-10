@@ -22,7 +22,6 @@
 struct CMRMemoryModelRowMajor
 {
 	static inline int getCellId(int x,int y,int width,int height);
-	static inline int getRelCellId(int dx,int dy,int width,int height,int x,int y);
 	static inline bool isContiguous(const CMRRect & memoryRect, const CMRRect & rect);
 	static inline const char * getName(void);
 	//template <class T> int copyFromBuffer(T * mesh, const void* buffer, size_t size, const CMRRect & memoryRect, const CMRRect & rect);
@@ -43,16 +42,6 @@ int CMRMemoryModelRowMajor::getCellId ( int x, int y, int width, int height )
 	assert(y >= 0 && y < height);
 	
 	return y * width + x;
-}
-
-/*******************  FUNCTION  *********************/
-int CMRMemoryModelRowMajor::getRelCellId ( int dx, int dy, int width, int height, int absX, int absY )
-{
-	//errors
-	assert(absX >= 0 && absX < width);
-	assert(absY >= 0 && absY < height);
-	
-	return dy * width + dx;
 }
 
 /*******************  FUNCTION  *********************/

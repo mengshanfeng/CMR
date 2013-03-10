@@ -192,3 +192,25 @@ CMRRect CMRRect::expended ( int depth ) const
 	CMRRect rect(*this);
 	return rect.expend(depth);
 }
+
+/*******************  FUNCTION  *********************/
+CMRRect CMRRect::relativeTo ( const CMRRect& rect ) const
+{
+	assert(rect.contains(*this));
+	CMRRect res(*this);
+	res.x -= rect.x;
+	res.y -= rect.y;
+	assert(res.x >= 0 && res.y >=0);
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+CMRRect CMRRect::relativeTo (const CMRVect2D& vect ) const
+{
+	assert(this->x >= vect.x && this->y >= vect.y);
+	CMRRect res(*this);
+	res.x -= vect.x;
+	res.y -= vect.y;
+	assert(res.x >= 0 && res.y >=0);
+	return res;
+}

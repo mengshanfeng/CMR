@@ -42,7 +42,6 @@ template <class DataType,class MemoryModel>
 const void* CMRGenericMemoryAccessor<DataType,MemoryModel>::getCell ( int x, int y ) const
 {
 	//errors
-	assert(ptrAbsPosition == CMRVect2D(0,0));
 	assert(ptr != NULL);
 	
 	//return cell
@@ -60,7 +59,7 @@ void* CMRGenericMemoryAccessor<DataType,MemoryModel>::getCell ( int x, int y )
 	
 	//return cell
 	DataType * typedPtr = (DataType*)ptr;
-	int id = MemoryModel::getCellId(x - ptrAbsPosition.x,y - ptrAbsPosition.y,memoryRect.width,memoryRect.height);
+	int id = MemoryModel::getCellId(x - memoryRect.x,y - memoryRect.y,memoryRect.width,memoryRect.height);
 	return typedPtr+id;
 }
 
@@ -96,12 +95,7 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyToBuffer ( void* buff
 	assert(ptr != NULL);
 	
 	//local
-	int origX = rect.x - ptrAbsPosition.x;
-	int origY = rect.y - ptrAbsPosition.y;
-	int memW = memoryRect.width;
-	int memH = memoryRect.height;
-	int absOrigX = rect.x - memoryRect.x;
-	int absOrigY = rect.y - memoryRect.y;
+	CMRRect localRect = rect.relativeTo(memoryRect);
 	
 	//ptrs
 	DataType * typedBuffer = (DataType*) buffer;
@@ -113,7 +107,7 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyToBuffer ( void* buff
 		for (int x = 0 ; x < rect.width ; x++)
 		{
 			void * dest = &typedBuffer[y*rect.width + x];
-			const void * src = &typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,absOrigX + x,absOrigY + y)];
+			const void * src = &typedDomain[MemoryModel::getCellId(x + localRect.x,y + localRect.y,memoryRect.width,memoryRect.height)];
 			/** @TODO optimize small sizes **/
 			memcpy(dest,src,sizeof(DataType));
 		}
@@ -134,12 +128,7 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyFromBuffer ( const vo
 	assert(ptr != NULL);
 	
 	//local
-	int origX = rect.x - ptrAbsPosition.x;
-	int origY = rect.y - ptrAbsPosition.y;
-	int memW = memoryRect.width;
-	int memH = memoryRect.height;
-	int absOrigX = rect.x - memoryRect.x;
-	int absOrigY = rect.y - memoryRect.y;
+	CMRRect localRect = rect.relativeTo(memoryRect);
 	
 	//ptrs
 	const DataType * typedBuffer = (const DataType*) buffer;
@@ -150,7 +139,7 @@ size_t CMRGenericMemoryAccessor<DataType,MemoryModel>::copyFromBuffer ( const vo
 	{
 		for (int x = 0 ; x < rect.width ; x++)
 		{
-			void * dest = &typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,absOrigX + x,absOrigY + y)];
+			void * dest = &typedDomain[MemoryModel::getCellId(x + localRect.x,y + localRect.y,memoryRect.width,memoryRect.height)];
 			const void * src = &typedBuffer[y*rect.width + x];
 			/** @TODO optimize small sizes **/
 			memcpy(dest,src,sizeof(DataType));
@@ -183,18 +172,13 @@ void CMRGenericMemoryAccessor<DataType,MemoryModel>::printDebug ( const CMRRect&
 	const DataType * typedDomain = (const DataType*) ptr;
 	
 	//local
-	int origX = rect.x - ptrAbsPosition.x;
-	int origY = rect.y - ptrAbsPosition.y;
-	int memW = memoryRect.width;
-	int memH = memoryRect.height;
-	int absOrigX = rect.x - memoryRect.x;
-	int absOrigY = rect.y - memoryRect.y;
+	CMRRect localRect = rect.relativeTo(memoryRect);
 	
-	for (int y = 0 ; y < rect.height ; y++)
+	for (int y = 0 ; y < localRect.height ; y++)
 	{
-		for (int x = 0 ; x < rect.width ; x++)
+		for (int x = 0 ; x < localRect.width ; x++)
 		{
-			const DataType & cell = typedDomain[MemoryModel::getRelCellId(x + origX,y + origY,memW,memH,absOrigX + x,absOrigY + y)];
+			const DataType & cell = typedDomain[MemoryModel::getCellId(x + localRect.x,y + localRect.y,memoryRect.width,memoryRect.height)];
 			buffer << cmrTypeToString(cell) << " ";
 		}
 		buffer << std::endl;

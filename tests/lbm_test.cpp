@@ -130,7 +130,7 @@ double get_vect_norme_2(const LBMVect vect1,const LBMVect vect2)
  * Calcule la densité macroscopiques de la cellule en sommant ses DIRECTIONS
  * densités microscopiques.
 **/
-double get_cell_density(const VarSystem::CellAccessor & in)
+double get_cell_density(const VarSystem::CellAccessor & in,int x,int y)
 {
 	//vars
 	int k;
@@ -138,7 +138,7 @@ double get_cell_density(const VarSystem::CellAccessor & in)
 
 	//loop on directions
 	for( k = 0 ; k < DIRECTIONS ; k++)
-		res += in.directions.getCell(0,0)[k];
+		res += *in.directions.getCell(x,y)[k];
 
 	//return res
 	return res;
@@ -150,7 +150,7 @@ double get_cell_density(const VarSystem::CellAccessor & in)
  * densités microscopiques.
  * @param cell_density Densité macroscopique de la cellules.
 **/
-void get_cell_velocity(LBMVect v,const VarSystem::CellAccessor & in,double cell_density)
+void get_cell_velocity(LBMVect v,const VarSystem::CellAccessor & in,double cell_density,int x,int y)
 {
 	//vars
 	int k,d;
@@ -163,7 +163,7 @@ void get_cell_velocity(LBMVect v,const VarSystem::CellAccessor & in,double cell_
 
 		//sum all directions
 		for ( k = 0 ; k < DIRECTIONS ; k++)
-			v[d] += in.directions.getCell(0,0)[k] * direction_matrix[k][d];
+			v[d] += *in.directions.getCell(x,y)[k] * direction_matrix[k][d];
 
 		//normalize
 		v[d] = v[d] / cell_density;
@@ -209,7 +209,7 @@ double compute_equilibrium_profile(LBMVect velocity,double density,int direction
 /**
  * Applique une reflexion sur les différentes directions pour simuler la présence d'un solide.
 **/
-void compute_bounce_back(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out)
+void compute_bounce_back(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y)
 {
 	//vars
 	int k;
@@ -217,11 +217,11 @@ void compute_bounce_back(const VarSystem::CellAccessor & in,VarSystem::CellAcces
 
 	//compute bounce back
 	for ( k = 0 ; k < DIRECTIONS ; k++)
-		tmp[k] = in.directions.getCell(0,0)[opposite_of[k]];
+		tmp[k] = *in.directions.getCell(x,y)[opposite_of[k]];
 
 	//compute bounce back
 	for ( k = 0 ; k < DIRECTIONS ; k++)
-		out.directions.getCell(0,0)[k] = tmp[k];
+		*out.directions.getCell(x,y)[k] = tmp[k];
 }
 
 /*******************  FUNCTION  *********************/
@@ -245,7 +245,7 @@ double helper_compute_poiseuille(int i,int size)
  * @param cell Maille à mettre à jour.
  * @param id_y Position en y de la cellule pour savoir comment calculer la vitesse de poiseuille.
 **/
-void compute_inflow_zou_he_poiseuille_distr(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos)
+void compute_inflow_zou_he_poiseuille_distr(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos,int x,int y)
 {
 	//vars
 	double v;
@@ -259,9 +259,9 @@ void compute_inflow_zou_he_poiseuille_distr(const VarSystem::CellAccessor & in,V
 	//set macroscopic fluide info
 	//poiseuille distr on X and null on Y
 	//we just want the norm, so v = v_x
-	v = helper_compute_poiseuille(pos.getAbsY(),pos.globalMesh.height);
-	const float * cellIn = in.directions.getCell(0,0);
-	float * cellOut = out.directions.getCell(0,0);
+	v = helper_compute_poiseuille(pos.getAbsY(x),pos.globalMesh.height);
+	const float * cellIn = *in.directions.getCell(x,y);
+	float * cellOut = *out.directions.getCell(x,y);
 
 	//compute rho from u and inner flow on surface
 	density = (cellIn[0] + cellIn[2] + cellIn[4] + 2 * ( cellIn[3] + cellIn[6] + cellIn[7] )) / (1.0 - v) ;
@@ -287,7 +287,7 @@ void compute_inflow_zou_he_poiseuille_distr(const VarSystem::CellAccessor & in,V
  * @param cell Maille à mettre à jour
  * @param id_y Position en y de la cellule pour savoir comment calculer la vitesse de poiseuille.
 **/
-void compute_outflow_zou_he_const_density(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out)
+void compute_outflow_zou_he_const_density(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y)
 {
 	//vars
 	const double density = 1.0;
@@ -298,8 +298,8 @@ void compute_outflow_zou_he_const_density(const VarSystem::CellAccessor & in,Var
 	#error Implemented only for 9 directions
 	#endif
 	
-	const float * cellIn = in.directions.getCell(0,0);
-	float * cellOut = out.directions.getCell(0,0);
+	const float * cellIn = *in.directions.getCell(x,y);
+	float * cellOut = *out.directions.getCell(x,y);
 
 	//compute macroscopic v depeding on inner flow going onto the wall
 	v = -1.0 + (1.0 / density) * (cellIn[0] + cellIn[2] + cellIn[4] + 2 * (cellIn[1] + cellIn[5] + cellIn[8]));
@@ -317,7 +317,7 @@ void compute_outflow_zou_he_const_density(const VarSystem::CellAccessor & in,Var
 /*******************  FUNCTION  *********************/
 struct ActionPropagation
 {
-	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos)
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)
 	{
 		int k;
 		int ii;
@@ -327,31 +327,31 @@ struct ActionPropagation
 		for ( k  = 0 ; k < DIRECTIONS ; k++)
 		{
 			//compute destination point
-			ii = (direction_matrix[k][0]);
-			jj = (direction_matrix[k][1]);
+			ii = x+(direction_matrix[k][0]);
+			jj = y+(direction_matrix[k][1]);
 			//propagate to neighboor nodes
 			if (pos.cellExist(ii,jj,1))
-				out.directions.getCell(ii,jj)[k] = in.directions.getCell(0,0)[k];
+				*out.directions.getCell(ii,jj)[k] = *in.directions.getCell(x,y)[k];
 		}
 	}
 };
 
 struct ActionSpecialCells
 {
-	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos)
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos,int x,int y)
 	{
-		switch (in.cellType.getCell(0,0))
+		switch (*in.cellType.getCell(x,y))
 		{
 			case CELL_FUILD:
 				break;
 			case CELL_BOUNCE_BACK:
-				compute_bounce_back(in,out);
+				compute_bounce_back(in,out,x,y);
 				break;
 			case CELL_LEFT_IN:
-				compute_inflow_zou_he_poiseuille_distr(in,out ,pos);
+				compute_inflow_zou_he_poiseuille_distr(in,out ,pos,x,y);
 				break;
 			case CELL_RIGHT_OUT:
-				compute_outflow_zou_he_const_density(in,out);
+				compute_outflow_zou_he_const_density(in,out,x,y);
 				break;
 		}
 	}
@@ -360,7 +360,7 @@ struct ActionSpecialCells
 /*******************  FUNCTION  *********************/
 struct ActionCollision
 {
-	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out)
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y)
 	{
 		//vars
 		int k;
@@ -369,8 +369,8 @@ struct ActionCollision
 		double feq;
 
 		//compute macroscopic values
-		density = get_cell_density(in);
-		get_cell_velocity(v,in,density);
+		density = get_cell_density(in,x,y);
+		get_cell_velocity(v,in,density,x,y);
 
 		//loop on microscopic directions
 		for( k = 0 ; k < DIRECTIONS ; k++)
@@ -378,7 +378,7 @@ struct ActionCollision
 			//compute f at equilibr.
 			feq = compute_equilibrium_profile(v,density,k);
 			//compute fout
-			out.directions.getCell(0,0)[k] = in.directions.getCell(0,0)[k] - RELAX_PARAMETER * (in.directions.getCell(0,0)[k] - feq);
+			*out.directions.getCell(x,y)[k] = *in.directions.getCell(x,y)[k] - RELAX_PARAMETER * (*in.directions.getCell(x,y)[k] - feq);
 		}
 	};
 };

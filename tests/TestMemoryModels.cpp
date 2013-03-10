@@ -26,18 +26,6 @@ SVUT_DECLARE_FLAT_TEST(TestMemoryModelRowMajor,testGetCellId)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestMemoryModelRowMajor,testGetCellRelId)
-{
-	SVUT_ASSERT_EQUAL(0,CMRMemoryModelRowMajor::getRelCellId(0,0,CST_WIDTH,CST_HEIGHT,0,0));
-	SVUT_ASSERT_EQUAL(1,CMRMemoryModelRowMajor::getRelCellId(1,0,CST_WIDTH,CST_HEIGHT,0,0));
-	SVUT_ASSERT_EQUAL(CST_WIDTH,CMRMemoryModelRowMajor::getRelCellId(0,1,CST_WIDTH,CST_HEIGHT,0,0));
-	
-	SVUT_ASSERT_EQUAL(0,CMRMemoryModelRowMajor::getRelCellId(0,0,CST_WIDTH,CST_HEIGHT,10,15));
-	SVUT_ASSERT_EQUAL(1,CMRMemoryModelRowMajor::getRelCellId(1,0,CST_WIDTH,CST_HEIGHT,10,15));
-	SVUT_ASSERT_EQUAL(CST_WIDTH,CMRMemoryModelRowMajor::getRelCellId(0,1,CST_WIDTH,CST_HEIGHT,10,15));
-}
-
-/*******************  FUNCTION  *********************/
 SVUT_DECLARE_FLAT_TEST(TestMemoryModelRowMajor,testIsContiguous)
 {
 	SVUT_ASSERT_TRUE(CMRMemoryModelRowMajor::isContiguous(CST_MM_RECT,CMRRect(0,0,CST_WIDTH,1)));

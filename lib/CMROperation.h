@@ -71,18 +71,12 @@ void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect & zone )
 	debug("Start to compute on [ %d , %d : %d x %d ] into ",zone.x,zone.y,zone.width,zone.height);
 	CMRRect localZone = zone;
 	assert(sys->getDomain(0,0)->getMemoryRect().contains(localZone));
-	typename T::CellAccessor cellIn(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
+	const typename T::CellAccessor cellIn(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
 	typename T::CellAccessor cellOut(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y,true);
 	
 	for(int y = 0 ; y < localZone.height ; y++)
-	{
 		for(int x = 0 ; x < localZone.width ; x++)
-		{
-			const typename T::CellAccessor cellLocalIn(cellIn,x,y);
-			typename T::CellAccessor cellLocalOut(cellOut,x,y);
-			U::cellAction(cellLocalIn,cellLocalOut);
-		}
-	}
+			U::cellAction(cellIn,cellOut,x,y);
 }
 
 /*********************  CLASS  **********************/
@@ -128,13 +122,8 @@ void CMRMeshOperationSimpleLoopInPlace<T,U>::run ( const CMRRect & zone )
 	typename T::CellAccessor cell(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
 	
 	for(int y = 0 ; y < localZone.height ; y++)
-	{
 		for(int x = 0 ; x < localZone.width ; x++)
-		{
-			typename T::CellAccessor cellLocalOut(cell,x,y);
-			U::cellAction(cell);
-		}
-	}
+			U::cellAction(cell,x,y);
 }
 
 /*******************  FUNCTION  *********************/
@@ -143,8 +132,8 @@ struct CMRCellPosition
 	CMRCellPosition(const CMRRect & globalMesh,const CMRRect & localMesh,const CMRVect2D & cellPos);
 	CMRCellPosition(const CMRRect & globalMesh,const CMRRect & localMesh,int x,int y);
 	CMRCellPosition(const CMRCellPosition & orig,int dx,int dy);
-	int getAbsX(int dx = 0) const;
-	int getAbsY(int dy = 0) const;
+	int getAbsX(int dx) const;
+	int getAbsY(int dy) const;
 	bool cellExist(int dx,int dy,int ghostDepth) const;
 	CMRRect localMesh;
 	CMRRect globalMesh;
@@ -242,15 +231,8 @@ void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( const CMRRect & zone )
 	CMRCellPosition pos(sys->getDomain(0,0)->getGlobalRect(),sys->getDomain(0,0)->getLocalDomainRect(),localZone.x,localZone.y);
 	
 	for(int y = 0 ; y < localZone.height ; y++)
-	{
 		for(int x = 0 ; x < localZone.width ; x++)
-		{
-			const typename T::CellAccessor cellLocalIn(cellIn,x,y);
-			typename T::CellAccessor cellLocalOut(cellOut,x,y);
-			const CMRCellPosition cellPos(pos,x,y);
-			U::cellAction(cellLocalIn,cellLocalOut,cellPos);
-		}
-	}
+			U::cellAction(cellIn,cellOut,pos,x,y);
 }
 
 #endif // CMR_SPACE_SPLITTER_H
