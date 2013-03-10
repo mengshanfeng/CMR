@@ -15,15 +15,25 @@
 #include <domain/CMRVarSystem.h>
 #include <domain/CMRMPIDomainBuilder.h>
 #include <domain/CMRMemoryModels.h>
+#include <math.h>
+#include <cstdio>
+#include <stdint.h>
 
 using namespace std;
 
 #define DIRECTIONS 9
 #define DIMENSIONS 2
-#define RELAX_PARAMETER 1
 //=>(lbm_gbl_config.relax_parameter)
-#define INFLOW_MAX_VELOCITY 1
+#define INFLOW_MAX_VELOCITY 0.1
 //=>(lbm_gbl_config.inflow_max_velocity)
+#define REYNOLDS 100
+#define KINETIC_VISCOSITY (INFLOW_MAX_VELOCITY * 2.0 * OBSTRACLE_R / REYNOLDS)
+#define RELAX_PARAMETER (1.0 / (3.0 * KINETIC_VISCOSITY + 1.0/2.0))
+#define WIDTH 800
+#define HEIGHT 100
+#define OBSTRACLE_R ((HEIGHT)/2.0)
+#define ITERATIONS 100
+#define WRITE_STEP_INTERVAL 4
 
 /** Représentation d'un vecteur pour la manipulation des vitesses macroscopiques. **/
 typedef double LBMVect[DIMENSIONS];
@@ -43,6 +53,28 @@ enum LBMCellType
 	CELL_LEFT_IN,
 	/** Cellule de la paroie de sortie. Application de Zou/He avec gradiant de densité constant. **/
 	CELL_RIGHT_OUT
+};
+
+/********************  STRUCT  **********************/
+/** Structure des en-tête utilisé dans le fichier de sortie. **/
+struct LBMFileHeader
+{
+	/** Pour validation du format du fichier. **/
+	uint32_t magick;
+	/** Taille totale du maillage simulé (hors mailles fantômes). **/
+	uint32_t mesh_width;
+	/** Taille totale du maillage simulé (hors mailles fantômes). **/
+	uint32_t mesh_height;
+	/** Number of vertical lines. **/
+	uint32_t lines;
+};
+
+/********************  STRUCT  **********************/
+/** Une entrée du fichier, avec les deux grandeurs macroscopiques. **/
+struct LBMFileEntry
+{
+	float v;
+	float density;
 };
 
 /********************** CONSTS **********************/
@@ -84,6 +116,7 @@ class VarSystem : public CMRVarSystem
 			CellAccessor(CellAccessor & acc,int x,int y,bool absolute = false);
 			CMRCellAccessor<float[DIRECTIONS],CMRMemoryModelRowMajor> directions;
 			CMRCellAccessor<LBMCellType,CMRMemoryModelRowMajor> cellType;
+			CMRCellAccessor<LBMFileEntry,CMRMemoryModelColMajor> fileout;
 		};
 		VarSystem(CMRDomainBuilder * builder);
 };
@@ -93,19 +126,26 @@ VarSystem::VarSystem ( CMRDomainBuilder * builder)
 {
 	this->addVariable("directions",sizeof(float[DIRECTIONS]),1);
 	this->addVariable("cellType",sizeof(LBMCellType),1);
+	this->addVariable("fileout",sizeof(LBMFileEntry),0);
 }
 
 
 
 VarSystem::CellAccessor::CellAccessor (CMRVarSystem & sys,int tstep,int x,int y,bool absolute)
-	:directions(*(sys.getDomain(0,tstep)),x,y,absolute),cellType(*sys.getDomain(1,tstep),x,y,absolute)
+	:directions(*(sys.getDomain(0,tstep)),x,y,absolute),cellType(*sys.getDomain(1,tstep),x,y,absolute),fileout(*sys.getDomain(2,tstep),x,y,absolute)
 {
 	
 }
 
 VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y,bool absolute)
-	:directions(acc.directions,x,y,absolute),cellType(acc.cellType,x,y,absolute)
+	:directions(acc.directions,x,y,absolute),cellType(acc.cellType,x,y,absolute),fileout(acc.cellType,x,y,absolute)
 {
+}
+
+/*******************  FUNCTION  *********************/
+std::string cmrTypeToString(const LBMFileEntry & value)
+{
+	return "??";
 }
 
 /*******************  FUNCTION  *********************/
@@ -259,7 +299,7 @@ void compute_inflow_zou_he_poiseuille_distr(const VarSystem::CellAccessor & in,V
 	//set macroscopic fluide info
 	//poiseuille distr on X and null on Y
 	//we just want the norm, so v = v_x
-	v = helper_compute_poiseuille(pos.getAbsY(x),pos.globalMesh.height);
+	v = helper_compute_poiseuille(pos.getAbsY(y),pos.globalMesh.height);
 	const float * cellIn = *in.directions(x,y);
 	float * cellOut = *out.directions(x,y);
 
@@ -328,11 +368,11 @@ struct ActionPropagation
 		for ( k  = 0 ; k < DIRECTIONS ; k++)
 		{
 			//compute destination point
-			ii = x+(direction_matrix[k][0]);
-			jj = y+(direction_matrix[k][1]);
+			ii = x-(direction_matrix[k][0]);
+			jj = y-(direction_matrix[k][1]);
 			//propagate to neighboor nodes
-			if (pos.cellExist(ii,jj,1))
-				(*out.directions(ii,jj))[k] = (*in.directions(x,y))[k];
+			//if (pos.cellExist(ii,jj,1))
+			(*out.directions(x,y))[k] = (*in.directions(ii,jj))[k];
 		}
 	}
 };
@@ -395,7 +435,9 @@ struct ActionInitStatePoiseuil
 		LBMVect v = {0.0,0.0};
 		
 		//compute poiseuil speed
-		v[0] = helper_compute_poiseuille(pos.getAbsY(x),pos.globalMesh.height);
+		v[0] = helper_compute_poiseuille(pos.getAbsY(y),pos.globalMesh.height);
+		if (x == 40)
+			v[0] = 0.0;
 
 		//apply poiseuil for all nodes except on top/bottom border
 		for ( k = 0 ; k < DIRECTIONS ; k++)
@@ -420,11 +462,84 @@ struct ActionInitCellType
 };
 
 /*******************  FUNCTION  *********************/
+struct ActionUpdateFileout
+{
+	void cellAction(VarSystem::CellAccessor & cell,int x,int y) const
+	{
+		LBMVect v;
+		double density;
+		
+		density = get_cell_density(cell,x,y);
+		get_cell_velocity(v,cell,density,x,y);
+
+		//compute macrospic values
+		cell.fileout(x,y)->density = density;
+		cell.fileout(x,y)->v       = sqrt(get_vect_norme_2(v,v));
+	}
+};
+
+#define RESULT_MAGICK 0x12345
+#define RESULT_FILENAME "out.raw"
+
+/*******************  FUNCTION  *********************/
+/**
+ * Ecrit l'en-tête du fichier de sortie. Cet en-tête sert essentiellement à fournir les informations
+ * de taille du maillage pour les chargements.
+ * @param fp Descripteur de fichier à utiliser pour l'écriture.
+**/
+void write_file_header(FILE * fp,const CMRAbstractSpaceSplitter & splitter)
+{
+	//setup header values
+	LBMFileHeader header;
+	header.magick      = RESULT_MAGICK;
+	header.mesh_height = splitter.getDomain().height;
+	header.mesh_width  = splitter.getDomain().width;
+	header.lines       = splitter.getSplittingSize().y;
+
+	//write file
+	fwrite(&header,sizeof(header),1,fp);
+}
+
+/*******************  FUNCTION  *********************/
+FILE * open_output_file(const CMRAbstractSpaceSplitter & splitter)
+{
+	//vars
+	FILE * fp;
+
+	//open result file
+	fp = fopen(RESULT_FILENAME,"w");
+
+	//errors
+	if (fp == NULL)
+	{
+		perror(RESULT_FILENAME);
+		abort();
+	}
+
+	//write header
+	write_file_header(fp,splitter);
+
+	return fp;
+}
+
+/*******************  FUNCTION  *********************/
+void write_to_file(FILE * fp,VarSystem & sys,const CMRRect & globalRect,const CMRRect & localRect)
+{
+	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionUpdateFileout> initBounceBack(&sys);
+	initBounceBack.run(globalRect);
+	assert(sys.getDomain(2,CMR_CURRENT_STEP)->isContiguousGhost(globalRect));
+	size_t size = sys.getDomain(2,CMR_CURRENT_STEP)->getGhostSize(globalRect);
+	void * buffer = sys.getDomain(2,CMR_PREV_STEP)->getContiguousGhost(globalRect);
+	debug("Write size = %lu",size);
+	fwrite(buffer,1,size,fp);
+}
+
+/*******************  FUNCTION  *********************/
 void setup_init_state(VarSystem & sys,const CMRRect & globalRect,const CMRRect & localRect)
 {
 	//setup all as poiseuil profile and setup all as fluide cell
 	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionInitStatePoiseuil> initPoiseuil(&sys);
-	initPoiseuil.run(localRect);
+	initPoiseuil.run(localRect.expended(1));
 	
 	//setup left border (flow in)
 	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionInitCellType> initInCells(&sys,new ActionInitCellType(CELL_LEFT_IN));
@@ -453,31 +568,75 @@ void setup_init_state(VarSystem & sys,const CMRRect & globalRect,const CMRRect &
 /*******************  FUNCTION  *********************/
 int main(int argc, char * argv[])
 {
+	//vars
+	FILE * fp = NULL;
+
 	//init MPI
 	MPI_Init(&argc,&argv);
 	info_on_master("Start with np = %d",cmrGetMPISize());
 	MPI_Barrier(MPI_COMM_WORLD);
 	
 	//try space splitter
-	CMRRect globalRect(0,0,20,20);
+	CMRRect globalRect(0,0,WIDTH,HEIGHT);
 	CMRBasicSpaceSplitter splitter(globalRect,cmrGetMPISize(),0);
 	splitter.printDebug(CMR_MPI_MASTER);
 	
 	//try system computation
 	CMRMPIDomainBuilder builder(&splitter);
 	VarSystem sys(&builder);
+	
+	//open fileout
+	if (cmrIsMPIMaster())
+		fp = open_output_file(splitter);
 
-	//init
+	//init CURRENT and PREV
+	setup_init_state(sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
+	sys.permutVar(CMR_ALL);
 	setup_init_state(sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
 	
-// 	CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys);
-// 	loop1.run(CMRRect(10,10,40,40));
-// 	
-// 	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys);
-// 	loop2.run(CMRRect(10,10,40,40));
-// 	
-// 	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys);
-// 	loop3.run(CMRRect(10,10,40,40));
+	//write to fileo
+	write_to_file(fp,sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
+	
+	//time steps
+	for ( int i = 1 ; i < ITERATIONS ; i++ )
+	{
+		//progression
+		info_on_master("Progress [%5d / %5d]\n",i,ITERATIONS);
+		
+		//compute special actions (border, obstacle...)
+		//special_cells( &mesh, &mesh_type, &mesh_comm);
+		CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys);
+		loop2.run(globalRect);
+		sys.permutVar(CMR_ALL);
+
+		//compute collision term
+		//collision( &temp, &mesh);
+		CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys);
+		loop1.run(globalRect);
+		sys.permutVar(CMR_ALL);
+
+		//need to wait all before doing next step
+		MPI_Barrier(MPI_COMM_WORLD);
+
+		//propagate values from node to neighboors
+		//lbm_comm_ghost_exchange( &mesh_comm, &temp );
+		
+		//prop
+		//propagation( &mesh, &temp);
+		CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys);
+		loop3.run(globalRect);
+
+		//need to wait all before doing next step
+		MPI_Barrier(MPI_COMM_WORLD);
+
+		//save step
+		if ( i % WRITE_STEP_INTERVAL == 0 )
+			write_to_file(fp,sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
+	}
+	
+	//close file
+	if (fp != NULL)
+		fclose(fp);
 
 	//Finish
 	MPI_Barrier(MPI_COMM_WORLD);
