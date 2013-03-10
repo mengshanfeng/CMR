@@ -10,6 +10,8 @@
 #include <cstdio>
 #include <cassert>
 #include "CMRGeometry.h"
+#include "CMRDebug.h"
+#include "CMRCommon.h"
 
 /*******************  FUNCTION  *********************/
 CMRVect2D::CMRVect2D ( int x, int y )
@@ -213,4 +215,70 @@ CMRRect CMRRect::relativeTo (const CMRVect2D& vect ) const
 	res.y -= vect.y;
 	assert(res.x >= 0 && res.y >=0);
 	return res;
+}
+
+/*******************  FUNCTION  *********************/
+CMRRect CMRRect::getBorder ( CMRDirections direction, int depth, bool keepCorner )
+{
+	//var
+	CMRRect res(*this);
+
+	//errors
+	assert(depth > 0);
+
+	//cases
+	switch (direction)
+	{
+		case CMR_TOP:
+			res.height = depth;
+			break;
+		case CMR_BOTTOM:
+			res.y += res.height - depth;
+			res.height = depth;
+			break;
+		case CMR_LEFT:
+			res.width = depth;
+			break;
+		case CMR_RIGHT:
+			res.x += res.width - depth;
+			res.width = depth;
+			break;
+		default:
+			fatal("Invalid direction value : %d !",direction);
+			break;
+	}
+	
+	//remove corner if need
+	if (keepCorner == false)
+	{
+		if (direction == CMR_TOP || direction == CMR_BOTTOM)
+		{
+			res.x += depth;
+			res.width -= 2*depth;
+		} else {
+			res.y += depth;
+			res.height -= 2*depth;
+		}
+	}
+	
+	//check
+	assert(contains(res));
+	
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+CMRRect CMRRect::intersect ( const CMRRect& rect ) const
+{
+	//check if at least partially in
+	int x1 = cmrMax(x,rect.x);
+	int y1 = cmrMax(y,rect.y);
+	int x2 = cmrMin(x+width,rect.x+rect.width);
+	int y2 = cmrMin(y+height,rect.y+rect.height);
+	
+	//if overlap, compute size
+	if (x1 < x2 && y1 < y2)
+		return CMRRect(x1,y1,x2-x1,y2-y1);
+	else
+		return CMRRect(0,0,0,0);
 }

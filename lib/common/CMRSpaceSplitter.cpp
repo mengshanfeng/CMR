@@ -53,6 +53,7 @@ CMRAbstractSpaceSplitter::CMRAbstractSpaceSplitter ( CMRRect rect, int nbSubDoma
 	assert(firstDim >= 0 && firstDim <= 1);
 
 	this->rect = rect;
+	this->firstDim = firstDim;
 	this->nbSubDomains = nbSubDomains;
 }
 

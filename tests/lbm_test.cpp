@@ -98,7 +98,7 @@ VarSystem::VarSystem ( CMRDomainBuilder * builder)
 
 
 VarSystem::CellAccessor::CellAccessor (CMRVarSystem & sys,int tstep,int x,int y,bool absolute)
-	:directions(*(sys.getDomain(0,tstep)),x,y,absolute),cellType(*sys.getDomain(0,tstep),x,y,absolute)
+	:directions(*(sys.getDomain(0,tstep)),x,y,absolute),cellType(*sys.getDomain(1,tstep),x,y,absolute)
 {
 	
 }
@@ -138,7 +138,7 @@ double get_cell_density(const VarSystem::CellAccessor & in,int x,int y)
 
 	//loop on directions
 	for( k = 0 ; k < DIRECTIONS ; k++)
-		res += *in.directions(x,y)[k];
+		res += (*in.directions(x,y))[k];
 
 	//return res
 	return res;
@@ -163,7 +163,7 @@ void get_cell_velocity(LBMVect v,const VarSystem::CellAccessor & in,double cell_
 
 		//sum all directions
 		for ( k = 0 ; k < DIRECTIONS ; k++)
-			v[d] += *in.directions(x,y)[k] * direction_matrix[k][d];
+			v[d] += (*in.directions(x,y))[k] * direction_matrix[k][d];
 
 		//normalize
 		v[d] = v[d] / cell_density;
@@ -217,11 +217,11 @@ void compute_bounce_back(const VarSystem::CellAccessor & in,VarSystem::CellAcces
 
 	//compute bounce back
 	for ( k = 0 ; k < DIRECTIONS ; k++)
-		tmp[k] = *in.directions(x,y)[opposite_of[k]];
+		tmp[k] = (*in.directions(x,y))[opposite_of[k]];
 
 	//compute bounce back
 	for ( k = 0 ; k < DIRECTIONS ; k++)
-		*out.directions(x,y)[k] = tmp[k];
+		(*out.directions(x,y))[k] = tmp[k];
 }
 
 /*******************  FUNCTION  *********************/
@@ -317,6 +317,7 @@ void compute_outflow_zou_he_const_density(const VarSystem::CellAccessor & in,Var
 /*******************  FUNCTION  *********************/
 struct ActionPropagation
 {
+	//TODO invert ii = x - ...  => ii <!-> x into in/out
 	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)
 	{
 		int k;
@@ -331,7 +332,7 @@ struct ActionPropagation
 			jj = y+(direction_matrix[k][1]);
 			//propagate to neighboor nodes
 			if (pos.cellExist(ii,jj,1))
-				*out.directions(ii,jj)[k] = *in.directions(x,y)[k];
+				(*out.directions(ii,jj))[k] = (*in.directions(x,y))[k];
 		}
 	}
 };
@@ -378,10 +379,76 @@ struct ActionCollision
 			//compute f at equilibr.
 			feq = compute_equilibrium_profile(v,density,k);
 			//compute fout
-			*out.directions(x,y)[k] = *in.directions(x,y)[k] - RELAX_PARAMETER * (*in.directions(x,y)[k] - feq);
+			(*out.directions(x,y))[k] = (*in.directions(x,y))[k] - RELAX_PARAMETER * ((*in.directions(x,y))[k] - feq);
 		}
 	};
 };
+
+/*******************  FUNCTION  *********************/
+struct ActionInitStatePoiseuil
+{
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos,int x,int y)
+	{
+		//vars
+		int k;
+		const double density = 1.0;
+		LBMVect v = {0.0,0.0};
+		
+		//compute poiseuil speed
+		v[0] = helper_compute_poiseuille(pos.getAbsY(x),pos.globalMesh.height);
+
+		//apply poiseuil for all nodes except on top/bottom border
+		for ( k = 0 ; k < DIRECTIONS ; k++)
+			((*out.directions(x,y)))[k] = compute_equilibrium_profile(v,density,k);
+	}
+};
+
+/*******************  FUNCTION  *********************/
+struct ActionInitCellType
+{
+	ActionInitCellType(LBMCellType cellType)
+	{
+		this->cellType = cellType;
+	}
+
+	void cellAction(VarSystem::CellAccessor & cell,int x,int y) const
+	{
+		*cell.cellType(x,y) = cellType;
+	}
+
+	LBMCellType cellType;
+};
+
+/*******************  FUNCTION  *********************/
+void setup_init_state(VarSystem & sys,const CMRRect & globalRect,const CMRRect & localRect)
+{
+	//setup all as poiseuil profile and setup all as fluide cell
+	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionInitStatePoiseuil> initPoiseuil(&sys);
+	initPoiseuil.run(localRect);
+	
+	//setup left border (flow in)
+	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionInitCellType> initInCells(&sys,new ActionInitCellType(CELL_LEFT_IN));
+	initInCells.run(globalRect.expended(1).getBorder(CMR_LEFT));
+	
+	//sys.getDomain(1,CMR_PREV_STEP)->printDebug();
+	
+	//setup right border (flow out)
+	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionInitCellType> initOutCells(&sys,new ActionInitCellType(CELL_RIGHT_OUT));
+	initOutCells.run(globalRect.expended(1).getBorder(CMR_RIGHT));
+	
+	//sys.getDomain(1,CMR_PREV_STEP)->printDebug();
+	
+	//setup top bounce back
+	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionInitCellType> initBounceBack(&sys,new ActionInitCellType(CELL_BOUNCE_BACK));
+	initBounceBack.run(globalRect.expended(1).getBorder(CMR_TOP));
+	
+	//sys.getDomain(1,CMR_PREV_STEP)->printDebug();
+	
+	//setup bottom bounce back
+	initBounceBack.run(globalRect.expended(1).getBorder(CMR_BOTTOM));
+	
+	//sys.getDomain(1,CMR_PREV_STEP)->printDebug();
+}
 
 /*******************  FUNCTION  *********************/
 int main(int argc, char * argv[])
@@ -392,21 +459,25 @@ int main(int argc, char * argv[])
 	MPI_Barrier(MPI_COMM_WORLD);
 	
 	//try space splitter
-	CMRBasicSpaceSplitter splitter(0,0,800,600,cmrGetMPISize(),0);
+	CMRRect globalRect(0,0,20,20);
+	CMRBasicSpaceSplitter splitter(globalRect,cmrGetMPISize(),0);
 	splitter.printDebug(CMR_MPI_MASTER);
 	
 	//try system computation
 	CMRMPIDomainBuilder builder(&splitter);
 	VarSystem sys(&builder);
+
+	//init
+	setup_init_state(sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
 	
-	CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys);
-	loop1.run(CMRRect(10,10,40,40));
-	
-	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys);
-	loop2.run(CMRRect(10,10,40,40));
-	
-	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys);
-	loop3.run(CMRRect(10,10,40,40));
+// 	CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys);
+// 	loop1.run(CMRRect(10,10,40,40));
+// 	
+// 	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys);
+// 	loop2.run(CMRRect(10,10,40,40));
+// 	
+// 	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys);
+// 	loop3.run(CMRRect(10,10,40,40));
 
 	//Finish
 	MPI_Barrier(MPI_COMM_WORLD);

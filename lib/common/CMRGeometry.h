@@ -12,6 +12,15 @@
 /********************  HEADERS  *********************/
 #include <ostream>
 
+/********************  ENUM  ************************/
+enum CMRDirections
+{
+	CMR_LEFT,
+	CMR_RIGHT,
+	CMR_TOP,
+	CMR_BOTTOM
+};
+
 /*********************  CLASS  **********************/
 struct CMRVect2D
 {
@@ -42,6 +51,8 @@ struct CMRRect
 	CMRRect operator+(const CMRVect2D & vect) const;
 	CMRRect relativeTo(const CMRRect & rect) const;
 	CMRRect relativeTo( const CMRVect2D& vect ) const;
+	CMRRect getBorder(CMRDirections direction, int depth = 1,bool keepCorner = true);
+	CMRRect intersect(const CMRRect & rect) const;
 	int x;
 	int y;
 	int width;
