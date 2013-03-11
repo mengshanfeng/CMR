@@ -5,3 +5,5 @@ https://code.google.com/p/mathtex/
 http://www.mpi-forum.org/docs/docs.html
 http://www.cmake.org/cmake/help/documentation.html
 https://github.com/svalat/svUnitTest
+http://www.libgeodecomp.org/
+http://code.google.com/p/patus/

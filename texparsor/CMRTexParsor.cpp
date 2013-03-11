@@ -152,7 +152,7 @@ void cmrReplaceByCommaGroup(CMRLatexFormulas & formula)
 	bool hasComma = false;
 	CMRLatexEntity * entity = NULL;
 
-	for (CMRLatexFormulas::const_iterator it = formula.begin() ; it != formula.end() ; ++it)
+	for (CMRLatexEntityVector::const_iterator it = formula.childs.begin() ; it != formula.childs.end() ; ++it)
 		if ((*it)->name == ",")
 			hasComma = true;
 		
@@ -163,26 +163,28 @@ void cmrReplaceByCommaGroup(CMRLatexFormulas & formula)
 	//create entity
 	entity = new CMRLatexEntity;
 	entity->name = "\\COMMA_GROUP";
-	entity->totalValue = (*formula.begin())->parent;
+	entity->totalValue = (*formula.childs.begin())->parent;
 	
 	//create formulas
 	CMRLatexFormulas * f = new CMRLatexFormulas;
+
 	//fill
-	for (CMRLatexFormulas::const_iterator it = formula.begin() ; it != formula.end() ; ++it)
+	for (CMRLatexEntityVector::const_iterator it = formula.childs.begin() ; it != formula.childs.end() ; ++it)
 	{
 		if ((*it)->name == ",")
 		{
 			entity->params.push_back(f);
 			f = new CMRLatexFormulas;
 		} else {
-			f->push_back(*it);
+			f->childs.push_back(*it);
+			f->string += (*it)->getString();
 		}
 	}
 	entity->params.push_back(f);
 	
 	//replace in formula
-	formula.clear();
-	formula.push_back(entity);
+	formula.childs.clear();
+	formula.childs.push_back(entity);
 }
 
 /*******************  FUNCTION  *********************/
@@ -283,10 +285,11 @@ void cmrParseLatexFormula(CMRLatexFormulas & formula,const string & value)
 {
 	CMRLatexEntity * entity;
 	int cur = 0;
+	formula.string = value;
 	cmrSkipWhiteSpace(value,cur);
 	while ((entity = cmrParseLatexEntity(value,cur)) != NULL)
 	{
-		formula.push_back(entity);
+		formula.childs.push_back(entity);
 		cmrSkipWhiteSpace(value,cur);
 	}
 }

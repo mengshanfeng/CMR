@@ -52,10 +52,10 @@ bool cmrEntityExactMatch(const CMRLatexEntity & e1,const CMRLatexEntity & e2,boo
 /*******************  FUNCTION  *********************/
 const CMRLatexFormulas * cmrEntityExtractSubscriptParam(const CMRLatexEntity & entity,int id)
 {
-	if (entity.subscript.empty() || entity.subscript.size() > 1)
+	if (entity.subscript.childs.empty() || entity.subscript.childs.size() > 1)
 		return NULL;
 	
-	const CMRLatexEntity * e = entity.subscript[0];
+	const CMRLatexEntity * e = entity.subscript.childs[0];
 	if (e->name != "\\COMMA_GROUP")
 		return NULL;
 	else if (e->params.size() <= id)
@@ -87,7 +87,7 @@ int cmrFormulaExtractDelta(const CMRLatexFormulas * formula,const string & varna
 {
 	int res = 0;
 	char op = '+';
-	for (CMRLatexFormulas::const_iterator it = formula->begin() ; it != formula->end() ; ++it)
+	for (CMRLatexEntityVector::const_iterator it = formula->childs.begin() ; it != formula->childs.end() ; ++it)
 	{
 		const string & name = (*it)->name;
 		if (name == varname)
@@ -157,6 +157,6 @@ void cmrExtractDeps(CMREqDepMatrix & matrix,const CMRLatexEntity & f,const strin
 /*******************  FUNCTION  *********************/
 void cmrExtractDeps(CMREqDepMatrix & matrix,const CMRLatexFormulas & f,const string & varname)
 {
-	for (CMRLatexFormulas::const_iterator it = f.begin() ; it != f.end() ; ++it)
+	for (CMRLatexEntityVector::const_iterator it = f.childs.begin() ; it != f.childs.end() ; ++it)
 		cmrExtractDeps(matrix,**it,varname);
 }

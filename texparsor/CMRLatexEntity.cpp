@@ -21,9 +21,9 @@ CMRLatexEntity::CMRLatexEntity ( void )
 /*******************  FUNCTION  *********************/
 CMRLatexEntity::~CMRLatexEntity ( void )
 {
-	for(CMRLatexFormulas::iterator it = subscript.begin();it!=subscript.end();++it)
+	for(CMRLatexEntityVector::iterator it = subscript.childs.begin();it!=subscript.childs.end();++it)
 		delete *it;
-	for(CMRLatexFormulas::iterator it = superscript.begin();it!=superscript.end();++it)
+	for(CMRLatexEntityVector::iterator it = superscript.childs.begin();it!=superscript.childs.end();++it)
 		delete *it;
 	for(CMRLatexFormulasList::iterator it = params.begin();it!=params.end();++it)
 		delete *it;
@@ -33,7 +33,7 @@ CMRLatexEntity::~CMRLatexEntity ( void )
 void cmrPrintFormula(const CMRLatexFormulas & formula,int depth)
 {
 	int pos = 0;
-	for(CMRLatexFormulas::const_iterator it = formula.begin();it!=formula.end();++it)
+	for(CMRLatexEntityVector::const_iterator it = formula.childs.begin();it!=formula.childs.end();++it)
 		(*it)->print(depth,pos++);
 }
 
@@ -52,4 +52,36 @@ void CMRLatexEntity::print ( int depth, int pos )
 	cmrPrintFormula(superscript,depth+1);
 	for(CMRLatexFormulasList::const_iterator it = params.begin();it!=params.end();++it)
 		cmrPrintFormula(**it,depth+1);
+}
+
+/*******************  FUNCTION  *********************/
+std::string CMRLatexEntity::getString ( void ) const
+{
+	return parent.substr(from,to-from);
+}
+
+/*******************  FUNCTION  *********************/
+int CMRLatexEntity::countIndices ( void ) const
+{
+	if (subscript.childs.empty())
+		return 0;
+	else if (subscript.childs[0]->name == "\\COMMA_GROUP")
+		return subscript.childs[0]->params.size();
+	else
+		return 1;
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexFormulasList CMRLatexEntity::getIndices ( void )
+{
+	CMRLatexFormulasList tmp;
+	if (subscript.childs.empty())
+	{
+		return tmp;
+	} else if (subscript.childs[0]->name == "\\COMMA_GROUP") {
+		return subscript.childs[0]->params;
+	} else {
+		tmp.push_back(&subscript);
+		return tmp;
+	}
 }

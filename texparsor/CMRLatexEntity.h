@@ -16,8 +16,16 @@
 
 /*********************  TYPES  **********************/
 struct CMRLatexEntity;
-typedef std::vector<CMRLatexEntity*> CMRLatexFormulas;
+struct CMRLatexFormulas;
 typedef std::vector<CMRLatexFormulas*> CMRLatexFormulasList;
+typedef std::vector<CMRLatexEntity*> CMRLatexEntityVector;
+
+/*********************  STRUCT  *********************/
+struct CMRLatexFormulas
+{
+	CMRLatexEntityVector childs;
+	std::string string;
+};
 
 /*********************  STRUCT  *********************/
 struct CMRLatexEntity
@@ -25,6 +33,9 @@ struct CMRLatexEntity
 	CMRLatexEntity(void);
 	~CMRLatexEntity(void);
 	void print(int depth, int pos);
+	int countIndices(void) const;
+	CMRLatexFormulasList getIndices( void );
+	std::string getString(void) const;
 	std::string name;
 	std::string parent;
 	CMRLatexFormulas subscript;
