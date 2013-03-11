@@ -549,11 +549,13 @@ FILE * open_output_file(const CMRAbstractSpaceSplitter & splitter)
 /*******************  FUNCTION  *********************/
 void write_to_file(FILE * fp,VarSystem & sys,const CMRRect & globalRect,const CMRRect & localRect)
 {
+	assert(fp != NULL);
 	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionUpdateFileout> initBounceBack(&sys);
-	initBounceBack.run(globalRect);
-	assert(sys.getDomain(2,CMR_CURRENT_STEP)->isContiguousGhost(globalRect));
-	size_t size = sys.getDomain(2,CMR_CURRENT_STEP)->getGhostSize(globalRect);
-	void * buffer = sys.getDomain(2,CMR_PREV_STEP)->getContiguousGhost(globalRect);
+	initBounceBack.run(localRect);
+	assert(sys.getDomain(2,CMR_CURRENT_STEP)->isContiguousGhost(localRect));
+	size_t size = sys.getDomain(2,CMR_CURRENT_STEP)->getGhostSize(localRect);
+	void * buffer = sys.getDomain(2,CMR_PREV_STEP)->getContiguousGhost(localRect);
+	assert(buffer != NULL);
 	debug("Write size = %lu",size);
 	fwrite(buffer,1,size,fp);
 }
@@ -611,19 +613,23 @@ int main(int argc, char * argv[])
 	CMRMPIDomainBuilder builder(&splitter);
 	VarSystem sys(&builder);
 	
+	//get local domaine
+	CMRRect localDomain = splitter.getLocalDomain(cmrGetMPIRank());
+	
 	//open fileout
 	if (cmrIsMPIMaster())
 		fp = open_output_file(splitter);
 
 	//init CURRENT and PREV
-	setup_init_state(sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
+	setup_init_state(sys,globalRect,localDomain);
 	sys.permutVar(CMR_ALL);
-	setup_init_state(sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
+	setup_init_state(sys,globalRect,localDomain);
 	
 	//write to fileo
-	write_to_file(fp,sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
+	if (fp != NULL)
+		write_to_file(fp,sys,globalRect,localDomain);
 	
-	CMRBasicSpaceSplitter splitterBlocking(globalRect,1,0);
+	CMRBasicSpaceSplitter splitterBlocking(localDomain,1,0);
 	splitterBlocking.printDebug();
 	
 	//time steps
@@ -659,8 +665,8 @@ int main(int argc, char * argv[])
 		}
 
 		//save step
-		if ( i % WRITE_STEP_INTERVAL == 0 )
-			write_to_file(fp,sys,globalRect,splitter.getLocalDomain(cmrGetMPIRank()));
+		if ( i % WRITE_STEP_INTERVAL == 0 && fp != NULL)
+			write_to_file(fp,sys,globalRect,localDomain);
 	}
 	
 	//close file
