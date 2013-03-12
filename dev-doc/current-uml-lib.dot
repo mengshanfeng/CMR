@@ -1,0 +1,171 @@
+digraph G {
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+
+        node [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+                shape = "record"
+        ]
+
+        edge [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+        ]
+	CMRAbstractDomain [ label = "{CMRAbstractDomain|+commFactories :  CMRCommFactory * \l+dimensions :  int \l+ghostDepth :  int \l+ghostStatus :  CMRUpdateStatus \l+globalRect :  CMRRect \l+localRect :  CMRRect \l+memoryRect :  CMRRect \l+typeSize :  size_t \l}" ]
+	CMRAbstractMemoryAccessor [ label = "{CMRAbstractMemoryAccessor|}" ]
+	CMRAbstractSpaceSplitter [ label = "{CMRAbstractSpaceSplitter|+firstDim :  int \l+nbSubDomains :  int \l+rect :  CMRRect \l}" ]
+	CMRAbstractType [ label = "{CMRAbstractType|}" ]
+	CMRBasicSpaceSplitter [ label = "{CMRBasicSpaceSplitter|}" ]
+	CMRBufferedComm [ label = "{CMRBufferedComm|+buffer :  void * \l+bufferSize :  size_t \l+commStatus :  CMRCommStatus \l+commType :  CMRCommType \l+domain :  CMRAbstractDomain* \l+isTempBuffer :  bool \l+rect :  CMRRect \l}" ]
+	CMRCellAccessor [ label = "{CMRCellAccessor|+position :  CMRVect2D \l}" ]
+	CMRCellPosition [ label = "{CMRCellPosition|+cellPos :  CMRVect2D \l+globalMesh :  CMRRect \l+localMesh :  CMRRect \l}" ]
+	CMRComm [ label = "{CMRComm|}" ]
+	CMRCommFactory [ label = "{CMRCommFactory|}" ]
+	CMRCommList [ label = "{CMRCommList|}" ]
+	CMRCommSchem [ label = "{CMRCommSchem|+comms :  CMRCommList \l+name :  std::string \l}" ]
+	CMRCommStatus [ label = "{CMRCommStatus|}" ]
+	CMRCommType [ label = "{CMRCommType|}" ]
+	CMRComposedDomain [ label = "{CMRComposedDomain|}" ]
+	CMRDebugMessageLevel [ label = "{CMRDebugMessageLevel|}" ]
+	CMRDirections [ label = "{CMRDirections|}" ]
+	CMRDomainBuilder [ label = "{CMRDomainBuilder|}" ]
+	CMRDomainMemory [ label = "{CMRDomainMemory|+memoryRect :  CMRRect \l+ptr :  void * \l}" ]
+	CMRDomainStorage [ label = "{CMRDomainStorage|+acc :  CMRAbstractMemoryAccessor * \l+data :  unsigned char * \l}" ]
+	CMRGenericMemoryAccessor [ label = "{CMRGenericMemoryAccessor|}" ]
+	CMRGenericType [ label = "{CMRGenericType|}" ]
+	CMRMPIComm [ label = "{CMRMPIComm|+communicator :  CMRMPICommFactory * \l}" ]
+	CMRMPICommFactory [ label = "{CMRMPICommFactory|+recvRank :  int \l+sendRank :  int \l+tagBase :  int \l}" ]
+	CMRMPIDomainBuilder [ label = "{CMRMPIDomainBuilder|+splitter :  CMRAbstractSpaceSplitter * \l}" ]
+	CMRMemoryModelColMajor [ label = "{CMRMemoryModelColMajor|}" ]
+	CMRMemoryModelRowMajor [ label = "{CMRMemoryModelRowMajor|}" ]
+	CMRMeshOperation [ label = "{CMRMeshOperation|}" ]
+	CMRMeshOperationSimpleLoop [ label = "{CMRMeshOperationSimpleLoop|+sys :  CMRVarSystem * \l}" ]
+	CMRMeshOperationSimpleLoopInPlace [ label = "{CMRMeshOperationSimpleLoopInPlace|+action :  const U * \l+sys :  CMRVarSystem * \l}" ]
+	CMRMeshOperationSimpleLoopWithPos [ label = "{CMRMeshOperationSimpleLoopWithPos|+sys :  CMRVarSystem * \l}" ]
+	CMROrientation [ label = "{CMROrientation|}" ]
+	CMRRect [ label = "{CMRRect|+height :  int \l+width :  int \l+x :  int \l+y :  int \l}" ]
+	CMRSpaceSubDomains [ label = "{CMRSpaceSubDomains|}" ]
+	CMRTypeId [ label = "{CMRTypeId|}" ]
+	CMRUpdateStatus [ label = "{CMRUpdateStatus|}" ]
+	CMRVarMode [ label = "{CMRVarMode|}" ]
+	CMRVarSystem [ label = "{CMRVarSystem|+domainBuilder :  CMRDomainBuilder * \l+variables :  CMRVariableVector \l}" ]
+	CMRVariable [ label = "{CMRVariable|+domain :  CMRDomainStorage * \l+ghostDepth :  int \l+mode :  CMRVarMode \l+name :  std::string \l+typeSize :  size_t \l}" ]
+	CMRVariableId [ label = "{CMRVariableId|}" ]
+	CMRVariableVector [ label = "{CMRVariableVector|}" ]
+	CMRVect2D [ label = "{CMRVect2D|+x :  int \l+y :  int \l}" ]
+	unsignedint [ label = "{unsignedint|}" ]
+	void [ label = "{void|}" ]
+	subgraph clusterInheritCMRAbstractDomain {
+		label = "CMRAbstractDomain"
+		CMRAbstractDomain
+		CMRComposedDomain
+		CMRDomainStorage
+	}
+	subgraph clusterInheritCMRDomainMemory {
+		label = "CMRDomainMemory"
+		CMRAbstractMemoryAccessor
+		CMRDomainMemory
+		CMRCellAccessor
+		CMRGenericMemoryAccessor
+	}
+	subgraph clusterInheritCMRComm {
+		label = "CMRComm"
+		CMRBufferedComm
+		CMRComm
+		CMRCommList
+		CMRMPIComm
+	}
+	subgraph clusterInheritCMRCommFactory {
+		label = "CMRCommFactory"
+		CMRCommFactory
+		CMRMPICommFactory
+	}
+	subgraph clusterInheritCMRAbstractSpaceSplitter {
+		label = "CMRAbstractSpaceSplitter"
+		CMRAbstractSpaceSplitter
+		CMRBasicSpaceSplitter
+	}
+	subgraph clusterInheritCMRAbstractType {
+		label = "CMRAbstractType"
+		CMRAbstractType
+		CMRGenericType
+	}
+	subgraph clusterInheritCMRDomainBuilder {
+		label = "CMRDomainBuilder"
+		CMRDomainBuilder
+		CMRMPIDomainBuilder
+	}
+	subgraph clusterInheritCMRMeshOperation {
+		label = "CMRMeshOperation"
+		CMRMeshOperation
+		CMRMeshOperationSimpleLoop
+		CMRMeshOperationSimpleLoopInPlace
+		CMRMeshOperationSimpleLoopWithPos
+	}
+	subgraph clusterInheritCMRRect {
+		label = "CMRRect"
+		CMRRect
+		CMRSpaceSubDomains
+	}
+	subgraph clusterInheritvoid {
+		label = "void"
+		CMRTypeId
+		void
+	}
+	subgraph clusterInheritCMRVariable {
+		label = "CMRVariable"
+		CMRVariable
+		CMRVariableVector
+	}
+	subgraph clusterInheritunsignedint {
+		label = "unsignedint"
+		CMRVariableId
+		unsignedint
+	}
+	CMRAbstractMemoryAccessor -> CMRDomainMemory
+	CMRBasicSpaceSplitter -> CMRAbstractSpaceSplitter
+	CMRBufferedComm -> CMRComm
+	CMRCellAccessor -> CMRDomainMemory
+	CMRCommList -> CMRComm
+	CMRComposedDomain -> CMRAbstractDomain
+	CMRDomainStorage -> CMRAbstractDomain
+	CMRGenericMemoryAccessor -> CMRAbstractMemoryAccessor
+	CMRGenericType -> CMRAbstractType
+	CMRMPIComm -> CMRBufferedComm
+	CMRMPICommFactory -> CMRCommFactory
+	CMRMPIDomainBuilder -> CMRDomainBuilder
+	CMRMeshOperationSimpleLoop -> CMRMeshOperation
+	CMRMeshOperationSimpleLoopInPlace -> CMRMeshOperation
+	CMRMeshOperationSimpleLoopWithPos -> CMRMeshOperation
+	CMRSpaceSubDomains -> CMRRect
+	CMRTypeId -> void
+	CMRVariableId -> unsignedint
+	CMRVariableVector -> CMRVariable
+	edge [
+		arrowhead = "none"
+	]
+	CMRAbstractDomain -> CMRCommFactory
+	CMRAbstractDomain -> CMRRect
+	CMRAbstractDomain -> CMRUpdateStatus
+	CMRDomainMemory -> CMRRect
+	CMRDomainMemory -> void
+	CMRAbstractSpaceSplitter -> CMRRect
+	CMRBufferedComm -> CMRCommStatus
+	CMRBufferedComm -> CMRCommType
+	CMRBufferedComm -> CMRRect
+	CMRBufferedComm -> void
+	CMRCellAccessor -> CMRVect2D
+	CMRCellPosition -> CMRRect
+	CMRCellPosition -> CMRVect2D
+	CMRCommSchem -> CMRCommList
+	CMRDomainStorage -> CMRAbstractMemoryAccessor
+	CMRMPIComm -> CMRMPICommFactory
+	CMRMPIDomainBuilder -> CMRAbstractSpaceSplitter
+	CMRMeshOperationSimpleLoopInPlace -> CMRVarSystem
+	CMRVarSystem -> CMRDomainBuilder
+	CMRVarSystem -> CMRVariableVector
+	CMRVariable -> CMRDomainStorage
+	CMRVariable -> CMRVarMode
+	clusterInheritCMRMeshOperation -> CMRVarSystem
+}

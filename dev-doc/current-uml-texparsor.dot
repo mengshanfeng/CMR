@@ -1,0 +1,93 @@
+digraph G {
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+
+        node [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+                shape = "record"
+        ]
+
+        edge [
+                fontname = "Bitstream Vera Sans"
+                fontsize = 8
+        ]
+	CMRCaptureType [ label = "{CMRCaptureType|}" ]
+	CMRConstantDimensionsVector [ label = "{CMRConstantDimensionsVector|}" ]
+	CMRConstantValueVector [ label = "{CMRConstantValueVector|}" ]
+	CMREntity [ label = "{CMREntity|+exponent :  std::string \l+indices :  CMREntityIndiceVector \l+indicesCapture :  CMREntityIndiceCaptureVector \l+latexName :  std::string \l+longName :  std::string \l+requiredIndices :  int \l+shortName :  std::string \l}" ]
+	CMREntityCellMatching [ label = "{CMREntityCellMatching|+depInfo :  bool \l+dx :  int \l+dy :  int \l+match :  bool \l+out :  bool \l+write :  bool \l}" ]
+	CMREntityConstant [ label = "{CMREntityConstant|+comment :  std::string \l+dims :  CMRConstantDimensionsVector \l+estimatedMax :  std::string \l+estimatedMin :  std::string \l+unit :  std::string \l+values :  CMRConstantValueVector \l}" ]
+	CMREntityIndiceCaptureVector [ label = "{CMREntityIndiceCaptureVector|}" ]
+	CMREntityIndiceVector [ label = "{CMREntityIndiceVector|}" ]
+	CMREqDepMatrix [ label = "{CMREqDepMatrix|+access :  unsigned char \l+maxDepth :  int \l}" ]
+	CMRIndiceCaptureMap [ label = "{CMRIndiceCaptureMap|}" ]
+	CMRLatexEntity [ label = "{CMRLatexEntity|+argsTotalValue :  std::string \l+from :  int \l+name :  std::string \l+params :  CMRLatexFormulasList \l+parent :  std::string \l+subscript :  CMRLatexFormulas \l+subscriptTotalValue :  std::string \l+superscript :  CMRLatexFormulas \l+superscriptTotalValue :  std::string \l+to :  int \l+totalValue :  std::string \l}" ]
+	CMRLatexEntity_ [ label = "{CMRLatexEntity*|}" ]
+	CMRLatexEntityVector [ label = "{CMRLatexEntityVector|}" ]
+	CMRLatexFormulas [ label = "{CMRLatexFormulas|+childs :  CMRLatexEntityVector \l+string :  std::string \l}" ]
+	CMRLatexFormulas_ [ label = "{CMRLatexFormulas*|}" ]
+	CMRLatexFormulasList [ label = "{CMRLatexFormulasList|}" ]
+	CMRProject [ label = "{CMRProject|}" ]
+	CMRStringVector [ label = "{CMRStringVector|}" ]
+	double [ label = "{double|}" ]
+	int [ label = "{int|}" ]
+	std__map [ label = "{std::map|}" ]
+	std__map_std__string_std__string_ [ label = "{std::map\<std::string,std::string\>|+__template_1 : std::string\l+__template_2 : std::string\l}" ]
+	std__string [ label = "{std::string|}" ]
+	subgraph clusterInheritCMREntity {
+		label = "CMREntity"
+		CMREntity
+		CMREntityConstant
+	}
+	subgraph clusterInheritCMRLatexEntity_ {
+		label = "CMRLatexEntity*"
+		CMRLatexEntityVector
+		CMRLatexEntity_
+	}
+	subgraph clusterInheritCMRCaptureType {
+		label = "CMRCaptureType"
+		CMRCaptureType
+		CMREntityIndiceCaptureVector
+	}
+	subgraph clusterInheritCMRLatexFormulas_ {
+		label = "CMRLatexFormulas*"
+		CMRLatexFormulasList
+		CMRLatexFormulas_
+	}
+	subgraph clusterInheritstd__map {
+		label = "std::map"
+		CMRIndiceCaptureMap
+		std__map_std__string_std__string_
+		std__map
+	}
+	CMRConstantDimensionsVector -> int
+	CMRConstantValueVector -> double
+	CMREntityConstant -> CMREntity
+	CMREntityIndiceCaptureVector -> CMRCaptureType
+	CMREntityIndiceVector -> std__string
+	CMRIndiceCaptureMap -> std__map_std__string_std__string_
+	CMRLatexEntityVector -> CMRLatexEntity_
+	CMRLatexFormulasList -> CMRLatexFormulas_
+	CMRStringVector -> std__string
+	std__map_std__string_std__string_ -> std__map
+	edge [
+		arrowhead = "none"
+	]
+	CMREntity -> int
+	CMREntity -> CMREntityIndiceCaptureVector
+	CMREntity -> CMREntityIndiceVector
+	CMREntity -> std__string
+	CMREntityCellMatching -> int
+	CMREntityConstant -> CMRConstantDimensionsVector
+	CMREntityConstant -> CMRConstantValueVector
+	CMREntityConstant -> std__string
+	CMREqDepMatrix -> int
+	std__map_std__string_std__string_ -> std__string
+	CMRLatexEntity -> int
+	CMRLatexEntity -> std__string
+	CMRLatexEntity -> CMRLatexFormulas
+	CMRLatexEntity -> CMRLatexFormulasList
+	CMRLatexFormulas -> std__string
+	CMRLatexFormulas -> CMRLatexEntityVector
+}
