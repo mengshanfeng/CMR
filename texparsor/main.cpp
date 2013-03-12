@@ -15,9 +15,17 @@
 /********************  NAMESPACE  *******************/
 using namespace std;
 
+/********************  ENUM  ************************/
+enum CMRCaptureType
+{
+	CMR_CAPTURE_NONE,
+	CMR_CAPTURE_REQUIRED,
+	CMR_CAPTURE_OPTIONS
+};
+
 /*********************  TYPES  **********************/
 typedef std::vector<std::string> CMREntityIndiceVector;
-typedef std::vector<bool> CMREntityIndiceCaptureVector;
+typedef std::vector<CMRCaptureType> CMREntityIndiceCaptureVector;
 typedef std::vector<int> CMRConstantDimensionsVector;
 typedef std::vector<double> CMRConstantValueVector;
 typedef std::map<std::string,std::string> CMRIndiceCaptureMap;
@@ -28,7 +36,7 @@ class CMREntity
 	public:
 		CMREntity(const std::string & latexName,const std::string & longName);
 		virtual ~CMREntity(void);
-		void addIndice(const std::string & name,bool capture = false);
+		void addIndice(const std::string & name,CMRCaptureType capture = CMR_CAPTURE_NONE);
 		void printDebug(void) const;
 		bool match(CMRLatexEntity & entity,CMRIndiceCaptureMap & capture);
 	protected:
@@ -40,6 +48,7 @@ class CMREntity
 		std::string exponent;
 		CMREntityIndiceVector indices;
 		CMREntityIndiceCaptureVector indicesCapture;
+		int requiredIndices;
 };
 
 /*********************  CLASS  **********************/
@@ -47,9 +56,15 @@ class CMREntity
 class CMREntityConstant : public CMREntity
 {
 	public:
-		CMREntityConstant(const std::string & latexName,const std::string & longName);
+		CMREntityConstant( const string& latexName, const string& longName );
+		void loadValues(const std::string & data,int dimensions);
+		void printDebug(void) const;
+		void printCPPCode(void) const;
+	protected:
 		void addDimension(int size);
-		void loadValues(const std::string & data);
+		void loadValuesScalar(const std::string & data);
+		void loadValuesVector(const std::string & data);
+		void loadValuesMatrix(const std::string & data);
 	public:
 		std::string unit;
 		std::string estimatedMin;
@@ -71,6 +86,7 @@ CMREntity::CMREntity ( const string& latexName, const string& longName )
 	this->latexName = latexName;
 	this->longName = longName;
 	this->applyLatexName(latexName);
+	this->requiredIndices = 0;
 }
 
 /*******************  FUNCTION  *********************/
@@ -80,15 +96,17 @@ CMREntity::~CMREntity ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMREntity::addIndice ( const string& name ,bool capture)
+void CMREntity::addIndice ( const string& name ,CMRCaptureType capture)
 {
 	indices.push_back(name);
 	if (name == "i" || name == "j")
 	{
 		printf("Caution, automatic capture for i/j\n");
-		capture = true;
+		capture = CMR_CAPTURE_REQUIRED;
 	}
 	indicesCapture.push_back(capture);
+	if (capture != CMR_CAPTURE_OPTIONS)
+		this->requiredIndices++;
 }
 
 /*******************  FUNCTION  *********************/
@@ -117,9 +135,9 @@ void CMREntity::applyLatexName ( const string& latexName )
 		if (entity->subscript.childs[0]->name == "\\COMMA_GROUP")
 		{
 			for (CMRLatexFormulasList::iterator it = entity->subscript.childs[0]->params.begin() ; it != entity->subscript.childs[0]->params.end() ; ++it)
-				this->addIndice((*it)->string,false);
+				this->addIndice((*it)->string,CMR_CAPTURE_NONE);
 		} else {
-			this->addIndice(entity->subscriptTotalValue,false);
+			this->addIndice(entity->subscriptTotalValue,CMR_CAPTURE_NONE);
 		}
 	}
 }
@@ -144,12 +162,12 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture )
 		return false;
 	
 	CMRLatexFormulasList tmp = entity.getIndices();
-	if (tmp.size() == indices.size())
+	if (tmp.size() <= indices.size() & tmp.size() >= requiredIndices)
 	{
 		//capture
 		for (int i = 0 ; i < tmp.size() ; i++)
 		{
-			if (indicesCapture[i])
+			if (indicesCapture[i] != CMR_CAPTURE_NONE)
 			{
 				capture[indices[i]] = tmp[i]->string;
 			} else {
@@ -164,6 +182,157 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture )
 	} else {
 		fprintf(stderr,"Caution, not same indices on %s for matching %s\n",entity.getString().c_str(),latexName.c_str());
 		return false;
+	}
+}
+
+/*******************  FUNCTION  *********************/
+CMREntityConstant::CMREntityConstant ( const string& latexName, const string& longName) 
+	: CMREntity ( latexName, longName )
+{
+}
+
+/*******************  FUNCTION  *********************/
+void CMREntityConstant::loadValues ( const string& data, int dimensions )
+{
+	assert(values.empty());
+	switch(dimensions)
+	{
+		case 0:
+			loadValuesScalar(data);
+			break;
+		case 1:
+			loadValuesVector(data);
+			break;
+		case 2:
+			loadValuesMatrix(data);
+			break;
+		default:
+			fprintf(stderr,"Unsupported constent dimension : %d\n",dimensions);
+			abort();
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMREntityConstant::loadValuesScalar ( const string& data )
+{
+	//errors
+	assert(data.empty() == false);
+	
+	values.push_back(atof(data.c_str()));
+}
+
+/*******************  FUNCTION  *********************/
+void CMREntityConstant::loadValuesVector ( const string& data )
+{
+	//errors
+	assert(data.empty() == false);
+	
+	CMRStringVector vs = cmrStringSplit(data,";");
+	addDimension(vs.size());
+	
+	for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
+		values.push_back(atof(it->c_str()));
+	
+	if (values.size() == 1 && values[0] == 0.0)
+		fprintf(stderr,"Warning, you get a unique 0.0 value for a vector, maybe this is a mistake !\n");
+}
+
+/*******************  FUNCTION  *********************/
+void CMREntityConstant::loadValuesMatrix ( const string& data )
+{
+	//vars
+	int dim1 = -1;
+	int dim2 = -1;
+	
+	//errors
+	assert(data.empty() == false);
+	
+	CMRStringVector ms = cmrStringSplit(data,"\\\\");
+	dim1 = ms.size();
+	
+	for (CMRStringVector::const_iterator it = ms.begin() ; it != ms.end() ; ++it)
+	{
+		CMRStringVector vs = cmrStringSplit(*it,";");
+		if (dim2 == -1)
+		{
+			dim2 = vs.size();
+		} else {
+			assert(dim2 == vs.size());
+		}
+		for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
+			values.push_back(atof(it->c_str()));
+	}
+	
+	addDimension(dim2);
+	addDimension(dim1);
+	
+	if (values.size() == 1 && values[0] == 0.0)
+		fprintf(stderr,"Warning, you get a unique 0.0 value for a matrix, maybe this is a mistake !\n");
+}
+
+/*******************  FUNCTION  *********************/
+void CMREntityConstant::addDimension ( int size )
+{
+	dims.push_back(size);
+	switch(dims.size())
+	{
+		case 1:
+			addIndice("\\const_id_i",CMR_CAPTURE_OPTIONS);
+			break;
+		case 2:
+			addIndice("\\const_id_j",CMR_CAPTURE_OPTIONS);
+			break;
+		default:
+			abort();
+			fprintf(stderr,"Not supported !");
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMREntityConstant::printDebug ( void ) const
+{
+	CMREntity::printDebug();
+	printf("    - dims      : %lu : [",dims.size());
+	for (size_t i = 0 ; i < dims.size() ; i++)
+		printf(" %d ,",dims[i]);
+	printf("]\n");
+	printf("    - values    :");
+	for (size_t i = 0 ; i < values.size() ; i++)
+		printf(" %f ,",values[i]);
+	printf("\n");
+}
+
+/*******************  FUNCTION  *********************/
+void CMREntityConstant::printCPPCode ( void ) const
+{
+	assert(dims.size() <= 2);
+	if (dims.size() > 0)
+	{
+		cout << "//Definition of constant " << shortName << endl;
+		cout << "static const float TMP_VALUE_" << longName;
+		for (size_t i = 0 ; i < dims.size() ; i++)
+			cout << "[" << dims[i] << "]";
+		cout << "=";
+		cout << "{";
+		for (size_t i = 0 ; i < values.size() ; i++)
+		{
+			if (dims.size()==2 && i % dims[0] == 0 && i > 0)
+				cout << "},";
+			if (dims.size()==2 && i % dims[0] == 0 && i < values.size() - 1)
+				cout << "{";
+			cout << values[i] << ",";
+		}
+		if (dims.size() == 2)
+			cout << "}";
+		cout << "}";
+		cout << endl;
+		
+		if (dims.size() == 1)
+			cout << "const CMRMathVector " << longName << "(TMP_VALUE_" << longName << ","<< dims[0] <<");" << endl;
+		else if (dims.size() == 2)
+			cout << "const CMRMathMatrix " << longName << "(TMP_VALUE_" << longName << ","<< dims[0] << ","<< dims[1] << ");" << endl;
+	} else {
+		cout << "const float " << longName << "=" << values[0] << ";" << endl;
 	}
 }
 
@@ -204,12 +373,16 @@ int main(int argc,char ** argv)
 		depMatrix.printDebug();
 		printf("================================================\n");
 	} else {
-		CMREntity cst("A_{eq,i}^{2*4}","toto");
-		cst.addIndice("k",true);
+		CMREntityConstant cst("A_{eq,i}^{2*4}","toto");
+		cst.addIndice("k",CMR_CAPTURE_REQUIRED);
+		//cst.loadValues("1.1",0);
+		//cst.loadValues("1.1 ; 2.2 ; 3.3",1);
+		cst.loadValues("1.1 ; 1.2 ; 1.3 ; 1.4 \\\\ 2.1 ; 2.2 ; 2.3 ; 2.4 \\\\ 3.1 ; 3.2 ; 3.3 ; 3.4",2);
 		cst.printDebug();
+		cst.printCPPCode();
 		
 		CMRLatexFormulas f;
-		cmrParseLatexFormula(f,"A_{eq,i+1,4}");
+		cmrParseLatexFormula(f,"A_{eq,i+1,4,j,k}");
 		
 		CMRIndiceCaptureMap capture;
 		printf("Matching : %d\n",cst.match(*f.childs[0],capture));

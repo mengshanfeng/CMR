@@ -12,6 +12,10 @@
 
 /********************  HEADERS  *********************/
 #include <string>
+#include <vector>
+
+/*********************  TYPES  **********************/
+typedef std::vector<std::string> CMRStringVector;
 
 /*******************  FUNCTION  *********************/
 bool cmrIsAlphaNum(char value);
@@ -20,5 +24,6 @@ bool cmrIsNumFloat(char value);
 bool cmrIsOperator(char value);
 bool cmrIsWhiteSpace(char value);
 bool cmrIsSimpleOperator(const std::string & value);
+CMRStringVector cmrStringSplit(const std::string & value,const std::string & separator);
 
 #endif //CMR_PARSOR_BASICS_H
