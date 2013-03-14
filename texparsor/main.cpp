@@ -31,6 +31,32 @@ class CMRProject
 };
 
 /*********************  CLASS  **********************/
+class CMRProjectEquation : public CMREntity
+{
+	public:
+		CMRProjectEquation ( const string& latexName, const string& longName , const string & compute);
+		void printDebug(void) const;
+	private:
+		string compute;
+		CMRLatexFormulas formula;
+};
+
+/*******************  FUNCTION  *********************/
+CMRProjectEquation::CMRProjectEquation ( const string& latexName, const string& longName, const string& compute ) 
+	: CMREntity ( latexName, longName )
+{
+	this->compute = compute;
+	cmrParseLatexFormula(formula,compute);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectEquation::printDebug ( void ) const
+{
+	CMREntity::printDebug();
+	printf("    - value     : %s\n",compute.c_str());
+}
+
+/*********************  CLASS  **********************/
 class CMRProjectIterator : public CMREntity
 {
 	public:
@@ -179,7 +205,7 @@ int main(int argc,char ** argv)
 		cst.printCPPCode();
 		
 		CMRLatexFormulas f;
-		cmrParseLatexFormula(f,"A_{eq,i+1,4,j,k}");
+		cmrParseLatexFormula(f,"A^2_{eq,i+1,4,j,k}");
 		
 		CMRIndiceCaptureMap capture;
 		printf("Matching : %d\n",cst.match(*f.childs[0],capture));
@@ -198,6 +224,10 @@ int main(int argc,char ** argv)
 		CMRProjectIterator iter("k","k",1,9);
 		iter.printDebug();
 		iter.printCPPCode();
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+		CMRProjectEquation eq("d_{i,j}","density","\\sum_k{D_{i,j,k}}");
+		eq.printDebug();
 	}
 
 	return 0;

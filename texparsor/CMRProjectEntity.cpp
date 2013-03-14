@@ -64,7 +64,7 @@ void CMREntity::applyLatexName ( const string& latexName )
 	
 	//get name and exponent
 	this->shortName = entity->name;
-	this->exponent = entity->subscriptTotalValue;
+	this->exponent = entity->superscriptTotalValue;
 	
 	//extract subscript info
 	if (entity->subscript.childs.empty() == false)
@@ -95,7 +95,7 @@ void CMREntity::printDebug ( void ) const
 /*******************  FUNCTION  *********************/
 bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture )
 {
-	if (entity.name != shortName || entity.subscriptTotalValue == exponent)
+	if (entity.name != shortName || (entity.superscriptTotalValue != exponent && exponent.empty() == false))
 		return false;
 	
 	CMRLatexFormulasList tmp = entity.getIndices();
@@ -115,6 +115,9 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture )
 				}
 			}
 		}
+		//capture exponent
+		if (entity.superscriptTotalValue.empty() == false && exponent.empty() == true)
+			capture["cmrExponent"] = entity.superscriptTotalValue;
 		return true;
 	} else {
 		fprintf(stderr,"Caution, not same indices on %s for matching %s\n",entity.getString().c_str(),latexName.c_str());
