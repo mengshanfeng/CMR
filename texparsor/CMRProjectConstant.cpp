@@ -51,7 +51,7 @@ void CMREntityConstant::loadValuesScalar ( const string& data )
 	//errors
 	assert(data.empty() == false);
 	
-	values.push_back(atof(data.c_str()));
+	values.push_back(cmrSafeStringToFloat(data));
 }
 
 /*******************  FUNCTION  *********************/
@@ -64,7 +64,7 @@ void CMREntityConstant::loadValuesVector ( const string& data )
 	addDimension(vs.size());
 	
 	for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
-		values.push_back(atof(it->c_str()));
+		values.push_back(cmrSafeStringToFloat(*it));
 	
 	if (values.size() == 1 && values[0] == 0.0)
 		fprintf(stderr,"Warning, you get a unique 0.0 value for a vector, maybe this is a mistake !\n");
@@ -93,7 +93,7 @@ void CMREntityConstant::loadValuesMatrix ( const string& data )
 			assert(dim2 == vs.size());
 		}
 		for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
-			values.push_back(atof(it->c_str()));
+			values.push_back(cmrSafeStringToFloat(*it));
 	}
 	
 	addDimension(dim2);

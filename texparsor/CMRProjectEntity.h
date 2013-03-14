@@ -42,6 +42,8 @@ class CMREntity
 		bool match(CMRLatexEntity & entity,CMRIndiceCaptureMap & capture);
 	protected:
 		void applyLatexName(const std::string & latexName);
+		bool haveCaptureFor(const std::string name) const;
+		void madeCaptureIndice(const std::string name,enum CMRCaptureType capture);
 	public:
 		std::string latexName;
 		std::string shortName;

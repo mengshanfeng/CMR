@@ -9,6 +9,7 @@
 
 /********************  HEADERS  *********************/
 #include <cstdio>
+#include <cstdlib>
 #include "CMRParsorBasics.h"
 
 /*******************  FUNCTION  *********************/
@@ -78,4 +79,11 @@ std::vector< std::string> cmrStringSplit ( const std::string& value, const std::
 	}
 	
 	return res;
+}
+
+/*******************  FUNCTION  *********************/
+float cmrSafeStringToFloat ( const std::string& value )
+{
+	/** TODO : implement **/
+	return atof(value.c_str());
 }

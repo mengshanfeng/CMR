@@ -10,6 +10,7 @@
 /********************  HEADERS  *********************/
 #include <cstdio>
 #include <cassert>
+#include <cstdlib>
 #include "CMRTexParsor.h"
 #include "CMRProjectEntity.h"
 
@@ -119,4 +120,30 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture )
 		fprintf(stderr,"Caution, not same indices on %s for matching %s\n",entity.getString().c_str(),latexName.c_str());
 		return false;
 	}
+}
+
+/*******************  FUNCTION  *********************/
+bool CMREntity::haveCaptureFor ( const string name ) const
+{
+	for (int i = 0 ; i < indices.size() ; i++)
+	{
+		if (indices[i] == name)
+			return indicesCapture[i] != CMR_CAPTURE_NONE;
+	}
+	return false;
+}
+
+/*******************  FUNCTION  *********************/
+void CMREntity::madeCaptureIndice ( const string name, CMRCaptureType capture )
+{
+	for (int i = 0 ; i < indices.size() ; i++)
+	{
+		if (indices[i] == name)
+		{
+			indicesCapture[i] = capture;
+			return;
+		}
+	}
+	assert(false);
+	abort();
 }

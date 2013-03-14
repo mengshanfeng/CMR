@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <map>
+#include <sstream>
 #include "CMRLatexEntity.h"
 #include "CMRParsorBasics.h"
 #include "CMRTexParsor.h"
@@ -17,11 +18,119 @@
 /********************  NAMESPACE  *******************/
 using namespace std;
 
+/*********************  TYPES  **********************/
+typedef std::vector<CMREntityConstant*> CMRProjectConstantVector;
+
 /*********************  CLASS  **********************/
 class CMRProject
 {
-	
+	public:
+		~CMRProject(void);
+	private:
+		CMRProjectConstantVector constants;
 };
+
+/*********************  CLASS  **********************/
+class CMRProjectIterator : public CMREntity
+{
+	public:
+		CMRProjectIterator ( const string& latexName, const string& longName ,int start, int end);
+		void printDebug(void) const;
+		void printCPPCode(void) const;
+	private:
+		int start;
+		int end;
+};
+
+/*******************  FUNCTION  *********************/
+CMRProjectIterator::CMRProjectIterator ( const string& latexName, const string& longName, int start, int end ) 
+	: CMREntity ( latexName, longName )
+{
+	this->start = start;
+	this->end = end;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectIterator::printDebug ( void ) const
+{
+	CMREntity::printDebug();
+	printf("    - values    : %d .. %d\n",start,end);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectIterator::printCPPCode ( void ) const
+{
+	cout << "int " << longName << " = " << start << " ; " << longName << " <= " << end << " ; " << longName << "++" << endl;
+}
+
+/*********************  CLASS  **********************/
+class CMRProjectVariable : public CMREntity
+{
+	public:
+		CMRProjectVariable ( const string& latexName, const string& longName, const string& type );
+		void addDim( int size, const string& name, int start = 0);
+		void printCPPCode(void) const;
+		std::string getTypeWithDims(void) const;
+	private:
+		int ghostDepths;
+		std::string type;
+		std::string memoryModel;
+		CMRConstantDimensionsVector dims;
+		CMRConstantDimensionsVector dimStart;
+		CMRStringVector dimNames;
+};
+
+/*******************  FUNCTION  *********************/
+CMRProjectVariable::CMRProjectVariable ( const string& latexName, const string& longName , const std::string & type) 
+	: CMREntity ( latexName, longName )
+{
+	//check that we have i/j for capture
+	assert(haveCaptureFor("i"));
+	assert(haveCaptureFor("j"));
+	assert(type.empty() == false);
+	ghostDepths = 1;
+	memoryModel = "CMRMemoryModelColMajor";
+	this->type = type;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectVariable::addDim ( int size, const string& name,int start )
+{
+	assert(size > 0);
+	assert(name.empty() == false);
+	dims.push_back(size);
+	dimNames.push_back(name);
+	dimStart.push_back(start);
+	madeCaptureIndice(name,CMR_CAPTURE_OPTIONS);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectVariable::printCPPCode ( void ) const
+{
+	//definition
+	cout << "//define variable " << latexName << endl;
+	cout << "this->addVariable(\"" << longName << "\",sizeof(" << getTypeWithDims() << ")," << ghostDepths << ");" << endl;
+	
+	//accessor member definition
+	cout << "//define variable " << latexName << endl;
+	cout << "CMRCellAccessor<" << getTypeWithDims() << "," << memoryModel << "> " << longName << endl;
+	
+	//build local accessor from domain
+	cout << longName << "*(sys.getDomain(0,tstep)),x,y,absolute)" << endl;
+	
+	//build local accessor from parent accessor
+	cout << longName << "(acc.directions,x,y,absolute)" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+string CMRProjectVariable::getTypeWithDims ( void ) const
+{
+	stringstream res;
+	res << type;
+	for (int i = 0 ; i < dims.size() ; i++)
+		res << "[" << dims[i] << "]";
+	return res.str();
+}
 
 /*******************  FUNCTION  *********************/
 int main(int argc,char ** argv)
@@ -60,6 +169,7 @@ int main(int argc,char ** argv)
 		depMatrix.printDebug();
 		printf("================================================\n");
 	} else {
+		///////////////////////////////////////////////////////////////////////////////////////////////////
 		CMREntityConstant cst("A_{eq,i}^{2*4}","toto");
 		cst.addIndice("k",CMR_CAPTURE_REQUIRED);
 		//cst.loadValues("1.1",0);
@@ -77,6 +187,17 @@ int main(int argc,char ** argv)
 		{
 			printf("Capture %s => %s\n",it->first.c_str(),it->second.c_str());
 		}
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+		CMRProjectVariable var("D_{i,j,k}","Directions","int");
+		var.addDim(9,"k",1);
+		var.printDebug();
+		var.printCPPCode();
+
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+		CMRProjectIterator iter("k","k",1,9);
+		iter.printDebug();
+		iter.printCPPCode();
 	}
 
 	return 0;
