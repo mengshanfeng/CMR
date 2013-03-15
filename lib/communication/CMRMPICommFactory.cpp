@@ -7,6 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
+#include <cassert>
 #include "CMRMPICommFactory.h"
 #include "CMRMPIComm.h"
 

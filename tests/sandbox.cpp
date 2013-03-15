@@ -19,6 +19,12 @@
 
 using namespace std;
 
+struct GlobalVariables
+{
+	GlobalVariables() {dt = 0;};
+	float dt;
+};
+
 class VarSystem : public CMRVarSystem
 {
 	public:
@@ -30,6 +36,10 @@ class VarSystem : public CMRVarSystem
 			CMRCellAccessor<float,CMRMemoryModelRowMajor> variation;
 		};
 		VarSystem(CMRDomainBuilder * builder);
+		GlobalVariables &getGlobals(void) {return globals;};
+		const GlobalVariables &getGlobals(void) const {return globals;};
+	private:
+		GlobalVariables globals;
 };
 
 VarSystem::VarSystem ( CMRDomainBuilder * builder)
@@ -37,6 +47,7 @@ VarSystem::VarSystem ( CMRDomainBuilder * builder)
 {
 	this->addVariable("density",sizeof(float),1);
 	this->addVariable("variation",sizeof(float),1);
+	//this->addGlobalVariable("dt",sizeof(double),1);
 }
 
 VarSystem::CellAccessor::CellAccessor ( CMRVarSystem& sys, int tstep, int x, int y ,bool absolute)
@@ -86,6 +97,32 @@ struct ActionInit
 	}
 };
 
+struct ActionDTReduce
+{
+	//init reduction
+	ActionDTReduce() {localValue = 0;};
+	
+	//cell action
+	void cellAction(const VarSystem::CellAccessor & in,int x,int y)
+	{
+		localValue += *in.density(x,y);
+	}
+
+	//eventual custom op
+	void doReduce(const ActionDTReduce & rightMember)
+	{
+		localValue += rightMember.localValue;
+	}
+	
+	//get final result
+	void applyFinalResult(GlobalVariables & gbl)
+	{
+		gbl.dt = localValue * 4;
+	}
+	
+	float localValue;
+};
+
 ticks testsimple(const CMRRect rect)
 {
 	float * buffer = new float[rect.surface()];
@@ -133,6 +170,14 @@ int main(int argc, char * argv[])
 	//compute
 	CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop(&sys);
 	loop.run(localRect);
+	
+	//reduction
+	info("Before reduction, dt = %f",sys.getGlobals().dt);
+	ActionDTReduce reduction;
+	CMRMeshReduction<VarSystem,ActionDTReduce> red(&sys,&reduction);
+	red.run(localRect);
+	reduction.applyFinalResult(sys.getGlobals());
+	info("After reduction, dt = %f",sys.getGlobals().dt);
 	
 	////////////////////////////////
 	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionIncInPlace> loop2(&sys);
