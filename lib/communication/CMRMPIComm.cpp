@@ -33,7 +33,7 @@ void CMRMPIComm::runReceive ( void* buffer, size_t size )
 {
 	debug("Start MPI_Recv( %2d <-- %2d [tag = %d , size = %lu] )",cmrGetMPIRank(),communicator->getRecvRank(),communicator->getTagBase(),size);
 	int res = MPI_Recv(buffer,size,MPI_CHAR,communicator->getRecvRank(),communicator->getTagBase(),MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-	assume(res == 0,"MPI_Recv failure : %d",res);
+	assume(res == MPI_SUCCESS,"MPI_Recv failure : %d",res);
 }
 
 /*******************  FUNCTION  *********************/
@@ -41,7 +41,7 @@ void CMRMPIComm::runSend ( void* buffer, size_t size )
 {
 	debug("Start MPI_Send( %2d --> %2d [tag = %d , size = %lu] )",cmrGetMPIRank(),communicator->getSendRank(),communicator->getTagBase(),size);
 	int res = MPI_Send(buffer,size,MPI_CHAR,communicator->getSendRank(),communicator->getTagBase(),MPI_COMM_WORLD);
-	assume(res == 0,"MPI_Send failure : %d",res);
+	assume(res == MPI_SUCCESS,"MPI_Send failure : %d",res);
 }
 
 /*******************  FUNCTION  *********************/

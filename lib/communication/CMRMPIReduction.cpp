@@ -55,6 +55,7 @@ void CMRMPIReduction::runNative ( void )
 	void * buffer = descriptor->getBuffer();
 	size_t bufferSize = descriptor->getBufferSize();
 	size_t size = descriptor->getSize();
+	int status;
 	
 	//errors
 	assert(buffer != NULL);
@@ -89,9 +90,12 @@ void CMRMPIReduction::runNative ( void )
 	
 	//run mpi reduce
 	if (root == CMR_ALL)
-		MPI_Allreduce(buffer,buffer,size,mpiType,mpiOp,MPI_COMM_WORLD);
+		status = MPI_Allreduce(buffer,buffer,size,mpiType,mpiOp,MPI_COMM_WORLD);
 	else
-		MPI_Reduce(buffer,buffer,size,mpiType,mpiOp,root,MPI_COMM_WORLD);
+		status = MPI_Reduce(buffer,buffer,size,mpiType,mpiOp,root,MPI_COMM_WORLD);
+	
+	//check
+	assume(status == MPI_SUCCESS,"Error while doing MPI reduction !");
 }
 
 /*******************  FUNCTION  *********************/
