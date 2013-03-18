@@ -7,6 +7,8 @@
 #include <MockAbstractDomain.h>
 #include <communication/CMRMPICommFactory.h>
 #include <communication/CMRCommSchem.h>
+#include <communication/CMRMPIReduction.h>
+#include <communication/CMRReductionDescriptor.h>
 #include <domain/CMRDomainStorage.h>
 #include <domain/CMRCellAccessor.h>
 #include <domain/CMRMemoryModels.h>
@@ -93,7 +95,7 @@ struct ActionInit
 	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)
 	{
 		*out.density(x,y) = pos.cellPos.y;
-		*out.variation(x,y) = 0.0;
+		*out.variation(x,y) = 1.0;
 	}
 };
 
@@ -105,7 +107,7 @@ struct ActionDTReduce
 	//cell action
 	void cellAction(const VarSystem::CellAccessor & in,int x,int y)
 	{
-		localValue += *in.density(x,y);
+		localValue += *in.variation(x,y);
 	}
 
 	//eventual custom op
@@ -178,6 +180,10 @@ int main(int argc, char * argv[])
 	red.run(localRect);
 	reduction.applyFinalResult(sys.getGlobals());
 	info("After reduction, dt = %f",sys.getGlobals().dt);
+	CMRMPIReduction mpiReduce(new CMRGenericReductionDescriptor<ActionDTReduce>(&reduction));
+	mpiReduce.run();
+	reduction.applyFinalResult(sys.getGlobals());
+	info("After MPI reduction, dt = %f",sys.getGlobals().dt);
 	
 	////////////////////////////////
 	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionIncInPlace> loop2(&sys);

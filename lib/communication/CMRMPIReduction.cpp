@@ -41,7 +41,7 @@ void CMRMPIReduction::run ( void )
 /*******************  FUNCTION  *********************/
 bool CMRMPIReduction::isNative ( void )
 {
-	return (descriptor->getOperation() != CMR_REDUCE_OP_CUSTOM && descriptor->getTyep() != CMR_REDUCE_TYPE_CUSTOM);
+	return (descriptor->getOperation() != CMR_REDUCE_OP_CUSTOM && descriptor->getType() != CMR_REDUCE_TYPE_CUSTOM);
 }
 
 /*******************  FUNCTION  *********************/
@@ -49,16 +49,17 @@ void CMRMPIReduction::runNative ( void )
 {
 	//vars
 	CMRReductionOp cmrOp = descriptor->getOperation();
-	CMRReductionType cmrType = descriptor->getTyep();
+	CMRReductionType cmrType = descriptor->getType();
 	MPI_Op mpiOp = MPI_SUM;
 	MPI_Datatype mpiType = MPI_INT;
-	void * buffer = descriptor->getBuffer();
+	void * bufferIn = descriptor->getBufferIn();
+	void * bufferOut = descriptor->getBufferOut();
 	size_t bufferSize = descriptor->getBufferSize();
 	size_t size = descriptor->getSize();
 	int status;
 	
 	//errors
-	assert(buffer != NULL);
+	assert(bufferIn != NULL && bufferOut != NULL);
 	assert(size > 0 && bufferSize > 0);
 	assert(bufferSize % size == 0);
 	assert(root == CMR_ALL || root < cmrGetMPISize());
@@ -90,9 +91,9 @@ void CMRMPIReduction::runNative ( void )
 	
 	//run mpi reduce
 	if (root == CMR_ALL)
-		status = MPI_Allreduce(buffer,buffer,size,mpiType,mpiOp,MPI_COMM_WORLD);
+		status = MPI_Allreduce(bufferIn,bufferOut,size,mpiType,mpiOp,MPI_COMM_WORLD);
 	else
-		status = MPI_Reduce(buffer,buffer,size,mpiType,mpiOp,root,MPI_COMM_WORLD);
+		status = MPI_Reduce(bufferIn,bufferOut,size,mpiType,mpiOp,root,MPI_COMM_WORLD);
 	
 	//check
 	assume(status == MPI_SUCCESS,"Error while doing MPI reduction !");
