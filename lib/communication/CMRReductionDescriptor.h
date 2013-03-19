@@ -30,6 +30,10 @@ enum CMRReductionOp
 	CMR_REDUCE_OP_CUSTOM
 };
 
+/*********************  TYPES  **********************/
+typedef void (CMRUserReduceOperator) ( void * a, 
+               void * b, int * len, void * ); 
+
 /*********************  CLASS  **********************/
 class CMRReductionDescriptor
 {
@@ -41,9 +45,9 @@ class CMRReductionDescriptor
 		virtual CMRReductionType getType(void) const = 0;
 		virtual CMRReductionOp getOperation(void) const = 0;
 		virtual size_t getSize(void) const = 0;
-		virtual void doCustomReduce(void) = 0;
 		virtual void flush(void) = 0;
 		virtual bool getCommute(void) = 0;
+		virtual CMRUserReduceOperator * getCustomOperator(void) = 0;
 };
 
 /*********************  CLASS  **********************/
@@ -52,7 +56,6 @@ class CMRGenericReductionDescriptor : public CMRReductionDescriptor
 {
 	public:
 		CMRGenericReductionDescriptor ( T * reduction );
-		virtual void doCustomReduce ( void );
 		virtual void* getBufferIn ( void );
 		virtual void* getBufferOut ( void );
 		virtual size_t getBufferSize ( void ) const;
@@ -61,6 +64,9 @@ class CMRGenericReductionDescriptor : public CMRReductionDescriptor
 		virtual size_t getSize ( void ) const;
 		virtual void flush(void);
 		virtual bool getCommute ( void );
+		virtual CMRUserReduceOperator* getCustomOperator ( void );
+	private:
+		static void userOperator ( void * a, void * b, int * len, void * ); 
 	protected:
 		T * reduction;
 		T tmpReduction;
@@ -68,16 +74,29 @@ class CMRGenericReductionDescriptor : public CMRReductionDescriptor
 
 /*******************  FUNCTION  *********************/
 template <class T>
-CMRGenericReductionDescriptor<T>::CMRGenericReductionDescriptor ( T* reduction )
+CMRUserReduceOperator* CMRGenericReductionDescriptor<T>::getCustomOperator ( void )
 {
-	this->reduction = reduction;
+	return userOperator;
 }
 
 /*******************  FUNCTION  *********************/
 template <class T>
-void CMRGenericReductionDescriptor<T>::doCustomReduce ( void )
+void CMRGenericReductionDescriptor<T>::userOperator ( void* a, void* b, int* len, void* )
 {
-	assert(false);
+	//errors
+	assert(len != NULL);
+	assert(*len == sizeof(T));
+	assert(a != NULL);
+	assert(b != NULL);
+	
+	((T*)b)->doReduce(*(T*)a);
+}
+
+/*******************  FUNCTION  *********************/
+template <class T>
+CMRGenericReductionDescriptor<T>::CMRGenericReductionDescriptor ( T* reduction )
+{
+	this->reduction = reduction;
 }
 
 /*******************  FUNCTION  *********************/
@@ -141,7 +160,7 @@ template <class T>
 CMRReductionType CMRGenericReductionDescriptor<T>::getType ( void ) const
 {
 	warning("Improve!");
-	return CMR_REDUCE_TYPE_FLOAT;
+	return CMR_REDUCE_TYPE_CUSTOM;
 }
 
 #endif // CMR_ABSTRACT_REDUCTION_H

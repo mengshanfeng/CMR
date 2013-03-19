@@ -10,11 +10,14 @@
 #define CMR_MPI_REDUCTION_H
 
 /********************  HEADERS  *********************/
+#include <map>
+#include <mpi.h>
 #include "CMRComm.h"
+#include "CMRReductionDescriptor.h"
 #include "../common/CMRCommon.h"
 
 /*********************  TYPES  **********************/
-class CMRReductionDescriptor;
+typedef std::map<CMRUserReduceOperator*,MPI_Op> CMRMPIOpMap;
 
 /*********************  CLASS  **********************/
 class CMRMPIReduction : public CMRComm
@@ -23,6 +26,7 @@ class CMRMPIReduction : public CMRComm
 		CMRMPIReduction(CMRReductionDescriptor * descriptor,int root = CMR_ALL);
 		virtual std::string getDebugString ( void ) const;
 		virtual void run ( void );
+		MPI_Op & getMpiOperation(void);
 	private:
 		void runCustom(void);
 		void runNative(void);
@@ -30,6 +34,7 @@ class CMRMPIReduction : public CMRComm
 	private:
 		CMRReductionDescriptor * descriptor;
 		int root;
+		static CMRMPIOpMap mpiOps;
 };
 
 #endif // CMR_MPI_REDUCTION_H
