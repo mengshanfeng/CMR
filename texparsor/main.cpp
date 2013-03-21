@@ -19,15 +19,66 @@
 using namespace std;
 
 /*********************  TYPES  **********************/
-typedef std::vector<CMREntityConstant*> CMRProjectConstantVector;
+class CMRProjectVariable;
+class CMRProjectIterator;
+struct CMRProjectActionBlock;
+class CMRProjectEquation;
+class CMRProjectAction;
+
+/*********************  TYPES  **********************/
+typedef std::vector <CMREntityConstant*> CMRProjectConstantVector;
+typedef std::vector <CMRProjectVariable*> CMRProjectVariableVector;
+typedef std::vector <CMRProjectIterator*> CMRProjectIteratorVector;
+typedef std::vector <CMRProjectActionBlock*> CMRProjectActionBlockVector;
+typedef std::vector <CMREntity*> CMRProjectEntityList;
+typedef std::vector <CMRProjectAction *> CMRProjectActionVector;
+typedef std::vector <CMRProjectEquation*> CMRProjectEquationVector;
+
+/*********************  CLASS  **********************/
+struct CMRProjectContext
+{
+	CMRProjectContext(CMRProjectContext * parent) {this->parent = parent;};
+	CMRProjectContext * parent;
+	CMRProjectEntityList entities;
+};
 
 /*********************  CLASS  **********************/
 class CMRProject
 {
 	public:
-		~CMRProject(void);
+		CMRProject() :rootContext(NULL) {};
+		CMREntityConstant & addConstant(const std::string& latexName, const std::string& longName);
+		CMRProjectVariable & addvariable(const string& latexName, const string& longName, const string& type);
+		CMRProjectAction & addAction(std::string name,std::string descr = "");
 	private:
 		CMRProjectConstantVector constants;
+		CMRProjectVariableVector variables;
+		CMRProjectActionVector actions;
+		CMRProjectContext rootContext;
+};
+
+/*********************  CLASS  *********************/
+struct CMRProjectActionBlock
+{
+	CMRProjectActionBlock(CMRProjectContext * parent) :context(parent) {};
+	std::string loopDescr;
+	CMRProjectEquation * eq;
+	CMRProjectActionBlockVector subblocks;
+	CMRProjectContext context;
+};
+
+/*********************  CLASS  *********************/
+class CMRProjectAction
+{
+	public:
+		CMRProjectAction(CMRProjectContext * parentContext,std::string name,std::string descr = "");
+		CMRProjectActionBlock & addSubBlock(std::string loopDescr);
+		CMRProjectEquation& addEquation( const string& latexName, const string& longName, const string& compute );
+	private:
+	CMRProjectActionBlockVector blocks;
+	std::string name;
+	std::string description;
+	CMRProjectContext context;
 };
 
 /*********************  CLASS  **********************/
@@ -36,6 +87,7 @@ class CMRProjectEquation : public CMREntity
 	public:
 		CMRProjectEquation ( const string& latexName, const string& longName , const string & compute);
 		void printDebug(void) const;
+		CMRLatexEntity * extractNextInnerLoop(void);
 	private:
 		string compute;
 		CMRLatexFormulas formula;
@@ -87,6 +139,23 @@ void CMRProjectIterator::printDebug ( void ) const
 void CMRProjectIterator::printCPPCode ( void ) const
 {
 	cout << "int " << longName << " = " << start << " ; " << longName << " <= " << end << " ; " << longName << "++" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexEntity* extractFirstInnerLoop(CMRLatexFormulas & formula)
+{
+	for (CMRLatexEntityVector::iterator it = formula.childs.begin() ; it != formula.childs.end() ; ++it)
+	{
+		if ((*it)->name == "\\sum")
+			return *it;
+	}
+	return NULL;
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexEntity* CMRProjectEquation::extractNextInnerLoop ( void )
+{
+	return extractFirstInnerLoop(formula);
 }
 
 /*********************  CLASS  **********************/
@@ -159,6 +228,71 @@ string CMRProjectVariable::getTypeWithDims ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
+CMRProjectEquation * convertLoopToEq(CMRLatexEntity * entity)
+{
+	//nothing to do
+	if (entity == NULL)
+		return NULL;
+	//extract the loop id
+	string id = entity->subscriptTotalValue;
+	cout << "===> loop id = " << id << endl;
+	//extract inner term
+	return new CMRProjectEquation("Z_1","CMR_inner_loop_1",entity->params[0]->string);
+}
+
+/*******************  FUNCTION  *********************/
+CMREntityConstant& CMRProject::addConstant ( const string& latexName, const string& longName )
+{
+	CMREntityConstant * tmp = new CMREntityConstant(latexName,longName);
+	constants.push_back(tmp);
+	rootContext.entities.push_back(tmp);
+	return *tmp;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectVariable& CMRProject::addvariable ( const string& latexName, const string& longName, const string& type )
+{
+	CMRProjectVariable * tmp = new CMRProjectVariable(latexName,longName,type);
+	variables.push_back(tmp);
+	rootContext.entities.push_back(tmp);
+	return *tmp;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectAction::CMRProjectAction ( CMRProjectContext* parentContext, string name, string descr )
+	:context(parentContext)
+{
+	assert(parentContext != NULL);
+	this->name = name;
+	this->description = descr;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectEquation& CMRProjectAction::addEquation ( const string& latexName, const string& longName, const string& compute )
+{
+	CMRProjectActionBlock * tmpBlock = new CMRProjectActionBlock(&context);
+	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(latexName,longName,compute);
+	context.entities.push_back(tmp);
+	return *tmp;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectActionBlock& CMRProjectAction::addSubBlock ( string loopDescr )
+{
+	CMRProjectActionBlock * tmpBlock = new CMRProjectActionBlock(&context);
+	tmpBlock->loopDescr = loopDescr;
+	return *tmpBlock;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectAction& CMRProject::addAction ( string name, string descr )
+{
+	CMRProjectAction * tmp = new CMRProjectAction(&rootContext,name,descr);
+	actions.push_back(tmp);
+	return *tmp;
+}
+
+/*******************  FUNCTION  *********************/
 int main(int argc,char ** argv)
 {
 	//string value = "v'_{l} = \\frac{\\sum_{k}{v_{i,j,k} * D_{l,k}}}{d}";
@@ -228,6 +362,30 @@ int main(int argc,char ** argv)
 		///////////////////////////////////////////////////////////////////////////////////////////////////
 		CMRProjectEquation eq("d_{i,j}","density","\\sum_k{D_{i,j,k}}");
 		eq.printDebug();
+		CMRLatexEntity * term = eq.extractNextInnerLoop();
+		if (term == NULL)
+		{
+			cout << "None" << endl;
+		} else {
+			cout << "Capture inner loop : " << term->totalValue << endl;
+		}
+		convertLoopToEq(term)->printDebug();
+		
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+		//assemble into project
+		cout << "===================================================" << endl;
+		CMRProject project;
+		CMREntityConstant & cst2 = project.addConstant("A_{eq}","toto");
+		cst2.addIndice("k",CMR_CAPTURE_REQUIRED);
+		//cst2.loadValues("1.1",0);
+		cst2.loadValues("1.1 ; 2.2 ; 3.3 ; 4.4 ; 5.5 ; 6.6 ; 7.7 ; 8.8 ; 9.9",1);
+		//cst2.loadValues("1.1 ; 1.2 ; 1.3 ; 1.4 \\\\ 2.1 ; 2.2 ; 2.3 ; 2.4 \\\\ 3.1 ; 3.2 ; 3.3 ; 3.4",2);
+		
+		CMRProjectVariable & var2 = project.addvariable("D_{i,j,k}","Directions","int");
+		var2.addDim(9,"k",1);
+		
+		CMRProjectAction & ac = project.addAction("test1");
+		ac.addEquation("d_{i,j}","density","4+\\sum_k{D_{i,j,k}*A_{eq,k}}");
 	}
 
 	return 0;
