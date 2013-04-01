@@ -11,7 +11,7 @@
 
 /********************  HEADERS  *********************/
 #include <string>
-#include "CMRDomainBuilder.h"
+#include "../domain/CMRDomainBuilder.h"
 
 /*********************  TYPES  **********************/
 class CMRAbstractSpaceSplitter;

@@ -7,11 +7,11 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "CMRVarSystem.h"
-#include "CMRDomainStorage.h"
+#include "../domain/CMRVarSystem.h"
+#include "../domain/CMRDomainStorage.h"
 #include "CMRMPIDomainBuilder.h"
 #include "../common/CMRSpaceSplitter.h"
-#include "../communication/CMRMPICommFactory.h"
+#include "../mpi/CMRMPICommFactory.h"
 
 /*******************  FUNCTION  *********************/
 CMRMPIDomainBuilder::CMRMPIDomainBuilder ( CMRAbstractSpaceSplitter* splitter )

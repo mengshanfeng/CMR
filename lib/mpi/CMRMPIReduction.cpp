@@ -11,7 +11,7 @@
 #include <cassert>
 #include <cstdlib>
 #include "CMRMPIReduction.h"
-#include "CMRReductionDescriptor.h"
+#include "../communication/CMRReductionDescriptor.h"
 #include "../common/CMRDebug.h"
 #include "../common/CMRCommon.h"
 

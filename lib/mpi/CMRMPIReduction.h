@@ -12,8 +12,8 @@
 /********************  HEADERS  *********************/
 #include <map>
 #include <mpi.h>
-#include "CMRComm.h"
-#include "CMRReductionDescriptor.h"
+#include "../communication/CMRComm.h"
+#include "../communication/CMRReductionDescriptor.h"
 #include "../common/CMRCommon.h"
 
 /*********************  TYPES  **********************/

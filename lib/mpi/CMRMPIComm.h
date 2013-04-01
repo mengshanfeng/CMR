@@ -10,7 +10,7 @@
 #define CMR_MPI_COMMUNICATION_H
 
 /********************  HEADERS  *********************/
-#include "CMRBufferedComm.h"
+#include "../communication/CMRBufferedComm.h"
 
 /*********************  CLASS  **********************/
 class CMRAbstractDomain;

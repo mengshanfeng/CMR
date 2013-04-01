@@ -10,7 +10,7 @@
 #define CMR_MPI_COMMUNICATOR_H
 
 /********************  HEADERS  *********************/
-#include "CMRCommFactory.h"
+#include "../communication/CMRCommFactory.h"
 
 /*********************  CLASS  **********************/
 class CMRMPICommFactory : public CMRCommFactory

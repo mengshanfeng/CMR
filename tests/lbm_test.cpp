@@ -3,9 +3,9 @@
 #include <mpi.h>
 #include <cassert>
 #include <common/CMRDebug.h>
-#include <communication/CMRMPIComm.h>
+#include <mpi/CMRMPIComm.h>
 #include <MockAbstractDomain.h>
-#include <communication/CMRMPICommFactory.h>
+#include <mpi/CMRMPICommFactory.h>
 #include <communication/CMRCommSchem.h>
 #include <domain/CMRDomainStorage.h>
 #include <common/CMRSpaceSplitter.h>
@@ -13,7 +13,7 @@
 #include <domain/CMRMemoryModels.h>
 #include <domain/CMRCellAccessor.h>
 #include <domain/CMRVarSystem.h>
-#include <domain/CMRMPIDomainBuilder.h>
+#include <mpi/CMRMPIDomainBuilder.h>
 #include <domain/CMRMemoryModels.h>
 #include <math.h>
 #include <cstdio>
