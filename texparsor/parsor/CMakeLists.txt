@@ -1,0 +1,1 @@
+add_library(cmr_tex_parsor CMREntityMatching.cpp CMREqDepMatrix.cpp CMRTexParsor.cpp CMRLatexEntity.cpp CMRParsorBasics.cpp)

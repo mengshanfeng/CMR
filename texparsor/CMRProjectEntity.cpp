@@ -11,7 +11,7 @@
 #include <cstdio>
 #include <cassert>
 #include <cstdlib>
-#include "CMRTexParsor.h"
+#include "parsor/CMRTexParsor.h"
 #include "CMRProjectEntity.h"
 
 /**********************  USING  *********************/

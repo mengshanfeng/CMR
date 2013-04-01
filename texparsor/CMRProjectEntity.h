@@ -14,7 +14,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "CMRLatexEntity.h"
+#include "parsor/CMRLatexEntity.h"
 
 /********************  ENUM  ************************/
 enum CMRCaptureType

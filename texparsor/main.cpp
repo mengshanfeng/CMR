@@ -7,11 +7,11 @@
 #include <cstring>
 #include <map>
 #include <sstream>
-#include "CMRLatexEntity.h"
-#include "CMRParsorBasics.h"
-#include "CMRTexParsor.h"
-#include "CMREqDepMatrix.h"
-#include "CMREntityMatching.h"
+#include "parsor/CMRLatexEntity.h"
+#include "parsor/CMRParsorBasics.h"
+#include "parsor/CMRTexParsor.h"
+#include "parsor/CMREqDepMatrix.h"
+#include "parsor/CMREntityMatching.h"
 #include "CMRProjectEntity.h"
 #include "CMRProjectConstant.h"
 
