@@ -21,7 +21,6 @@ class CMRProjectEquation : public CMREntity
 		CMRProjectEquation ( const std::string& latexName, const std::string& longName , const std::string & compute);
 		void printDebug(void) const;
 		CMRLatexEntity * extractNextInnerLoop(void);
-	private:
 		std::string compute;
 		CMRLatexFormulas formula;
 };

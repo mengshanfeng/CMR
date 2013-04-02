@@ -12,36 +12,28 @@
 
 /********************  HEADERS  *********************/
 #include <vector>
+#include <list>
 #include "CMRProjectContext.h"
 #include "CMRProjectEquation.h"
 
 /*********************  TYPES  **********************/
 struct CMRProjectContext;
-class CMRProjectActionBlock;
-typedef std::vector <CMRProjectActionBlock*> CMRProjectActionBlockVector;
-
-/*********************  CLASS  *********************/
-struct CMRProjectActionBlock
-{
-	CMRProjectActionBlock(CMRProjectContext * parent) :context(parent) {eq = NULL;};
-	void replaceLoops(void);
-	std::string loopDescr;
-	std::string parameter;
-	CMRProjectEquation * eq;
-	CMRProjectActionBlockVector subblocks;
-	CMRProjectContext context;
-};
+class CMRProjectAction;
+typedef std::list <CMRProjectAction*> CMRProjectActionVector;
 
 /*********************  CLASS  *********************/
 class CMRProjectAction
 {
 	public:
 		CMRProjectAction(CMRProjectContext * parentContext,std::string name,std::string descr = "");
-		CMRProjectActionBlock & addSubBlock(std::string loopDescr,std::string parameter);
+		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute );
-		void replaceLoops(void);
+		CMRProjectEquation& addEquationBefore(CMRProjectAction * action, const std::string& latexName, const std::string& longName, const std::string& compute );
+		void replaceLoops(CMRProjectAction * parent);
+		void printDebug(int depth);
 	private:
-	CMRProjectActionBlockVector blocks;
+	CMRProjectEquation * eq;
+	CMRProjectActionVector childs;
 	std::string name;
 	std::string description;
 	CMRProjectContext context;

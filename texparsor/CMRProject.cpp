@@ -8,6 +8,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
+#include <iostream>
 #include "CMRProject.h"
 #include "CMRProjectConstant.h"
 #include "CMRProjectVariable.h"
@@ -36,7 +37,26 @@ CMRProjectVariable& CMRProject::addvariable ( const string& latexName, const str
 /*******************  FUNCTION  *********************/
 CMRProjectAction& CMRProject::addAction ( string name, string descr )
 {
-	CMRProjectAction * tmp = new CMRProjectAction(&rootContext,name,descr);
-	actions.push_back(tmp);
-	return *tmp;
+	return mainAction.addSubBlock(name,descr);
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectEquation& CMRProject::addEquation(const string& latexName, const string& longName, const string& compute)
+{
+	return mainAction.addEquation(latexName,longName,compute);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject::replaceLoops(void )
+{
+	mainAction.replaceLoops(NULL);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject::printDebug(void )
+{
+	cout << "=============================================" << endl;
+	cout << "Actions : " << endl;
+	mainAction.printDebug(1);
+	cout << "=============================================" << endl;
 }

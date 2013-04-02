@@ -9,7 +9,10 @@
 
 /********************  HEADERS  *********************/
 #include <cassert>
+#include <iostream>
 #include "CMRProjectAction.h"
+#include "CMRProject.h"
+#include "parsor/CMRTexParsor.h"
 
 using namespace std;
 
@@ -25,45 +28,79 @@ CMRProjectAction::CMRProjectAction ( CMRProjectContext* parentContext, string na
 /*******************  FUNCTION  *********************/
 CMRProjectEquation& CMRProjectAction::addEquation ( const string& latexName, const string& longName, const string& compute )
 {
-	CMRProjectActionBlock * tmpBlock = new CMRProjectActionBlock(&context);
+	CMRProjectAction * tmpBlock = new CMRProjectAction(&context,"cmrEquation",latexName);
 	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(latexName,longName,compute);
-	tmpBlock->loopDescr = "cmrEquation";
 	context.entities.push_back(tmp);
+	childs.push_back(tmpBlock);
 	return *tmp;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectActionBlock& CMRProjectAction::addSubBlock ( string loopDescr, string parameter )
+CMRProjectEquation& CMRProjectAction::addEquationBefore(CMRProjectAction* action, const string& latexName, const string& longName, const string& compute)
 {
-	CMRProjectActionBlock * tmpBlock = new CMRProjectActionBlock(&context);
-	tmpBlock->loopDescr = loopDescr;
-	tmpBlock->parameter = parameter;
+	CMRProjectAction * tmpBlock = new CMRProjectAction(&context,"cmrEquation",latexName);
+	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(latexName,longName,compute);
+	context.entities.push_back(tmp);
+	CMRProjectActionVector::iterator it = childs.begin();
+	childs.insert(it,tmpBlock);
+	return *tmp;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectAction& CMRProjectAction::addSubBlock ( string loopDescr, string parameter )
+{
+	CMRProjectAction * tmpBlock = new CMRProjectAction(&context,"cmrSubBlock",loopDescr);
+	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(parameter,"cmrIndice",parameter);
+	context.entities.push_back(tmp);
+	childs.push_back(tmpBlock);
 	return *tmpBlock;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::replaceLoops(void )
+void CMRProjectAction::replaceLoops(CMRProjectAction * parent )
 {
-	for (CMRProjectActionBlockVector::iterator it = blocks.begin() ; it != blocks.end() ; ++it)
-		(*it)->replaceLoops();
+	CMRLatexEntity * term;
+	string op;
+
+	if (name == "cmrEquation")
+	{
+		assert(eq != NULL);
+		assert(parent != NULL);
+		while ((term = eq->extractNextInnerLoop()) != NULL)
+		{
+			if (term->name == "\\sum")
+				op = " + ";
+			else
+				assert(false);
+			CMRLatexFormulas f;
+			parent->addEquation("\\CMRTMP{1}","cmrTmpValue1","0");
+			cout << "Replace loops with iterator (" << term->subscriptTotalValue << ") and core (" << term->params[0]->string << ")" << endl;
+			CMRProjectAction & ac = parent->addSubBlock("cmrLoop",term->subscriptTotalValue);
+			ac.addEquation("\\CMRTMP{1}","cmrTmpValue1",string("\\CMRTMP{1}") + op + term->params[0]->string);
+			cmrParseLatexFormula(f,"\\CMRTMP{1}");
+			*term = *f.childs[0];
+			ac.replaceLoops(parent);
+		}
+	} else {
+		for (CMRProjectActionVector::iterator it = childs.begin() ; it != childs.end() ; ++it)
+			(*it)->replaceLoops(this);
+	}
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectActionBlock::replaceLoops(void )
+void CMRProjectAction::printDebug(int depth)
 {
-	CMRLatexEntity * term;
-
-	if (loopDescr == "cmrEquation")
+	for (int i = 0 ; i < depth ; i++)
+			cout << "\t";
+	if (name == "cmrEquation")
 	{
-		if (eq != NULL)
-		{
-			while ((term = eq->extractNextInnerLoop()) != NULL)
-			{
-				
-			}
-		}
+		cout << this->eq->latexName << " = " << this->eq->compute << endl;
 	} else {
-		for (CMRProjectActionBlockVector::iterator it = subblocks.begin() ; it != subblocks.end() ; ++it)
-			(*it)->replaceLoops();
+		if (eq != NULL)
+			cout << name << " - " << description << " - " << eq->compute << ":" << endl;
+		else
+			cout << name << " - " << description << ":" << endl;
+		for (CMRProjectActionVector::iterator it = childs.begin() ; it != childs.end() ; ++it)
+			(*it)->printDebug(depth+1);
 	}
 }

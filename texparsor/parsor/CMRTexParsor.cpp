@@ -139,6 +139,8 @@ int cmrRequireParameters(const string & name,const string & value,int pos)
 		return 2;
 	} else if (name == "\\sum") {
 		return 1;
+	} else if (name == "\\CMRTMP") {
+		return 1;
 	} else {
 		cmrParsorError(value,pos,"Invalid latex command.");
 		return -1;

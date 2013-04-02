@@ -14,33 +14,36 @@
 #include <vector>
 #include "CMRProjectEntity.h"
 #include "CMRProjectContext.h"
+#include "CMRProjectAction.h"
 
 /*********************  TYPES  **********************/
 class CMREntityConstant;
 class CMRProjectVariable;
 class CMRProjectIterator;
-class CMRProjectAction;
 class CMRProjectEquation;
 
 /*********************  TYPES  **********************/
 typedef std::vector <CMREntityConstant*> CMRProjectConstantVector;
 typedef std::vector <CMRProjectVariable*> CMRProjectVariableVector;
 typedef std::vector <CMRProjectIterator*> CMRProjectIteratorVector;
-typedef std::vector <CMRProjectAction *> CMRProjectActionVector;
 typedef std::vector <CMRProjectEquation*> CMRProjectEquationVector;
 
 /*********************  CLASS  **********************/
 class CMRProject
 {
 	public:
-		CMRProject() :rootContext(NULL) {};
+		CMRProject() :rootContext(NULL), mainAction(&rootContext,"cmrMainLoop","cmrMainLoop") {};
 		CMREntityConstant & addConstant(const std::string& latexName, const std::string& longName);
 		CMRProjectVariable & addvariable(const std::string& latexName, const std::string& longName, const std::string& type);
 		CMRProjectAction & addAction(std::string name,std::string descr = "");
+		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute );
+		void replaceLoops(void);
+		
+		void printDebug(void);
 	private:
 		CMRProjectConstantVector constants;
 		CMRProjectVariableVector variables;
-		CMRProjectActionVector actions;
+		CMRProjectAction mainAction;
 		CMRProjectContext rootContext;
 };
 
