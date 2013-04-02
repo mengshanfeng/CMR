@@ -23,8 +23,10 @@ typedef std::vector <CMRProjectActionBlock*> CMRProjectActionBlockVector;
 /*********************  CLASS  *********************/
 struct CMRProjectActionBlock
 {
-	CMRProjectActionBlock(CMRProjectContext * parent) :context(parent) {};
+	CMRProjectActionBlock(CMRProjectContext * parent) :context(parent) {eq = NULL;};
+	void replaceLoops(void);
 	std::string loopDescr;
+	std::string parameter;
 	CMRProjectEquation * eq;
 	CMRProjectActionBlockVector subblocks;
 	CMRProjectContext context;
@@ -35,8 +37,9 @@ class CMRProjectAction
 {
 	public:
 		CMRProjectAction(CMRProjectContext * parentContext,std::string name,std::string descr = "");
-		CMRProjectActionBlock & addSubBlock(std::string loopDescr);
+		CMRProjectActionBlock & addSubBlock(std::string loopDescr,std::string parameter);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute );
+		void replaceLoops(void);
 	private:
 	CMRProjectActionBlockVector blocks;
 	std::string name;

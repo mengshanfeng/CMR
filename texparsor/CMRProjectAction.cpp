@@ -27,14 +27,43 @@ CMRProjectEquation& CMRProjectAction::addEquation ( const string& latexName, con
 {
 	CMRProjectActionBlock * tmpBlock = new CMRProjectActionBlock(&context);
 	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(latexName,longName,compute);
+	tmpBlock->loopDescr = "cmrEquation";
 	context.entities.push_back(tmp);
 	return *tmp;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectActionBlock& CMRProjectAction::addSubBlock ( string loopDescr )
+CMRProjectActionBlock& CMRProjectAction::addSubBlock ( string loopDescr, string parameter )
 {
 	CMRProjectActionBlock * tmpBlock = new CMRProjectActionBlock(&context);
 	tmpBlock->loopDescr = loopDescr;
+	tmpBlock->parameter = parameter;
 	return *tmpBlock;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::replaceLoops(void )
+{
+	for (CMRProjectActionBlockVector::iterator it = blocks.begin() ; it != blocks.end() ; ++it)
+		(*it)->replaceLoops();
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectActionBlock::replaceLoops(void )
+{
+	CMRLatexEntity * term;
+
+	if (loopDescr == "cmrEquation")
+	{
+		if (eq != NULL)
+		{
+			while ((term = eq->extractNextInnerLoop()) != NULL)
+			{
+				
+			}
+		}
+	} else {
+		for (CMRProjectActionBlockVector::iterator it = subblocks.begin() ; it != subblocks.end() ; ++it)
+			(*it)->replaceLoops();
+	}
 }
