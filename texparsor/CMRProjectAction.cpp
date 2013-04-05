@@ -10,6 +10,7 @@
 /********************  HEADERS  *********************/
 #include <cassert>
 #include <iostream>
+#include <cstdlib>
 #include "CMRProjectAction.h"
 #include "CMRProject.h"
 #include "parsor/CMRTexParsor.h"
@@ -17,47 +18,38 @@
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction::CMRProjectAction ( CMRProjectContext* parentContext, string name, string descr )
-	:context(parentContext)
+CMRProjectAction::CMRProjectAction ( string name, string descr )
 {
-	assert(parentContext != NULL);
+	this->parent = NULL;
+	this->next = NULL;
+	this->prev = NULL;
+	this->firstChild = NULL;
+	this->lastChild = NULL;
 	this->name = name;
 	this->description = descr;
+	this->eq = NULL;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectEquation& CMRProjectAction::addEquation ( const string& latexName, const string& longName, const string& compute )
+CMRProjectEquation& CMRProjectAction::addEquation ( const string& latexName, const string& longName, const string& compute,CMRProjectActionInsert location )
 {
-	CMRProjectAction * tmpBlock = new CMRProjectAction(&context,"cmrEquation",latexName);
+	CMRProjectAction * tmpBlock = new CMRProjectAction("cmrEquation",latexName);
 	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(latexName,longName,compute);
-	context.entities.push_back(tmp);
-	childs.push_back(tmpBlock);
+	insertAction(tmpBlock,location);
 	return *tmp;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectEquation& CMRProjectAction::addEquationBefore(CMRProjectAction* action, const string& latexName, const string& longName, const string& compute)
+CMRProjectAction& CMRProjectAction::addSubBlock ( string loopDescr, string parameter,CMRProjectActionInsert location )
 {
-	CMRProjectAction * tmpBlock = new CMRProjectAction(&context,"cmrEquation",latexName);
-	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(latexName,longName,compute);
-	context.entities.push_back(tmp);
-	CMRProjectActionVector::iterator it = childs.begin();
-	childs.insert(it,tmpBlock);
-	return *tmp;
-}
-
-/*******************  FUNCTION  *********************/
-CMRProjectAction& CMRProjectAction::addSubBlock ( string loopDescr, string parameter )
-{
-	CMRProjectAction * tmpBlock = new CMRProjectAction(&context,"cmrSubBlock",loopDescr);
+	CMRProjectAction * tmpBlock = new CMRProjectAction("cmrSubBlock",loopDescr);
 	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(parameter,"cmrIndice",parameter);
-	context.entities.push_back(tmp);
-	childs.push_back(tmpBlock);
+	insertAction(tmpBlock,location);
 	return *tmpBlock;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::replaceLoops(CMRProjectAction * parent )
+void CMRProjectAction::replaceLoops()
 {
 	CMRLatexEntity * term;
 	string op;
@@ -73,17 +65,17 @@ void CMRProjectAction::replaceLoops(CMRProjectAction * parent )
 			else
 				assert(false);
 			CMRLatexFormulas f;
-			parent->addEquation("\\CMRTMP{1}","cmrTmpValue1","0");
+			this->addEquation("\\CMRTMP{1}","cmrTmpValue1","0",CMR_ACTION_INSERT_BEFORE);
 			cout << "Replace loops with iterator (" << term->subscriptTotalValue << ") and core (" << term->params[0]->string << ")" << endl;
-			CMRProjectAction & ac = parent->addSubBlock("cmrLoop",term->subscriptTotalValue);
+			CMRProjectAction & ac = this->addSubBlock("cmrLoop",term->subscriptTotalValue,CMR_ACTION_INSERT_BEFORE);
 			ac.addEquation("\\CMRTMP{1}","cmrTmpValue1",string("\\CMRTMP{1}") + op + term->params[0]->string);
 			cmrParseLatexFormula(f,"\\CMRTMP{1}");
 			*term = *f.childs[0];
-			ac.replaceLoops(parent);
+			ac.replaceLoops();
 		}
 	} else {
-		for (CMRProjectActionVector::iterator it = childs.begin() ; it != childs.end() ; ++it)
-			(*it)->replaceLoops(this);
+		for (CMRProjectAction * it = firstChild ; it != NULL ; it = it->next)
+			it->replaceLoops();
 	}
 }
 
@@ -100,7 +92,65 @@ void CMRProjectAction::printDebug(int depth)
 			cout << name << " - " << description << " - " << eq->compute << ":" << endl;
 		else
 			cout << name << " - " << description << ":" << endl;
-		for (CMRProjectActionVector::iterator it = childs.begin() ; it != childs.end() ; ++it)
-			(*it)->printDebug(depth+1);
+		for (CMRProjectAction * it = firstChild ; it != NULL ; it = it->next)
+			it->printDebug(depth+1);
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::insertAction(CMRProjectAction* action, CMRProjectActionInsert location)
+{
+	//trivial
+	if (action == NULL)
+		return;
+
+	//do it
+	switch(location)
+	{
+		case CMR_ACTION_INSERT_AFTER:
+			action->prev = this;
+			action->next = next;
+			if (next != NULL)
+				next->prev = action;
+			else
+				parent->lastChild = action;
+			next = action;
+			action->parent = parent;
+			break;
+		case CMR_ACTION_INSERT_BEFORE:
+			action->next = this;
+			action->prev = prev;
+			if (prev != NULL)
+				prev->next = action;
+			else
+				parent->firstChild = action;
+			prev = action;
+			action->parent = parent;
+			break;
+		case CMR_ACTION_INSERT_FIRST_CHILD:
+			if (firstChild == NULL)
+				lastChild = firstChild = action;
+			else
+				firstChild->insertAction(action,CMR_ACTION_INSERT_BEFORE);
+			action->parent = this;
+			break;
+		case CMR_ACTION_INSERT_LAST_CHILD:
+			if (lastChild == NULL)
+				lastChild = firstChild = action;
+			else
+				lastChild->insertAction(action,CMR_ACTION_INSERT_AFTER);
+			action->parent = this;
+			break;
+		case  CMR_ACTION_INSERT_FIRST:
+			assert(parent != NULL);
+			parent->insertAction(action,CMR_ACTION_INSERT_FIRST_CHILD);
+			break;
+		case  CMR_ACTION_INSERT_LAST:
+			assert(parent != NULL);
+			parent->insertAction(action,CMR_ACTION_INSERT_LAST_CHILD);
+			break;
+		default:
+			assert(false);
+			abort();
 	}
 }

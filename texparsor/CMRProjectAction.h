@@ -17,26 +17,36 @@
 #include "CMRProjectEquation.h"
 
 /*********************  TYPES  **********************/
-struct CMRProjectContext;
-class CMRProjectAction;
-typedef std::list <CMRProjectAction*> CMRProjectActionVector;
+enum CMRProjectActionInsert
+{
+	CMR_ACTION_INSERT_FIRST_CHILD,
+	CMR_ACTION_INSERT_LAST_CHILD,
+	CMR_ACTION_INSERT_FIRST,
+	CMR_ACTION_INSERT_LAST,
+	CMR_ACTION_INSERT_AFTER,
+	CMR_ACTION_INSERT_BEFORE,
+	CMR_ACTION_INSERT_INPLACE
+};
 
 /*********************  CLASS  *********************/
 class CMRProjectAction
 {
 	public:
-		CMRProjectAction(CMRProjectContext * parentContext,std::string name,std::string descr = "");
-		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter);
-		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute );
-		CMRProjectEquation& addEquationBefore(CMRProjectAction * action, const std::string& latexName, const std::string& longName, const std::string& compute );
-		void replaceLoops(CMRProjectAction * parent);
+		CMRProjectAction(std::string name,std::string descr = "");
+		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectActionInsert location = CMR_ACTION_INSERT_LAST_CHILD);
+		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectActionInsert location = CMR_ACTION_INSERT_LAST_CHILD);
+		void replaceLoops(void);
 		void printDebug(int depth);
+		void insertAction(CMRProjectAction * action,CMRProjectActionInsert location);
 	private:
 	CMRProjectEquation * eq;
-	CMRProjectActionVector childs;
+	CMRProjectAction * next;
+	CMRProjectAction * prev;
+	CMRProjectAction * parent;
+	CMRProjectAction * firstChild;
+	CMRProjectAction * lastChild;
 	std::string name;
 	std::string description;
-	CMRProjectContext context;
 };
 
 #endif //CMR_PROJECT_ACTION_H

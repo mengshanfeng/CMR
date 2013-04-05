@@ -49,7 +49,7 @@ CMRProjectEquation& CMRProject::addEquation(const string& latexName, const strin
 /*******************  FUNCTION  *********************/
 void CMRProject::replaceLoops(void )
 {
-	mainAction.replaceLoops(NULL);
+	mainAction.replaceLoops();
 }
 
 /*******************  FUNCTION  *********************/

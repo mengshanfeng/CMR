@@ -32,7 +32,7 @@ typedef std::vector <CMRProjectEquation*> CMRProjectEquationVector;
 class CMRProject
 {
 	public:
-		CMRProject() :rootContext(NULL), mainAction(&rootContext,"cmrMainLoop","cmrMainLoop") {};
+		CMRProject() :rootContext(NULL), mainAction("cmrMainLoop","cmrMainLoop") {};
 		CMREntityConstant & addConstant(const std::string& latexName, const std::string& longName);
 		CMRProjectVariable & addvariable(const std::string& latexName, const std::string& longName, const std::string& type);
 		CMRProjectAction & addAction(std::string name,std::string descr = "");
