@@ -13,7 +13,6 @@
 /********************  HEADERS  *********************/
 #include <vector>
 #include "CMRProjectEntity.h"
-#include "CMRProjectContext.h"
 
 /*********************  TYPES  **********************/
 class CMREntityConstant;
@@ -34,12 +33,12 @@ typedef std::vector <CMRProjectDefinition*> CMRProjectDefinitionVector;
 class CMRProject
 {
 	public:
-		CMRProject() :rootContext(NULL){};
 		CMREntityConstant & addConstant(const std::string& latexName, const std::string& longName);
 		CMRProjectVariable & addvariable(const std::string& latexName, const std::string& longName, const std::string& type);
 		CMRProjectAction & addAction(std::string name,std::string descr = "");
 		CMRProjectDefinition & addDefinition(const std::string& latexName, const std::string& longName);
 		CMRProjectDefinition& addDefinition( const std::string& latexName, const std::string& longName, const std::string& compute );
+		CMRProjectIterator & addIterator(const std::string& latexName, const std::string& longName ,int start, int end);
 		void replaceLoops(void);
 		void genCCode(std::ostream & out);
 		void printDebug(void);
@@ -48,7 +47,7 @@ class CMRProject
 		CMRProjectVariableVector variables;
 		CMRProjectActionVector actions;
 		CMRProjectDefinitionVector definitions;
-		CMRProjectContext rootContext;
+		CMRProjectIteratorVector iterators;
 };
 
 #endif //CMR_PROJECT_H

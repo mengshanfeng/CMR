@@ -14,6 +14,7 @@
 #include "CMRProjectVariable.h"
 #include "CMRProjectAction.h"
 #include "CMRProjectDefinition.h"
+#include "CMRProjectIterator.h"
 
 using namespace std;
 
@@ -22,7 +23,6 @@ CMREntityConstant& CMRProject::addConstant ( const string& latexName, const stri
 {
 	CMREntityConstant * tmp = new CMREntityConstant(latexName,longName);
 	constants.push_back(tmp);
-	rootContext.entities.push_back(tmp);
 	return *tmp;
 }
 
@@ -31,7 +31,6 @@ CMRProjectVariable& CMRProject::addvariable ( const string& latexName, const str
 {
 	CMRProjectVariable * tmp = new CMRProjectVariable(latexName,longName,type);
 	variables.push_back(tmp);
-	rootContext.entities.push_back(tmp);
 	return *tmp;
 }
 
@@ -93,4 +92,12 @@ CMRProjectDefinition& CMRProject::addDefinition(const string& latexName, const s
 	CMRProjectDefinition & def = addDefinition(latexName,longName);
 	def.addEquation(latexName,longName,compute);
 	return def;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectIterator& CMRProject::addIterator(const string& latexName, const string& longName, int start, int end)
+{
+	CMRProjectIterator * it = new CMRProjectIterator(latexName,longName,start,end);
+	iterators.push_back(it);
+	return *it;
 }
