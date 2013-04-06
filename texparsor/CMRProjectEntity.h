@@ -25,6 +25,7 @@ enum CMRCaptureType
 };
 
 /*********************  TYPES  **********************/
+class CMRProjectContext;
 typedef std::vector<std::string> CMREntityIndiceVector;
 typedef std::vector<CMRCaptureType> CMREntityIndiceCaptureVector;
 typedef std::vector<int> CMRConstantDimensionsVector;
@@ -38,8 +39,10 @@ class CMREntity
 		CMREntity(const std::string & latexName,const std::string & longName);
 		virtual ~CMREntity(void);
 		void addIndice(const std::string & name,CMRCaptureType capture = CMR_CAPTURE_NONE);
-		void printDebug(void) const;
-		bool match(CMRLatexEntity & entity,CMRIndiceCaptureMap & capture);
+		void setCaptureExponent(bool status = true);
+		virtual void printDebug(void) const;
+		virtual bool match(CMRLatexEntity & entity,CMRIndiceCaptureMap & capture) const;
+		virtual std::ostream & genUsageCCode(std::ostream& out, CMRProjectContext& context, CMRLatexEntity& entity) const { out << longName; return out;};
 	protected:
 		void applyLatexName(const std::string & latexName);
 		bool haveCaptureFor(const std::string name) const;
@@ -52,6 +55,8 @@ class CMREntity
 		CMREntityIndiceVector indices;
 		CMREntityIndiceCaptureVector indicesCapture;
 		int requiredIndices;
+		CMRLatexEntity latexEntity;
+		bool captureExponent;
 };
 
 #endif //CMR_PROJECT_ENTITY_H

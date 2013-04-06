@@ -11,6 +11,7 @@
 #include <cassert>
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 #include "CMRProjectVariable.h"
 
 using namespace std;
@@ -26,6 +27,7 @@ CMRProjectVariable::CMRProjectVariable ( const string& latexName, const string& 
 	ghostDepths = 1;
 	memoryModel = "CMRMemoryModelColMajor";
 	this->type = type;
+	this->setCaptureExponent(true);
 }
 
 /*******************  FUNCTION  *********************/
@@ -100,4 +102,29 @@ string CMRProjectVariable::getTypeWithDims ( void ) const
 	for (int i = 0 ; i < dims.size() ; i++)
 		res << "[" << dims[i] << "]";
 	return res.str();
+}
+
+/*******************  FUNCTION  *********************/
+ostream& CMRProjectVariable::genUsageCCode(ostream& out, CMRProjectContext& context, CMRLatexEntity& entity) const
+{
+	CMRIndiceCaptureMap capture;
+
+	if (entity.name == shortName)
+		out << "in.";
+	else if (entity.name == shortName + "'")
+		out << "out.";
+	else
+		abort();
+	
+	CMRLatexEntity tmp = entity;
+	tmp.name = shortName;
+	bool res = match(tmp,capture);
+	assert(res == true);
+	
+	out << longName << "(x,y)";
+	
+	for (int i = indices.size() - 1 ; i >= 2 ; i--)
+		out << "[ " << capture[indices[i]] << " ]";
+	
+	return out;
 }

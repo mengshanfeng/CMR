@@ -15,6 +15,7 @@
 #include "CMRProjectAction.h"
 #include "CMRProject.h"
 #include "parsor/CMRTexParsor.h"
+#include "parsor/CMRParsorBasics.h"
 
 using namespace std;
 
@@ -45,11 +46,18 @@ CMRProjectAction& CMRProjectAction::addSubBlock ( string loopDescr, string param
 }
 
 /*******************  FUNCTION  *********************/
-std::string getTempName(int * tmpId)
+std::string getTempName(int id)
 {
-	int id = (*tmpId)++;
 	stringstream tmp;
-	tmp << "\\CMRTMP{" << id << "}";
+	tmp << "\\CMRTMP^"<< id <<"{" << id << "}";
+	return tmp.str();
+}
+
+/*******************  FUNCTION  *********************/
+std::string getLongTempName(int id)
+{
+	stringstream tmp;
+	tmp << "cmrTmpValue" << id;
 	return tmp.str();
 }
 
@@ -71,11 +79,13 @@ void CMRProjectAction::replaceLoops(int* tmpId)
 			else
 				assert(false);
 			CMRLatexFormulas f;
-			string tmpName = getTempName(tmpId);
-			this->addEquation(tmpName,"cmrTmpValue1","0",CMR_INSERT_BEFORE);
+			string tmpName = getTempName(*tmpId);
+			string longTmpName = getLongTempName(*tmpId);
+			(*tmpId)++;
+			this->addEquation(tmpName,longTmpName,"0",CMR_INSERT_BEFORE);
 			cout << "Replace loops with iterator (" << term->subscriptTotalValue << ") and core (" << term->params[0]->string << ")" << endl;
 			CMRProjectAction & ac = this->addSubBlock("cmrLoop",term->subscriptTotalValue,CMR_INSERT_BEFORE);
-			ac.addEquation(tmpName,"cmrTmpValue1",string(tmpName) + op + term->params[0]->string);
+			ac.addEquation(tmpName,longTmpName,string(tmpName) + op + term->params[0]->string);
 			cmrParseLatexFormula(f,tmpName);
 			*term = *f.childs[0];
 			ac.replaceLoops(tmpId);
@@ -110,6 +120,7 @@ void CMRProjectAction::insertAction(CMRProjectAction* action, CMRProjectCodeTree
 	insert(action,location);
 }
 
+/*******************  FUNCTION  *********************/
 std::string genCCodeIndent(int depth)
 {
 	std::string tmp;
@@ -121,25 +132,89 @@ std::string genCCodeIndent(int depth)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genCCode(std::ostream & out,int depth) const
+bool latexEntityIsInteger(CMRLatexEntity & entity)
 {
+	for (int i = 0 ; i < entity.totalValue.size() ; i++)
+		if (!cmrIsNum(entity.totalValue[i]))
+			return false;
+	return true;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::genEqCCode(ostream& out, CMRProjectContext& context, CMRLatexEntity& entity) const
+{
+	if (latexEntityIsInteger(entity))
+	{
+		out << entity.totalValue << " ";
+	} else if (entity.totalValue.size() == 1 && cmrIsOperator(entity.totalValue[0])) {
+		out << entity.totalValue << " ";
+	} else {
+		//search matching in context
+		CMREntity * def = context.find(entity);
+		if (def == NULL)
+		{
+			cerr << endl << "Unknown member " << entity.totalValue << " in equation " << eq->latexName << " = " << eq->compute << endl;
+			abort();
+		}
+		def->genUsageCCode(out,context,entity);
+		out << " ";
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::genEqCCode(ostream& out, CMRProjectContext& context, int depth) const
+{
+	//errors
+	assert(eq != NULL);
+	//check if in context of if new def
+	CMREntity * entity = context.find(eq->latexEntity);
+	
+	//indent
+	out << genCCodeIndent(depth);
+	
+	//if new def, need to insert declaration code
+	if (entity == NULL)
+	{
+		out << "double ";
+		entity = & context.addEntry(new CMRProjectLocalVariable(eq->latexName,eq->longName));
+	}
+	
+	//write left member
+	entity->genUsageCCode(out,context,eq->latexEntity);
+	out << " = ";
+	
+	//loop on body elements
+	CMRLatexEntityVector & elems = eq->formula.childs;
+	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
+		genEqCCode(out,context,**it);
+	
+	out << ";" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::genCCode(std::ostream & out,CMRProjectContext & context,int depth) const
+{
+	CMRProjectContext localContext(&context);
+	
 	//cases
 	if (depth == 0)
 	{
 		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
-			it->genCCode(out,depth+1);
+			it->genCCode(out,context,depth+1);
 	}else if (name == "cmrMainLoop" && description == "cmrMainLoop") {
 		out << genCCodeIndent(depth) << "//mainLoop" << endl;
 		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
-			it->genCCode(out,depth+1);
+			it->genCCode(out,localContext,depth+1);
 	} else if (name == "cmrSubBlock" && description == "cmrLoop") {
-		out << genCCodeIndent(depth) << "for (" << eq->compute << " = 0 ; " << eq->compute << " < 9 ; " << eq->compute << "++ )" <<endl;
+		CMRProjectLocalVariable localVar(eq->compute,eq->compute);
+		localContext.addEntry(&localVar);
+		out << genCCodeIndent(depth) << "for (int " << eq->compute << " = 0 ; " << eq->compute << " < 9 ; " << eq->compute << "++ )" <<endl;
 		out << genCCodeIndent(depth) << "{" << endl;
 		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
-			it->genCCode(out,depth+1);
+			it->genCCode(out,localContext,depth+1);
 		out << genCCodeIndent(depth) << "}" << endl;
 	} else if (name == "cmrEquation") {
-		out << genCCodeIndent(depth) << "//eq TODO : "<< description << " = " << eq->compute << endl;
+		genEqCCode(out,context,depth);
 	} else {
 		out << genCCodeIndent(depth) << "//Unknown member : " << name << " : " << description;
 		if (eq != NULL)

@@ -142,36 +142,56 @@ void CMRProject::genCCodeOfVariables(ostream& out)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProject::genCCodeOfDefinitions(ostream& out)
+void CMRProject::genCCodeOfDefinitions(ostream& out,CMRProjectContext & rootContext)
 {
 	if (definitions.empty())
 		return;
 	out << "/********************* DEFINITIONS ********************/" << endl;
 	for (CMRProjectDefinitionVector::iterator it = definitions.begin() ; it != definitions.end() ; ++it)
-		(*it)->printCPPCode();
+		(*it)->printCPPCode(rootContext);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProject::genCCodeOfActions(ostream& out)
+void CMRProject::genCCodeOfActions(ostream& out,CMRProjectContext & rootContext)
 {
 	out << "/*********************** ACTIONS *********************/" << endl;
 	for (CMRProjectActionVector::iterator it = actions.begin() ; it != actions.end() ; ++it)
 	{
 		out << "void " << (*it)->getName() << "(void)" << endl;
 		out << "{" << endl;
-		(*it)->genCCode(out,0);
+		(*it)->genCCode(out,rootContext,0);
 		out << "}" << endl;
 		out << endl;
 	}
 }
 
 /*******************  FUNCTION  *********************/
+void CMRProject::buildRootContext(CMRProjectContext& context)
+{
+	for (CMRProjectIteratorVector::iterator it = iterators.begin() ; it != iterators.end() ; ++it)
+		context.addEntry(*it);
+	for (CMRProjectConstantVector::iterator it = constants.begin() ; it != constants.end() ; ++it)
+		context.addEntry(*it);
+	for (CMRProjectDefinitionVector::iterator it = definitions.begin() ; it != definitions.end() ; ++it)
+		context.addEntry(*it);
+	for (CMRProjectVariableVector::iterator it = variables.begin() ; it != variables.end() ; ++it)
+	{
+		context.addEntry(*it);
+		context.addEntry(new CMRProjectAlias(*it,(*it)->shortName + "'",(*it)->longName + "Prim"));
+	}
+}
+
+/*******************  FUNCTION  *********************/
 void CMRProject::genCCode(ostream& out)
 {
+	//gen root context
+	CMRProjectContext rootContext(NULL);
+	buildRootContext(rootContext);
+	
 	genCCodeOfConsts(out);
 	genCCodeOfVariables(out);
-	genCCodeOfDefinitions(out);
-	genCCodeOfActions(out);
+	genCCodeOfDefinitions(out,rootContext);
+	genCCodeOfActions(out,rootContext);
 }
 
 /*******************  FUNCTION  *********************/

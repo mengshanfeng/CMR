@@ -21,12 +21,12 @@ CMRLatexEntity::CMRLatexEntity ( void )
 /*******************  FUNCTION  *********************/
 CMRLatexEntity::~CMRLatexEntity ( void )
 {
-	for(CMRLatexEntityVector::iterator it = subscript.childs.begin();it!=subscript.childs.end();++it)
-		delete *it;
-	for(CMRLatexEntityVector::iterator it = superscript.childs.begin();it!=superscript.childs.end();++it)
-		delete *it;
-	for(CMRLatexFormulasList::iterator it = params.begin();it!=params.end();++it)
-		delete *it;
+// 	for(CMRLatexEntityVector::iterator it = subscript.childs.begin();it!=subscript.childs.end();++it)
+// 		delete *it;
+// 	for(CMRLatexEntityVector::iterator it = superscript.childs.begin();it!=superscript.childs.end();++it)
+// 		delete *it;
+// 	for(CMRLatexFormulasList::iterator it = params.begin();it!=params.end();++it)
+// 		delete *it;
 }
 
 /*******************  FUNCTION  *********************/

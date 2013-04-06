@@ -20,7 +20,10 @@ typedef std::vector <CMREntity*> CMRProjectEntityList;
 /*********************  CLASS  **********************/
 struct CMRProjectContext
 {
-	CMRProjectContext(CMRProjectContext * parent) {this->parent = parent;};
+	CMRProjectContext(CMRProjectContext * parent);
+	CMREntity & addEntry(CMREntity * entry);
+	CMREntity* checkUnique(CMREntity & entry);
+	CMREntity * find(CMRLatexEntity & entity);
 	CMRProjectContext * parent;
 	CMRProjectEntityList entities;
 };

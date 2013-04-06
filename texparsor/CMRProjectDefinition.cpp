@@ -28,10 +28,10 @@ void CMRProjectDefinition::printDebug(void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::printCPPCode(void ) const
+void CMRProjectDefinition::printCPPCode(CMRProjectContext & context) const
 {
 	cout << "Definition : " << this->latexName << " : " << longName << endl;
-	ops.genCCode(cout,0);
+	ops.genCCode(cout,context,0);
 }
 
 /*******************  FUNCTION  *********************/

@@ -21,6 +21,7 @@ class CMRProjectIterator;
 class CMRProjectEquation;
 class CMRProjectAction;
 class CMRProjectDefinition;
+class CMRProjectContext;
 
 /*********************  TYPES  **********************/
 typedef std::vector <CMREntityConstant*> CMRProjectConstantVector;
@@ -28,6 +29,32 @@ typedef std::vector <CMRProjectVariable*> CMRProjectVariableVector;
 typedef std::vector <CMRProjectIterator*> CMRProjectIteratorVector;
 typedef std::vector <CMRProjectAction*> CMRProjectActionVector;
 typedef std::vector <CMRProjectDefinition*> CMRProjectDefinitionVector;
+
+/*********************  CLASS  **********************/
+class CMRProjectLocalVariable : public CMREntity
+{
+	public:
+		CMRProjectLocalVariable(const std::string& latexName, const std::string& longName) : CMREntity(latexName,longName) {};
+};
+
+/*********************  CLASS  **********************/
+class CMRProjectAlias : public CMREntity
+{
+	public:
+		CMRProjectAlias(CMREntity * entity, const std::string & alias,const std::string & longAlias) : CMREntity(entity->latexName,entity->longName) { this->real = entity; this->shortName = alias; this->latexEntity.name = alias; this->longName = longAlias;};
+		virtual bool match(CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) const
+		{
+			if (entity.name != shortName)
+				return false;
+			
+			CMRLatexEntity tmp = entity;
+			tmp.name = real->shortName;
+			return real->match(tmp,capture);
+		}
+		virtual std::ostream& genUsageCCode(std::ostream& out, CMRProjectContext& context, CMRLatexEntity& entity) const {return real->genUsageCCode(out,context,entity);};
+	private:
+		CMREntity * real;
+};
 
 /*********************  CLASS  **********************/
 class CMRProject
@@ -45,8 +72,9 @@ class CMRProject
 	protected:
 		void genCCodeOfConsts(std::ostream & out);
 		void genCCodeOfVariables(std::ostream & out);
-		void genCCodeOfDefinitions(std::ostream & out);
-		void genCCodeOfActions(std::ostream & out);
+		void genCCodeOfDefinitions(std::ostream& out, CMRProjectContext& rootContext);
+		void genCCodeOfActions(std::ostream& out, CMRProjectContext& rootContext);
+		void buildRootContext(CMRProjectContext & context);
 	private:
 		CMRProjectConstantVector constants;
 		CMRProjectVariableVector variables;

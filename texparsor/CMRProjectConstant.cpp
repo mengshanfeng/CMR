@@ -169,3 +169,34 @@ void CMREntityConstant::printCPPCode ( void ) const
 	}
 	cout << endl;
 }
+
+/*******************  FUNCTION  *********************/
+ostream& CMREntityConstant::genUsageCCode(ostream& out, CMRProjectContext& context, CMRLatexEntity& entity) const
+{
+	//extract matching
+	CMRIndiceCaptureMap capture;
+	
+	//extract matching
+	bool res = this->match(entity,capture);
+	assert(res == true);
+	
+	//gen usage
+	out << longName;
+	
+// 	for (CMRIndiceCaptureMap::iterator it = capture.begin() ; it != capture.end() ; ++it)
+// 		cerr << "==> " << it->first << " => " << it->second << endl;
+	
+	//matrix
+	if (dims.size() >= 2)
+	{
+		assert(capture.find("\\const_id_j") != capture.end());
+		out << "[ " << capture["\\const_id_j"] << " ]";
+	}
+	
+	//vector
+	if (dims.size() >= 1)
+	{
+		assert(capture.find("\\const_id_i") != capture.end());
+		out << "[ " << capture["\\const_id_i"] << " ]";
+	}
+}

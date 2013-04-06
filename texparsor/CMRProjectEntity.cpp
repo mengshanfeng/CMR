@@ -20,10 +20,10 @@ using namespace std;
 /*******************  FUNCTION  *********************/
 CMREntity::CMREntity ( const string& latexName, const string& longName )
 {
-	this->latexName = latexName;
 	this->longName = longName;
 	this->applyLatexName(latexName);
 	this->requiredIndices = 0;
+	this->captureExponent = false;
 }
 
 /*******************  FUNCTION  *********************/
@@ -65,6 +65,7 @@ void CMREntity::applyLatexName ( const string& latexName )
 	//get name and exponent
 	this->shortName = entity->name;
 	this->exponent = entity->superscriptTotalValue;
+	this->latexEntity = *entity;
 	
 	//extract subscript info
 	if (entity->subscript.childs.empty() == false)
@@ -77,6 +78,8 @@ void CMREntity::applyLatexName ( const string& latexName )
 			this->addIndice(entity->subscriptTotalValue,CMR_CAPTURE_NONE);
 		}
 	}
+	
+	this->latexName = latexName;
 }
 
 /*******************  FUNCTION  *********************/
@@ -93,7 +96,7 @@ void CMREntity::printDebug ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture )
+bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) const
 {
 	if (entity.name != shortName || (entity.superscriptTotalValue != exponent && exponent.empty() == false))
 		return false;
@@ -149,4 +152,10 @@ void CMREntity::madeCaptureIndice ( const string name, CMRCaptureType capture )
 	}
 	assert(false);
 	abort();
+}
+
+/*******************  FUNCTION  *********************/
+void CMREntity::setCaptureExponent(bool status)
+{
+	captureExponent = status;
 }

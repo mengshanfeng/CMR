@@ -121,7 +121,7 @@ int main(int argc,char ** argv)
 		cout << "===================================================" << endl;
 		CMRProject project;
 		CMREntityConstant & cst2 = project.addConstant("A_{eq}","toto");
-		cst2.addIndice("k",CMR_CAPTURE_REQUIRED);
+// 		cst2.addIndice("k",CMR_CAPTURE_REQUIRED);
 		//cst2.loadValues("1.1",0);
 		cst2.loadValues("1.1 ; 2.2 ; 3.3 ; 4.4 ; 5.5 ; 6.6 ; 7.7 ; 8.8 ; 9.9",1);
 		//cst2.loadValues("1.1 ; 1.2 ; 1.3 ; 1.4 \\\\ 2.1 ; 2.2 ; 2.3 ; 2.4 \\\\ 3.1 ; 3.2 ; 3.3 ; 3.4",2);
@@ -130,7 +130,7 @@ int main(int argc,char ** argv)
 		var2.addDim(9,"k",1);
 		
 		CMRProjectAction & ac = project.addAction("update_energy","update the energy");
-		ac.addEquation("d_{i,j}","density","4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*Z_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}}");
+		ac.addEquation("D'_{i,j,k}","density","4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}}");
 		project.printDebug();
 		project.replaceLoops();
 		project.printDebug();

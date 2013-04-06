@@ -45,15 +45,18 @@ class CMRProjectAction : public CMRCodeTree
 		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		void replaceLoops(int * tmpId);
-		void genCCode(std::ostream& out, int depth) const;
+		void genCCode(std::ostream& out, CMRProjectContext & context ,int depth) const;
 		void printDebug(int depth) const;
 		void insertAction(CMRProjectAction * action,CMRProjectCodeTreeInsert location);
 		const std::string & getName(void) const {return name;};
 		const std::string & getDescription(void) const {return description;};
+	protected:
+		void genEqCCode(std::ostream& out, CMRProjectContext & context ,int depth) const;
+		void genEqCCode(std::ostream& out, CMRProjectContext & context, CMRLatexEntity & entity) const;
 	private:
-	CMRProjectEquation * eq;
-	std::string name;
-	std::string description;
+		CMRProjectEquation * eq;
+		std::string name;
+		std::string description;
 };
 
 #endif //CMR_PROJECT_ACTION_H
