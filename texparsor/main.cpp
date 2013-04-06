@@ -19,6 +19,7 @@
 #include "CMRProjectVariable.h"
 #include "CMRProjectAction.h"
 #include "CMRProject.h"
+#include "CMRCodeTree.h"
 
 /********************  NAMESPACE  *******************/
 using namespace std;

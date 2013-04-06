@@ -15,36 +15,30 @@
 #include <list>
 #include "CMRProjectContext.h"
 #include "CMRProjectEquation.h"
-
-/*********************  TYPES  **********************/
-enum CMRProjectActionInsert
-{
-	CMR_ACTION_INSERT_FIRST_CHILD,
-	CMR_ACTION_INSERT_LAST_CHILD,
-	CMR_ACTION_INSERT_FIRST,
-	CMR_ACTION_INSERT_LAST,
-	CMR_ACTION_INSERT_AFTER,
-	CMR_ACTION_INSERT_BEFORE,
-	CMR_ACTION_INSERT_INPLACE
-};
+#include "CMRCodeTree.h"
 
 /*********************  CLASS  *********************/
-class CMRProjectAction
+class CMRProjectAction : public CMRCodeTree
 {
 	public:
+		class Iterator : public CMRCodeTree::Iterator
+		{
+			public:
+				Iterator(CMRProjectAction * current) :CMRCodeTree::Iterator(current){};
+				Iterator(CMRCodeTree::Iterator it) :CMRCodeTree::Iterator(it) {};
+				CMRProjectAction & operator*(void) {return *((CMRProjectAction*)current);};
+				CMRProjectAction * operator->(void) {return ((CMRProjectAction*)current);};
+				Iterator & operator = (CMRCodeTree::Iterator it) {*(CMRCodeTree::Iterator*)this = it;};
+		};
+	public:
 		CMRProjectAction(std::string name,std::string descr = "");
-		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectActionInsert location = CMR_ACTION_INSERT_LAST_CHILD);
-		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectActionInsert location = CMR_ACTION_INSERT_LAST_CHILD);
+		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		void replaceLoops(void);
 		void printDebug(int depth);
-		void insertAction(CMRProjectAction * action,CMRProjectActionInsert location);
+		void insertAction(CMRProjectAction * action,CMRProjectCodeTreeInsert location);
 	private:
 	CMRProjectEquation * eq;
-	CMRProjectAction * next;
-	CMRProjectAction * prev;
-	CMRProjectAction * parent;
-	CMRProjectAction * firstChild;
-	CMRProjectAction * lastChild;
 	std::string name;
 	std::string description;
 };
