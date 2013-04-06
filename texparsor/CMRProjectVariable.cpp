@@ -40,6 +40,39 @@ void CMRProjectVariable::addDim ( int size, const string& name,int start )
 }
 
 /*******************  FUNCTION  *********************/
+ostream& CMRProjectVariable::genCPPAccessorDefinition(ostream& out)
+{
+	out << "\t\t\tCMRCellAccessor<" << type;
+	for (int i = 0 ; i < dims.size() ; i++)
+		out << "[" << dims[i] << "]";
+	out << ",CMRMemoryModelRowMajor> " << longName << ";" << endl;
+	return out;
+}
+
+/*******************  FUNCTION  *********************/
+ostream& CMRProjectVariable::genCPPAccessorAddVar(ostream& out)
+{
+	//definition
+	out << "\t//define variable " << latexName << endl;
+	out << "\tthis->addVariable(\"" << longName << "\",sizeof(" << getTypeWithDims() << ")," << ghostDepths << ");" << endl;
+	return out;
+}
+
+/*******************  FUNCTION  *********************/
+ostream& CMRProjectVariable::genCPPAccessorConstrSys(ostream& out,int id)
+{
+	out << longName << "*(sys.getDomain(" << id << ",tstep)),x,y,absolute)" << endl;
+	return out;
+}
+
+/*******************  FUNCTION  *********************/
+ostream& CMRProjectVariable::genCPPAccessorConstrAcc(ostream& out)
+{
+	out << longName << "(acc." << longName << ",x,y,absolute)" << endl;
+	return out;
+}
+
+/*******************  FUNCTION  *********************/
 void CMRProjectVariable::printCPPCode ( void ) const
 {
 	//definition
@@ -55,6 +88,8 @@ void CMRProjectVariable::printCPPCode ( void ) const
 	
 	//build local accessor from parent accessor
 	cout << longName << "(acc.directions,x,y,absolute)" << endl;
+	
+	cout << endl;
 }
 
 /*******************  FUNCTION  *********************/

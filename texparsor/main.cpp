@@ -75,46 +75,46 @@ int main(int argc,char ** argv)
 		printf("================================================\n");
 	} else {
 		///////////////////////////////////////////////////////////////////////////////////////////////////
-		CMREntityConstant cst("A_{eq,i}^{2*4}","toto");
-		cst.addIndice("k",CMR_CAPTURE_REQUIRED);
-		//cst.loadValues("1.1",0);
-		//cst.loadValues("1.1 ; 2.2 ; 3.3",1);
-		cst.loadValues("1.1 ; 1.2 ; 1.3 ; 1.4 \\\\ 2.1 ; 2.2 ; 2.3 ; 2.4 \\\\ 3.1 ; 3.2 ; 3.3 ; 3.4",2);
-		cst.printDebug();
-		cst.printCPPCode();
-		
-		CMRLatexFormulas f;
-		cmrParseLatexFormula(f,"A^2_{eq,i+1,4,j,k}");
-		
-		CMRIndiceCaptureMap capture;
-		printf("Matching : %d\n",cst.match(*f.childs[0],capture));
-		for (CMRIndiceCaptureMap::iterator it = capture.begin() ; it != capture.end() ; ++it)
-		{
-			printf("Capture %s => %s\n",it->first.c_str(),it->second.c_str());
-		}
+// 		CMREntityConstant cst("A_{eq,i}^{2*4}","toto");
+// 		cst.addIndice("k",CMR_CAPTURE_REQUIRED);
+// 		//cst.loadValues("1.1",0);
+// 		//cst.loadValues("1.1 ; 2.2 ; 3.3",1);
+// 		cst.loadValues("1.1 ; 1.2 ; 1.3 ; 1.4 \\\\ 2.1 ; 2.2 ; 2.3 ; 2.4 \\\\ 3.1 ; 3.2 ; 3.3 ; 3.4",2);
+// 		cst.printDebug();
+// 		cst.printCPPCode();
+// 		
+// 		CMRLatexFormulas f;
+// 		cmrParseLatexFormula(f,"A^2_{eq,i+1,4,j,k}");
+// 		
+// 		CMRIndiceCaptureMap capture;
+// 		printf("Matching : %d\n",cst.match(*f.childs[0],capture));
+// 		for (CMRIndiceCaptureMap::iterator it = capture.begin() ; it != capture.end() ; ++it)
+// 		{
+// 			printf("Capture %s => %s\n",it->first.c_str(),it->second.c_str());
+// 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////
-		CMRProjectVariable var("D_{i,j,k}","Directions","int");
-		var.addDim(9,"k",1);
-		var.printDebug();
-		var.printCPPCode();
+// 		CMRProjectVariable var("D_{i,j,k}","Directions","int");
+// 		var.addDim(9,"k",1);
+// 		var.printDebug();
+// 		var.printCPPCode();
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////
-		CMRProjectIterator iter("k","k",1,9);
-		iter.printDebug();
-		iter.printCPPCode();
+// 		CMRProjectIterator iter("k","k",1,9);
+// 		iter.printDebug();
+// 		iter.printCPPCode();
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////
-		CMRProjectEquation eq("d_{i,j}","density","\\sum_k{D_{i,j,k}}");
-		eq.printDebug();
-		CMRLatexEntity * term = eq.extractNextInnerLoop();
-		if (term == NULL)
-		{
-			cout << "None" << endl;
-		} else {
-			cout << "Capture inner loop : " << term->totalValue << endl;
-		}
-		convertLoopToEq(term)->printDebug();
+// 		CMRProjectEquation eq("d_{i,j}","density","\\sum_k{D_{i,j,k}}");
+// 		eq.printDebug();
+// 		CMRLatexEntity * term = eq.extractNextInnerLoop();
+// 		if (term == NULL)
+// 		{
+// 			cout << "None" << endl;
+// 		} else {
+// 			cout << "Capture inner loop : " << term->totalValue << endl;
+// 		}
+// 		convertLoopToEq(term)->printDebug();
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////
 		//assemble into project
@@ -126,7 +126,7 @@ int main(int argc,char ** argv)
 		cst2.loadValues("1.1 ; 2.2 ; 3.3 ; 4.4 ; 5.5 ; 6.6 ; 7.7 ; 8.8 ; 9.9",1);
 		//cst2.loadValues("1.1 ; 1.2 ; 1.3 ; 1.4 \\\\ 2.1 ; 2.2 ; 2.3 ; 2.4 \\\\ 3.1 ; 3.2 ; 3.3 ; 3.4",2);
 		
-		CMRProjectVariable & var2 = project.addvariable("D_{i,j,k}","Directions","int");
+		CMRProjectVariable & var2 = project.addvariable("D_{i,j,k}","directions","int");
 		var2.addDim(9,"k",1);
 		
 		CMRProjectAction & ac = project.addAction("update_energy","update the energy");

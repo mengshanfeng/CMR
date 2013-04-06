@@ -157,7 +157,7 @@ void CMREntityConstant::printCPPCode ( void ) const
 		}
 		if (dims.size() == 2)
 			cout << "}";
-		cout << "}";
+		cout << "};";
 		cout << endl;
 		
 		if (dims.size() == 1)
@@ -167,4 +167,5 @@ void CMREntityConstant::printCPPCode ( void ) const
 	} else {
 		cout << "const float " << longName << "=" << values[0] << ";" << endl;
 	}
+	cout << endl;
 }

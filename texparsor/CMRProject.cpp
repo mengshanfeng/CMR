@@ -66,8 +66,95 @@ void CMRProject::printDebug(void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProject::genCCode(ostream& out)
+void CMRProject::genCCodeOfConsts(ostream& out)
 {
+	if (constants.empty())
+		return;
+
+	out << "/************************ CONSTS **********************/" << endl;
+	for (CMRProjectConstantVector::iterator it = constants.begin() ; it != constants.end() ; ++it)
+		(*it)->printCPPCode();
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject::genCCodeOfVariables(ostream& out)
+{
+	if (variables.empty())
+		return;
+
+	out << "/********************** VARIABLES *********************/" << endl;
+	out << "class VarSystem : public CMRVarSystem" << endl;
+	out << "{" << endl;
+	out << "\tpublic:" << endl;
+	out << "\t\tstruct CellAccessor" << endl;
+	out << "\t\t{" << endl;
+	out << "\t\t\tCellAccessor(CMRVarSystem & sys,int tstep,int x,int y,bool absolute = true);" << endl;
+	out << "\t\t\tCellAccessor(CellAccessor & acc,int x,int y,bool absolute = false);" << endl;
+	
+	for (CMRProjectVariableVector::iterator it = variables.begin() ; it != variables.end() ; ++it)
+		(*it)->genCPPAccessorDefinition(out);
+
+	out << "\t\t};" << endl;
+	out << "\tpublic:" << endl;
+	out << "\t\tVarSystem(CMRDomainBuilder * builder);" << endl;
+	out << "};" << endl;
+	out << endl;
+
+	out << "VarSystem::VarSystem ( CMRDomainBuilder * builder)" << endl;
+	out << "\t:CMRVarSystem(builder)" << endl;
+	out << "{" << endl;
+	
+	for (CMRProjectVariableVector::iterator it = variables.begin() ; it != variables.end() ; ++it)
+		(*it)->genCPPAccessorAddVar(out);
+
+	out << "}" << endl;
+	out << endl;
+	out << "VarSystem::CellAccessor::CellAccessor (CMRVarSystem & sys,int tstep,int x,int y,bool absolute)" << endl;
+	
+	int cnt = 0;
+	for (CMRProjectVariableVector::iterator it = variables.begin() ; it != variables.end() ; ++it)
+	{
+		if (cnt == 0)
+			out << "\t:";
+		else
+			out << "\t,";
+		(*it)->genCPPAccessorConstrSys(out,cnt++);
+		out << endl;
+	}
+
+	out << "{}" << endl;
+	out << endl;
+	out << "VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y,bool absolute)" << endl;
+	
+	cnt = 0;
+	for (CMRProjectVariableVector::iterator it = variables.begin() ; it != variables.end() ; ++it)
+	{
+		if (cnt == 0)
+			out << "\t:";
+		else
+			out << "\t,";
+		(*it)->genCPPAccessorConstrAcc(out);
+		out << endl;
+	}
+	
+	out << "{}" << endl;
+	out << endl;	
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject::genCCodeOfDefinitions(ostream& out)
+{
+	if (definitions.empty())
+		return;
+	out << "/********************* DEFINITIONS ********************/" << endl;
+	for (CMRProjectDefinitionVector::iterator it = definitions.begin() ; it != definitions.end() ; ++it)
+		(*it)->printCPPCode();
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject::genCCodeOfActions(ostream& out)
+{
+	out << "/*********************** ACTIONS *********************/" << endl;
 	for (CMRProjectActionVector::iterator it = actions.begin() ; it != actions.end() ; ++it)
 	{
 		out << "void " << (*it)->getName() << "(void)" << endl;
@@ -76,6 +163,15 @@ void CMRProject::genCCode(ostream& out)
 		out << "}" << endl;
 		out << endl;
 	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject::genCCode(ostream& out)
+{
+	genCCodeOfConsts(out);
+	genCCodeOfVariables(out);
+	genCCodeOfDefinitions(out);
+	genCCodeOfActions(out);
 }
 
 /*******************  FUNCTION  *********************/

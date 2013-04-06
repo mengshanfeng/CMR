@@ -42,6 +42,11 @@ class CMRProject
 		void replaceLoops(void);
 		void genCCode(std::ostream & out);
 		void printDebug(void);
+	protected:
+		void genCCodeOfConsts(std::ostream & out);
+		void genCCodeOfVariables(std::ostream & out);
+		void genCCodeOfDefinitions(std::ostream & out);
+		void genCCodeOfActions(std::ostream & out);
 	private:
 		CMRProjectConstantVector constants;
 		CMRProjectVariableVector variables;
