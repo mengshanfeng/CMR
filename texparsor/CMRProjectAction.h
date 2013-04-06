@@ -34,7 +34,8 @@ class CMRProjectAction : public CMRCodeTree
 		CMRProjectAction(std::string name,std::string descr = "");
 		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
-		void replaceLoops(void);
+		void replaceLoops(int * tmpId);
+		void genCCode(std::ostream &out,int depth);
 		void printDebug(int depth);
 		void insertAction(CMRProjectAction * action,CMRProjectCodeTreeInsert location);
 	private:

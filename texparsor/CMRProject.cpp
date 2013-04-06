@@ -49,7 +49,8 @@ CMRProjectEquation& CMRProject::addEquation(const string& latexName, const strin
 /*******************  FUNCTION  *********************/
 void CMRProject::replaceLoops(void )
 {
-	mainAction.replaceLoops();
+	int id = 0;
+	mainAction.replaceLoops(&id);
 }
 
 /*******************  FUNCTION  *********************/
@@ -59,4 +60,10 @@ void CMRProject::printDebug(void )
 	cout << "Actions : " << endl;
 	mainAction.printDebug(1);
 	cout << "=============================================" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject::genCCode(ostream& out)
+{
+	mainAction.genCCode(out,0);
 }

@@ -133,6 +133,10 @@ int main(int argc,char ** argv)
 		project.printDebug();
 		project.replaceLoops();
 		project.printDebug();
+		
+		printf("================================================\n");
+		project.genCCode(cout);
+		printf("================================================\n");
 	}
 
 	return 0;

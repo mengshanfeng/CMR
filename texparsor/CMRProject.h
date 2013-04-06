@@ -38,7 +38,7 @@ class CMRProject
 		CMRProjectAction & addAction(std::string name,std::string descr = "");
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute );
 		void replaceLoops(void);
-		
+		void genCCode(std::ostream & out);
 		void printDebug(void);
 	private:
 		CMRProjectConstantVector constants;
