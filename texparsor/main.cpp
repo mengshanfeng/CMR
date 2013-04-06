@@ -129,7 +129,8 @@ int main(int argc,char ** argv)
 		CMRProjectVariable & var2 = project.addvariable("D_{i,j,k}","Directions","int");
 		var2.addDim(9,"k",1);
 		
-		project.addEquation("d_{i,j}","density","4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*Z_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}}");
+		CMRProjectAction & ac = project.addAction("update_energy","update the energy");
+		ac.addEquation("d_{i,j}","density","4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*Z_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}}");
 		project.printDebug();
 		project.replaceLoops();
 		project.printDebug();

@@ -87,7 +87,7 @@ void CMRProjectAction::replaceLoops(int* tmpId)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::printDebug(int depth)
+void CMRProjectAction::printDebug(int depth) const
 {
 	for (int i = 0 ; i < depth ; i++)
 			cout << "\t";
@@ -99,7 +99,7 @@ void CMRProjectAction::printDebug(int depth)
 			cout << name << " - " << description << " - " << eq->compute << ":" << endl;
 		else
 			cout << name << " - " << description << ":" << endl;
-		for (Iterator it = getFirstChild() ; ! it.isEnd() ; ++it)
+		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
 			it->printDebug(depth+1);
 	}
 }
@@ -121,18 +121,21 @@ std::string genCCodeIndent(int depth)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genCCode(std::ostream & out,int depth)
+void CMRProjectAction::genCCode(std::ostream & out,int depth) const
 {
 	//cases
-	if (name == "cmrMainLoop" && description == "cmrMainLoop")
+	if (depth == 0)
 	{
+		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
+			it->genCCode(out,depth+1);
+	}else if (name == "cmrMainLoop" && description == "cmrMainLoop") {
 		out << genCCodeIndent(depth) << "//mainLoop" << endl;
-		for (Iterator it = getFirstChild() ; ! it.isEnd() ; ++it)
+		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
 			it->genCCode(out,depth+1);
 	} else if (name == "cmrSubBlock" && description == "cmrLoop") {
 		out << genCCodeIndent(depth) << "for (" << eq->compute << " = 0 ; " << eq->compute << " < 9 ; " << eq->compute << "++ )" <<endl;
 		out << genCCodeIndent(depth) << "{" << endl;
-		for (Iterator it = getFirstChild() ; ! it.isEnd() ; ++it)
+		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
 			it->genCCode(out,depth+1);
 		out << genCCodeIndent(depth) << "}" << endl;
 	} else if (name == "cmrEquation") {

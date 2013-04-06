@@ -71,6 +71,48 @@ CMRCodeTree::Iterator CMRCodeTree::getParentFirst(void )
 }
 
 /*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator CMRCodeTree::getCurrent(void ) const
+{
+	ConstIterator it(this);
+	return it;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator CMRCodeTree::getFirstChild(void ) const
+{
+	ConstIterator it(firstChild);
+	return it;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator CMRCodeTree::getLastChild(void ) const
+{
+	ConstIterator it(lastChild);
+	return it;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator CMRCodeTree::getEnd(void ) const
+{
+	ConstIterator it(NULL);
+	return it;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator CMRCodeTree::getParent(void ) const
+{
+	ConstIterator it(parent);
+	return it;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator CMRCodeTree::getParentFirst(void ) const
+{
+	assert(parent != NULL);
+	ConstIterator it(parent->firstChild);
+}
+
+/*******************  FUNCTION  *********************/
 void CMRCodeTree::clear(void )
 {
 	CMRCodeTree * cur = firstChild;
@@ -238,6 +280,104 @@ CMRCodeTree::Iterator& CMRCodeTree::Iterator::operator--(void )
 
 /*******************  FUNCTION  *********************/
 bool CMRCodeTree::Iterator::operator==(const CMRCodeTree::Iterator& it) const
+{
+	return current == it.current;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*******************  FUNCTION  *********************/
+bool CMRCodeTree::ConstIterator::hasChild(void ) const
+{
+	assert(current != NULL);
+	return current->firstChild != NULL;
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRCodeTree::ConstIterator::hasNext(void ) const
+{
+	assert(current != NULL);
+	return current->next != NULL;
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRCodeTree::ConstIterator::hasParent(void ) const
+{
+	assert(current != NULL);
+	return current->parent != NULL;
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRCodeTree::ConstIterator::hasPrev(void ) const
+{
+	assert(current != NULL);
+	return current->prev != NULL;
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRCodeTree::ConstIterator::isEnd(void ) const
+{
+	return current == NULL;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator::ConstIterator(const CMRCodeTree* current)
+{
+	this->current = current;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator& CMRCodeTree::ConstIterator::moveDown(void )
+{
+	assert(current != NULL);
+	current = current->firstChild;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator& CMRCodeTree::ConstIterator::moveNext(void )
+{
+	assert(current != NULL);
+	current = current->next;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator& CMRCodeTree::ConstIterator::movePrev(void )
+{
+	assert(current != NULL);
+	current = current->prev;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator& CMRCodeTree::ConstIterator::moveUp(void )
+{
+	assert(current != NULL);
+	current = current->parent;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator& CMRCodeTree::ConstIterator::operator++(void )
+{
+	moveNext();
+}
+
+/*******************  FUNCTION  *********************/
+CMRCodeTree::ConstIterator& CMRCodeTree::ConstIterator::operator--(void )
+{
+	movePrev();
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRCodeTree::ConstIterator::operator==(const CMRCodeTree::ConstIterator& it) const
 {
 	return current == it.current;
 }

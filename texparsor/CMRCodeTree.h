@@ -51,6 +51,26 @@ class CMRCodeTree
 			protected:
 				CMRCodeTree * current;
 		};
+		
+		class ConstIterator
+		{
+			public:
+				ConstIterator(const CMRCodeTree * current);
+				ConstIterator & operator++(void);
+				ConstIterator & operator--(void);
+				ConstIterator & moveNext(void);
+				ConstIterator & movePrev(void);
+				ConstIterator & moveUp(void);
+				ConstIterator & moveDown(void);
+				bool hasNext(void) const;
+				bool hasPrev(void) const;
+				bool hasParent(void) const;
+				bool hasChild(void) const;
+				bool isEnd(void) const;
+				bool operator == (const ConstIterator & it) const;
+			protected:
+				const CMRCodeTree * current;
+		};
 	public:
 		CMRCodeTree(void);
 		virtual ~CMRCodeTree(void);
@@ -63,6 +83,12 @@ class CMRCodeTree
 		Iterator getParent(void);
 		Iterator getParentFirst(void);
 		Iterator getEnd(void);
+		ConstIterator getFirstChild(void) const;
+		ConstIterator getLastChild(void) const;
+		ConstIterator getCurrent(void) const;
+		ConstIterator getParent(void) const;
+		ConstIterator getParentFirst(void) const;
+		ConstIterator getEnd(void) const;
 	private:
 		CMRCodeTree(const CMRCodeTree & orig);
 		CMRCodeTree & operator=(const CMRCodeTree & orig);

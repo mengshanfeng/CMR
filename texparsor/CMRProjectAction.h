@@ -30,14 +30,26 @@ class CMRProjectAction : public CMRCodeTree
 				CMRProjectAction * operator->(void) {return ((CMRProjectAction*)current);};
 				Iterator & operator = (CMRCodeTree::Iterator it) {*(CMRCodeTree::Iterator*)this = it;};
 		};
+		
+		class ConstIterator : public CMRCodeTree::ConstIterator
+		{
+			public:
+				ConstIterator(const CMRProjectAction * current) :CMRCodeTree::ConstIterator(current){};
+				ConstIterator(CMRCodeTree::ConstIterator it) :CMRCodeTree::ConstIterator(it) {};
+				const CMRProjectAction & operator*(void) {return *((const CMRProjectAction*)current);};
+				const CMRProjectAction * operator->(void) {return ((const CMRProjectAction*)current);};
+				ConstIterator & operator = (CMRCodeTree::ConstIterator it) {*(CMRCodeTree::ConstIterator*)this = it;};
+		};
 	public:
 		CMRProjectAction(std::string name,std::string descr = "");
 		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		void replaceLoops(int * tmpId);
-		void genCCode(std::ostream &out,int depth);
-		void printDebug(int depth);
+		void genCCode(std::ostream& out, int depth) const;
+		void printDebug(int depth) const;
 		void insertAction(CMRProjectAction * action,CMRProjectCodeTreeInsert location);
+		const std::string & getName(void) const {return name;};
+		const std::string & getDescription(void) const {return description;};
 	private:
 	CMRProjectEquation * eq;
 	std::string name;
