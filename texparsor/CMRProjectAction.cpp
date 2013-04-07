@@ -16,6 +16,7 @@
 #include "CMRProject.h"
 #include "parsor/CMRTexParsor.h"
 #include "parsor/CMRParsorBasics.h"
+#include "CMRProjectIterator.h"
 
 using namespace std;
 
@@ -43,6 +44,13 @@ CMRProjectAction& CMRProjectAction::addSubBlock ( string loopDescr, string param
 	tmpBlock->eq = new CMRProjectEquation(parameter,"cmrIndice",parameter);
 	insertAction(tmpBlock,location);
 	return *tmpBlock;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectAction& CMRProjectAction::addIteratorLoop ( const string& iterator ,CMRProjectCodeTreeInsert location)
+{
+	CMRProjectAction & ac = this->addSubBlock("cmrIteratorLoop",iterator,location);
+	return ac;
 }
 
 /*******************  FUNCTION  *********************/
@@ -84,7 +92,8 @@ void CMRProjectAction::replaceLoops(int* tmpId)
 			(*tmpId)++;
 			this->addEquation(tmpName,longTmpName,"0",CMR_INSERT_BEFORE);
 			cout << "Replace loops with iterator (" << term->subscriptTotalValue << ") and core (" << term->params[0]->string << ")" << endl;
-			CMRProjectAction & ac = this->addSubBlock("cmrLoop",term->subscriptTotalValue,CMR_INSERT_BEFORE);
+ 			CMRProjectAction & ac = addIteratorLoop(term->subscriptTotalValue,CMR_INSERT_BEFORE);
+// 			CMRProjectAction & ac = this->addSubBlock("cmrIteratorLoop",term->subscriptTotalValue,CMR_INSERT_BEFORE);
 			ac.addEquation(tmpName,longTmpName,string(tmpName) + op + term->params[0]->string);
 			cmrParseLatexFormula(f,tmpName);
 			*term = *f.childs[0];
@@ -192,27 +201,57 @@ void CMRProjectAction::genEqCCode(ostream& out, CMRProjectContext& context, int 
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genCCode(std::ostream & out,CMRProjectContext & context,int depth) const
+void CMRProjectAction::genItLoopCCode ( ostream& out, CMRProjectContext& context, int depth ) const
 {
 	CMRProjectContext localContext(&context);
+
+	//errors
+	assert(name == "cmrSubBlock" && description == "cmrIteratorLoop");
 	
-	//cases
-	if (depth == 0)
+	//search the related iterator definition
+	CMREntity * entity = context.find(eq->latexEntity);
+	if (entity == NULL)
 	{
-		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
-			it->genCCode(out,context,depth+1);
+		cerr << "Can't find the definition of iterator " << eq->compute << " in current context." << endl;
+		abort();
+	}
+
+	CMRProjectIterator * iterator = dynamic_cast<CMRProjectIterator*>(entity);
+	if (iterator == NULL)
+	{
+		cerr << "Cuation, expect iterator " << eq->compute << " but get another type." << endl;
+		abort();
+	}
+	assert(iterator != NULL);
+	
+	CMRProjectLocalVariable localVar(eq->compute,eq->compute);
+	localContext.addEntry(&localVar);
+	out << genCCodeIndent(depth) << "for (int " << eq->compute << " = " << iterator->start << " ; " << eq->compute << " < " << iterator->end << " ; " << eq->compute << "++ )" <<endl;
+	out << genCCodeIndent(depth) << "{" << endl;
+	for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
+		it->genCCode(out,localContext,depth+1);
+	out << genCCodeIndent(depth) << "}" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::genRootElemCCode ( ostream& out, CMRProjectContext& context, int depth ) const
+{
+	CMRProjectContext localContext(&context);
+	for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
+		it->genCCode(out,localContext,depth+1);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::genCCode(std::ostream & out,CMRProjectContext & context,int depth) const
+{
+	//cases
+	if (depth <= 1)
+	{
+		genRootElemCCode(out,context,depth);
 	}else if (name == "cmrMainLoop" && description == "cmrMainLoop") {
-		out << genCCodeIndent(depth) << "//mainLoop" << endl;
-		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
-			it->genCCode(out,localContext,depth+1);
-	} else if (name == "cmrSubBlock" && description == "cmrLoop") {
-		CMRProjectLocalVariable localVar(eq->compute,eq->compute);
-		localContext.addEntry(&localVar);
-		out << genCCodeIndent(depth) << "for (int " << eq->compute << " = 0 ; " << eq->compute << " < 9 ; " << eq->compute << "++ )" <<endl;
-		out << genCCodeIndent(depth) << "{" << endl;
-		for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
-			it->genCCode(out,localContext,depth+1);
-		out << genCCodeIndent(depth) << "}" << endl;
+		genRootElemCCode(out,context,depth);
+	} else if (name == "cmrSubBlock" && description == "cmrIteratorLoop") {
+		genItLoopCCode(out,context,depth);
 	} else if (name == "cmrEquation") {
 		genEqCCode(out,context,depth);
 	} else {

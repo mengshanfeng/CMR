@@ -157,10 +157,13 @@ void CMRProject::genCCodeOfActions(ostream& out,CMRProjectContext & rootContext)
 	out << "/*********************** ACTIONS *********************/" << endl;
 	for (CMRProjectActionVector::iterator it = actions.begin() ; it != actions.end() ; ++it)
 	{
-		out << "void " << (*it)->getName() << "(void)" << endl;
+		out << "struct Action" << (*it)->getName() << endl;
 		out << "{" << endl;
-		(*it)->genCCode(out,rootContext,0);
-		out << "}" << endl;
+		out << "\tstatic void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)" << endl;
+		out << "\t{" << endl;
+		(*it)->genCCode(out,rootContext,1);
+		out << "\t}" << endl;
+		out << "};" << endl;
 		out << endl;
 	}
 }

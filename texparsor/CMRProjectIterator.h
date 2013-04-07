@@ -20,7 +20,7 @@ class CMRProjectIterator : public CMREntity
 		CMRProjectIterator ( const std::string& latexName, const std::string& longName ,int start, int end);
 		void printDebug(void) const;
 		void printCPPCode(void) const;
-	private:
+// 	private:
 		int start;
 		int end;
 };
