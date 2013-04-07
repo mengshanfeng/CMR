@@ -109,7 +109,7 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) co
 		{
 			if (indicesCapture[i] != CMR_CAPTURE_NONE)
 			{
-				capture[indices[i]] = tmp[i]->string;
+				capture[indices[i]] = tmp[i];
 			} else {
 				if (tmp[i]->string != indices[i])
 				{
@@ -120,7 +120,7 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) co
 		}
 		//capture exponent
 		if (entity.superscriptTotalValue.empty() == false && exponent.empty() == true)
-			capture["cmrExponent"] = entity.superscriptTotalValue;
+			capture["cmrExponent"] = &entity.superscript;
 		return true;
 	} else {
 		fprintf(stderr,"Caution, not same indices on %s for matching %s\n",entity.getString().c_str(),latexName.c_str());

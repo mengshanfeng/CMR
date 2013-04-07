@@ -13,6 +13,7 @@
 #include <sstream>
 #include <cstdlib>
 #include "CMRProjectVariable.h"
+#include "CMRGenCode.h"
 
 using namespace std;
 
@@ -121,10 +122,15 @@ ostream& CMRProjectVariable::genUsageCCode(ostream& out, CMRProjectContext& cont
 	bool res = match(tmp,capture);
 	assert(res == true);
 	
-	out << longName << "(x,y)";
+	out << longName << "( ";
+	cmrGenEqCCode(out,context,*capture["i"]) << ", ";
+	cmrGenEqCCode(out,context,*capture["j"]) << ")";
 	
 	for (int i = indices.size() - 1 ; i >= 2 ; i--)
-		out << "[ " << capture[indices[i]] << " ]";
+	{
+		out << "[ ";
+		cmrGenEqCCode(out,context,*capture[indices[i]]) << "]";
+	}
 	
 	return out;
 }

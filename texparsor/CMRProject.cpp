@@ -195,6 +195,8 @@ void CMRProject::buildRootContext(CMRProjectContext& context)
 		context.addEntry(*it);
 		context.addEntry(new CMRProjectAlias(*it,(*it)->shortName + "'",(*it)->longName + "Prim"));
 	}
+	context.addEntry(new CMRProjectLocalVariable("i","x"));
+	context.addEntry(new CMRProjectLocalVariable("j","y"));
 }
 
 /*******************  FUNCTION  *********************/

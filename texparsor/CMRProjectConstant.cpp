@@ -14,6 +14,7 @@
 #include <iostream>
 #include "CMRProjectConstant.h"
 #include "parsor/CMRParsorBasics.h"
+#include "CMRGenCode.h"
 
 /********************  NAMESPACE  *******************/
 using namespace std;
@@ -190,14 +191,16 @@ ostream& CMREntityConstant::genUsageCCode(ostream& out, CMRProjectContext& conte
 	if (dims.size() >= 2)
 	{
 		assert(capture.find("\\const_id_j") != capture.end());
-		out << "[ " << capture["\\const_id_j"] << " ]";
+		out << "[ ";
+		cmrGenEqCCode(out,context, *capture["\\const_id_j"]) << "]";
 	}
 	
 	//vector
 	if (dims.size() >= 1)
 	{
 		assert(capture.find("\\const_id_i") != capture.end());
-		out << "[ " << capture["\\const_id_i"] << " ]";
+		out << "[ ";
+		cmrGenEqCCode(out,context, *capture["\\const_id_i"]) << "]";
 	}
 	
 	return out;

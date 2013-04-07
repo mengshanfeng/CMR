@@ -54,8 +54,6 @@ class CMRProjectAction : public CMRCodeTree
 		bool hasEquation(void) const {return eq != NULL;};
 	protected:
 		void genEqCCode(std::ostream& out, CMRProjectContext & context ,int depth) const;
-		void genEqCCode(std::ostream& out, CMRProjectContext & context, CMRLatexEntity & entity) const;
-		void genEqCCode(std::ostream& out, CMRProjectContext & context, CMRLatexFormulas & formula) const;
 		void genItLoopCCode(std::ostream& out, CMRProjectContext & context ,int depth) const;
 		void genRootElemCCode(std::ostream& out, CMRProjectContext & context ,int depth) const;
 	private:

@@ -30,7 +30,7 @@ typedef std::vector<std::string> CMREntityIndiceVector;
 typedef std::vector<CMRCaptureType> CMREntityIndiceCaptureVector;
 typedef std::vector<int> CMRConstantDimensionsVector;
 typedef std::vector<double> CMRConstantValueVector;
-typedef std::map<std::string,std::string> CMRIndiceCaptureMap;
+typedef std::map<std::string,CMRLatexFormulas *> CMRIndiceCaptureMap;
 
 /*********************  CLASS  **********************/
 class CMREntity
