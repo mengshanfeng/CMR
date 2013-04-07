@@ -10,6 +10,7 @@
 /********************  HEADERS  *********************/
 #include <cstdio>
 #include <iostream>
+#include <cstdlib>
 #include "CMRProjectIterator.h"
 
 using namespace std;
@@ -33,4 +34,11 @@ void CMRProjectIterator::printDebug ( void ) const
 void CMRProjectIterator::printCPPCode ( void ) const
 {
 	cout << "int " << longName << " = " << start << " ; " << longName << " <= " << end << " ; " << longName << "++" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+ostream& CMRProjectIterator::genUsageCCode ( ostream& out, CMRProjectContext& context, CMRLatexEntity& entity ) const
+{
+	cerr << "Error, iterator may not be used out of loop definition : " << latexName << " : " << start << " -> " << end << endl;
+	abort();
 }

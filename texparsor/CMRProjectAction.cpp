@@ -143,10 +143,20 @@ std::string genCCodeIndent(int depth)
 /*******************  FUNCTION  *********************/
 bool latexEntityIsInteger(CMRLatexEntity & entity)
 {
+	if (entity.totalValue.empty() == true)
+		return false;
 	for (int i = 0 ; i < entity.totalValue.size() ; i++)
 		if (!cmrIsNum(entity.totalValue[i]))
 			return false;
 	return true;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::genEqCCode ( ostream& out, CMRProjectContext& context, CMRLatexFormulas& formula ) const
+{
+	CMRLatexEntityVector & elems = formula.childs;
+	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
+		genEqCCode(out,context,**it);
 }
 
 /*******************  FUNCTION  *********************/
@@ -157,6 +167,11 @@ void CMRProjectAction::genEqCCode(ostream& out, CMRProjectContext& context, CMRL
 		out << entity.totalValue << " ";
 	} else if (entity.totalValue.size() == 1 && cmrIsOperator(entity.totalValue[0])) {
 		out << entity.totalValue << " ";
+	} else if (entity.name == "(") {
+		out << "( ";
+		assert(entity.params[0] != NULL);
+		genEqCCode(out,context,*entity.params[0]);
+		out << ") ";
 	} else {
 		//search matching in context
 		CMREntity * def = context.find(entity);
@@ -193,9 +208,7 @@ void CMRProjectAction::genEqCCode(ostream& out, CMRProjectContext& context, int 
 	out << " = ";
 	
 	//loop on body elements
-	CMRLatexEntityVector & elems = eq->formula.childs;
-	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
-		genEqCCode(out,context,**it);
+	genEqCCode(out,context,eq->formula);
 	
 	out << ";" << endl;
 }
