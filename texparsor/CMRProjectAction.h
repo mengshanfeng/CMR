@@ -28,7 +28,7 @@ class CMRProjectAction : public CMRCodeTree
 				Iterator(CMRCodeTree::Iterator it) :CMRCodeTree::Iterator(it) {};
 				CMRProjectAction & operator*(void) {return *((CMRProjectAction*)current);};
 				CMRProjectAction * operator->(void) {return ((CMRProjectAction*)current);};
-				Iterator & operator = (CMRCodeTree::Iterator it) {*(CMRCodeTree::Iterator*)this = it;};
+				Iterator & operator = (CMRCodeTree::Iterator it) {*(CMRCodeTree::Iterator*)this = it; return *this;};
 		};
 		
 		class ConstIterator : public CMRCodeTree::ConstIterator
@@ -38,7 +38,7 @@ class CMRProjectAction : public CMRCodeTree
 				ConstIterator(CMRCodeTree::ConstIterator it) :CMRCodeTree::ConstIterator(it) {};
 				const CMRProjectAction & operator*(void) {return *((const CMRProjectAction*)current);};
 				const CMRProjectAction * operator->(void) {return ((const CMRProjectAction*)current);};
-				ConstIterator & operator = (CMRCodeTree::ConstIterator it) {*(CMRCodeTree::ConstIterator*)this = it;};
+				ConstIterator & operator = (CMRCodeTree::ConstIterator it) {*(CMRCodeTree::ConstIterator*)this = it; return *this;};
 		};
 	public:
 		CMRProjectAction(std::string name,std::string descr = "");

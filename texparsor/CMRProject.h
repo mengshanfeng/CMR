@@ -21,7 +21,7 @@ class CMRProjectIterator;
 class CMRProjectEquation;
 class CMRProjectAction;
 class CMRProjectDefinition;
-class CMRProjectContext;
+struct CMRProjectContext;
 
 /*********************  TYPES  **********************/
 typedef std::vector <CMREntityConstant*> CMRProjectConstantVector;

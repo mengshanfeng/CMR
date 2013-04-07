@@ -25,7 +25,7 @@ enum CMRCaptureType
 };
 
 /*********************  TYPES  **********************/
-class CMRProjectContext;
+struct CMRProjectContext;
 typedef std::vector<std::string> CMREntityIndiceVector;
 typedef std::vector<CMRCaptureType> CMREntityIndiceCaptureVector;
 typedef std::vector<int> CMRConstantDimensionsVector;

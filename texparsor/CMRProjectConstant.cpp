@@ -199,4 +199,6 @@ ostream& CMREntityConstant::genUsageCCode(ostream& out, CMRProjectContext& conte
 		assert(capture.find("\\const_id_i") != capture.end());
 		out << "[ " << capture["\\const_id_i"] << " ]";
 	}
+	
+	return out;
 }

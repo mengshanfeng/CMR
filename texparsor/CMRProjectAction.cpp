@@ -40,7 +40,7 @@ CMRProjectEquation& CMRProjectAction::addEquation ( const string& latexName, con
 CMRProjectAction& CMRProjectAction::addSubBlock ( string loopDescr, string parameter,CMRProjectCodeTreeInsert location )
 {
 	CMRProjectAction * tmpBlock = new CMRProjectAction("cmrSubBlock",loopDescr);
-	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(parameter,"cmrIndice",parameter);
+	tmpBlock->eq = new CMRProjectEquation(parameter,"cmrIndice",parameter);
 	insertAction(tmpBlock,location);
 	return *tmpBlock;
 }
