@@ -20,10 +20,18 @@
 using namespace std;
 
 /*******************  FUNCTION  *********************/
+CMRProject::CMRProject ( void )
+{
+	rootContext.addEntry(new CMRProjectLocalVariable("i","x"));
+	rootContext.addEntry(new CMRProjectLocalVariable("j","y"));
+}
+
+/*******************  FUNCTION  *********************/
 CMREntityConstant& CMRProject::addConstant ( const string& latexName, const string& longName )
 {
 	CMREntityConstant * tmp = new CMREntityConstant(latexName,longName);
 	constants.push_back(tmp);
+	rootContext.addEntry(tmp);
 	return *tmp;
 }
 
@@ -32,13 +40,15 @@ CMRProjectVariable& CMRProject::addvariable ( const string& latexName, const str
 {
 	CMRProjectVariable * tmp = new CMRProjectVariable(latexName,longName,type);
 	variables.push_back(tmp);
+	rootContext.addEntry(tmp);
+	rootContext.addEntry(new CMRProjectAlias(tmp,tmp->shortName + "'",tmp->longName + "Prim"));
 	return *tmp;
 }
 
 /*******************  FUNCTION  *********************/
 CMRProjectAction& CMRProject::addAction ( string name, string descr )
 {
-	CMRProjectAction * action = new CMRProjectAction(name,descr);
+	CMRProjectAction * action = new CMRProjectAction(name,descr,&rootContext);
 	actions.push_back(action);
 	return *action;
 }
@@ -215,8 +225,9 @@ void CMRProject::genCCode(ostream& out)
 /*******************  FUNCTION  *********************/
 CMRProjectDefinition & CMRProject::addDefinition(const string& latexName, const string& longName)
 {
-	CMRProjectDefinition * def = new CMRProjectDefinition(latexName,longName);
+	CMRProjectDefinition * def = new CMRProjectDefinition(latexName,longName,&rootContext);
 	definitions.push_back(def);
+	rootContext.addEntry(def);
 	return *def;
 }
 
@@ -233,5 +244,6 @@ CMRProjectIterator& CMRProject::addIterator(const string& latexName, const strin
 {
 	CMRProjectIterator * it = new CMRProjectIterator(latexName,longName,start,end);
 	iterators.push_back(it);
+	rootContext.addEntry(it);
 	return *it;
 }

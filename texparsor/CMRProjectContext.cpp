@@ -69,3 +69,29 @@ CMREntity* CMRProjectContext::find(CMRLatexEntity& entity)
 	else
 		return NULL;
 }
+
+/*******************  FUNCTION  *********************/
+int CMRProjectContext::countTotalEntries ( void ) const
+{
+	int cnt = 0;
+	const CMRProjectContext * cur = this;
+	while (cur != NULL)
+	{
+		cnt += cur->entities.size();
+		cur = cur->parent;
+	}
+	return cnt;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectContext::printDebug ( void ) const
+{
+	const CMRProjectContext * cur = this;
+	while (cur != NULL)
+	{
+		cerr << "   - Level : " << endl;
+		for (CMRProjectEntityList::const_iterator it = cur->entities.begin(); it != cur->entities.end() ; ++it)
+			cerr << "          + " << (*it)->latexName << " : " << (*it)->longName << endl;
+		cur = cur->parent;
+	}
+}

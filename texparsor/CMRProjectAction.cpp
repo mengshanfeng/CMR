@@ -22,7 +22,8 @@
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction::CMRProjectAction ( string name, string descr )
+CMRProjectAction::CMRProjectAction ( string name, string descr , CMRProjectContext  * parentContext)
+	:context(parentContext)
 {
 	this->name = name;
 	this->description = descr;
@@ -35,6 +36,10 @@ CMRProjectEquation& CMRProjectAction::addEquation ( const string& latexName, con
 	CMRProjectAction * tmpBlock = new CMRProjectAction("cmrEquation",latexName);
 	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(latexName,longName,compute);
 	insertAction(tmpBlock,location);
+	
+	if (context.find(tmp->latexEntity) == NULL)
+		addContextEntry(tmp,location);
+	
 	return *tmp;
 }
 
@@ -51,7 +56,14 @@ CMRProjectAction& CMRProjectAction::addSubBlock ( string loopDescr, string param
 CMRProjectAction& CMRProjectAction::addIteratorLoop ( const string& iterator ,CMRProjectCodeTreeInsert location)
 {
 	CMRProjectAction & ac = this->addSubBlock("cmrIteratorLoop",iterator,location);
+	ac.context.addEntry(new CMRProjectLocalVariable(iterator,iterator));
 	return ac;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::addContextEntry ( CMREntity* entity )
+{
+	context.addEntry(entity);
 }
 
 /*******************  FUNCTION  *********************/
@@ -92,6 +104,27 @@ void CMRProjectAction::printDebug(int depth) const
 void CMRProjectAction::insertAction(CMRProjectAction* action, CMRProjectCodeTreeInsert location)
 {
 	insert(action,location);
+	
+	Iterator it(this);
+
+	switch(location)
+	{
+		case CMR_INSERT_AFTER:
+		case CMR_INSERT_BEFORE:
+		case  CMR_INSERT_FIRST:
+		case  CMR_INSERT_LAST:
+			assert(it.hasParent());
+			it.moveUp();
+			action->context.parent = &it->context;
+			break;
+		case CMR_INSERT_FIRST_CHILD:
+		case CMR_INSERT_LAST_CHILD:
+			action->context.parent = &this->context;
+			break;
+		default:
+			assert(false);
+			abort();
+	}
 }
 
 /*******************  FUNCTION  *********************/
@@ -103,6 +136,30 @@ std::string genCCodeIndent(int depth)
 		tmp += "\t";
 
 	return tmp;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectAction::checkContext ( CMRProjectContext& context ) const
+{
+	ConstIterator it(this);
+	const CMRProjectContext * cur = &this->context;
+	
+	do {
+		assert(cur == &it->context);
+		it.moveUp();
+		cur = cur->parent;
+	} while (it.hasParent());
+	
+	if (context.countTotalEntries() != this->context.countTotalEntries())
+	{
+		cerr << endl << "!!!!!!!!!!!!!!! CONTEXT ERROR !!!!!!!!!!!!!!!!" << endl;
+		cerr << "Correct :" << endl;
+		context.printDebug();
+		cerr << "------------------------------" << endl;
+		cerr << "Local :" << endl;
+		this->context.printDebug();
+		//abort();
+	}
 }
 
 /*******************  FUNCTION  *********************/
@@ -134,6 +191,31 @@ void CMRProjectAction::genEqCCode(ostream& out, CMRProjectContext& context, int 
 }
 
 /*******************  FUNCTION  *********************/
+void CMRProjectAction::addContextEntry ( CMREntity* entity, CMRProjectCodeTreeInsert location )
+{
+	Iterator it(this);
+
+	switch(location)
+	{
+		case CMR_INSERT_AFTER:
+		case CMR_INSERT_BEFORE:
+		case  CMR_INSERT_FIRST:
+		case  CMR_INSERT_LAST:
+			assert(it.hasParent());
+			it.moveUp();
+			it->addContextEntry(entity);
+			break;
+		case CMR_INSERT_FIRST_CHILD:
+		case CMR_INSERT_LAST_CHILD:
+			addContextEntry(entity);
+			break;
+		default:
+			assert(false);
+			abort();
+	}
+}
+
+/*******************  FUNCTION  *********************/
 void CMRProjectAction::genItLoopCCode ( ostream& out, CMRProjectContext& context, int depth ) const
 {
 	CMRProjectContext localContext(&context);
@@ -142,7 +224,7 @@ void CMRProjectAction::genItLoopCCode ( ostream& out, CMRProjectContext& context
 	assert(name == "cmrSubBlock" && description == "cmrIteratorLoop");
 	
 	//search the related iterator definition
-	CMREntity * entity = context.find(eq->latexEntity);
+	CMREntity * entity = localContext.find(eq->latexEntity);
 	if (entity == NULL)
 	{
 		cerr << "Can't find the definition of iterator " << eq->compute << " in current context." << endl;
@@ -164,6 +246,8 @@ void CMRProjectAction::genItLoopCCode ( ostream& out, CMRProjectContext& context
 	for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
 		it->genCCode(out,localContext,depth+1);
 	out << genCCodeIndent(depth) << "}" << endl;
+	
+	//checkContext(localContext);
 }
 
 /*******************  FUNCTION  *********************/
@@ -172,6 +256,7 @@ void CMRProjectAction::genRootElemCCode ( ostream& out, CMRProjectContext& conte
 	CMRProjectContext localContext(&context);
 	for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
 		it->genCCode(out,localContext,depth+1);
+	//checkContext(localContext);
 }
 
 /*******************  FUNCTION  *********************/

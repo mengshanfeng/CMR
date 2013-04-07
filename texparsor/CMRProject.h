@@ -13,6 +13,7 @@
 /********************  HEADERS  *********************/
 #include <vector>
 #include "CMRProjectEntity.h"
+#include "CMRProjectContext.h"
 
 class CMRProjectTransformation;
 /*********************  TYPES  **********************/
@@ -61,6 +62,7 @@ class CMRProjectAlias : public CMREntity
 class CMRProject
 {
 	public:
+		CMRProject(void);
 		CMREntityConstant & addConstant(const std::string& latexName, const std::string& longName);
 		CMRProjectVariable & addvariable(const std::string& latexName, const std::string& longName, const std::string& type);
 		CMRProjectAction & addAction(std::string name,std::string descr = "");
@@ -84,6 +86,7 @@ class CMRProject
 		CMRProjectActionVector actions;
 		CMRProjectDefinitionVector definitions;
 		CMRProjectIteratorVector iterators;
+		CMRProjectContext rootContext;
 };
 
 #endif //CMR_PROJECT_H

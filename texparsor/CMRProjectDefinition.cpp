@@ -15,8 +15,8 @@
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-CMRProjectDefinition::CMRProjectDefinition(const std::string& latexName, const std::string& longName)
-	:CMREntity(latexName,longName), ops("body","body")
+CMRProjectDefinition::CMRProjectDefinition(const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext)
+	:CMREntity(latexName,longName), ops("body","body",parentContext)
 {
 
 }

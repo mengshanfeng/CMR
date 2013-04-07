@@ -41,7 +41,7 @@ class CMRProjectAction : public CMRCodeTree
 				ConstIterator & operator = (CMRCodeTree::ConstIterator it) {*(CMRCodeTree::ConstIterator*)this = it; return *this;};
 		};
 	public:
-		CMRProjectAction(std::string name,std::string descr = "");
+		CMRProjectAction( std::string name, std::string descr, CMRProjectContext* parentContext = NULL );
 		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectAction & addIteratorLoop( const std::string& iterator, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
@@ -52,14 +52,18 @@ class CMRProjectAction : public CMRCodeTree
 		const std::string & getDescription(void) const {return description;};
 		CMRProjectEquation & getEquation(void) {return *eq;};
 		bool hasEquation(void) const {return eq != NULL;};
+		void addContextEntry(CMREntity * entity);
+		void addContextEntry(CMREntity * entity,CMRProjectCodeTreeInsert location);
 	protected:
 		void genEqCCode(std::ostream& out, CMRProjectContext & context ,int depth) const;
 		void genItLoopCCode(std::ostream& out, CMRProjectContext & context ,int depth) const;
 		void genRootElemCCode(std::ostream& out, CMRProjectContext & context ,int depth) const;
+		void checkContext(CMRProjectContext & context) const;
 	private:
 		CMRProjectEquation * eq;
 		std::string name;
 		std::string description;
+		CMRProjectContext context;
 };
 
 #endif //CMR_PROJECT_ACTION_H

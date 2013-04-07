@@ -21,7 +21,7 @@ class CMRProjectTransformation;
 class CMRProjectDefinition : public CMREntity
 {
 	public:
-		CMRProjectDefinition ( const std::string& latexName, const std::string& longName);
+		CMRProjectDefinition ( const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext = NULL);
 		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		void printDebug(void) const;
