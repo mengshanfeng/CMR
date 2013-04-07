@@ -263,6 +263,15 @@ CMRLatexEntity * cmrExtractSubGroup(const string & value,int & start)
 	cmrParseLatexFormula(*f,res->argsTotalValue);
 	res->params.push_back(f);
 	
+	//skip spaces
+	cmrSkipWhiteSpace(value,start);
+	
+	//if is '^' capture exponent
+	if (value[start] == '^')
+	{
+		cmrExtractSubAndSuperScript(value,start,res);
+	}
+	
 	return res;
 }
 

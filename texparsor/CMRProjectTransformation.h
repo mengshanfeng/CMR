@@ -64,4 +64,13 @@ class CMRProjectTransfExpandFrac : public CMRProjectTransformation
 		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );
 };
 
+/*********************  CLASS  **********************/
+class CMRProjectTransfExpendExponent : public CMRProjectTransformation
+{
+	protected:
+		void expandExponent(CMRLatexEntity & entity);
+		void expandExponent(CMRLatexFormulas & forumlas);
+		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );
+};
+
 #endif //CMR_PROJECT_TRANSFORMATION_H

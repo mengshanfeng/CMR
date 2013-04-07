@@ -271,3 +271,54 @@ void CMRProjectTransfExpandFrac::expandFrac ( CMRLatexFormulas& forumlas )
 	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
 		expandFrac(**it);
 }
+
+/*******************  FUNCTION  *********************/
+CMRProjectAction::Iterator CMRProjectTransfExpendExponent::transform ( CMRProjectAction::Iterator action, int depth )
+{
+	if (action->getName() == "cmrEquation")
+	{
+		assert(action->hasEquation());
+		expandExponent(action->getEquation().formula);
+	}
+	return action;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexFormulas& formulas)
+{
+	CMRLatexEntityVector & elems = formulas.childs;
+	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
+		expandExponent(**it);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexEntity& entity )
+{
+	if (entity.name[0] != '\\')
+	{
+		if (entity.superscript.string == "2")
+		{
+			CMRLatexEntity * e = new CMRLatexEntity();
+			*e = entity;
+			entity.name = "(";
+			CMRLatexFormulas * f = new CMRLatexFormulas;
+			f->childs.push_back(e);
+			f->childs.push_back(simpleEntity("*"));
+			f->childs.push_back(e);
+			entity.params.clear();
+			entity.params.push_back(f);
+		} else if (entity.superscript.string == "3") {
+			CMRLatexEntity * e = new CMRLatexEntity();
+			*e = entity;
+			entity.name = "(";
+			CMRLatexFormulas * f = new CMRLatexFormulas;
+			f->childs.push_back(e);
+			f->childs.push_back(simpleEntity("*"));
+			f->childs.push_back(e);
+			f->childs.push_back(simpleEntity("*"));
+			f->childs.push_back(e);
+			entity.params.clear();
+			entity.params.push_back(f);
+		}
+	}
+}

@@ -137,7 +137,7 @@ int main(int argc,char ** argv)
 
 		CMRProjectAction & ac = project.addAction("UpdateEnergy","update the energy");
 		ac.addEquation("b","bip","4 * 2 + A_{eq,4}");
-		ac.addEquation("D'_{i,j,3+5}","density","e_{i,j} / 2A_{eq,1} A_{eq,2} + ( 6 + 7 ) \\frac{1}{2+4} + 4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}} + b");
+		ac.addEquation("D'_{i,j,3+5}","density","e^3_{i,j} / 2A_{eq,1} A_{eq,2} + ( 6 + 7 )^2 \\frac{1}{2+4} + 4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}} + b");
 		project.printDebug();
 		project.replaceLoops();
 		project.printDebug();
@@ -145,6 +145,9 @@ int main(int argc,char ** argv)
 		project.printDebug();
 		CMRProjectTransfExpandFrac t1;
 		project.runTransformation(t1);
+		project.printDebug();
+		CMRProjectTransfExpendExponent t2;
+		project.runTransformation(t2);
 		project.printDebug();
 		
 		/**
