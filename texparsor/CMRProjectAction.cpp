@@ -70,42 +70,6 @@ std::string getLongTempName(int id)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::replaceLoops(int* tmpId)
-{
-	CMRLatexEntity * term;
-	string op;
-	assert(tmpId != NULL);
-
-	if (name == "cmrEquation")
-	{
-		assert(eq != NULL);
-		//assert(parent != NULL);
-		while ((term = eq->extractNextInnerLoop()) != NULL)
-		{
-			if (term->name == "\\sum")
-				op = " + ";
-			else
-				assert(false);
-			CMRLatexFormulas f;
-			string tmpName = getTempName(*tmpId);
-			string longTmpName = getLongTempName(*tmpId);
-			(*tmpId)++;
-			this->addEquation(tmpName,longTmpName,"0",CMR_INSERT_BEFORE);
-			cout << "Replace loops with iterator (" << term->subscriptTotalValue << ") and core (" << term->params[0]->string << ")" << endl;
- 			CMRProjectAction & ac = addIteratorLoop(term->subscriptTotalValue,CMR_INSERT_BEFORE);
-// 			CMRProjectAction & ac = this->addSubBlock("cmrIteratorLoop",term->subscriptTotalValue,CMR_INSERT_BEFORE);
-			ac.addEquation(tmpName,longTmpName,string(tmpName) + op + term->params[0]->string);
-			cmrParseLatexFormula(f,tmpName);
-			*term = *f.childs[0];
-			ac.replaceLoops(tmpId);
-		}
-	} else {
-		for (Iterator it = getFirstChild() ; ! it.isEnd() ; ++it)
-			it->replaceLoops(tmpId);
-	}
-}
-
-/*******************  FUNCTION  *********************/
 void CMRProjectAction::printDebug(int depth) const
 {
 	for (int i = 0 ; i < depth ; i++)

@@ -14,6 +14,9 @@
 #include "CMRProjectEntity.h"
 #include "CMRProjectAction.h"
 
+/*********************  TYPES  **********************/
+class CMRProjectTransformation;
+
 /*********************  CLASS  **********************/
 class CMRProjectDefinition : public CMREntity
 {
@@ -23,6 +26,8 @@ class CMRProjectDefinition : public CMREntity
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		void printDebug(void) const;
 		void printCPPCode(CMRProjectContext & context) const;
+		void runTransformation(CMRProjectTransformation & transf);
+		virtual std::ostream& genUsageCCode ( std::ostream& out, CMRProjectContext& context, CMRLatexEntity& entity ) const;
 	private:
 		CMRProjectAction ops;
 };

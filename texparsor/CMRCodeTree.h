@@ -48,6 +48,7 @@ class CMRCodeTree
 				bool hasChild(void) const;
 				bool isEnd(void) const;
 				bool operator == (const Iterator & it) const;
+				bool operator != (const Iterator & it) const;
 			protected:
 				CMRCodeTree * current;
 		};
@@ -68,6 +69,7 @@ class CMRCodeTree
 				bool hasChild(void) const;
 				bool isEnd(void) const;
 				bool operator == (const ConstIterator & it) const;
+				bool operator != (const ConstIterator & it) const;
 			protected:
 				const CMRCodeTree * current;
 		};
@@ -89,6 +91,8 @@ class CMRCodeTree
 		ConstIterator getParent(void) const;
 		ConstIterator getParentFirst(void) const;
 		ConstIterator getEnd(void) const;
+		bool hasChild(void) const;
+		int getDepth(void) const;
 	private:
 		CMRCodeTree(const CMRCodeTree & orig);
 		CMRCodeTree & operator=(const CMRCodeTree & orig);

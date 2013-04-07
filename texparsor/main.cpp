@@ -20,6 +20,7 @@
 #include "CMRProjectAction.h"
 #include "CMRProject.h"
 #include "CMRCodeTree.h"
+#include "CMRProjectTransformation.h"
 
 /********************  NAMESPACE  *******************/
 using namespace std;
@@ -127,17 +128,38 @@ int main(int argc,char ** argv)
 		//cst2.loadValues("1.1 ; 1.2 ; 1.3 ; 1.4 \\\\ 2.1 ; 2.2 ; 2.3 ; 2.4 \\\\ 3.1 ; 3.2 ; 3.3 ; 3.4",2);
 		
 		CMRProjectVariable & var2 = project.addvariable("D_{i,j,k}","directions","int");
-		var2.addDim(9,"k",1);
+		var2.addDim(9,"k");
 		
 		project.addIterator("k","k",0,9);
 		project.addIterator("l","l",0,9);
+		
+		project.addDefinition("e_{i,j}","energy","\\sum_k{D_{i,j,k}*D_{i,j,k}+5}");
 
 		CMRProjectAction & ac = project.addAction("UpdateEnergy","update the energy");
-		ac.addEquation("b","b","4 * 2 + A_{eq,4}");
-		ac.addEquation("D'_{i,j,k}","density"," ( 6 + 7 ) * 4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}} + b");
+		ac.addEquation("b","bip","4 * 2 + A_{eq,4}");
+		ac.addEquation("D'_{i,j,k}","density","e_{i,j} / 2A_{eq,1} A_{eq,2} + ( 6 + 7 ) \\frac{1}{2+4} + 4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}} + b");
 		project.printDebug();
 		project.replaceLoops();
 		project.printDebug();
+		project.insertImplicitMul();
+		project.printDebug();
+		CMRProjectTransfExpandFrac t1;
+		project.runTransformation(t1);
+		project.printDebug();
+		
+		/**
+		 *  TODO :
+		 *    - Redefinir les Context attaché aux actions
+		 *    - Iterateur locaux
+		 *    - Remplacement des exposants
+		 *    - Propagation de type
+		 *    - Notation vectoriel
+		 *    - Definir un 2eme type d'alias grace auquel on peut figer certains des parametres attendues
+		 *    - Support - 1 en début d'équation (pb à cause de - pour le remplacement des * implicite)
+		 * 
+		 *  TODO clean :
+		 *    - Séparé ProjectAction en deux classes
+		 **/
 		
 		printf("================================================\n");
 		project.genCCode(cout);

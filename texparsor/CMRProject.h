@@ -14,6 +14,7 @@
 #include <vector>
 #include "CMRProjectEntity.h"
 
+class CMRProjectTransformation;
 /*********************  TYPES  **********************/
 class CMREntityConstant;
 class CMRProjectVariable;
@@ -67,6 +68,8 @@ class CMRProject
 		CMRProjectDefinition& addDefinition( const std::string& latexName, const std::string& longName, const std::string& compute );
 		CMRProjectIterator & addIterator(const std::string& latexName, const std::string& longName ,int start, int end);
 		void replaceLoops(void);
+		void insertImplicitMul(void);
+		void runTransformation(CMRProjectTransformation & transf);
 		void genCCode(std::ostream & out);
 		void printDebug(void);
 	protected:

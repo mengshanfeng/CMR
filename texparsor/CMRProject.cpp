@@ -15,6 +15,7 @@
 #include "CMRProjectAction.h"
 #include "CMRProjectDefinition.h"
 #include "CMRProjectIterator.h"
+#include "CMRProjectTransformation.h"
 
 using namespace std;
 
@@ -45,12 +46,24 @@ CMRProjectAction& CMRProject::addAction ( string name, string descr )
 /*******************  FUNCTION  *********************/
 void CMRProject::replaceLoops(void )
 {
-	int id;
+	CMRProjectTransfExtractLoops t;
+	runTransformation(t);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject::insertImplicitMul(void )
+{
+	CMRProjectTransfImplicitMul t;
+	runTransformation(t);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject::runTransformation ( CMRProjectTransformation& transf )
+{
 	for (CMRProjectActionVector::iterator it = actions.begin() ; it != actions.end() ; ++it)
-	{
-		id = 0;
-		(*it)->replaceLoops(&id);
-	}
+		transf.run((*it));
+	for (CMRProjectDefinitionVector::iterator it = definitions.begin() ; it != definitions.end() ; ++it)
+		(*it)->runTransformation(transf);
 }
 
 /*******************  FUNCTION  *********************/
