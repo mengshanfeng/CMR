@@ -38,8 +38,8 @@ struct CMRLatexEntity
 	std::string getString(void) const;
 	std::string name;
 	std::string parent;
-	CMRLatexFormulas subscript;
-	CMRLatexFormulas superscript;
+	CMRLatexFormulasList subscript;
+	CMRLatexFormulasList superscript;
 	CMRLatexFormulasList params;
 	int from;
 	int to;
@@ -50,6 +50,7 @@ struct CMRLatexEntity
 };
 
 /*******************  FUNCTION  *********************/
+void cmrPrintFormula(const CMRLatexFormulasList & formulas,int depth);
 void cmrPrintFormula(const CMRLatexFormulas & formula,int depth);
 
 #endif //CMR_LATEX_ENTITY_H

@@ -118,12 +118,16 @@ void cmrExtractSubAndSuperScript(const string & value,int & start,CMRLatexEntity
 		start++;
 		res = cmrExtractSubZone(value,start);
 		entity->subscriptTotalValue = res;
-		cmrParseLatexFormula(entity->subscript,res);
+		CMRLatexFormulas * f = new CMRLatexFormulas;
+		cmrParseLatexFormula(*f,res);
+		entity->subscript.push_back(f);
 	} else if (mode == '^') {
 		start++;
 		res = cmrExtractSubZone(value,start);
 		entity->superscriptTotalValue = res;
-		cmrParseLatexFormula(entity->superscript,res);
+		CMRLatexFormulas * f = new CMRLatexFormulas;
+		cmrParseLatexFormula(*f,res);
+		entity->superscript.push_back(f);
 	} else {
 		assert(false);
 	}
@@ -148,13 +152,19 @@ int cmrRequireParameters(const string & name,const string & value,int pos)
 }
 
 /*******************  FUNCTION  *********************/
-void cmrReplaceByCommaGroup(CMRLatexFormulas & formula)
+void cmrReplaceByCommaGroup(CMRLatexFormulasList & formula)
 {
 	//vars
 	bool hasComma = false;
 	CMRLatexEntity * entity = NULL;
+	CMRLatexFormulas * current;
+	
+	if (formula.empty())
+		return;
+	
+	current = formula[0];
 
-	for (CMRLatexEntityVector::const_iterator it = formula.childs.begin() ; it != formula.childs.end() ; ++it)
+	for (CMRLatexEntityVector::const_iterator it = current->childs.begin() ; it != current->childs.end() ; ++it)
 		if ((*it)->name == ",")
 			hasComma = true;
 		
@@ -165,28 +175,26 @@ void cmrReplaceByCommaGroup(CMRLatexFormulas & formula)
 	//create entity
 	entity = new CMRLatexEntity;
 	entity->name = "\\COMMA_GROUP";
-	entity->totalValue = (*formula.childs.begin())->parent;
+	entity->totalValue = (*current->childs.begin())->parent;
 	
 	//create formulas
 	CMRLatexFormulas * f = new CMRLatexFormulas;
 
 	//fill
-	for (CMRLatexEntityVector::const_iterator it = formula.childs.begin() ; it != formula.childs.end() ; ++it)
+	formula.clear();
+	for (CMRLatexEntityVector::const_iterator it = current->childs.begin() ; it != current->childs.end() ; ++it)
 	{
 		if ((*it)->name == ",")
 		{
-			entity->params.push_back(f);
+			formula.push_back(f);
 			f = new CMRLatexFormulas;
 		} else {
 			f->childs.push_back(*it);
 			f->string += (*it)->getString();
 		}
 	}
-	entity->params.push_back(f);
-	
-	//replace in formula
-	formula.childs.clear();
-	formula.childs.push_back(entity);
+	formula.push_back(f);
+	delete current;
 }
 
 /*******************  FUNCTION  *********************/

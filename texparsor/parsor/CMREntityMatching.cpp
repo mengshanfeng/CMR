@@ -52,16 +52,10 @@ bool cmrEntityExactMatch(const CMRLatexEntity & e1,const CMRLatexEntity & e2,boo
 /*******************  FUNCTION  *********************/
 const CMRLatexFormulas * cmrEntityExtractSubscriptParam(const CMRLatexEntity & entity,int id)
 {
-	if (entity.subscript.childs.empty() || entity.subscript.childs.size() > 1)
+	if (entity.subscript.empty() || entity.subscript.size() <= id)
 		return NULL;
 	
-	const CMRLatexEntity * e = entity.subscript.childs[0];
-	if (e->name != "\\COMMA_GROUP")
-		return NULL;
-	else if (e->params.size() <= id)
-		return NULL;
-	else
-		return e->params[id];
+	return entity.subscript[id];
 }
 
 /*******************  FUNCTION  *********************/
@@ -135,6 +129,13 @@ CMREntityCellMatching cmrEntityCellMatch(const CMRLatexEntity & entity,const str
 	res.depInfo = true;
 
 	return res;
+}
+
+/*******************  FUNCTION  *********************/
+void cmrExtractDeps(CMREqDepMatrix & matrix,const CMRLatexFormulasList & f,const string & varname)
+{
+	for (CMRLatexFormulasList::const_iterator it = f.begin() ; it != f.end() ; ++it)
+		cmrExtractDeps(matrix,**it,varname);
 }
 
 /*******************  FUNCTION  *********************/

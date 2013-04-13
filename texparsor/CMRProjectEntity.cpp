@@ -68,16 +68,8 @@ void CMREntity::applyLatexName ( const string& latexName )
 	this->latexEntity = *entity;
 	
 	//extract subscript info
-	if (entity->subscript.childs.empty() == false)
-	{
-		if (entity->subscript.childs[0]->name == "\\COMMA_GROUP")
-		{
-			for (CMRLatexFormulasList::iterator it = entity->subscript.childs[0]->params.begin() ; it != entity->subscript.childs[0]->params.end() ; ++it)
-				this->addIndice((*it)->string,CMR_CAPTURE_NONE);
-		} else {
-			this->addIndice(entity->subscriptTotalValue,CMR_CAPTURE_NONE);
-		}
-	}
+	for (CMRLatexFormulasList::iterator it = entity->subscript.begin() ; it != entity->subscript.end() ; ++it)
+		this->addIndice((*it)->string,CMR_CAPTURE_NONE);
 	
 	this->latexName = latexName;
 }
@@ -122,7 +114,7 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) co
 		}
 		//capture exponent
 		if (entity.superscriptTotalValue.empty() == false && exponent.empty() == true)
-			capture["cmrExponent"] = &entity.superscript;
+			capture["cmrExponent"] = entity.superscript[0];
 		return true;
 	} else {
 		fprintf(stderr,"Caution, not same indices on %s for matching %s\n",entity.getString().c_str(),latexName.c_str());

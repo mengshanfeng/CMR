@@ -51,6 +51,7 @@ class CMRProjectTransfImplicitMul : public CMRProjectTransformation
 	public:
 		CMRProjectTransfImplicitMul (void);
 	protected:
+		void replaceImplMul(CMRLatexFormulasList & formula);
 		void replaceImplMul(CMRLatexFormulas & formula);
 		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );
 };
@@ -59,6 +60,7 @@ class CMRProjectTransfImplicitMul : public CMRProjectTransformation
 class CMRProjectTransfExpandFrac : public CMRProjectTransformation
 {
 	protected:
+		void expandFrac(CMRLatexFormulasList & forumlas);
 		void expandFrac(CMRLatexEntity & entity);
 		void expandFrac(CMRLatexFormulas & forumlas);
 		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );

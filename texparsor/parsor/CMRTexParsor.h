@@ -21,7 +21,7 @@ std::string cmrExtractSubZone(const std::string & value, int & start,char open =
 void cmrExtractSubAndSuperScript(const std::string & value,int & start,CMRLatexEntity * entity);
 void cmrParseLatexFormula(CMRLatexFormulas & formula,const std::string & value);
 int cmrRequireParameters(const std::string & name,const std::string & value,int pos);
-void cmrReplaceByCommaGroup(CMRLatexFormulas & formula);
+void cmrReplaceByCommaGroup(CMRLatexFormulasList & formulas);
 CMRLatexEntity * cmrParseLatexEntitySimple(const std::string & value,int & start);
 CMRLatexEntity * cmrExtractSubGroup(const std::string & value,int & start);
 CMRLatexEntity * cmrParseLatexEntity(const std::string & value,int & start);

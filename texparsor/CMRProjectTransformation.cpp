@@ -179,6 +179,13 @@ CMRLatexEntity * simpleEntity(const std::string & value)
 }
 
 /*******************  FUNCTION  *********************/
+void CMRProjectTransfImplicitMul::replaceImplMul ( CMRLatexFormulasList& formula )
+{
+	for (CMRLatexFormulasList::iterator it = formula.begin() ;  it != formula.end() ; ++it)
+		replaceImplMul(**it);
+}
+
+/*******************  FUNCTION  *********************/
 void CMRProjectTransfImplicitMul::replaceImplMul ( CMRLatexFormulas & formula )
 {
 	int cnt = 0;
@@ -265,6 +272,13 @@ void CMRProjectTransfExpandFrac::expandFrac ( CMRLatexEntity& entity )
 }
 
 /*******************  FUNCTION  *********************/
+void CMRProjectTransfExpandFrac::expandFrac ( CMRLatexFormulasList& forumlas )
+{
+	for (CMRLatexFormulasList::iterator it = forumlas.begin() ;  it != forumlas.end() ; ++it)
+		expandFrac(**it);
+}
+
+/*******************  FUNCTION  *********************/
 void CMRProjectTransfExpandFrac::expandFrac ( CMRLatexFormulas& forumlas )
 {
 	CMRLatexEntityVector & elems = forumlas.childs;
@@ -294,7 +308,7 @@ void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexFormulas& formulas
 /*******************  FUNCTION  *********************/
 void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexEntity& entity ,CMRProjectAction & action)
 {
-	if (entity.name[0] == '\\' || entity.superscript.childs.empty())
+	if (entity.name[0] == '\\' || entity.superscript.empty())
 		return;
 
 	CMRIndiceCaptureMap capture;
@@ -303,7 +317,7 @@ void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexEntity& entity ,CM
 	e->match(entity,capture);
 	if (capture.find("cmrExponent") != capture.end())
 	{
-		if (entity.superscript.string == "2")
+		if (entity.superscript[0]->string == "2")
 		{
 			CMRLatexEntity * e = new CMRLatexEntity();
 			*e = entity;
@@ -314,7 +328,7 @@ void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexEntity& entity ,CM
 			f->childs.push_back(e);
 			entity.params.clear();
 			entity.params.push_back(f);
-		} else if (entity.superscript.string == "3") {
+		} else if (entity.superscript[0]->string == "3") {
 			CMRLatexEntity * e = new CMRLatexEntity();
 			*e = entity;
 			entity.name = "(";

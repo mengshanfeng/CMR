@@ -30,6 +30,17 @@ CMRLatexEntity::~CMRLatexEntity ( void )
 }
 
 /*******************  FUNCTION  *********************/
+void cmrPrintFormula(const CMRLatexFormulasList & formulas,int depth)
+{
+	for(CMRLatexFormulasList::const_iterator it = formulas.begin();it!=formulas.end();++it)
+	{
+		if (it != formulas.begin())
+			printf(",");
+		cmrPrintFormula(**it,depth);
+	}
+}
+
+/*******************  FUNCTION  *********************/
 void cmrPrintFormula(const CMRLatexFormulas & formula,int depth)
 {
 	int pos = 0;
@@ -63,25 +74,11 @@ std::string CMRLatexEntity::getString ( void ) const
 /*******************  FUNCTION  *********************/
 int CMRLatexEntity::countIndices ( void ) const
 {
-	if (subscript.childs.empty())
-		return 0;
-	else if (subscript.childs[0]->name == "\\COMMA_GROUP")
-		return subscript.childs[0]->params.size();
-	else
-		return 1;
+	return subscript.size();
 }
 
 /*******************  FUNCTION  *********************/
 CMRLatexFormulasList CMRLatexEntity::getIndices ( void )
 {
-	CMRLatexFormulasList tmp;
-	if (subscript.childs.empty())
-	{
-		return tmp;
-	} else if (subscript.childs[0]->name == "\\COMMA_GROUP") {
-		return subscript.childs[0]->params;
-	} else {
-		tmp.push_back(&subscript);
-		return tmp;
-	}
+	return subscript;
 }
