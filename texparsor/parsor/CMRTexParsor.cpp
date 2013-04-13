@@ -152,6 +152,24 @@ int cmrRequireParameters(const string & name,const string & value,int pos)
 }
 
 /*******************  FUNCTION  *********************/
+int cmrRequireParameters(const string & name,CMRLatexParsorContext & context)
+{
+	if (name[0] != '\\')
+	{
+		return 0;
+	} else if (name == "\\frac") {
+		return 2;
+	} else if (name == "\\sum") {
+		return 1;
+	} else if (name == "\\CMRTMP") {
+		return 1;
+	} else {
+		context.fatal("Invalid latex command.");
+		return -1;
+	}
+}
+
+/*******************  FUNCTION  *********************/
 void cmrReplaceByCommaGroup(CMRLatexFormulasList & formula)
 {
 	//vars
