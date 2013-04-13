@@ -21,6 +21,7 @@
 #include "CMRProject.h"
 #include "CMRCodeTree.h"
 #include "CMRProjectTransformation.h"
+#include "CMRProjectDefinition.h"
 
 /********************  NAMESPACE  *******************/
 using namespace std;
@@ -121,23 +122,50 @@ int main(int argc,char ** argv)
 		//assemble into project
 		cout << "===================================================" << endl;
 		CMRProject project;
-		CMREntityConstant & cst2 = project.addConstant("A_{eq}","toto");
+		CMREntityConstant & direction_matrix = project.addConstant("M","direction_matrix");
+		direction_matrix.loadValues("0.0 ; 0.0 \\\\ 1.0 ; 0.0 \\\\ 0.0 ; 1.0 \\\\ -1.0 ; 0.0 \\\\ 0.0 ; -1.0 \\\\ 1.0 ; 1.0 \\\\ -1.0 ; 1.0 \\\\ -1.0 ; -1.0 \\\\ 1.0 ; -1.0",2);
 // 		cst2.addIndice("k",CMR_CAPTURE_REQUIRED);
-		//cst2.loadValues("1.1",0);
-		cst2.loadValues("1.1 ; 2.2 ; 3.3 ; 4.4 ; 5.5 ; 6.6 ; 7.7 ; 8.8 ; 9.9",1);
-		//cst2.loadValues("1.1 ; 1.2 ; 1.3 ; 1.4 \\\\ 2.1 ; 2.2 ; 2.3 ; 2.4 \\\\ 3.1 ; 3.2 ; 3.3 ; 3.4",2);
 		
-		CMRProjectVariable & var2 = project.addvariable("D_{i,j,k}","directions","int");
+		CMREntityConstant & equi_weight = project.addConstant("W","equi_weight");
+		equi_weight.loadValues("4.0/9.0 ; 1.0/9.0 ; 1.0/9.0 ; 1.0/9.0 ; 1.0/9.0 ; 1.0/36.0 ; 1.0/36.0 ; 1.0/36.0 ; 1.0/36.0",1);
+		
+		CMREntityConstant & opposite_of = project.addConstant("o","opposite_of");
+		opposite_of.loadValues("0;3;4;1;2;7;8;5;6",1);
+		
+		CMREntityConstant & reynolds = project.addConstant("R","reynolds");
+		reynolds.loadValues("300",0);
+		///////
+		
+		CMRProjectVariable & var2 = project.addvariable("f_{i,j,k}","pdf","double");
 		var2.addDim(9,"k");
+		
+		CMRProjectVariable & var3 = project.addvariable("T_{i,j}","cell_type","LBMCellType");
+
+		CMRProjectVariable & var1 = project.addvariable("O_{i,j}","fileout","LBMFileEntry");
+		///////
 		
 		project.addIterator("k","k",0,9);
 		project.addIterator("l","l",0,9);
+		project.addIterator("s","s",0,1);
 		
-		project.addDefinition("e_{i,j}","energy","\\sum_k{D_{i,j,k}*D_{i,j,k}+5}");
+		///////
+		project.addDefinition("d","density","\\sum_k{f_{i,j,k}}");
+		
+		CMRProjectDefinition & vs = project.addDefinition("v_{i,j,s}","velocity","\\sum_k{f_{i,j,k} * M_{k,s}} / d");
+		vs.addIndice("s",CMR_CAPTURE_REQUIRED);
+		
+		CMRProjectDefinition & feq = project.addDefinition("f_{eq,i,j,k}","eq_profile");
+		feq.addIndice("k",CMR_CAPTURE_REQUIRED);
+		feq.addEquation("v^2","v2","\\sum_s{v_{i,j,s} * v_{i,j,s}}");
+		feq.addEquation("p","p","\\sum_s{M_{k,s} * v_{i,j,s}}");
+		feq.addEquation("f_{eq,i,j,k}","eq_profile","1 + 3p + \\frac{9}{2}p^2 - \\frac{3}{2}v^2");
+		feq.addEquation("f_{eq,i,j,k}","eq_profile","f_{eq,i,j,k} * W_k * d");
+		
+// 		project.addDefinition("e_{i,j}","energy","\\sum_k{D_{i,j,k}*D_{i,j,k}+5}");
 
-		CMRProjectAction & ac = project.addAction("UpdateEnergy","update the energy");
-		ac.addEquation("b","bip","4 * 2 + A_{eq,4}");
-		ac.addEquation("D'_{i,j,3+5}","density","e^3_{i,j} / 2A_{eq,1} A_{eq,2} + ( 6 + 7 )^2 \\frac{1}{2+4} + 4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}} + b");
+// 		CMRProjectAction & ac = project.addAction("UpdateEnergy","update the energy");
+// 		ac.addEquation("b","bip","4 * 2 + A_{eq,4}");
+// 		ac.addEquation("D'_{i,j,3+5}","density","e^3_{i,j} / 2A_{eq,1} A_{eq,2} + ( 6 + 7 )^2 \\frac{1}{2+4} + 4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}} + b");
 		project.printDebug();
 		project.replaceLoops();
 		project.printDebug();

@@ -18,7 +18,7 @@ class CMRProjectIterator : public CMREntity
 {
 	public:
 		CMRProjectIterator ( const std::string& latexName, const std::string& longName ,int start, int end);
-		virtual std::ostream& genUsageCCode ( std::ostream& out, CMRProjectContext& context, CMRLatexEntity& entity ) const;
+		virtual std::ostream& genUsageCCode ( std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const;
 		void printDebug(void) const;
 		void printCPPCode(void) const;
 // 	private:

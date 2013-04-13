@@ -11,6 +11,7 @@
 #include <iostream>
 #include "CMRProjectDefinition.h"
 #include "CMRProjectTransformation.h"
+#include "CMRProject.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ using namespace std;
 CMRProjectDefinition::CMRProjectDefinition(const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext)
 	:CMREntity(latexName,longName), ops("body","body",parentContext)
 {
-
+	this->ops.addContextEntry(new CMRProjectLocalVariable(latexName,"tmp"));
 }
 
 /*******************  FUNCTION  *********************/
@@ -41,7 +42,7 @@ void CMRProjectDefinition::printCPPCode(CMRProjectContext & context) const
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectDefinition::genUsageCCode ( ostream& out, CMRProjectContext& context, CMRLatexEntity& entity ) const
+ostream& CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const
 {
 	out << "compute_" << this->longName << "(in,out,x,y)";
 	return out;
@@ -68,4 +69,11 @@ CMRProjectAction& CMRProjectDefinition::addSubBlock(string loopDescr, string par
 void CMRProjectDefinition::runTransformation ( CMRProjectTransformation& transf )
 {
 	transf.run(&ops);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectDefinition::addIndice ( const string& name, CMRCaptureType capture )
+{
+	CMREntity::addIndice ( name, capture );
+	this->ops.addContextEntry(new CMRProjectLocalVariable(name,"tmpvariable"));
 }

@@ -278,23 +278,30 @@ CMRProjectAction::Iterator CMRProjectTransfExpendExponent::transform ( CMRProjec
 	if (action->getName() == "cmrEquation")
 	{
 		assert(action->hasEquation());
-		expandExponent(action->getEquation().formula);
+		expandExponent(action->getEquation().formula,*action);
 	}
 	return action;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexFormulas& formulas)
+void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexFormulas& formulas,CMRProjectAction & action)
 {
 	CMRLatexEntityVector & elems = formulas.childs;
 	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
-		expandExponent(**it);
+		expandExponent(**it,action);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexEntity& entity )
+void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexEntity& entity ,CMRProjectAction & action)
 {
-	if (entity.name[0] != '\\')
+	if (entity.name[0] == '\\' || entity.superscript.childs.empty())
+		return;
+
+	CMRIndiceCaptureMap capture;
+	const CMREntity * e = action.getContext().find(entity);
+	assert(e != NULL);
+	e->match(entity,capture);
+	if (capture.find("cmrExponent") != capture.end())
 	{
 		if (entity.superscript.string == "2")
 		{

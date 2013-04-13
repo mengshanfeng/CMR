@@ -30,7 +30,7 @@ bool latexEntityIsInteger(CMRLatexEntity & entity)
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode ( ostream& out, CMRProjectContext& context, CMRLatexFormulas& formula )
+std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, CMRLatexFormulas& formula )
 {
 	CMRLatexEntityVector & elems = formula.childs;
 	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
@@ -39,7 +39,7 @@ std::ostream&  cmrGenEqCCode ( ostream& out, CMRProjectContext& context, CMRLate
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode(ostream& out, CMRProjectContext& context, CMRLatexEntity& entity)
+std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity)
 {
 	if (latexEntityIsInteger(entity))
 	{
@@ -53,10 +53,13 @@ std::ostream&  cmrGenEqCCode(ostream& out, CMRProjectContext& context, CMRLatexE
 		out << ") ";
 	} else {
 		//search matching in context
-		CMREntity * def = context.find(entity);
+		const CMREntity * def = context.find(entity);
 		if (def == NULL)
 		{
 			cerr << endl << "Unknown member " << entity.totalValue;// << " in equation " << eq->latexName << " = " << eq->compute << endl;
+			cerr << endl;
+			cerr << "Context is : " << endl;
+			context.printDebug();
 			abort();
 		}
 		def->genUsageCCode(out,context,entity);

@@ -53,7 +53,7 @@ class CMRProjectAlias : public CMREntity
 			tmp.name = real->shortName;
 			return real->match(tmp,capture);
 		}
-		virtual std::ostream& genUsageCCode(std::ostream& out, CMRProjectContext& context, CMRLatexEntity& entity) const {return real->genUsageCCode(out,context,entity);};
+		virtual std::ostream& genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const {return real->genUsageCCode(out,context,entity);};
 	private:
 		CMREntity * real;
 };

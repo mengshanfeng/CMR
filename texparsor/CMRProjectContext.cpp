@@ -16,7 +16,7 @@
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-CMRProjectContext::CMRProjectContext(CMRProjectContext* parent)
+CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
 {
 	this->parent = parent;
 }
@@ -55,9 +55,9 @@ CMREntity * CMRProjectContext::checkUnique(CMREntity & entry)
 }
 
 /*******************  FUNCTION  *********************/
-CMREntity* CMRProjectContext::find(CMRLatexEntity& entity)
+const CMREntity* CMRProjectContext::find( CMRLatexEntity& entity ) const
 {
-	for (CMRProjectEntityList::iterator it = entities.begin() ; it != entities.end() ; ++it)
+	for (CMRProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
 	{
 		CMRIndiceCaptureMap capture;
 		if ((*it)->match(entity,capture))

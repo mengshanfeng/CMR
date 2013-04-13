@@ -163,12 +163,12 @@ void CMRProjectAction::checkContext ( CMRProjectContext& context ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genEqCCode(ostream& out, CMRProjectContext& context, int depth) const
+void CMRProjectAction::genEqCCode(ostream& out, const CMRProjectContext& context, int depth) const
 {
 	//errors
 	assert(eq != NULL);
 	//check if in context of if new def
-	CMREntity * entity = context.find(eq->latexEntity);
+	const CMREntity * entity = context.find(eq->latexEntity);
 	
 	//indent
 	out << genCCodeIndent(depth);
@@ -177,7 +177,7 @@ void CMRProjectAction::genEqCCode(ostream& out, CMRProjectContext& context, int 
 	if (entity == NULL)
 	{
 		out << "double ";
-		entity = & context.addEntry(new CMRProjectLocalVariable(eq->latexName,eq->longName));
+// 		entity = & context.addEntry(new CMRProjectLocalVariable(eq->latexName,eq->longName));
 	}
 	
 	//write left member
@@ -216,7 +216,7 @@ void CMRProjectAction::addContextEntry ( CMREntity* entity, CMRProjectCodeTreeIn
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genItLoopCCode ( ostream& out, CMRProjectContext& context, int depth ) const
+void CMRProjectAction::genItLoopCCode ( ostream& out, const CMRProjectContext& context, int depth ) const
 {
 	CMRProjectContext localContext(&context);
 
@@ -224,17 +224,18 @@ void CMRProjectAction::genItLoopCCode ( ostream& out, CMRProjectContext& context
 	assert(name == "cmrSubBlock" && description == "cmrIteratorLoop");
 	
 	//search the related iterator definition
-	CMREntity * entity = localContext.find(eq->latexEntity);
+	const CMREntity * entity = context.parent->find(eq->latexEntity);
 	if (entity == NULL)
 	{
 		cerr << "Can't find the definition of iterator " << eq->compute << " in current context." << endl;
 		abort();
 	}
 
-	CMRProjectIterator * iterator = dynamic_cast<CMRProjectIterator*>(entity);
+	const CMRProjectIterator * iterator = dynamic_cast<const CMRProjectIterator*>(entity);
 	if (iterator == NULL)
 	{
 		cerr << "Cuation, expect iterator " << eq->compute << " but get another type." << endl;
+		context.printDebug();
 		abort();
 	}
 	assert(iterator != NULL);
@@ -244,23 +245,25 @@ void CMRProjectAction::genItLoopCCode ( ostream& out, CMRProjectContext& context
 	out << genCCodeIndent(depth) << "for (int " << eq->compute << " = " << iterator->start << " ; " << eq->compute << " < " << iterator->end << " ; " << eq->compute << "++ )" <<endl;
 	out << genCCodeIndent(depth) << "{" << endl;
 	for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
-		it->genCCode(out,localContext,depth+1);
+		it->genCCode(out,it->context,depth+1);
+		//it->genCCode(out,localContext,depth+1);
 	out << genCCodeIndent(depth) << "}" << endl;
 	
 	//checkContext(localContext);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genRootElemCCode ( ostream& out, CMRProjectContext& context, int depth ) const
+void CMRProjectAction::genRootElemCCode ( ostream& out, const CMRProjectContext& context, int depth ) const
 {
 	CMRProjectContext localContext(&context);
 	for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
-		it->genCCode(out,localContext,depth+1);
+		it->genCCode(out,it->context,depth+1);
+		//it->genCCode(out,localContext,depth+1);
 	//checkContext(localContext);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genCCode(std::ostream & out,CMRProjectContext & context,int depth) const
+void CMRProjectAction::genCCode( ostream& out, const CMRProjectContext& context, int depth ) const
 {
 	//cases
 	if (depth <= 1)
@@ -278,4 +281,10 @@ void CMRProjectAction::genCCode(std::ostream & out,CMRProjectContext & context,i
 			out << " : " << description << " = " << eq->compute;
 		out << endl;
 	}
+}
+
+/*******************  FUNCTION  *********************/
+const CMRProjectContext& CMRProjectAction::getContext ( void ) const
+{
+	return context;
 }

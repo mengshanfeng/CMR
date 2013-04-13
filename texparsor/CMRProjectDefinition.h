@@ -24,10 +24,11 @@ class CMRProjectDefinition : public CMREntity
 		CMRProjectDefinition ( const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext = NULL);
 		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		virtual void addIndice ( const std::string& name, CMRCaptureType capture = CMR_CAPTURE_NONE );
 		void printDebug(void) const;
 		void printCPPCode(CMRProjectContext & context) const;
 		void runTransformation(CMRProjectTransformation & transf);
-		virtual std::ostream& genUsageCCode ( std::ostream& out, CMRProjectContext& context, CMRLatexEntity& entity ) const;
+		virtual std::ostream& genUsageCCode ( std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const;
 	private:
 		CMRProjectAction ops;
 };

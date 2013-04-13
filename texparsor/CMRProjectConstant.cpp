@@ -52,7 +52,7 @@ void CMREntityConstant::loadValuesScalar ( const string& data )
 	//errors
 	assert(data.empty() == false);
 	
-	values.push_back(cmrSafeStringToFloat(data));
+	values.push_back(data);
 }
 
 /*******************  FUNCTION  *********************/
@@ -65,10 +65,10 @@ void CMREntityConstant::loadValuesVector ( const string& data )
 	addDimension(vs.size());
 	
 	for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
-		values.push_back(cmrSafeStringToFloat(*it));
+		values.push_back(*it);
 	
-	if (values.size() == 1 && values[0] == 0.0)
-		fprintf(stderr,"Warning, you get a unique 0.0 value for a vector, maybe this is a mistake !\n");
+// 	if (values.size() == 1)
+// 		fprintf(stderr,"Warning, you get a unique 0.0 value for a vector, maybe this is a mistake !\n");
 }
 
 /*******************  FUNCTION  *********************/
@@ -94,14 +94,14 @@ void CMREntityConstant::loadValuesMatrix ( const string& data )
 			assert(dim2 == vs.size());
 		}
 		for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
-			values.push_back(cmrSafeStringToFloat(*it));
+			values.push_back(*it);
 	}
 	
 	addDimension(dim2);
 	addDimension(dim1);
 	
-	if (values.size() == 1 && values[0] == 0.0)
-		fprintf(stderr,"Warning, you get a unique 0.0 value for a matrix, maybe this is a mistake !\n");
+// 	if (values.size() == 1 && values[0] == 0.0)
+// 		fprintf(stderr,"Warning, you get a unique 0.0 value for a matrix, maybe this is a mistake !\n");
 }
 
 /*******************  FUNCTION  *********************/
@@ -132,7 +132,7 @@ void CMREntityConstant::printDebug ( void ) const
 	printf("]\n");
 	printf("    - values    :");
 	for (size_t i = 0 ; i < values.size() ; i++)
-		printf(" %f ,",values[i]);
+		printf(" %s ,",values[i].c_str());
 	printf("\n");
 }
 
@@ -172,7 +172,7 @@ void CMREntityConstant::printCPPCode ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMREntityConstant::genUsageCCode(ostream& out, CMRProjectContext& context, CMRLatexEntity& entity) const
+ostream& CMREntityConstant::genUsageCCode(ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const
 {
 	//extract matching
 	CMRIndiceCaptureMap capture;

@@ -106,7 +106,7 @@ string CMRProjectVariable::getTypeWithDims ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectVariable::genUsageCCode(ostream& out, CMRProjectContext& context, CMRLatexEntity& entity) const
+ostream& CMRProjectVariable::genUsageCCode(ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const
 {
 	CMRIndiceCaptureMap capture;
 
