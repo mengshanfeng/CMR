@@ -101,6 +101,8 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) co
 	if (entity.name != shortName || (entity.superscriptTotalValue != exponent && exponent.empty() == false))
 		return false;
 	
+	assert(indices.size() == indicesCapture.size());
+	
 	CMRLatexFormulasList tmp = entity.getIndices();
 	if (tmp.size() <= indices.size() & tmp.size() >= requiredIndices)
 	{

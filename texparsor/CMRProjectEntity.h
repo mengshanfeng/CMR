@@ -43,10 +43,10 @@ class CMREntity
 		virtual void printDebug(void) const;
 		virtual bool match(CMRLatexEntity & entity,CMRIndiceCaptureMap & capture) const;
 		virtual std::ostream & genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const { out << longName; return out;};
+		virtual void madeCaptureIndice(const std::string name,enum CMRCaptureType capture);
 	protected:
 		void applyLatexName(const std::string & latexName);
 		bool haveCaptureFor(const std::string name) const;
-		void madeCaptureIndice(const std::string name,enum CMRCaptureType capture);
 	public:
 		std::string latexName;
 		std::string shortName;

@@ -8,10 +8,12 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
+#include <cassert>
 #include <iostream>
 #include "CMRProjectDefinition.h"
 #include "CMRProjectTransformation.h"
 #include "CMRProject.h"
+#include "CMRGenCode.h"
 
 using namespace std;
 
@@ -33,7 +35,16 @@ void CMRProjectDefinition::printDebug(void ) const
 void CMRProjectDefinition::printCPPCode(CMRProjectContext & context) const
 {
 	cout << "//Definition : " << this->latexName << " : " << longName << endl;
-	cout << "double compute_" << this->longName << "(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y)" << endl;
+	cout << "double compute_" << this->longName << "(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y";
+	
+	for (int i = 0 ; i < indicesCapture.size() ; i++)
+	{
+		assert(indicesCapture[i] != CMR_CAPTURE_OPTIONS);
+		if (indicesCapture[i] == CMR_CAPTURE_REQUIRED && indices[i] != "i" && indices[i] != "j")
+			cout << ", int " << indices[i];
+	}
+	
+	cout << ")" << endl;
 	cout << "{" << endl;
 	ops.genCCode(cout,context,1);
 	cout << "\t\treturn " << this->longName << endl;
@@ -44,7 +55,26 @@ void CMRProjectDefinition::printCPPCode(CMRProjectContext & context) const
 /*******************  FUNCTION  *********************/
 ostream& CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const
 {
-	out << "compute_" << this->longName << "(in,out,x,y)";
+	//extract matching
+	CMRIndiceCaptureMap capture;
+	
+	//extract matching
+	bool res = this->match(entity,capture);
+	assert(res == true);
+	
+	out << "compute_" << this->longName << "(in,out,x,y";
+	for (int i = 0 ; i < indicesCapture.size() ; i++)
+	{
+		assert(indicesCapture[i] != CMR_CAPTURE_OPTIONS);
+		
+		if (indicesCapture[i] == CMR_CAPTURE_REQUIRED && indices[i] != "i" && indices[i] != "j")
+		{
+			out << ",";
+			assert(capture[indices[i]] != NULL);
+			cmrGenEqCCode(out,context, *capture[indices[i]]);
+		}
+	}
+	out << ");";
 	return out;
 }
 
@@ -75,5 +105,12 @@ void CMRProjectDefinition::runTransformation ( CMRProjectTransformation& transf 
 void CMRProjectDefinition::addIndice ( const string& name, CMRCaptureType capture )
 {
 	CMREntity::addIndice ( name, capture );
+	this->ops.addContextEntry(new CMRProjectLocalVariable(name,"tmpvariable"));
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectDefinition::madeCaptureIndice ( const string name, CMRCaptureType capture )
+{
+	CMREntity::madeCaptureIndice ( name, capture );
 	this->ops.addContextEntry(new CMRProjectLocalVariable(name,"tmpvariable"));
 }

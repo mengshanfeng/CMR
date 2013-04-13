@@ -25,6 +25,7 @@ class CMRProjectDefinition : public CMREntity
 		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		virtual void addIndice ( const std::string& name, CMRCaptureType capture = CMR_CAPTURE_NONE );
+		virtual void madeCaptureIndice ( const std::string name, CMRCaptureType capture );
 		void printDebug(void) const;
 		void printCPPCode(CMRProjectContext & context) const;
 		void runTransformation(CMRProjectTransformation & transf);

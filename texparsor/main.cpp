@@ -151,11 +151,11 @@ int main(int argc,char ** argv)
 		///////
 		project.addDefinition("d","density","\\sum_k{f_{i,j,k}}");
 		
-		CMRProjectDefinition & vs = project.addDefinition("v_{i,j,s}","velocity","\\sum_k{f_{i,j,k} * M_{k,s}} / d");
+		CMRProjectDefinition & vs = project.addDefinition("v_{i,j}","velocity","\\sum_k{f_{i,j,k} * M_{k,s}} / d");
 		vs.addIndice("s",CMR_CAPTURE_REQUIRED);
 		
 		CMRProjectDefinition & feq = project.addDefinition("f_{eq,i,j,k}","eq_profile");
-		feq.addIndice("k",CMR_CAPTURE_REQUIRED);
+		feq.madeCaptureIndice("k",CMR_CAPTURE_REQUIRED);
 		feq.addEquation("v^2","v2","\\sum_s{v_{i,j,s} * v_{i,j,s}}");
 		feq.addEquation("p","p","\\sum_s{M_{k,s} * v_{i,j,s}}");
 		feq.addEquation("f_{eq,i,j,k}","eq_profile","1 + 3p + \\frac{9}{2}p^2 - \\frac{3}{2}v^2");
