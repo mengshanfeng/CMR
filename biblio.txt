@@ -7,3 +7,10 @@ http://www.cmake.org/cmake/help/documentation.html
 https://github.com/svalat/svUnitTest
 http://www.libgeodecomp.org/
 http://code.google.com/p/patus/
+http://groups.csail.mit.edu/sct/wiki/index.php?title=The_Pochoir_Project
+QIRAL: A High Level Language for Lattice QCD Code 
+Maude : http://maude.cs.uiuc.edu/ : Maude: speciÿcation and programming in rewriting logic
+https://code.google.com/p/pencil-code/ | http://pencil-code.nordita.org/
+Extracting Mathematical Semantics from LATEX Documents
+Efficient and Correct Stencil Computation via Pattern Matching and Static Typing
+Auto-Generation and Auto-Tuning of 3D Stencil Codes on GPU Clusters
