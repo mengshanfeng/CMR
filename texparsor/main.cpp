@@ -12,6 +12,7 @@
 #include "parsor/CMRTexParsor.h"
 #include "parsor/CMREqDepMatrix.h"
 #include "parsor/CMREntityMatching.h"
+#include "parsor/CMRLatexFormula.h"
 #include "CMRProjectEntity.h"
 #include "CMRProjectConstant.h"
 #include "CMRProjectEquation.h"
