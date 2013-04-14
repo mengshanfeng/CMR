@@ -14,6 +14,7 @@
 #include "CMRParsorBasics.h"
 #include "CMRTexParsor.h"
 #include "CMRLatexEntity.h"
+#include "CMRLatexParsorContext.h"
 
 /**********************  USING  *********************/
 using namespace std;

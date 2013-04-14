@@ -15,6 +15,7 @@
 #include <vector>
 #include <string>
 
+class CMRLatexParsorContext;
 /*********************  TYPES  **********************/
 struct CMRLatexEntity;
 struct CMRLatexFormulas;
@@ -53,30 +54,6 @@ struct CMRLatexEntity
 	std::string subscriptTotalValue;
 	std::string superscriptTotalValue;
 	std::string argsTotalValue;
-};
-
-/*********************  CLASS  **********************/
-class CMRLatexParsorContext
-{
-	public:
-		CMRLatexParsorContext(const std::string & value);
-		CMRLatexParsorContext(const CMRLatexParsorContext * parent,int start,int end);
-		int getPosition(void) const;
-		int move( int delta );
-		void skipWhiteSpace(void);
-		bool isEnd(void) const;
-		CMRLatexParsorContext & operator++(void);
-		char getCurrent(void) const;
-		char getCurAndMove( int delta = 1 );
-		bool startBy(const std::string & value) const;
-		bool startBy(char value) const;
-		CMRLatexParsorContext extractSubZone( char delimOpen, char delimClose );
-		void fatal(const std::string & message) const;
-	private:
-		int position;
-		std::string value;
-		const CMRLatexParsorContext * parent;
-		int relToParent;
 };
 
 /*********************  CLASS  **********************/
