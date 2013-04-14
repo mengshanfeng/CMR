@@ -44,6 +44,7 @@ int main(int argc,char ** argv)
 {
 	CMRLatexFormulas2 tmp("e^3_{i,j} / 2A_{eq,1} A_{eq,2} + ( 6 + 7 )^2 \\frac{1}{2+4} + 4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}} + b");
 	cout << tmp << endl;
+	tmp.dumpAsTree(cout);
 	//string value = "v'_{l} = \\frac{\\sum_{k}{v_{i,j,k} * D_{l,k}}}{d}";
 	//string value = "d = \\sum_{l=1}^{9}{D_{i,j,k}}";
 	//string value = "f_{ eq } = (1.0 + (3 * p) + ((9/2) * p^2 - (3/2) * v^2)) * W_{k} * d";

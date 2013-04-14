@@ -523,3 +523,64 @@ void CMRLatexFormulas2::split ( CMRLatexFormulasVector2& formulas, const string&
 // 	if (f != this)
 // 		this->resize(pos);
 }
+
+/*******************  FUNCTION  *********************/
+void CMRLatexFormulas2::dumpAsXml ( ostream& out, int depth ) const
+{
+	out << cmrIndent(depth) << "<formula>" << endl;
+	for (CMRLatexFormulas2::const_iterator it = begin() ; it != end() ; ++it)
+		(*it)->dumpAsXml(out,depth+1);
+	out << cmrIndent(depth) << "</formula>" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexEntity2::dumpAsXml ( ostream& out, int depth, const string& name, const CMRLatexFormulasVector2& list )
+{
+	if (list.empty() == false)
+	{
+		out << cmrIndent(depth) << "<" << name << ">" << endl;
+		for (CMRLatexFormulasVector2::const_iterator it = list.begin() ; it != list.end() ; ++it)
+			(*it)->dumpAsXml(out,depth+1);
+		out << cmrIndent(depth) << "</" << name << ">" << endl;
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexEntity2::dumpAsXml ( ostream& out, int depth ) const
+{
+	out << cmrIndent(depth) << "<entity>" << endl;
+	out << cmrIndent(depth+1) << "<name>"<< name << "</name>" << endl;
+	dumpAsXml(out,depth+1,"indices",indices);
+	dumpAsXml(out,depth+1,"exponents",exponents);
+	dumpAsXml(out,depth+1,"parameters",parameters);
+	out << cmrIndent(depth) << "</entity>" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexFormulas2::dumpAsTree ( ostream& out, int depth ) const
+{
+	out << cmrIndent(depth) << "formula:" << endl;
+	for (CMRLatexFormulas2::const_iterator it = begin() ; it != end() ; ++it)
+		(*it)->dumpAsTree(out,depth+1);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth, const string& name, const CMRLatexFormulasVector2& list )
+{
+	if (list.empty() == false)
+	{
+		out << cmrIndent(depth) << name << ":" << endl;
+		for (CMRLatexFormulasVector2::const_iterator it = list.begin() ; it != list.end() ; ++it)
+			(*it)->dumpAsTree(out,depth+1);
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth ) const
+{
+	out << cmrIndent(depth) << "entity:" << endl;
+	out << cmrIndent(depth+1) << "name:"<< name << endl;
+	dumpAsTree(out,depth+1,"indices",indices);
+	dumpAsTree(out,depth+1,"exponents",exponents);
+	dumpAsTree(out,depth+1,"parameters",parameters);
+}

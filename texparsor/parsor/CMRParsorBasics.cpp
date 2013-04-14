@@ -87,3 +87,12 @@ float cmrSafeStringToFloat ( const std::string& value )
 	/** TODO : implement **/
 	return atof(value.c_str());
 }
+
+/*******************  FUNCTION  *********************/
+std::string cmrIndent ( int depth )
+{
+	std::string res;
+	for (int i = 0 ; i < depth ; i++)
+		res+="  ";
+	return res;
+}
