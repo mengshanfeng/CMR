@@ -15,7 +15,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/unittest-macros.cmake)
 
 ######################################################
 #setup directories
-include_directories(${UNITTEST_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/texparsor/parsor)
+include_directories(${UNITTEST_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/..)
 add_definitions(-DUNITTEST)
 
 ######################################################
