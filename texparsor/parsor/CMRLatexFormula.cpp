@@ -104,7 +104,7 @@ void CMRLatexFormulas2::split ( CMRLatexFormulasVector2& formulas, const string&
 		{
 			formulas.push_back(f);
 			f = new CMRLatexFormulas2;
-			//delete (*this)[pos];
+			delete (*this)[i];
 		} else {
 			f->push_back((*this)[i]);
 		}
@@ -113,9 +113,7 @@ void CMRLatexFormulas2::split ( CMRLatexFormulasVector2& formulas, const string&
 	//finish
 	formulas.push_back(f);
 	
-	//resize if need
-// 	if (f != this)
-// 		this->resize(pos);
+	CMRLatexEntityVector2::clear();
 }
 
 /*******************  FUNCTION  *********************/

@@ -291,6 +291,9 @@ void CMRLatexEntity2::extractSubAndSuperScript ( CMRLatexParsorContext& context 
 		f->split(exponents,",");
 	else
 		abort();
+	
+	//clear tmp formula
+	delete f;
 }
 
 /*******************  FUNCTION  *********************/
