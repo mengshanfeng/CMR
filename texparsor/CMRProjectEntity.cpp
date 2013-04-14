@@ -96,7 +96,7 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) co
 	assert(indices.size() == indicesCapture.size());
 	
 	CMRLatexFormulasList tmp = entity.getIndices();
-	if (tmp.size() <= indices.size() & tmp.size() >= requiredIndices)
+	if (tmp.size() <= indices.size() && tmp.size() >= requiredIndices)
 	{
 		//capture
 		for (int i = 0 ; i < tmp.size() ; i++)
