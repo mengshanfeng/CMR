@@ -15,7 +15,7 @@
 #include "CMRProjectEntity.h"
 
 /*********************  TYPES  **********************/
-typedef std::vector <CMREntity*> CMRProjectEntityList;
+typedef std::vector <CMRProjectEntity*> CMRProjectEntityList;
 
 /*********************  CLASS  **********************/
 struct CMRProjectContext
@@ -23,10 +23,10 @@ struct CMRProjectContext
 	CMRProjectContext(const CMRProjectContext * parent = NULL);
 	int countTotalEntries(void) const;
 	void printDebug(void) const;
-	CMREntity & addEntry(CMREntity * entry);
-	CMREntity* checkUnique(CMREntity & entry);
+	CMRProjectEntity & addEntry(CMRProjectEntity * entry);
+	CMRProjectEntity* checkUnique(CMRProjectEntity & entry);
 // 	CMREntity * find(CMRLatexEntity & entity);
-	const CMREntity * find(CMRLatexEntity & entity) const;
+	const CMRProjectEntity * find(CMRLatexEntity & entity) const;
 	const CMRProjectContext * parent;
 	CMRProjectEntityList entities;
 };

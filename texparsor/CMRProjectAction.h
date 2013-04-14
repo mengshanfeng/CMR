@@ -52,8 +52,8 @@ class CMRProjectAction : public CMRCodeTree
 		const std::string & getDescription(void) const {return description;};
 		CMRProjectEquation & getEquation(void) {return *eq;};
 		bool hasEquation(void) const {return eq != NULL;};
-		void addContextEntry(CMREntity * entity);
-		void addContextEntry(CMREntity * entity,CMRProjectCodeTreeInsert location);
+		void addContextEntry(CMRProjectEntity * entity);
+		void addContextEntry(CMRProjectEntity * entity,CMRProjectCodeTreeInsert location);
 		const CMRProjectContext & getContext(void) const;
 	protected:
 		void genEqCCode(std::ostream& out, const CMRProjectContext & context ,int depth) const;

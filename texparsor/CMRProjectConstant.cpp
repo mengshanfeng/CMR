@@ -21,7 +21,7 @@ using namespace std;
 
 /*******************  FUNCTION  *********************/
 CMREntityConstant::CMREntityConstant ( const string& latexName, const string& longName) 
-	: CMREntity ( latexName, longName )
+	: CMRProjectEntity ( latexName, longName )
 {
 }
 
@@ -125,7 +125,7 @@ void CMREntityConstant::addDimension ( int size )
 /*******************  FUNCTION  *********************/
 void CMREntityConstant::printDebug ( void ) const
 {
-	CMREntity::printDebug();
+	CMRProjectEntity::printDebug();
 	printf("    - dims      : %lu : [",dims.size());
 	for (size_t i = 0 ; i < dims.size() ; i++)
 		printf(" %d ,",dims[i]);
@@ -175,7 +175,7 @@ void CMREntityConstant::printCPPCode ( void ) const
 ostream& CMREntityConstant::genUsageCCode(ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const
 {
 	//extract matching
-	CMRIndiceCaptureMap capture;
+	CMRProjectCaptureMap capture;
 	
 	//extract matching
 	bool res = this->match(entity,capture);

@@ -19,7 +19,7 @@ using namespace std;
 
 /*******************  FUNCTION  *********************/
 CMRProjectDefinition::CMRProjectDefinition(const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext)
-	:CMREntity(latexName,longName), ops("body","body",parentContext)
+	:CMRProjectEntity(latexName,longName), ops("body","body",parentContext)
 {
 	this->ops.addContextEntry(new CMRProjectLocalVariable(latexName,"tmp"));
 }
@@ -56,7 +56,7 @@ void CMRProjectDefinition::printCPPCode(CMRProjectContext & context) const
 ostream& CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const
 {
 	//extract matching
-	CMRIndiceCaptureMap capture;
+	CMRProjectCaptureMap capture;
 	
 	//extract matching
 	bool res = this->match(entity,capture);
@@ -104,13 +104,13 @@ void CMRProjectDefinition::runTransformation ( CMRProjectTransformation& transf 
 /*******************  FUNCTION  *********************/
 void CMRProjectDefinition::addIndice ( const string& name, CMRCaptureType capture )
 {
-	CMREntity::addIndice ( name, capture );
+	CMRProjectEntity::addIndice ( name, capture );
 	this->ops.addContextEntry(new CMRProjectLocalVariable(name,"tmpvariable"));
 }
 
 /*******************  FUNCTION  *********************/
 void CMRProjectDefinition::madeCaptureIndice ( const string name, CMRCaptureType capture )
 {
-	CMREntity::madeCaptureIndice ( name, capture );
+	CMRProjectEntity::madeCaptureIndice ( name, capture );
 	this->ops.addContextEntry(new CMRProjectLocalVariable(name,"tmpvariable"));
 }

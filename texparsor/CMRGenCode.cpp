@@ -53,7 +53,7 @@ std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, CMR
 		out << ") ";
 	} else {
 		//search matching in context
-		const CMREntity * def = context.find(entity);
+		const CMRProjectEntity * def = context.find(entity);
 		if (def == NULL)
 		{
 			cerr << endl << "Unknown member " << entity.totalValue;// << " in equation " << eq->latexName << " = " << eq->compute << endl;

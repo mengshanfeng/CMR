@@ -22,9 +22,9 @@ CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
 }
 
 /*******************  FUNCTION  *********************/
-CMREntity & CMRProjectContext::addEntry(CMREntity* entry)
+CMRProjectEntity & CMRProjectContext::addEntry(CMRProjectEntity* entry)
 {
-	CMREntity * conflict;
+	CMRProjectEntity * conflict;
 	assert(entry != NULL);
 	conflict = checkUnique(*entry);
 	if (conflict != NULL)
@@ -39,11 +39,11 @@ CMREntity & CMRProjectContext::addEntry(CMREntity* entry)
 }
 
 /*******************  FUNCTION  *********************/
-CMREntity * CMRProjectContext::checkUnique(CMREntity & entry)
+CMRProjectEntity * CMRProjectContext::checkUnique(CMRProjectEntity & entry)
 {
 	for (CMRProjectEntityList::iterator it = entities.begin() ; it != entities.end() ; ++it)
 	{
-		CMRIndiceCaptureMap capture;
+		CMRProjectCaptureMap capture;
 		if (entry.longName == (*it)->longName)
 			return *it;
 		if (entry.match((*it)->latexEntity, capture))
@@ -55,11 +55,11 @@ CMREntity * CMRProjectContext::checkUnique(CMREntity & entry)
 }
 
 /*******************  FUNCTION  *********************/
-const CMREntity* CMRProjectContext::find( CMRLatexEntity& entity ) const
+const CMRProjectEntity* CMRProjectContext::find( CMRLatexEntity& entity ) const
 {
 	for (CMRProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
 	{
-		CMRIndiceCaptureMap capture;
+		CMRProjectCaptureMap capture;
 		if ((*it)->match(entity,capture))
 			return *it;
 	}

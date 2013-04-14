@@ -7,7 +7,7 @@
 
 /*********************  CLASS  **********************/
 //<param short_name="R" long_name="relax_param" type="double" unit="??" estimated_min="0" estimated_max="1.3" value="1" comment=""/>
-class CMREntityConstant : public CMREntity
+class CMREntityConstant : public CMRProjectEntity
 {
 	public:
 		CMREntityConstant( const std::string& latexName, const std::string& longName );

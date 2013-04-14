@@ -61,7 +61,7 @@ CMRProjectAction& CMRProjectAction::addIteratorLoop ( const string& iterator ,CM
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::addContextEntry ( CMREntity* entity )
+void CMRProjectAction::addContextEntry ( CMRProjectEntity* entity )
 {
 	context.addEntry(entity);
 }
@@ -168,7 +168,7 @@ void CMRProjectAction::genEqCCode(ostream& out, const CMRProjectContext& context
 	//errors
 	assert(eq != NULL);
 	//check if in context of if new def
-	const CMREntity * entity = context.find(eq->latexEntity);
+	const CMRProjectEntity * entity = context.find(eq->latexEntity);
 	
 	//indent
 	out << genCCodeIndent(depth);
@@ -191,7 +191,7 @@ void CMRProjectAction::genEqCCode(ostream& out, const CMRProjectContext& context
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::addContextEntry ( CMREntity* entity, CMRProjectCodeTreeInsert location )
+void CMRProjectAction::addContextEntry ( CMRProjectEntity* entity, CMRProjectCodeTreeInsert location )
 {
 	Iterator it(this);
 
@@ -224,7 +224,7 @@ void CMRProjectAction::genItLoopCCode ( ostream& out, const CMRProjectContext& c
 	assert(name == "cmrSubBlock" && description == "cmrIteratorLoop");
 	
 	//search the related iterator definition
-	const CMREntity * entity = context.parent->find(eq->latexEntity);
+	const CMRProjectEntity * entity = context.parent->find(eq->latexEntity);
 	if (entity == NULL)
 	{
 		cerr << "Can't find the definition of iterator " << eq->compute << " in current context." << endl;

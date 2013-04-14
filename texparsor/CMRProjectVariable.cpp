@@ -19,7 +19,7 @@ using namespace std;
 
 /*******************  FUNCTION  *********************/
 CMRProjectVariable::CMRProjectVariable ( const string& latexName, const string& longName , const std::string & type) 
-	: CMREntity ( latexName, longName )
+	: CMRProjectEntity ( latexName, longName )
 {
 	//check that we have i/j for capture
 	assert(haveCaptureFor("i"));
@@ -108,7 +108,7 @@ string CMRProjectVariable::getTypeWithDims ( void ) const
 /*******************  FUNCTION  *********************/
 ostream& CMRProjectVariable::genUsageCCode(ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const
 {
-	CMRIndiceCaptureMap capture;
+	CMRProjectCaptureMap capture;
 
 	if (entity.name == shortName)
 		out << "in.";

@@ -311,8 +311,8 @@ void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexEntity& entity ,CM
 	if (entity.name[0] == '\\' || entity.superscript.empty())
 		return;
 
-	CMRIndiceCaptureMap capture;
-	const CMREntity * e = action.getContext().find(entity);
+	CMRProjectCaptureMap capture;
+	const CMRProjectEntity * e = action.getContext().find(entity);
 	assert(e != NULL);
 	e->match(entity,capture);
 	if (capture.find("cmrExponent") != capture.end())

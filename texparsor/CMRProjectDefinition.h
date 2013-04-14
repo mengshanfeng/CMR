@@ -18,7 +18,7 @@
 class CMRProjectTransformation;
 
 /*********************  CLASS  **********************/
-class CMRProjectDefinition : public CMREntity
+class CMRProjectDefinition : public CMRProjectEntity
 {
 	public:
 		CMRProjectDefinition ( const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext = NULL);

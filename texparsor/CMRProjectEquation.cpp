@@ -16,7 +16,7 @@ using namespace std;
 
 /*******************  FUNCTION  *********************/
 CMRProjectEquation::CMRProjectEquation ( const string& latexName, const string& longName, const string& compute ) 
-	: CMREntity ( latexName, longName )
+	: CMRProjectEntity ( latexName, longName )
 {
 	this->compute = compute;
 	cmrParseLatexFormula(formula,compute);
@@ -25,7 +25,7 @@ CMRProjectEquation::CMRProjectEquation ( const string& latexName, const string& 
 /*******************  FUNCTION  *********************/
 void CMRProjectEquation::printDebug ( void ) const
 {
-	CMREntity::printDebug();
+	CMRProjectEntity::printDebug();
 	printf("    - value     : %s\n",compute.c_str());
 }
 

@@ -15,7 +15,7 @@
 #include "parsor/CMRParsorBasics.h"
 
 /*********************  CLASS  **********************/
-class CMRProjectVariable : public CMREntity
+class CMRProjectVariable : public CMRProjectEntity
 {
 	public:
 		CMRProjectVariable ( const std::string& latexName, const std::string& longName, const std::string& type );

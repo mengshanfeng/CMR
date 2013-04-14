@@ -18,7 +18,7 @@ using namespace std;
 
 /*******************  FUNCTION  *********************/
 CMRProjectIterator::CMRProjectIterator ( const string& latexName, const string& longName, int start, int end ) 
-	: CMREntity ( latexName, longName )
+	: CMRProjectEntity ( latexName, longName )
 {
 	this->start = start;
 	this->end = end;
@@ -27,7 +27,7 @@ CMRProjectIterator::CMRProjectIterator ( const string& latexName, const string& 
 /*******************  FUNCTION  *********************/
 void CMRProjectIterator::printDebug ( void ) const
 {
-	CMREntity::printDebug();
+	CMRProjectEntity::printDebug();
 	printf("    - values    : %d .. %d\n",start,end);
 }
 

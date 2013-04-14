@@ -30,18 +30,18 @@ typedef std::vector<std::string> CMREntityIndiceVector;
 typedef std::vector<CMRCaptureType> CMREntityIndiceCaptureVector;
 typedef std::vector<int> CMRConstantDimensionsVector;
 typedef std::vector<std::string> CMRConstantValueVector;
-typedef std::map<std::string,CMRLatexFormulas *> CMRIndiceCaptureMap;
+typedef std::map<std::string,CMRLatexFormulas *> CMRProjectCaptureMap;
 
 /*********************  CLASS  **********************/
-class CMREntity
+class CMRProjectEntity
 {
 	public:
-		CMREntity(const std::string & latexName,const std::string & longName);
-		virtual ~CMREntity(void);
+		CMRProjectEntity(const std::string & latexName,const std::string & longName);
+		virtual ~CMRProjectEntity(void);
 		virtual void addIndice(const std::string & name,CMRCaptureType capture = CMR_CAPTURE_NONE);
 		virtual void setCaptureExponent(bool status = true);
 		virtual void printDebug(void) const;
-		virtual bool match(CMRLatexEntity & entity,CMRIndiceCaptureMap & capture) const;
+		virtual bool match(CMRLatexEntity & entity,CMRProjectCaptureMap & capture) const;
 		virtual std::ostream & genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const { out << longName; return out;};
 		virtual void madeCaptureIndice(const std::string name,enum CMRCaptureType capture);
 	protected:

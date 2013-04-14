@@ -15,7 +15,7 @@
 #include <string>
 
 /*********************  CLASS  **********************/
-class CMRProjectEquation : public CMREntity
+class CMRProjectEquation : public CMRProjectEntity
 {
 	public:
 		CMRProjectEquation ( const std::string& latexName, const std::string& longName , const std::string & compute);

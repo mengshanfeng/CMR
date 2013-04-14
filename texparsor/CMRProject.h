@@ -33,18 +33,18 @@ typedef std::vector <CMRProjectAction*> CMRProjectActionVector;
 typedef std::vector <CMRProjectDefinition*> CMRProjectDefinitionVector;
 
 /*********************  CLASS  **********************/
-class CMRProjectLocalVariable : public CMREntity
+class CMRProjectLocalVariable : public CMRProjectEntity
 {
 	public:
-		CMRProjectLocalVariable(const std::string& latexName, const std::string& longName) : CMREntity(latexName,longName) {};
+		CMRProjectLocalVariable(const std::string& latexName, const std::string& longName) : CMRProjectEntity(latexName,longName) {};
 };
 
 /*********************  CLASS  **********************/
-class CMRProjectAlias : public CMREntity
+class CMRProjectAlias : public CMRProjectEntity
 {
 	public:
-		CMRProjectAlias(CMREntity * entity, const std::string & alias,const std::string & longAlias) : CMREntity(entity->latexName,entity->longName) { this->real = entity; this->shortName = alias; this->latexEntity.name = alias; this->longName = longAlias;};
-		virtual bool match(CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) const
+		CMRProjectAlias(CMRProjectEntity * entity, const std::string & alias,const std::string & longAlias) : CMRProjectEntity(entity->latexName,entity->longName) { this->real = entity; this->shortName = alias; this->latexEntity.name = alias; this->longName = longAlias;};
+		virtual bool match(CMRLatexEntity& entity, CMRProjectCaptureMap& capture) const
 		{
 			if (entity.name != shortName)
 				return false;
@@ -55,7 +55,7 @@ class CMRProjectAlias : public CMREntity
 		}
 		virtual std::ostream& genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const {return real->genUsageCCode(out,context,entity);};
 	private:
-		CMREntity * real;
+		CMRProjectEntity * real;
 };
 
 /*********************  CLASS  **********************/

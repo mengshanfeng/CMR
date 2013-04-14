@@ -18,7 +18,7 @@
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-CMREntity::CMREntity ( const string& latexName, const string& longName )
+CMRProjectEntity::CMRProjectEntity ( const string& latexName, const string& longName )
 {
 	this->longName = longName;
 	this->applyLatexName(latexName);
@@ -27,13 +27,13 @@ CMREntity::CMREntity ( const string& latexName, const string& longName )
 }
 
 /*******************  FUNCTION  *********************/
-CMREntity::~CMREntity ( void )
+CMRProjectEntity::~CMRProjectEntity ( void )
 {
 	//nothing to do
 }
 
 /*******************  FUNCTION  *********************/
-void CMREntity::addIndice ( const string& name ,CMRCaptureType capture)
+void CMRProjectEntity::addIndice ( const string& name ,CMRCaptureType capture)
 {
 	indices.push_back(name);
 	if (name == "i" || name == "j")
@@ -47,7 +47,7 @@ void CMREntity::addIndice ( const string& name ,CMRCaptureType capture)
 }
 
 /*******************  FUNCTION  *********************/
-void CMREntity::applyLatexName ( const string& latexName )
+void CMRProjectEntity::applyLatexName ( const string& latexName )
 {
 	//vars
 	CMRLatexFormulas f;
@@ -75,7 +75,7 @@ void CMREntity::applyLatexName ( const string& latexName )
 }
 
 /*******************  FUNCTION  *********************/
-void CMREntity::printDebug ( void ) const
+void CMRProjectEntity::printDebug ( void ) const
 {
 	printf("Entity : \n");
 	printf("    - latexName : %s\n",latexName.c_str());
@@ -88,7 +88,7 @@ void CMREntity::printDebug ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) const
+bool CMRProjectEntity::match ( CMRLatexEntity& entity, CMRProjectCaptureMap& capture) const
 {
 	if (entity.name != shortName || (entity.superscriptTotalValue != exponent && exponent.empty() == false))
 		return false;
@@ -123,7 +123,7 @@ bool CMREntity::match ( CMRLatexEntity& entity, CMRIndiceCaptureMap& capture) co
 }
 
 /*******************  FUNCTION  *********************/
-bool CMREntity::haveCaptureFor ( const string name ) const
+bool CMRProjectEntity::haveCaptureFor ( const string name ) const
 {
 	for (int i = 0 ; i < indices.size() ; i++)
 	{
@@ -134,7 +134,7 @@ bool CMREntity::haveCaptureFor ( const string name ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMREntity::madeCaptureIndice ( const string name, CMRCaptureType capture )
+void CMRProjectEntity::madeCaptureIndice ( const string name, CMRCaptureType capture )
 {
 	for (int i = 0 ; i < indices.size() ; i++)
 	{
@@ -149,7 +149,7 @@ void CMREntity::madeCaptureIndice ( const string name, CMRCaptureType capture )
 }
 
 /*******************  FUNCTION  *********************/
-void CMREntity::setCaptureExponent(bool status)
+void CMRProjectEntity::setCaptureExponent(bool status)
 {
 	captureExponent = status;
 }

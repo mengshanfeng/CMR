@@ -14,7 +14,7 @@
 #include "CMRProjectEntity.h"
 
 /*********************  CLASS  **********************/
-class CMRProjectIterator : public CMREntity
+class CMRProjectIterator : public CMRProjectEntity
 {
 	public:
 		CMRProjectIterator ( const std::string& latexName, const std::string& longName ,int start, int end);
