@@ -63,6 +63,7 @@ class CMRLatexFormulas2 : public CMRLatexEntityVector2
 	public:
 		CMRLatexFormulas2(void);
 		CMRLatexFormulas2(const std::string & value);
+		~CMRLatexFormulas2(void);
 		void parse(const std::string & value);
 		void parse(CMRLatexParsorContext & context);
 		void split(CMRLatexFormulasVector2 & formulas,const std::string & sep = ",");
@@ -70,6 +71,10 @@ class CMRLatexFormulas2 : public CMRLatexEntityVector2
 		friend std::ostream & operator << (std::ostream & out,const CMRLatexFormulas2 & value);
 		void dumpAsXml(std::ostream & out, int depth = 0) const;
 		void dumpAsTree(std::ostream & out, int depth = 0) const;
+		void clear(void);
+	private:
+		CMRLatexFormulas2(const CMRLatexFormulas2 & orig);
+		CMRLatexFormulas2 & operator=(const CMRLatexFormulas2 & orig);
 };
 
 /*********************  CLASS  **********************/
@@ -78,6 +83,7 @@ class CMRLatexEntity2
 	public:
 		CMRLatexEntity2(void);
 		CMRLatexEntity2(const std::string & value);
+		~CMRLatexEntity2(void);
 		std::string getString(void) const;
 		const std::string & getName(void) const;
 		int countIndices(void) const;

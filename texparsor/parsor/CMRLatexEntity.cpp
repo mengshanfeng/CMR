@@ -416,6 +416,15 @@ void CMRLatexEntity2::parseStandard ( CMRLatexParsorContext& context )
 /*******************  FUNCTION  *********************/
 void CMRLatexEntity2::clear ( void )
 {
+	//cleanup memory
+	for(CMRLatexFormulasVector2::iterator it = indices.begin();it!=indices.end();++it)
+		delete *it;
+	for(CMRLatexFormulasVector2::iterator it = exponents.begin();it!=exponents.end();++it)
+		delete *it;
+	for(CMRLatexFormulasVector2::iterator it = parameters.begin();it!=parameters.end();++it)
+		delete *it;
+	
+	//local values
 	this->indices.clear();
 	this->exponents.clear();
 	this->parameters.clear();
@@ -586,4 +595,24 @@ void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth ) const
 	dumpAsTree(out,depth+1,"indices",indices);
 	dumpAsTree(out,depth+1,"exponents",exponents);
 	dumpAsTree(out,depth+1,"parameters",parameters);
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexEntity2::~CMRLatexEntity2 ( void )
+{
+	clear();
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexFormulas2::~CMRLatexFormulas2 ( void )
+{
+	this->clear();
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexFormulas2::clear ( void )
+{
+	for (CMRLatexFormulas2::iterator it = begin(); it != end() ; ++it)
+		delete *it;
+	CMRLatexEntityVector2::clear();
 }
