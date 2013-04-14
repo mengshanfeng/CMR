@@ -40,6 +40,7 @@ class CMRLatexEntity2
 		void clear(void);
 		void dumpAsXml(std::ostream & out, int depth = 0) const;
 		void dumpAsTree(std::ostream & out, int depth = 0) const;
+		bool isOnlyOneName(void) const;
 	protected:
 		static void writeFormulaList(std::ostream & out,const CMRLatexFormulasVector2 & value,const std::string & sep=",",const std::string & open = "{",const std::string & close =  "}", bool forceOpenClose = false);
 		void parseSubGroup(CMRLatexParsorContext & context);

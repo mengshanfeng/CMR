@@ -148,3 +148,12 @@ void CMRLatexFormulas2::clear ( void )
 		delete *it;
 	CMRLatexEntityVector2::clear();
 }
+
+/*******************  FUNCTION  *********************/
+bool CMRLatexFormulas2::isOnlyOneName ( void ) const
+{
+	if (size() == 1)
+		return (*this)[0]->isOnlyOneName();
+	else
+		return false;
+}

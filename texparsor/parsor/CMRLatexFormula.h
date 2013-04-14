@@ -39,6 +39,7 @@ class CMRLatexFormulas2 : public CMRLatexEntityVector2
 		void dumpAsXml(std::ostream & out, int depth = 0) const;
 		void dumpAsTree(std::ostream & out, int depth = 0) const;
 		void clear(void);
+		bool isOnlyOneName(void) const;
 	private:
 		CMRLatexFormulas2(const CMRLatexFormulas2 & orig);
 		CMRLatexFormulas2 & operator=(const CMRLatexFormulas2 & orig);

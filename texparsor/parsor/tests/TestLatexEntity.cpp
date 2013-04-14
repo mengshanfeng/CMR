@@ -23,28 +23,21 @@ static const char TEST_CST_1[] = "<entity>\n\
     <formula>\n\
       <entity>\n\
         <name>2</name>\n\
-        <exponents>\n\
-          <formula>\n\
-            <entity>\n\
-              <name>3</name>\n\
-            </entity>\n\
-          </formula>\n\
-        </exponents>\n\
       </entity>\n\
     </formula>\n\
   </indices>\n\
+  <exponents>\n\
+    <formula>\n\
+      <entity>\n\
+        <name>3</name>\n\
+      </entity>\n\
+    </formula>\n\
+  </exponents>\n\
 </entity>\n\
 ";
-static const char TEST_CST_2[] = "entity:\n\
-  name:A\n\
-  indices:\n\
-    formula:\n\
-      entity:\n\
-        name:2\n\
-        exponents:\n\
-          formula:\n\
-            entity:\n\
-              name:3\n\
+static const char TEST_CST_2[] = "entity: A\n\
+  indices: 2\n\
+  exponents: 3\n\
 ";
 
 /*******************  FUNCTION  *********************/
@@ -180,7 +173,7 @@ SVUT_DECLARE_FLAT_TEST(TestLatexEntity,testClear)
 /*******************  FUNCTION  *********************/
 SVUT_DECLARE_FLAT_TEST(TestLatexEntity,testDumpAsXml)
 {
-	CMRLatexEntity2 entity("A_2^3");
+	CMRLatexEntity2 entity("A_{2}^{3}");
 	stringstream tmp;
 	entity.dumpAsXml(tmp);
 	SVUT_ASSERT_EQUAL(TEST_CST_1,tmp.str());
@@ -189,7 +182,7 @@ SVUT_DECLARE_FLAT_TEST(TestLatexEntity,testDumpAsXml)
 /*******************  FUNCTION  *********************/
 SVUT_DECLARE_FLAT_TEST(TestLatexEntity,testDumpAsTree)
 {
-	CMRLatexEntity2 entity("A_2^3");
+	CMRLatexEntity2 entity("A_{2}^{3}");
 	stringstream tmp;
 	entity.dumpAsTree(tmp);
 	SVUT_ASSERT_EQUAL(TEST_CST_2,tmp.str());

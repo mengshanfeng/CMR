@@ -376,17 +376,21 @@ void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth, const string& name, 
 {
 	if (list.empty() == false)
 	{
-		out << cmrIndent(depth) << name << ":" << endl;
-		for (CMRLatexFormulasVector2::const_iterator it = list.begin() ; it != list.end() ; ++it)
-			(*it)->dumpAsTree(out,depth+1);
+		if (list.size() == 1 && list[0]->isOnlyOneName())
+		{
+			out << cmrIndent(depth) << name << ": " << *list[0] << endl;
+		} else {
+			out << cmrIndent(depth) << name << ":" << endl;
+			for (CMRLatexFormulasVector2::const_iterator it = list.begin() ; it != list.end() ; ++it)
+				(*it)->dumpAsTree(out,depth+1);
+		}
 	}
 }
 
 /*******************  FUNCTION  *********************/
 void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth ) const
 {
-	out << cmrIndent(depth) << "entity:" << endl;
-	out << cmrIndent(depth+1) << "name:"<< name << endl;
+	out << cmrIndent(depth) << "entity: " << name << endl;
 	dumpAsTree(out,depth+1,"indices",indices);
 	dumpAsTree(out,depth+1,"exponents",exponents);
 	dumpAsTree(out,depth+1,"parameters",parameters);
@@ -396,4 +400,10 @@ void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth ) const
 CMRLatexEntity2::~CMRLatexEntity2 ( void )
 {
 	clear();
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRLatexEntity2::isOnlyOneName ( void ) const
+{
+	return (name.empty() == false && indices.empty() && parameters.empty() && exponents.empty());
 }
