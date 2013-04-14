@@ -14,6 +14,7 @@
 #include <ostream>
 #include <vector>
 #include <string>
+#include "CMRLatexException.h"
 
 class CMRLatexParsorContext;
 /*********************  TYPES  **********************/
@@ -85,7 +86,7 @@ class CMRLatexEntity2
 		const CMRLatexFormulas2 * getIndice(int id) const;
 		const CMRLatexFormulas2 * getExponent(int id) const;
 		const CMRLatexFormulas2 * getParameter(int id) const;
-		void parse( const std::string& value );
+		void parse( const std::string& value ) throw(CMRLatexException);
 		void parse( CMRLatexParsorContext & context);
 		void clear(void);
 		void dumpAsXml(std::ostream & out, int depth = 0) const;

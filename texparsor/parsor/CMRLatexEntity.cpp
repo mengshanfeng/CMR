@@ -216,19 +216,20 @@ std::ostream& operator<< ( std::ostream& out, const CMRLatexEntity2& value )
 		
 		//parameters
 		CMRLatexEntity2::writeFormulaList(out,value.parameters,"}{","{","}",true);
-		
-		//indices and exponent
-		if (value.exponents.empty() == false)
-		{
-			out << "^";
-			CMRLatexEntity2::writeFormulaList(out,value.exponents);
-		}
-		if (value.indices.empty() == false)
-		{
-			out << "_";
-			CMRLatexEntity2::writeFormulaList(out,value.indices);
-		}
 	}
+		
+	//indices and exponent
+	if (value.indices.empty() == false)
+	{
+		out << "_";
+		CMRLatexEntity2::writeFormulaList(out,value.indices);
+	}
+	if (value.exponents.empty() == false)
+	{
+		out << "^";
+		CMRLatexEntity2::writeFormulaList(out,value.exponents);
+	}
+
 	return out;
 }
 
@@ -240,7 +241,7 @@ CMRLatexEntity2& CMRLatexEntity2::operator= ( const string& value )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::parse ( const string& value )
+void CMRLatexEntity2::parse ( const string& value ) throw(CMRLatexException)
 {
 	//trivial
 	if (value.empty())
@@ -251,7 +252,8 @@ void CMRLatexEntity2::parse ( const string& value )
 	this->parse(context);
 	
 	//check errors
-	assert(context.isEnd());
+	if (!context.isEnd())
+		context.fatal("Expect a uniq entity, but get a composed one !");
 }
 
 /*******************  FUNCTION  *********************/
@@ -290,9 +292,10 @@ void CMRLatexEntity2::parseSubGroup ( CMRLatexParsorContext& context )
 	
 	
 	//extract sub and superscript
-	//if (context.startBy('_') || context.startBy('^'))
-	//	extractSubAndSuperScript(context);
-	if (context.startBy('^'))
+	//extract sub and superscript
+	if (context.startBy('_') || context.startBy('^'))
+		extractSubAndSuperScript(context);
+	if (context.startBy('_') || context.startBy('^'))
 		extractSubAndSuperScript(context);
 }
 
