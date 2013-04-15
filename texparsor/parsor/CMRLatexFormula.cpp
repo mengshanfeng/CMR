@@ -155,3 +155,14 @@ bool CMRLatexFormulas2::isOnlyOneName ( void ) const
 	else
 		return false;
 }
+
+/*******************  FUNCTION  *********************/
+bool CMRLatexFormulas2::isSimpleEntity ( void ) const
+{
+	if (size() != 1)
+		return false;
+	else if ((*this)[0]->getName() == "()")
+		return false;
+	else
+		return true;
+}

@@ -143,9 +143,9 @@ int main(int argc,char ** argv)
 		CMRProjectVariable & var2 = project.addvariable("f_{i,j,k}","pdf","double");
 		var2.addDim(9,"k");
 		
-		CMRProjectVariable & var3 = project.addvariable("T_{i,j}","cell_type","LBMCellType");
+		project.addvariable("T_{i,j}","cell_type","LBMCellType");
 
-		CMRProjectVariable & var1 = project.addvariable("O_{i,j}","fileout","LBMFileEntry");
+		project.addvariable("O_{i,j}","fileout","LBMFileEntry");
 		///////
 		
 		project.addIterator("k","k",0,9);

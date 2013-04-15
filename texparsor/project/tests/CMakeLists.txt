@@ -19,12 +19,13 @@ add_definitions(-DUNITTEST)
 
 ######################################################
 #test list
-set(ALLOC_TEST_LIST TestLatexParsorContext TestLatexEntity TestLatexFormula)
+set(ALLOC_TEST_LIST)
 
 ######################################################
 #Now you can build your tests
 foreach(i ${ALLOC_TEST_LIST})
 	add_executable(${i} ${i}.cpp)
-	target_link_libraries(${i} ${UNITTEST_LIBRARY} cmr_tex_parsor ${MPI_CXX_LIBRARIES})
+	target_link_libraries(${i} ${UNITTEST_LIBRARY} cmr_tex_project ${MPI_CXX_LIBRARIES})
 	cmr_add_test(${i})
 endforeach(i)
+

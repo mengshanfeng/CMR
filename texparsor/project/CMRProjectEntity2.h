@@ -1,0 +1,84 @@
+/*****************************************************
+             PROJECT  : CartesinMeshRuntime
+             VERSION  : 0.0.0
+             DATE     : 06/2012
+             AUTHOR   : Valat Sébastien
+                      : Jean-Baptiste Besnard
+             LICENSE  : CeCILL-C
+*****************************************************/
+
+#ifndef CMR_PROJECT_ENTIT2_H
+#define CMR_PROJECT_ENTIT2_H
+
+/********************  HEADERS  *********************/
+#include <string>
+#include <map>
+#include <vector>
+#include "../parsor/CMRLatexEntity2.h"
+
+/********************  ENUM  ************************/
+enum CMRCaptureType
+{
+	CMR_CAPTURE_NONE,
+	CMR_CAPTURE_REQUIRED,
+	CMR_CAPTURE_OPTIONS
+};
+
+/*********************  STRUCT  *********************/
+struct CMRCaptureDef
+{
+	CMRCaptureDef(const std::string & name,CMRCaptureType captureType);
+	std::string name;
+	CMRCaptureType captureType;
+};
+
+/*********************  TYPES  **********************/
+struct CMRProjectContext;
+typedef std::vector<std::string> CMREntityIndiceVector;
+typedef std::vector<CMRCaptureType> CMREntityIndiceCaptureVector;
+typedef std::vector<int> CMRConstantDimensionsVector;
+typedef std::vector<std::string> CMRConstantValueVector;
+typedef std::map<std::string,CMRLatexFormulas2 *> CMRProjectCaptureMap2;
+typedef std::vector<CMRCaptureDef> CMRProjectCaptureDefMap;
+
+/*********************  CLASS  **********************/
+class CMRProjectEntity2
+{
+	public:
+		CMRProjectEntity2(const std::string & latexName,const std::string & longName);
+		virtual ~CMRProjectEntity2(void);
+		void addIndice(const std::string & name,CMRCaptureType captureType = CMR_CAPTURE_NONE);
+		void addExponent(const std::string & name,CMRCaptureType captureType = CMR_CAPTURE_NONE);
+		void addParameter(const std::string & name,CMRCaptureType captureType = CMR_CAPTURE_NONE);
+		void changeCaptureType(const std::string & name, enum CMRCaptureType captureType);
+		bool match(CMRLatexEntity2 & entity) const;
+		void capture(CMRLatexEntity2 & entity,CMRProjectCaptureMap2 & capture) const;
+		std::string getLatexName(void) const;
+		const std::string & getShortName(void) const;
+		const std::string & getLongName(void) const;
+		
+		//to overload
+		virtual std::ostream & genDefinitionCCode(std::ostream& out, const CMRProjectContext& context) = 0;
+		virtual std::ostream & genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity) = 0;
+	public:
+		friend std::ostream & operator << (std::ostream & out,const CMRProjectEntity2 & value);
+	protected:
+		virtual void onUpdateCaptureType(const std::string & name,enum CMRCaptureType captureType);
+		bool internalMatch(CMRLatexEntity2 & entity,CMRProjectCaptureMap2 * capture) const;
+		bool internalMatch( CMRLatexFormulasVector2& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap2* captureOut ) const;
+		void applyLatexName(const std::string & latexName);
+		static void fillCapture(CMRProjectCaptureDefMap & capture,CMRLatexFormulasVector2 & formulaList);
+		static void addCapture(CMRProjectCaptureDefMap & capture,const std::string & value,CMRCaptureType captureType);
+		static void addCapture( CMRProjectCaptureDefMap& capture, const CMRLatexFormulas2& formula, CMRCaptureType captureType );
+		bool changeCaptureType(CMRProjectCaptureDefMap & capture, const std::string & name, enum CMRCaptureType captureType);
+		static std::string formatCaptureList ( const CMRProjectCaptureDefMap& value, const std::string& sep, const std::string& open, const std::string& close, bool forceOpenClose);
+		CMRCaptureDef * findCaptureDef(CMRProjectCaptureDefMap & value,const std::string & name);
+	private:
+		std::string shortName;
+		std::string longName;
+		CMRProjectCaptureDefMap indices;
+		CMRProjectCaptureDefMap exponents;
+		CMRProjectCaptureDefMap parameters;
+};
+
+#endif //CMR_PROJECT_ENTIT2_H

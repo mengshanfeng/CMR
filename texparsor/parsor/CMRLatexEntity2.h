@@ -35,6 +35,9 @@ class CMRLatexEntity2
 		const CMRLatexFormulas2 * getIndice(int id) const;
 		const CMRLatexFormulas2 * getExponent(int id) const;
 		const CMRLatexFormulas2 * getParameter(int id) const;
+		CMRLatexFormulasVector2 & getIndices(void);
+		CMRLatexFormulasVector2 & getExponents(void);
+		CMRLatexFormulasVector2 & getParameters(void);
 		void parse( const std::string& value ) throw(CMRLatexException);
 		void parse( CMRLatexParsorContext & context);
 		void clear(void);

@@ -410,3 +410,21 @@ bool CMRLatexEntity2::isOnlyOneName ( void ) const
 {
 	return (name.empty() == false && indices.empty() && parameters.empty() && exponents.empty());
 }
+
+/*******************  FUNCTION  *********************/
+CMRLatexFormulasVector2& CMRLatexEntity2::getExponents ( void )
+{
+	return exponents;
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexFormulasVector2& CMRLatexEntity2::getIndices ( void )
+{
+	return indices;
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexFormulasVector2& CMRLatexEntity2::getParameters ( void )
+{
+	return parameters;
+}
