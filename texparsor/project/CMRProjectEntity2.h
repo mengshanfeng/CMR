@@ -67,12 +67,14 @@ class CMRProjectEntity2
 		bool internalMatch(CMRLatexEntity2 & entity,CMRProjectCaptureMap2 * capture) const;
 		bool internalMatch( CMRLatexFormulasVector2& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap2* captureOut ) const;
 		void applyLatexName(const std::string & latexName);
-		static void fillCapture(CMRProjectCaptureDefMap & capture,CMRLatexFormulasVector2 & formulaList);
-		static void addCapture(CMRProjectCaptureDefMap & capture,const std::string & value,CMRCaptureType captureType);
-		static void addCapture( CMRProjectCaptureDefMap& capture, const CMRLatexFormulas2& formula, CMRCaptureType captureType );
+		void fillCapture(CMRProjectCaptureDefMap & capture,CMRLatexFormulasVector2 & formulaList);
+		void addCapture(CMRProjectCaptureDefMap & capture,const std::string & value,CMRCaptureType captureType);
+		void addCapture( CMRProjectCaptureDefMap& capture, const CMRLatexFormulas2& formula, CMRCaptureType captureType );
 		bool changeCaptureType(CMRProjectCaptureDefMap & capture, const std::string & name, enum CMRCaptureType captureType);
 		static std::string formatCaptureList ( const CMRProjectCaptureDefMap& value, const std::string& sep, const std::string& open, const std::string& close, bool forceOpenClose);
-		CMRCaptureDef * findCaptureDef(CMRProjectCaptureDefMap & value,const std::string & name);
+		CMRCaptureDef * findCaptureDef( CMRProjectCaptureDefMap& value, const std::string& name, bool beCaptured = false);
+		CMRCaptureDef * findCaptureDef(const std::string & name, bool beCaptured = false);
+		void ensureUniqCapture( const CMRLatexFormulas2& f );
 	private:
 		std::string shortName;
 		std::string longName;

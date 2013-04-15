@@ -10,8 +10,10 @@
 /********************  HEADERS  *********************/
 #include <cassert>
 #include <cstdlib>
+#include <iostream>
 #include "CMRProjectEntity2.h"
 #include "../parsor/CMRLatexFormula.h"
+#include "../parsor/CMRParsorBasics.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -40,7 +42,7 @@ void CMRProjectEntity2::applyLatexName ( const string& latexName )
 	CMRLatexFormulas2 f(latexName);
 	
 	//check if get a uniq entity
-	if (f.isSimpleEntity())
+	if (f.isSimpleEntity() == false)
 		throw CMRLatexException(string("ERROR: you provide a complex equation to define a project entity, this is not valid : ") + latexName);
 	
 	//extract name
@@ -96,8 +98,10 @@ void CMRProjectEntity2::addCapture ( CMRProjectCaptureDefMap& capture, const CMR
 {
 	assert(captureType != CMR_CAPTURE_OPTIONS);
 	//check if get a uniq entity
-	if (formula.isSimpleEntity())
+	if (captureType != CMR_CAPTURE_NONE && formula.isSimpleEntity() == false)
 		throw CMRLatexException(string("ERROR: you provide a complex equation to to capture fields : ") + formula.getString());
+	if (captureType != CMR_CAPTURE_NONE)
+		ensureUniqCapture(formula);
 	capture.push_back(CMRCaptureDef(formula.getString(),CMR_CAPTURE_NONE));
 }
 
@@ -109,6 +113,10 @@ void CMRProjectEntity2::changeCaptureType ( const string& name, CMRCaptureType c
 	//regen the name without spaces and good order
 	CMRLatexFormulas2 f(name);
 	string tmp = f.getString();
+	
+	//check if get a uniq entity
+	if (captureType != CMR_CAPTURE_NONE && f.isSimpleEntity() == false)
+		throw CMRLatexException(string("ERROR: you provide a complex equation to to capture fields : ") + tmp);
 	
 	//indices
 	res = changeCaptureType(indices,tmp,captureType);
@@ -213,7 +221,8 @@ bool CMRProjectEntity2::match ( CMRLatexEntity2& entity ) const
 void CMRProjectEntity2::capture ( CMRLatexEntity2& entity, CMRProjectCaptureMap2& capture ) const
 {
 	bool res = internalMatch(entity,&capture);
-	assert(res);
+	if (res == false)
+		throw CMRLatexException(string("Try to capture values in non mathing entities : ")+entity.getString()+ string(" != ")+getLatexName());
 }
 
 /*******************  FUNCTION  *********************/
@@ -264,7 +273,7 @@ bool CMRProjectEntity2::internalMatch ( CMRLatexFormulasVector2& formulaList, co
 		switch(captureDef[i].captureType)
 		{
 			case CMR_CAPTURE_NONE:
-				if (captureDef[i].name == formulaList[i]->getString())
+				if (captureDef[i].name != formulaList[i]->getString())
 					return false;
 				break;
 			case CMR_CAPTURE_OPTIONS:
@@ -280,3 +289,44 @@ bool CMRProjectEntity2::internalMatch ( CMRLatexFormulasVector2& formulaList, co
 	
 	return true;
 }
+
+/*******************  FUNCTION  *********************/
+CMRCaptureDef::CMRCaptureDef ( const string& name, CMRCaptureType captureType )
+{
+	this->name = name;
+	this->captureType = captureType;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCaptureDef* CMRProjectEntity2::findCaptureDef ( CMRProjectCaptureDefMap& value, const string& name, bool beCaptured )
+{
+	for (CMRProjectCaptureDefMap::iterator it = value.begin() ; it != value.end() ; ++it)
+		if (name == it->name && (beCaptured == false || it->captureType != CMR_CAPTURE_NONE))
+			return &(*it);
+		
+	return NULL;
+}
+
+/*******************  FUNCTION  *********************/
+CMRCaptureDef* CMRProjectEntity2::findCaptureDef ( const string& name, bool beCaptured )
+{
+	CMRCaptureDef * res;
+	res = findCaptureDef(indices,name,beCaptured);
+	if (res == NULL)
+		res = findCaptureDef(exponents,name,beCaptured);
+	if (res== NULL)
+		res = findCaptureDef(parameters,name,beCaptured);
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectEntity2::ensureUniqCapture ( const CMRLatexFormulas2& f )
+{
+	std::string value = f.getString();
+	
+	CMRCaptureDef * def = this->findCaptureDef(value,true);
+	if (def != NULL)
+		throw CMRLatexException(string("Caution, cannot add capture for ")+value+string(" as it was already defined !"));
+}
+
+
