@@ -19,7 +19,7 @@ add_definitions(-DUNITTEST)
 
 ######################################################
 #test list
-set(ALLOC_TEST_LIST TestProjectEntity TestProjectContext)
+set(ALLOC_TEST_LIST TestProjectEntity TestProjectContext TestGenCode)
 
 ######################################################
 #Now you can build your tests

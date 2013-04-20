@@ -50,6 +50,36 @@ int CMRLatexEntity2::countParameters ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
+CMRLatexFormulas2* CMRLatexEntity2::getExponent ( int id )
+{
+	assert(id >= 0);
+	if (id < 0 || id >= exponents.size())
+		return NULL;
+	else
+		return exponents[id];
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexFormulas2* CMRLatexEntity2::getIndice ( int id )
+{
+	assert(id >= 0);
+	if (id < 0 || id >= indices.size())
+		return NULL;
+	else
+		return indices[id];
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexFormulas2* CMRLatexEntity2::getParameter ( int id )
+{
+	assert(id >= 0);
+	if (id < 0 || id >= parameters.size())
+		return NULL;
+	else
+		return parameters[id];
+}
+
+/*******************  FUNCTION  *********************/
 const CMRLatexFormulas2* CMRLatexEntity2::getExponent ( int id ) const
 {
 	assert(id >= 0);

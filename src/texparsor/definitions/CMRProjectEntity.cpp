@@ -103,6 +103,7 @@ void CMRProjectEntity::addCapture ( CMRProjectCaptureDefMap& capture, const CMRL
 	if (captureType != CMR_CAPTURE_NONE)
 		ensureUniqCapture(formula);
 	capture.push_back(CMRCaptureDef(formula.getString(),CMR_CAPTURE_NONE));
+	onUpdateCaptureType(formula.getString(),captureType);
 }
 
 /*******************  FUNCTION  *********************/
@@ -131,6 +132,9 @@ void CMRProjectEntity::changeCaptureType ( const string& name, CMRCaptureType ca
 	
 	if (res == false)
 		throw CMRLatexException(string("Invalid name to change capture type (") + tmp + string(") in : ") + getLatexName());
+	
+	//call user fonction
+	onUpdateCaptureType(name,captureType);
 }
 
 /*******************  FUNCTION  *********************/

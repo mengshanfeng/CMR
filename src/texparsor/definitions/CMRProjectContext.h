@@ -27,7 +27,7 @@ class CMRProjectContext
 		void printDebug(std::ostream & out = std::cerr) const;
 		CMRProjectEntity & addEntry(CMRProjectEntity * entry);
 		CMRProjectEntity* checkUnique(CMRProjectEntity & entry);
-		const CMRProjectEntity * find(CMRLatexEntity2 & entity) const;
+		const CMRProjectEntity * find( CMRLatexEntity2& entity ) const;
 	private:
 		const CMRProjectContext * parent;
 		CMRProjectEntityList entities;

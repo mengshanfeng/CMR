@@ -59,8 +59,8 @@ class CMRProjectEntity
 		const std::string & getLongName(void) const;
 		
 		//to overload
-		virtual std::ostream & genDefinitionCCode(std::ostream& out, const CMRProjectContext& context) = 0;
-		virtual std::ostream & genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity) = 0;
+		virtual std::ostream & genDefinitionCCode(std::ostream& out, const CMRProjectContext& context) const = 0;
+		virtual std::ostream & genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity) const = 0;
 	public:
 		friend std::ostream & operator << (std::ostream & out,const CMRProjectEntity & value);
 	protected:

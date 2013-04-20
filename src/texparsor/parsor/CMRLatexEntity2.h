@@ -32,6 +32,9 @@ class CMRLatexEntity2
 		int countIndices(void) const;
 		int countExponents(void) const;
 		int countParameters(void) const;
+		CMRLatexFormulas2 * getIndice(int id);
+		CMRLatexFormulas2 * getExponent(int id);
+		CMRLatexFormulas2 * getParameter(int id);
 		const CMRLatexFormulas2 * getIndice(int id) const;
 		const CMRLatexFormulas2 * getExponent(int id) const;
 		const CMRLatexFormulas2 * getParameter(int id) const;

@@ -227,5 +227,14 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testGetLongName)
 	SVUT_ASSERT_EQUAL("test",entity.getLongName());
 }
 
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testOperatorStream)
+{
+	MockProjectEntity entity("A_{ i , j }^{ 5 , k}","test");
+	stringstream out;
+	out << entity;
+	SVUT_ASSERT_EQUAL("A_{i,j}^{5,k}",out.str());
+}
+
 /********************  MACRO  ***********************/
 SVUT_USE_DEFAULT_MAIN
