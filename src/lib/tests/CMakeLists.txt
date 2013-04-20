@@ -14,7 +14,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/unittest-macros.cmake)
 
 ######################################################
 #setup directories
-include_directories(${UNITTEST_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/lib ${CMAKE_CURRENT_SOURCE_DIR}/mocks)
+include_directories(${UNITTEST_INCLUDE_DIR} ../ ./mocks)
 add_definitions(-DUNITTEST)
 
 ######################################################

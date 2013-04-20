@@ -1,7 +1,7 @@
 #include <iostream>
 #include "CMRMesh.h"
-#include "lib/domain/CMRAbstractDomain.h"
-#include "lib/common/CMRDebug.h"
+#include "src/lib/domain/CMRAbstractDomain.h"
+#include "src/lib/common/CMRDebug.h"
 
 struct Cell
 {

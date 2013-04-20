@@ -36,11 +36,7 @@ include_directories(extern-deps/from-fftw/)
 
 ######################################################
 #manage subdirs
-add_subdirectory(lib)
-add_subdirectory(texparsor)
-if (NOT DISABLE_TESTS)
-        add_subdirectory(tests)
-endif (NOT DISABLE_TESTS)
+add_subdirectory(src)
 
 ######################################################
 #build cmr exe (for tests)
