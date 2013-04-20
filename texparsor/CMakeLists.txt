@@ -3,4 +3,4 @@ add_executable(texparsor CMRProjectConstant.cpp CMRProjectEntity.cpp CMRProjectE
 target_link_libraries(texparsor cmr_tex_parsor)
 
 add_subdirectory(parsor)
-add_subdirectory(project)
+add_subdirectory(definitions)
