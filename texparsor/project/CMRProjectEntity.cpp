@@ -11,7 +11,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
-#include "CMRProjectEntity2.h"
+#include "CMRProjectEntity.h"
 #include "../parsor/CMRLatexFormula.h"
 #include "../parsor/CMRParsorBasics.h"
 
@@ -19,20 +19,20 @@
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-CMRProjectEntity2::CMRProjectEntity2 ( const string& latexName, const string& longName )
+CMRProjectEntity::CMRProjectEntity ( const string& latexName, const string& longName )
 {
 	this->longName = longName;
 	this->applyLatexName(latexName);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectEntity2::~CMRProjectEntity2 ( void )
+CMRProjectEntity::~CMRProjectEntity ( void )
 {
 	//do nothing, but virtual for inheritance
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::applyLatexName ( const string& latexName )
+void CMRProjectEntity::applyLatexName ( const string& latexName )
 {
 	//check if empty
 	if (latexName.empty())
@@ -55,7 +55,7 @@ void CMRProjectEntity2::applyLatexName ( const string& latexName )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::fillCapture ( CMRProjectCaptureDefMap& capture, CMRLatexFormulasVector2& formulaList )
+void CMRProjectEntity::fillCapture ( CMRProjectCaptureDefMap& capture, CMRLatexFormulasVector2& formulaList )
 {
 	//clear old list
 	capture.clear();
@@ -68,25 +68,25 @@ void CMRProjectEntity2::fillCapture ( CMRProjectCaptureDefMap& capture, CMRLatex
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::addIndice ( const string& name, CMRCaptureType captureType )
+void CMRProjectEntity::addIndice ( const string& name, CMRCaptureType captureType )
 {
 	addCapture(indices,name,captureType);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::addExponent ( const string& name, CMRCaptureType captureType )
+void CMRProjectEntity::addExponent ( const string& name, CMRCaptureType captureType )
 {
 	addCapture(exponents,name,captureType);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::addParameter ( const string& name, CMRCaptureType captureType )
+void CMRProjectEntity::addParameter ( const string& name, CMRCaptureType captureType )
 {
 	addCapture(parameters,name,captureType);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::addCapture ( CMRProjectCaptureDefMap& capture, const string& value, CMRCaptureType captureType )
+void CMRProjectEntity::addCapture ( CMRProjectCaptureDefMap& capture, const string& value, CMRCaptureType captureType )
 {
 	assert(captureType != CMR_CAPTURE_OPTIONS);
 	CMRLatexFormulas2 f(value);
@@ -94,7 +94,7 @@ void CMRProjectEntity2::addCapture ( CMRProjectCaptureDefMap& capture, const str
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::addCapture ( CMRProjectCaptureDefMap& capture, const CMRLatexFormulas2& formula, CMRCaptureType captureType )
+void CMRProjectEntity::addCapture ( CMRProjectCaptureDefMap& capture, const CMRLatexFormulas2& formula, CMRCaptureType captureType )
 {
 	assert(captureType != CMR_CAPTURE_OPTIONS);
 	//check if get a uniq entity
@@ -106,7 +106,7 @@ void CMRProjectEntity2::addCapture ( CMRProjectCaptureDefMap& capture, const CMR
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::changeCaptureType ( const string& name, CMRCaptureType captureType )
+void CMRProjectEntity::changeCaptureType ( const string& name, CMRCaptureType captureType )
 {
 	bool res;
 	
@@ -134,7 +134,7 @@ void CMRProjectEntity2::changeCaptureType ( const string& name, CMRCaptureType c
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity2::changeCaptureType ( CMRProjectCaptureDefMap& capture, const string& name, CMRCaptureType captureType )
+bool CMRProjectEntity::changeCaptureType ( CMRProjectCaptureDefMap& capture, const string& name, CMRCaptureType captureType )
 {
 	CMRCaptureDef * def = findCaptureDef(capture,name);
 	assert(captureType != CMR_CAPTURE_OPTIONS);
@@ -149,7 +149,7 @@ bool CMRProjectEntity2::changeCaptureType ( CMRProjectCaptureDefMap& capture, co
 }
 
 /*******************  FUNCTION  *********************/
-std::string CMRProjectEntity2::formatCaptureList ( const CMRProjectCaptureDefMap& value, const string& sep, const string& open, const string& close, bool forceOpenClose )
+std::string CMRProjectEntity::formatCaptureList ( const CMRProjectCaptureDefMap& value, const string& sep, const string& open, const string& close, bool forceOpenClose )
 {
 	//vars
 	string res;
@@ -178,7 +178,7 @@ std::string CMRProjectEntity2::formatCaptureList ( const CMRProjectCaptureDefMap
 }
 
 /*******************  FUNCTION  *********************/
-string CMRProjectEntity2::getLatexName ( void ) const
+string CMRProjectEntity::getLatexName ( void ) const
 {
 	string res = shortName;
 	
@@ -200,25 +200,25 @@ string CMRProjectEntity2::getLatexName ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-const string& CMRProjectEntity2::getLongName ( void ) const
+const string& CMRProjectEntity::getLongName ( void ) const
 {
 	return longName;
 }
 
 /*******************  FUNCTION  *********************/
-const string& CMRProjectEntity2::getShortName ( void ) const
+const string& CMRProjectEntity::getShortName ( void ) const
 {
 	return shortName;
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity2::match ( CMRLatexEntity2& entity ) const
+bool CMRProjectEntity::match ( CMRLatexEntity2& entity ) const
 {
 	return internalMatch(entity,NULL);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::capture ( CMRLatexEntity2& entity, CMRProjectCaptureMap2& capture ) const
+void CMRProjectEntity::capture ( CMRLatexEntity2& entity, CMRProjectCaptureMap& capture ) const
 {
 	bool res = internalMatch(entity,&capture);
 	if (res == false)
@@ -226,20 +226,20 @@ void CMRProjectEntity2::capture ( CMRLatexEntity2& entity, CMRProjectCaptureMap2
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::onUpdateCaptureType ( const string& name, CMRCaptureType captureType )
+void CMRProjectEntity::onUpdateCaptureType ( const string& name, CMRCaptureType captureType )
 {
 	assert(captureType != CMR_CAPTURE_OPTIONS);
 }
 
 /*******************  FUNCTION  *********************/
-ostream& operator<< ( ostream& out, const CMRProjectEntity2& value )
+ostream& operator<< ( ostream& out, const CMRProjectEntity& value )
 {
 	out << value.getLatexName();
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity2::internalMatch ( CMRLatexEntity2& entity, CMRProjectCaptureMap2* capture ) const
+bool CMRProjectEntity::internalMatch ( CMRLatexEntity2& entity, CMRProjectCaptureMap* capture ) const
 {
 	//check name
 	if (entity.name != this->shortName)
@@ -261,7 +261,7 @@ bool CMRProjectEntity2::internalMatch ( CMRLatexEntity2& entity, CMRProjectCaptu
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity2::internalMatch ( CMRLatexFormulasVector2& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap2* captureOut ) const
+bool CMRProjectEntity::internalMatch ( CMRLatexFormulasVector2& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap* captureOut ) const
 {
 	//trivial
 	if (formulaList.size() != captureDef.size())
@@ -298,7 +298,7 @@ CMRCaptureDef::CMRCaptureDef ( const string& name, CMRCaptureType captureType )
 }
 
 /*******************  FUNCTION  *********************/
-CMRCaptureDef* CMRProjectEntity2::findCaptureDef ( CMRProjectCaptureDefMap& value, const string& name, bool beCaptured )
+CMRCaptureDef* CMRProjectEntity::findCaptureDef ( CMRProjectCaptureDefMap& value, const string& name, bool beCaptured )
 {
 	for (CMRProjectCaptureDefMap::iterator it = value.begin() ; it != value.end() ; ++it)
 		if (name == it->name && (beCaptured == false || it->captureType != CMR_CAPTURE_NONE))
@@ -308,7 +308,7 @@ CMRCaptureDef* CMRProjectEntity2::findCaptureDef ( CMRProjectCaptureDefMap& valu
 }
 
 /*******************  FUNCTION  *********************/
-CMRCaptureDef* CMRProjectEntity2::findCaptureDef ( const string& name, bool beCaptured )
+CMRCaptureDef* CMRProjectEntity::findCaptureDef ( const string& name, bool beCaptured )
 {
 	CMRCaptureDef * res;
 	res = findCaptureDef(indices,name,beCaptured);
@@ -320,7 +320,7 @@ CMRCaptureDef* CMRProjectEntity2::findCaptureDef ( const string& name, bool beCa
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity2::ensureUniqCapture ( const CMRLatexFormulas2& f )
+void CMRProjectEntity::ensureUniqCapture ( const CMRLatexFormulas2& f )
 {
 	std::string value = f.getString();
 	

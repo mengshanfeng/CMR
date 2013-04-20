@@ -8,7 +8,7 @@
 
 /********************  HEADERS  *********************/
 #include <svUnitTest.h>
-#include <CMRProjectEntity2.h>
+#include <CMRProjectEntity.h>
 #include <../parsor/CMRLatexFormula.h>
 #include <sstream>
 
@@ -17,10 +17,10 @@ using namespace svUnitTest;
 using namespace std;
 
 /*********************  CLASS  **********************/
-class MockProjectEntity : public CMRProjectEntity2
+class MockProjectEntity : public CMRProjectEntity
 {
 	public:
-		MockProjectEntity ( const string& latexName, const string& longName ) : CMRProjectEntity2(latexName,longName) {};
+		MockProjectEntity ( const string& latexName, const string& longName ) : CMRProjectEntity(latexName,longName) {};
 		virtual ostream& genDefinitionCCode ( ostream& out, const CMRProjectContext& context ) {return out;};
 		virtual ostream& genUsageCCode ( ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity ) {return out;};
 };
@@ -175,7 +175,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_1)
 	
 	SVUT_ASSERT_TRUE(entity.match(le));
 	
-	CMRProjectCaptureMap2 capture;
+	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);
 	
 	SVUT_ASSERT_EQUAL(4,capture.size());
@@ -196,7 +196,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_2)
 	
 	SVUT_ASSERT_TRUE(entity.match(le));
 	
-	CMRProjectCaptureMap2 capture;
+	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);
 	
 	SVUT_ASSERT_EQUAL(2,capture.size());
@@ -217,7 +217,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_3)
 	
 	SVUT_ASSERT_FALSE(entity.match(le));
 	
-	CMRProjectCaptureMap2 capture;
+	CMRProjectCaptureMap capture;
 	SVUT_ASSERT_THROW(CMRLatexException, entity.capture(le,capture));
 }
 
