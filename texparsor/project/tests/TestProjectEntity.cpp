@@ -11,19 +11,11 @@
 #include <CMRProjectEntity.h>
 #include <../parsor/CMRLatexFormula.h>
 #include <sstream>
+#include "MockProjectEntity.h"
 
 /**********************  USING  *********************/
 using namespace svUnitTest;
 using namespace std;
-
-/*********************  CLASS  **********************/
-class MockProjectEntity : public CMRProjectEntity
-{
-	public:
-		MockProjectEntity ( const string& latexName, const string& longName ) : CMRProjectEntity(latexName,longName) {};
-		virtual ostream& genDefinitionCCode ( ostream& out, const CMRProjectContext& context ) {return out;};
-		virtual ostream& genUsageCCode ( ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity ) {return out;};
-};
 
 /*******************  FUNCTION  *********************/
 SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testConstructor)

@@ -33,7 +33,7 @@ struct CMRCaptureDef
 };
 
 /*********************  TYPES  **********************/
-struct CMRProjectContext;
+class CMRProjectContext;
 typedef std::vector<std::string> CMREntityIndiceVector;
 typedef std::vector<CMRCaptureType> CMREntityIndiceCaptureVector;
 typedef std::vector<int> CMRConstantDimensionsVector;
@@ -52,6 +52,7 @@ class CMRProjectEntity
 		void addParameter(const std::string & name,CMRCaptureType captureType = CMR_CAPTURE_NONE);
 		void changeCaptureType(const std::string & name, enum CMRCaptureType captureType);
 		bool match(CMRLatexEntity2 & entity) const;
+		bool match(const std::string & value) const;
 		void capture(CMRLatexEntity2 & entity,CMRProjectCaptureMap & capture) const;
 		std::string getLatexName(void) const;
 		const std::string & getShortName(void) const;

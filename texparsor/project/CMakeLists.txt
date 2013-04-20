@@ -1,3 +1,3 @@
-add_library(cmr_tex_project CMRProjectEntity.cpp)
+add_library(cmr_tex_project CMRProjectEntity.cpp CMRProjectContext.cpp)
 target_link_libraries(cmr_tex_project cmr_tex_parsor)
 add_subdirectory(tests)

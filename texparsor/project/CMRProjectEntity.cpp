@@ -310,23 +310,40 @@ CMRCaptureDef* CMRProjectEntity::findCaptureDef ( CMRProjectCaptureDefMap& value
 /*******************  FUNCTION  *********************/
 CMRCaptureDef* CMRProjectEntity::findCaptureDef ( const string& name, bool beCaptured )
 {
+	//vars
 	CMRCaptureDef * res;
+	
+	//search in lists
 	res = findCaptureDef(indices,name,beCaptured);
 	if (res == NULL)
 		res = findCaptureDef(exponents,name,beCaptured);
 	if (res== NULL)
 		res = findCaptureDef(parameters,name,beCaptured);
+	
+	//return final res
 	return res;
 }
 
 /*******************  FUNCTION  *********************/
 void CMRProjectEntity::ensureUniqCapture ( const CMRLatexFormulas2& f )
 {
+	//vars
 	std::string value = f.getString();
 	
+	//do capture
 	CMRCaptureDef * def = this->findCaptureDef(value,true);
+	
+	//cehck error
 	if (def != NULL)
 		throw CMRLatexException(string("Caution, cannot add capture for ")+value+string(" as it was already defined !"));
 }
 
-
+/*******************  FUNCTION  *********************/
+bool CMRProjectEntity::match ( const string& value ) const
+{
+	//convert
+	CMRLatexEntity2 e(value);
+	
+	//do mathcing
+	return match(e);
+}
