@@ -7,7 +7,7 @@
 ######################################################
 
 ######################################################
-add_library(cmr_tex_project CMRProjectEntity.cpp CMRProjectContext.cpp CMRGenCode.cpp)
+add_library(cmr_tex_project CMRProjectEntity.cpp CMRProjectContext.cpp CMRGenCode.cpp CMRProjectVariable.cpp)
 target_link_libraries(cmr_tex_project cmr_tex_parsor)
 
 ######################################################

@@ -34,10 +34,9 @@ struct CMRCaptureDef
 
 /*********************  TYPES  **********************/
 class CMRProjectContext;
-typedef std::vector<std::string> CMREntityIndiceVector;
-typedef std::vector<CMRCaptureType> CMREntityIndiceCaptureVector;
 typedef std::vector<int> CMRConstantDimensionsVector;
 typedef std::vector<std::string> CMRConstantValueVector;
+typedef std::vector<std::string> CMRStringVector;
 typedef std::map<std::string,CMRLatexFormulas2 *> CMRProjectCaptureMap;
 typedef std::vector<CMRCaptureDef> CMRProjectCaptureDefMap;
 
@@ -57,10 +56,12 @@ class CMRProjectEntity
 		std::string getLatexName(void) const;
 		const std::string & getShortName(void) const;
 		const std::string & getLongName(void) const;
+		bool haveCapture( const std::string& name );
+		CMRStringVector getCapturedIndices(void) const;
 		
 		//to overload
-		virtual std::ostream & genDefinitionCCode(std::ostream& out, const CMRProjectContext& context) const = 0;
-		virtual std::ostream & genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity) const = 0;
+		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context) const = 0;
+		virtual void genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity, bool write = false) const = 0;
 	public:
 		friend std::ostream & operator << (std::ostream & out,const CMRProjectEntity & value);
 	protected:
@@ -73,8 +74,8 @@ class CMRProjectEntity
 		void addCapture( CMRProjectCaptureDefMap& capture, const CMRLatexFormulas2& formula, CMRCaptureType captureType );
 		bool changeCaptureType(CMRProjectCaptureDefMap & capture, const std::string & name, enum CMRCaptureType captureType);
 		static std::string formatCaptureList ( const CMRProjectCaptureDefMap& value, const std::string& sep, const std::string& open, const std::string& close, bool forceOpenClose);
-		CMRCaptureDef * findCaptureDef( CMRProjectCaptureDefMap& value, const std::string& name, bool beCaptured = false);
-		CMRCaptureDef * findCaptureDef(const std::string & name, bool beCaptured = false);
+		CMRCaptureDef * findCaptureDef( CMRProjectCaptureDefMap& value, const std::string& name, bool beCaptured = false );
+		CMRCaptureDef * findCaptureDef( const std::string& name, bool beCaptured = false );
 		void ensureUniqCapture( const CMRLatexFormulas2& f );
 	private:
 		std::string shortName;

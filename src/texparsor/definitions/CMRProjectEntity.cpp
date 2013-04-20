@@ -351,3 +351,29 @@ bool CMRProjectEntity::match ( const string& value ) const
 	//do mathcing
 	return match(e);
 }
+
+/*******************  FUNCTION  *********************/
+bool CMRProjectEntity::haveCapture ( const string& name )
+{
+	//do capture
+	CMRCaptureDef * def = this->findCaptureDef(name,true);
+	
+	return (def != NULL);
+}
+
+/*******************  FUNCTION  *********************/
+CMRStringVector CMRProjectEntity::getCapturedIndices ( void ) const
+{
+	//vars
+	CMRStringVector res;
+	
+	//loop to search capture
+	for(CMRProjectCaptureDefMap::const_iterator it = indices.begin() ; it != indices.end() ; ++it)
+	{
+		assert(it->captureType != CMR_CAPTURE_OPTIONS);
+		if (it->captureType == CMR_CAPTURE_REQUIRED)
+			res.push_back(it->name);
+	}
+	
+	return res;
+}
