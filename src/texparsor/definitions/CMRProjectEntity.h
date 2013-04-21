@@ -62,6 +62,7 @@ class CMRProjectEntity
 		//to overload
 		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context) const = 0;
 		virtual void genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity, bool write = false) const = 0;
+		virtual void printDebug(std::ostream & out) const;
 	public:
 		friend std::ostream & operator << (std::ostream & out,const CMRProjectEntity & value);
 	protected:
@@ -77,6 +78,7 @@ class CMRProjectEntity
 		CMRCaptureDef * findCaptureDef( CMRProjectCaptureDefMap& value, const std::string& name, bool beCaptured = false );
 		CMRCaptureDef * findCaptureDef( const std::string& name, bool beCaptured = false );
 		void ensureUniqCapture( const CMRLatexFormulas2& f );
+		static void printDebug( std::ostream& out, const std::string& name, const CMRProjectCaptureDefMap& map );
 	private:
 		std::string shortName;
 		std::string longName;

@@ -11,6 +11,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
 #include "CMRProjectEntity.h"
 #include "../parsor/CMRLatexFormula.h"
 #include "../parsor/CMRParsorBasics.h"
@@ -376,4 +377,34 @@ CMRStringVector CMRProjectEntity::getCapturedIndices ( void ) const
 	}
 	
 	return res;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectEntity::printDebug ( ostream& out, const string& name, const CMRProjectCaptureDefMap& map ) 
+{
+	out << "    - " << setw(11) << left << name << ": ";
+	for (int i = 0 ; i < map.size() ; i++)
+	{
+		if (i > 0)
+			out << ", ";
+		if (map[i].captureType == CMR_CAPTURE_REQUIRED)
+			out << "[" << map[i].name << "]";
+		else
+			out << map[i].name;
+	}
+	out << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectEntity::printDebug ( ostream& out ) const
+{
+	out << "Entity :" << endl;
+	out << "    - latexName  : " << getLatexName() << endl;
+	out << "    - shortName  : " << getShortName() << endl;
+	out << "    - longName   : " << getLongName() << endl;
+	printDebug(out,"exponent",exponents);
+	printDebug(out,"indices",indices);
+	printDebug(out,"parameters",parameters);
+// 	for (int i = 0 ; i < indices.size() ; i++)
+// 		printf("           * %s [%d]\n",indices[i].c_str(),indicesCapture[i]);
 }

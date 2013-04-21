@@ -17,6 +17,15 @@
 using namespace svUnitTest;
 using namespace std;
 
+/*********************  CONSTS  *********************/
+static const char TEST_CST_1[] = "Entity :\n\
+    - latexName  : A_{i,j}^{5,k}\n\
+    - shortName  : A\n\
+    - longName   : test\n\
+    - exponent   : 5, k\n\
+    - indices    : i, [j]\n\
+    - parameters : \n";
+
 /*******************  FUNCTION  *********************/
 SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testConstructor)
 {
@@ -234,6 +243,18 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testOperatorStream)
 	stringstream out;
 	out << entity;
 	SVUT_ASSERT_EQUAL("A_{i,j}^{5,k}",out.str());
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testPrintDebug)
+{
+	MockProjectEntity entity("A_{ i , j }^{ 5 , k}","test");
+	entity.changeCaptureType("j",CMR_CAPTURE_REQUIRED);
+	
+	stringstream out;
+	entity.printDebug(out);
+	
+	SVUT_ASSERT_EQUAL(TEST_CST_1,out.str());
 }
 
 /********************  MACRO  ***********************/
