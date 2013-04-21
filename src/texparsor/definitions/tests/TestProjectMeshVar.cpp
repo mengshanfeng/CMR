@@ -8,7 +8,7 @@
 
 /********************  HEADERS  *********************/
 #include <svUnitTest.h>
-#include <CMRProjectVariable.h>
+#include <CMRProjectMeshVar.h>
 #include <../parsor/CMRLatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
@@ -26,15 +26,15 @@ static const char TEST_CST_3[] = "testA*(sys.getDomain(1,tstep)),x,y,absolute)\n
 static const char TEST_CST_4[] = "testA(acc.testA,x,y,absolute)\n";
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testConstructor)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testConstructor)
 {
-	CMRProjectVariable variable("A_{i,j}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j}","testA","int");
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testAddDim_1)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testAddDim_1)
 {
-	CMRProjectVariable variable("A_{i,j,k}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	SVUT_ASSERT_EQUAL(2,variable.getCapturedIndices().size());
 	variable.addDim("k",5);
 	SVUT_ASSERT_EQUAL("i",variable.getCapturedIndices()[0]);
@@ -43,17 +43,17 @@ SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testAddDim_1)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testAddDim_2)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testAddDim_2)
 {
-	CMRProjectVariable variable("A_{i,j}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j}","testA","int");
 	SVUT_ASSERT_EQUAL(2,variable.getCapturedIndices().size());
 	SVUT_ASSERT_THROW(CMRLatexException, variable.addDim("k",5));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenUsageCCode_1)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testGenUsageCCode_1)
 {
-	CMRProjectVariable variable("A_{i,j,k}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 
 	CMRLatexEntity2 entity("A_{2+1,2+1,55}");
@@ -69,9 +69,9 @@ SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenUsageCCode_1)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenUsageCCode_2)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testGenUsageCCode_2)
 {
-	CMRProjectVariable variable("A_{i,j,k}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 
 	CMRLatexEntity2 entity("A_{m+1,m+1,55}");
@@ -89,9 +89,9 @@ SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenUsageCCode_2)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenDefinitionCCode)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testGenDefinitionCCode)
 {
-	CMRProjectVariable variable("A_{i,j,k}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 	
 	CMRProjectContext context;
@@ -101,24 +101,24 @@ SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenDefinitionCCode)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGetTypeWithDims_0)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testGetTypeWithDims_0)
 {
-	CMRProjectVariable variable("A_{i,j}","testA","int");;
+	CMRProjectMeshVar variable("A_{i,j}","testA","int");;
 	SVUT_ASSERT_EQUAL("int",variable.getTypeWithDims());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGetTypeWithDims_1)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testGetTypeWithDims_1)
 {
-	CMRProjectVariable variable("A_{i,j,k}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 	SVUT_ASSERT_EQUAL("int[5]",variable.getTypeWithDims());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenCPPAccessorDefinition)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testGenCPPAccessorDefinition)
 {
-	CMRProjectVariable variable("A_{i,j,k}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 	
 	stringstream out;
@@ -127,9 +127,9 @@ SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenCPPAccessorDefinition)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenCPPAccessorAddVar)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testGenCPPAccessorAddVar)
 {
-	CMRProjectVariable variable("A_{i,j,k}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 	
 	stringstream out;
@@ -138,9 +138,9 @@ SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenCPPAccessorAddVar)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenCPPAccessorConstrSys)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testGenCPPAccessorConstrSys)
 {
-	CMRProjectVariable variable("A_{i,j,k}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 	
 	stringstream out;
@@ -149,9 +149,9 @@ SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenCPPAccessorConstrSys)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectVariable,testGenCPPAccessorConstrAcc)
+SVUT_DECLARE_FLAT_TEST(TestProjectMeshVar,testGenCPPAccessorConstrAcc)
 {
-	CMRProjectVariable variable("A_{i,j,k}","testA","int");
+	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 	
 	stringstream out;

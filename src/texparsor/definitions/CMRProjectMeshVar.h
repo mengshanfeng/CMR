@@ -15,22 +15,22 @@
 #include "../parsor/CMRParsorBasics.h"
 
 /*********************  STRUCT  *********************/
-struct CMRProjectVariableDef
+struct CMRProjectMeshVarDef
 {
-	CMRProjectVariableDef(const std::string & name,int dims,int start = 0);
+	CMRProjectMeshVarDef(const std::string & name,int dims,int start = 0);
 	std::string name;
 	int dims;
 	int start;
 };
 
 /*********************  TYPES  **********************/
-typedef std::vector<CMRProjectVariableDef> CMRProjectVariableDefVector;
+typedef std::vector<CMRProjectMeshVarDef> CMRProjectMeshVarDefVector;
 
 /*********************  CLASS  **********************/
-class CMRProjectVariable : public CMRProjectEntity
+class CMRProjectMeshVar : public CMRProjectEntity
 {
 	public:
-		CMRProjectVariable ( const std::string& latexName, const std::string& longName, const std::string& type );
+		CMRProjectMeshVar ( const std::string& latexName, const std::string& longName, const std::string& type );
 		void addDim( const std::string& name,int size, int start = 0);
 		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity, bool write = false ) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context ) const;
@@ -43,7 +43,7 @@ class CMRProjectVariable : public CMRProjectEntity
 		int ghostDepths;
 		std::string type;
 		std::string memoryModel;
-		CMRProjectVariableDefVector defs;
+		CMRProjectMeshVarDefVector defs;
 };
 
 #endif //CMR_PROJECT_VARIABLE_H

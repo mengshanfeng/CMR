@@ -12,13 +12,13 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
-#include "CMRProjectVariable.h"
+#include "CMRProjectMeshVar.h"
 #include "CMRGenCode.h"
 
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-CMRProjectVariable::CMRProjectVariable ( const string& latexName, const string& longName , const std::string & type) 
+CMRProjectMeshVar::CMRProjectMeshVar ( const string& latexName, const string& longName , const std::string & type) 
 	: CMRProjectEntity ( latexName, longName )
 {
 	//setup capture
@@ -35,16 +35,16 @@ CMRProjectVariable::CMRProjectVariable ( const string& latexName, const string& 
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectVariable::addDim ( const string& name,int size,int start )
+void CMRProjectMeshVar::addDim ( const string& name,int size,int start )
 {
 	assert(size > 0);
 	assert(name.empty() == false);
-	defs.push_back(CMRProjectVariableDef(name,size,start));
+	defs.push_back(CMRProjectMeshVarDef(name,size,start));
 	changeCaptureType(name,CMR_CAPTURE_REQUIRED);
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectVariable::genCPPAccessorDefinition(ostream& out)
+ostream& CMRProjectMeshVar::genCPPAccessorDefinition(ostream& out)
 {
 	out << "\t\t\tCMRCellAccessor<" << type;
 	for (int i = 0 ; i < defs.size() ; i++)
@@ -54,7 +54,7 @@ ostream& CMRProjectVariable::genCPPAccessorDefinition(ostream& out)
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectVariable::genCPPAccessorAddVar(ostream& out)
+ostream& CMRProjectMeshVar::genCPPAccessorAddVar(ostream& out)
 {
 	//definition
 	out << "\t//define variable " << getLatexName() << endl;
@@ -63,27 +63,27 @@ ostream& CMRProjectVariable::genCPPAccessorAddVar(ostream& out)
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectVariable::genCPPAccessorConstrSys(ostream& out,int id)
+ostream& CMRProjectMeshVar::genCPPAccessorConstrSys(ostream& out,int id)
 {
 	out << getLongName() << "*(sys.getDomain(" << id << ",tstep)),x,y,absolute)" << endl;
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectVariable::genCPPAccessorConstrAcc(ostream& out)
+ostream& CMRProjectMeshVar::genCPPAccessorConstrAcc(ostream& out)
 {
 	out << getLongName() << "(acc." << getLongName() << ",x,y,absolute)" << endl;
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectVariable::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ) const
+void CMRProjectMeshVar::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ) const
 {
 	throw CMRLatexException("Variable must be defined by calling special functions from project structure, not directly by genDefinitionCCode function.");
 }
 
 /*******************  FUNCTION  *********************/
-string CMRProjectVariable::getTypeWithDims ( void ) const
+string CMRProjectMeshVar::getTypeWithDims ( void ) const
 {
 	stringstream res;
 	res << type;
@@ -93,7 +93,7 @@ string CMRProjectVariable::getTypeWithDims ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectVariable::genUsageCCode( ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity, bool write ) const
+void CMRProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity, bool write ) const
 {
 	CMRProjectCaptureMap capture;
 
@@ -122,7 +122,7 @@ void CMRProjectVariable::genUsageCCode( ostream& out, const CMRProjectContext& c
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectVariableDef::CMRProjectVariableDef ( const string& name, int dims, int start )
+CMRProjectMeshVarDef::CMRProjectMeshVarDef ( const string& name, int dims, int start )
 {
 	this->name = name;
 	this->dims = dims;
