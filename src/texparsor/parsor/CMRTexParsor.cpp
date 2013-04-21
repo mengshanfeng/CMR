@@ -146,6 +146,8 @@ int cmrRequireParameters(const string & name,const string & value,int pos)
 		return 1;
 	} else if (name == "\\CMRTMP") {
 		return 1;
+	} else if (name == "\\cmr"){
+		return 2;
 	} else {
 		cmrParsorError(value,pos,"Invalid latex command.");
 		return -1;
@@ -164,6 +166,8 @@ int cmrRequireParameters(const string & name,CMRLatexParsorContext & context)
 		return 1;
 	} else if (name == "\\CMRTMP") {
 		return 1;
+	} else if (name == "\\cmr"){
+		return 2;
 	} else {
 		context.fatal("Invalid latex command.");
 		return -1;

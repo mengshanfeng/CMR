@@ -103,7 +103,7 @@ void CMRProjectEntity::addCapture ( CMRProjectCaptureDefMap& capture, const CMRL
 		throw CMRLatexException(string("ERROR: you provide a complex equation to to capture fields : ") + formula.getString());
 	if (captureType != CMR_CAPTURE_NONE)
 		ensureUniqCapture(formula);
-	capture.push_back(CMRCaptureDef(formula.getString(),CMR_CAPTURE_NONE));
+	capture.push_back(CMRCaptureDef(formula.getString(),captureType));
 	onUpdateCaptureType(formula.getString(),captureType);
 }
 
