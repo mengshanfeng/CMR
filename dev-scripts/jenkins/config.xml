@@ -2,7 +2,7 @@
 <project>
   <actions/>
   <description></description>
-  <logRotator>
+  <logRotator class="hudson.tasks.LogRotator">
     <daysToKeep>-1</daysToKeep>
     <numToKeep>40</numToKeep>
     <artifactDaysToKeep>-1</artifactDaysToKeep>
@@ -17,7 +17,7 @@
       <throttleOption>project</throttleOption>
     </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
   </properties>
-  <scm class="hudson.plugins.git.GitSCM" plugin="git@1.2.0">
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@1.3.0">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
@@ -63,7 +63,8 @@
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers class="vector">
     <hudson.triggers.SCMTrigger>
-      <spec>10 * * * *</spec>
+      <spec>5 * * * *</spec>
+      <ignorePostCommitHooks>false</ignorePostCommitHooks>
     </hudson.triggers.SCMTrigger>
   </triggers>
   <concurrentBuild>false</concurrentBuild>
@@ -90,11 +91,11 @@ ctest -D ExperimentalTest --no-compress-output
 cp Testing/`head -n 1 Testing/TAG`/Test.xml ./CTestResults.xml</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
-      <command>cppcheck --enable=all --report-progress --std=c++03 --inline-suppr lib/ --xml --suppress=duplicateBreak:src/tests/UnitTest_svUnitTestFake.cpp 2&gt; cmr.cppcheck.xml</command>
+      <command>cppcheck --enable=all --report-progress --std=c++03 --inline-suppr src --xml --suppress=duplicateBreak:src/tests/UnitTest_svUnitTestFake.cpp 2&gt; cmr.cppcheck.xml</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
-    <hudson.plugins.warnings.WarningsPublisher plugin="warnings@4.23">
+    <hudson.plugins.warnings.WarningsPublisher plugin="warnings@4.25">
       <healthy></healthy>
       <unHealthy></unHealthy>
       <thresholdLimit>low</thresholdLimit>
@@ -136,7 +137,7 @@ cp Testing/`head -n 1 Testing/TAG`/Test.xml ./CTestResults.xml</command>
         <publishResultsForFailedBuilds>false</publishResultsForFailedBuilds>
       </valgrindPublisherConfig>
     </org.jenkinsci.plugins.valgrind.ValgrindPublisher>
-    <xunit plugin="xunit@1.52">
+    <xunit plugin="xunit@1.54">
       <types>
         <CustomType>
           <pattern>build/CTestResults.xml</pattern>

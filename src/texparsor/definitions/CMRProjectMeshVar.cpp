@@ -93,7 +93,7 @@ string CMRProjectMeshVar::getTypeWithDims ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity, bool write ) const
+void CMRProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
 {
 	CMRProjectCaptureMap capture;
 

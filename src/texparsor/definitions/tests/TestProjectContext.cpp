@@ -149,5 +149,35 @@ SVUT_DECLARE_FLAT_TEST(TestProjectContext,testPrintDebug)
 	SVUT_ASSERT_FALSE(tmp.str().empty());
 }
 
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestProjectContext,testGetDeph)
+{
+	CMRProjectContext context;
+	CMRProjectContext context2(&context);
+	
+	SVUT_ASSERT_EQUAL(0,context.getDepth());
+	SVUT_ASSERT_EQUAL(1,context2.getDepth());
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestProjectContext,testGenTempName)
+{
+	CMRProjectContext context;
+	CMRProjectContext context2(&context);
+	CMRProjectContext context3(&context);
+	
+	SVUT_ASSERT_EQUAL("temp_0_0",context.genTempName());
+	SVUT_ASSERT_EQUAL("temp_0_1",context.genTempName());
+	SVUT_ASSERT_EQUAL("temp_0_2",context.genTempName());
+	
+	SVUT_ASSERT_EQUAL("temp_1_0",context2.genTempName());
+	SVUT_ASSERT_EQUAL("temp_1_1",context2.genTempName());
+	SVUT_ASSERT_EQUAL("temp_1_2",context2.genTempName());
+	
+	SVUT_ASSERT_EQUAL("temp_1_0",context3.genTempName());
+	SVUT_ASSERT_EQUAL("temp_1_1",context3.genTempName());
+	SVUT_ASSERT_EQUAL("temp_1_2",context3.genTempName());
+}
+
 /********************  MACRO  ***********************/
 SVUT_USE_DEFAULT_MAIN

@@ -24,6 +24,7 @@ CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
 	
 	//setup
 	this->parent = parent;
+	this->tmpCnt = 0;
 }
 
 /*******************  FUNCTION  *********************/
@@ -52,7 +53,7 @@ CMRProjectEntity & CMRProjectContext::addEntry(CMRProjectEntity* entry)
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectEntity * CMRProjectContext::checkUnique(CMRProjectEntity & entry)
+CMRProjectEntity * CMRProjectContext::checkUnique(const CMRProjectEntity & entry)
 {
 	//search in list
 	for (CMRProjectEntityList::iterator it = entities.begin() ; it != entities.end() ; ++it)
@@ -75,7 +76,7 @@ CMRProjectEntity * CMRProjectContext::checkUnique(CMRProjectEntity & entry)
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectEntity* CMRProjectContext::find( CMRLatexEntity2 & entity ) const
+const CMRProjectEntity* CMRProjectContext::find( const CMRLatexEntity2 & entity ) const
 {
 	//searh in list
 	for (CMRProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
@@ -123,4 +124,42 @@ void CMRProjectContext::printDebug ( std::ostream & out ) const
 			out << "          + " << (*it)->getLatexName() << " : " << (*it)->getLongName() << endl;
 		cur = cur->parent;
 	}
+}
+
+/*******************  FUNCTION  *********************/
+int CMRProjectContext::getDepth ( void ) const
+{
+	//vars
+	int tmp = 0;
+	const CMRProjectContext * current = this;
+	
+	//loop in tree
+	while (current->parent != NULL)
+	{
+		tmp++;
+		current = current->parent;
+	}
+	
+	//finish
+	return tmp;
+}
+
+/*******************  FUNCTION  *********************/
+string CMRProjectContext::genTempName ( const std::string & base )
+{
+	stringstream tmp;
+	tmp << base << "_" << getDepth() << "_" << tmpCnt++;
+	return tmp.str();	
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectContext::setParent ( const CMRProjectContext* parent )
+{
+	if (parent != NULL)
+	{
+		for (CMRProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
+			checkUnique(**it);
+	}
+	
+	this->parent = parent;
 }

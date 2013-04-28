@@ -13,7 +13,7 @@ class CMRProjectConstant : public CMRProjectEntity
 		void loadValues(const std::string & data,int dimensions);
 		virtual void printDebug(std::ostream & out) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context ) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
 		void printValues(std::ostream & out) const;
 	protected:
 		void addDimension(int size);

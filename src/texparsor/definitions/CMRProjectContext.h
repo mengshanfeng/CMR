@@ -26,11 +26,15 @@ class CMRProjectContext
 		int countTotalEntries(void) const;
 		void printDebug(std::ostream & out = std::cerr) const;
 		CMRProjectEntity & addEntry(CMRProjectEntity * entry);
-		CMRProjectEntity* checkUnique(CMRProjectEntity & entry);
-		const CMRProjectEntity * find( CMRLatexEntity2& entity ) const;
+		CMRProjectEntity* checkUnique( const CMRProjectEntity& entry );
+		const CMRProjectEntity * find( const CMRLatexEntity2& entity ) const;
+		int getDepth(void) const;
+		std::string genTempName( const std::string& base = "temp");
+		void setParent(const CMRProjectContext * parent);
 	private:
 		const CMRProjectContext * parent;
 		CMRProjectEntityList entities;
+		int tmpCnt;
 };
 
 #endif //CMR_PROJECT_CONTEXT_H

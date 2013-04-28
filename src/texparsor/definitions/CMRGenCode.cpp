@@ -42,7 +42,7 @@ bool latexEntityIsInteger(const CMRLatexEntity2 & entity)
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, CMRLatexFormulas2& formula )
+std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexFormulas2& formula )
 {
 	const CMRLatexEntityVector2 & elems = formula;
 	for (CMRLatexEntityVector2::const_iterator it = elems.begin() ;  it != elems.end() ; ++it)
@@ -51,7 +51,7 @@ std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, C
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity)
+std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity)
 {
 	if (latexEntityIsInteger(entity))
 	{

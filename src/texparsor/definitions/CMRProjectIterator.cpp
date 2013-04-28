@@ -39,7 +39,7 @@ void CMRProjectIterator::genDefinitionCCode ( ostream& out, const CMRProjectCont
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectIterator::genUsageCCode ( ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity, bool write ) const
+void CMRProjectIterator::genUsageCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
 {
 	stringstream err;
 	err << "Error, iterator may not be used out of loop definition : " << getLatexName() << " : " << start << " -> " << end << endl;

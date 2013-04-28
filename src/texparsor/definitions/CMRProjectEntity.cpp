@@ -217,13 +217,13 @@ const string& CMRProjectEntity::getShortName ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity::match ( CMRLatexEntity2& entity ) const
+bool CMRProjectEntity::match ( const CMRLatexEntity2& entity ) const
 {
 	return internalMatch(entity,NULL);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity::capture ( CMRLatexEntity2& entity, CMRProjectCaptureMap& capture ) const
+void CMRProjectEntity::capture ( const CMRLatexEntity2& entity, CMRProjectCaptureMap& capture ) const
 {
 	bool res = internalMatch(entity,&capture);
 	if (res == false)
@@ -244,7 +244,7 @@ ostream& operator<< ( ostream& out, const CMRProjectEntity& value )
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity::internalMatch ( CMRLatexEntity2& entity, CMRProjectCaptureMap* capture ) const
+bool CMRProjectEntity::internalMatch ( const CMRLatexEntity2& entity, CMRProjectCaptureMap* capture ) const
 {
 	//check name
 	if (entity.name != this->shortName)
@@ -266,7 +266,7 @@ bool CMRProjectEntity::internalMatch ( CMRLatexEntity2& entity, CMRProjectCaptur
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity::internalMatch ( CMRLatexFormulasVector2& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap* captureOut ) const
+bool CMRProjectEntity::internalMatch ( const CMRLatexFormulasVector2& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap* captureOut ) const
 {
 	//trivial
 	if (formulaList.size() != captureDef.size())

@@ -206,7 +206,7 @@ void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectCont
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::genUsageCCode ( ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity, bool write ) const
+void CMRProjectConstant::genUsageCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
 {
 	//extract matching
 	CMRProjectCaptureMap capture;

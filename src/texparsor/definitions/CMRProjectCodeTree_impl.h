@@ -193,7 +193,7 @@ T * CMRProjectCodeTree<T>::insert ( T* entry, CMRProjectCodeTreeInsert location 
 	if (localParent != parent)
 		onParentChange(parent);
 	if (entryParent != entry->parent)
-		entry->onParentChange(entry->parent);
+		((CMRProjectCodeTree<T>*)entry)->onParentChange(entry->parent);
 	
 	//finish
 	return entry;

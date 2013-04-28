@@ -19,8 +19,8 @@ class CMRLatexEntity2;
 class CMRProjectContext;
 
 /*******************  FUNCTION  *********************/
-std::ostream& cmrGenEqCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity2& entity);
-std::ostream& cmrGenEqCCode ( std::ostream& out, const CMRProjectContext& context, CMRLatexFormulas2& formula );
+std::ostream& cmrGenEqCCode(std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity);
+std::ostream& cmrGenEqCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexFormulas2& formula );
 bool latexEntityIsInteger(const CMRLatexEntity2 & entity);
 
 #endif //CMR_GEN_CODE_H
