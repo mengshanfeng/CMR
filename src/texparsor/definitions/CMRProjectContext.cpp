@@ -76,6 +76,15 @@ CMRProjectEntity * CMRProjectContext::checkUnique(const CMRProjectEntity & entry
 }
 
 /*******************  FUNCTION  *********************/
+const CMRProjectEntity* CMRProjectContext::findInParent(const CMRLatexEntity2& entity) const
+{
+	if (parent == NULL)
+		return NULL;
+	else
+		return parent->find(entity);
+}
+
+/*******************  FUNCTION  *********************/
 const CMRProjectEntity* CMRProjectContext::find( const CMRLatexEntity2 & entity ) const
 {
 	//searh in list

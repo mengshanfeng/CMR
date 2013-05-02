@@ -53,7 +53,7 @@ void CMRProjectCodeEntry::onParentChange ( CMRProjectCodeEntry* newParent )
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeType CMRProjectCodeBlockNode::getType ( void ) const
+CMRProjectCodeType CMRProjectCodeNode::getType ( void ) const
 {
 	return CMR_PROJECT_CODE_NODE;
 }
@@ -63,7 +63,8 @@ CMRProjectCodeEquation::CMRProjectCodeEquation ( const string& latexName, const 
 	:output(latexName)
 	,formula(compute)
 {
-	
+	assert(latexName.empty() == false);
+	assert(compute.empty() == false);
 }
 
 /*******************  FUNCTION  *********************/
@@ -75,29 +76,38 @@ CMRProjectCodeType CMRProjectCodeEquation::getType ( void ) const
 /*******************  FUNCTION  *********************/
 CMRProjectCodeIteratorLoop::CMRProjectCodeIteratorLoop ( const std::string & iterator )
 {
-	//build iterator loop
-	const CMRProjectEntity * entity = context.find(iterator);
-	const CMRProjectIterator * it = dynamic_cast<const CMRProjectIterator*>(entity);
-	if (it == NULL)
-		throw CMRLatexException("Invalid iterator type : "+string(iterator));
-	
 	//create local variable
 	string name = context.genTempName("tmp_it");
 	this->addLocalVariable(iterator,name,"int","0");
 	
-	this->it = it;
+	this->iterator = iterator;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeBlockNode& CMRProjectCodeNode::addSubBlock ( CMRProjectCodeTreeInsert location )
+const CMRProjectIterator& CMRProjectCodeIteratorLoop::getIterator(void ) const
 {
-	CMRProjectCodeBlockNode * res = new CMRProjectCodeBlockNode();
+	//build iterator loop
+	const CMRProjectEntity * entity = context.findInParent(iterator);
+	if (entity == NULL)
+		throw CMRLatexException("Invalid iterator name : "+iterator);
+
+	const CMRProjectIterator * it = dynamic_cast<const CMRProjectIterator*>(entity);
+	if (it == NULL)
+		throw CMRLatexException("Invalid iterator type : "+iterator);
+	
+	return *it;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCodeNode& CMRProjectCodeNode::addSubBlock ( CMRProjectCodeTreeInsert location )
+{
+	CMRProjectCodeNode * res = new CMRProjectCodeNode();
 	this->insert(res,location);
 	return *res;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEquation& CMRProjectCodeNode::addEquation ( const string& latexName, const string& longName, const string& compute, CMRProjectCodeTreeInsert location )
+CMRProjectCodeEquation& CMRProjectCodeNode::addEquation ( const string& latexName, const string& compute, CMRProjectCodeTreeInsert location )
 {
 	CMRProjectCodeEquation * eq = new CMRProjectCodeEquation(latexName,compute);
 	this->insert(eq,location);
@@ -124,4 +134,18 @@ CMRProjectLocalVariable& CMRProjectCodeNode::addLocalVariable ( const string& la
 	CMRProjectLocalVariable * var = new CMRProjectLocalVariable(latexName,longName,type,defaultValue);
 	this->context.addEntry(var);
 	return *var;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCodeNode::CMRProjectCodeNode(CMRProjectContext* context)
+	:CMRProjectCodeEntry(context)
+{
+	
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCodeEntry::CMRProjectCodeEntry(CMRProjectContext* context)
+	:context(context)
+{
+
 }

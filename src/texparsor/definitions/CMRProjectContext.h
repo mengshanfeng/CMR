@@ -28,6 +28,7 @@ class CMRProjectContext
 		CMRProjectEntity & addEntry(CMRProjectEntity * entry);
 		CMRProjectEntity* checkUnique( const CMRProjectEntity& entry );
 		const CMRProjectEntity * find( const CMRLatexEntity2& entity ) const;
+		const CMRProjectEntity * findInParent( const CMRLatexEntity2& entity ) const;
 		int getDepth(void) const;
 		std::string genTempName( const std::string& base = "temp");
 		void setParent(const CMRProjectContext * parent);

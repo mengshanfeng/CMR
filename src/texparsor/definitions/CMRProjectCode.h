@@ -18,7 +18,6 @@
 /*********************  TYPES  **********************/
 class CMRProjectIterator;
 class CMRProjectCodeEquation;
-class CMRProjectCodeBlockNode;
 class CMRProjectCodeIteratorLoop;
 
 /********************  ENUM  ************************/
@@ -48,6 +47,7 @@ class CMRProjectLocalVariable : public CMRProjectEntity
 class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
 {
 	public:
+		CMRProjectCodeEntry(CMRProjectContext * context = NULL);
 		virtual CMRProjectCodeType getType(void) const = 0;
 		CMRProjectContext & getContext(void);
 	protected:
@@ -60,17 +60,12 @@ class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
 class CMRProjectCodeNode : public CMRProjectCodeEntry
 {
 	public:
-		CMRProjectCodeBlockNode& addSubBlock( CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
-		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		CMRProjectCodeNode(CMRProjectContext * context = NULL);
+		CMRProjectCodeNode& addSubBlock( CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
+		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
-};
-
-/*********************  CLASS  **********************/
-class CMRProjectCodeBlockNode : public CMRProjectCodeNode
-{
-	public:
-		virtual CMRProjectCodeType getType ( void ) const;
+		virtual CMRProjectCodeType getType(void ) const;
 };
 
 /*********************  CLASS  **********************/
@@ -90,8 +85,9 @@ class CMRProjectCodeIteratorLoop : public CMRProjectCodeNode
 	public:
 		CMRProjectCodeIteratorLoop( const std::string& iterator );
 		virtual CMRProjectCodeType getType ( void ) const;
+		const CMRProjectIterator & getIterator(void) const;
 	private:
-		const CMRProjectIterator * it;
+		std::string iterator;
 };
 
 #endif //CMR_PROJECT_CODE_H
