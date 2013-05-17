@@ -166,3 +166,47 @@ bool CMRLatexFormulas2::isSimpleEntity ( void ) const
 	else
 		return true;
 }
+
+/*******************  FUNCTION  *********************/
+void CMRLatexFormulas2::setExtraInfo(const string& key, void* value, bool allowOverride)
+{
+	//errors
+	if (allowOverride == false && hasInfo(key))
+		throw CMRLatexException("Invalid override of information key on LatexEntity.");
+	
+	extraInfos[key] = value;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexFormulas2::deleteInfo(const string& key, bool throwOnError)
+{
+	bool status = hasInfo(key);
+
+	//errors
+	if (throwOnError && status == false)
+		throw CMRLatexException("Invalid delete of information key on LatexEntity.");
+	else if (status == false)
+		return;
+	
+	extraInfos.erase(key);
+}
+
+/*******************  FUNCTION  *********************/
+void* CMRLatexFormulas2::getExtraInfo(const string& key, bool throwOnError)
+{
+	bool status = hasInfo(key);
+
+	//errors
+	if (throwOnError && status == false)
+		throw CMRLatexException("Invalid read of information key on LatexEntity.");
+	else if (status == false)
+		return NULL;
+	
+	return extraInfos[key];
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRLatexFormulas2::hasInfo(const string& key) const
+{
+	return extraInfos.find(key) != extraInfos.end();
+}

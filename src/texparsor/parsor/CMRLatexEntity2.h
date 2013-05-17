@@ -13,12 +13,14 @@
 /********************  HEADERS  *********************/
 #include <string>
 #include <vector>
+#include <map>
 #include "CMRLatexException.h"
 
 /*********************  TYPES  **********************/
 class CMRLatexParsorContext;
 class CMRLatexFormulas2;
 typedef std::vector<CMRLatexFormulas2*> CMRLatexFormulasVector2;
+typedef std::map<std::string,void *> CMRLatexExtraInfo;
 
 /*********************  CLASS  **********************/
 class CMRLatexEntity2
@@ -47,6 +49,10 @@ class CMRLatexEntity2
 		void dumpAsXml(std::ostream & out, int depth = 0) const;
 		void dumpAsTree(std::ostream & out, int depth = 0) const;
 		bool isOnlyOneName(void) const;
+		void setExtraInfo(const std::string & key,void * value,bool allowOverride = false);
+		void deleteInfo(const std::string & key, bool throwOnError = true);
+		void * getExtraInfo(const std::string & key,bool throwOnError = true);
+		bool hasInfo(const std::string & key) const;
 	protected:
 		static void writeFormulaList(std::ostream & out,const CMRLatexFormulasVector2 & value,const std::string & sep=",",const std::string & open = "{",const std::string & close =  "}", bool forceOpenClose = false);
 		void parseSubGroup(CMRLatexParsorContext & context);
@@ -68,6 +74,7 @@ class CMRLatexEntity2
 		CMRLatexFormulasVector2 indices;
 		CMRLatexFormulasVector2 exponents;
 		CMRLatexFormulasVector2 parameters;
+		CMRLatexExtraInfo extraInfos;
 };
 
 #endif //CMR_LATEX_ENTITY2_H

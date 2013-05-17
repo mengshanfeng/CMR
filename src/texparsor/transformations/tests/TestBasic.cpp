@@ -65,7 +65,10 @@ void MockTransfBasic::transform(CMRProjectCodeIteratorLoop& loop)
 /*******************  FUNCTION  *********************/
 void MockTransfBasic::transform(CMRProjectCodeEquation& equation, CMRLatexEntity2& entity)
 {
-	out << "ENTITY [ " << entity.getName() << " , ";
+	if (entity.hasInfo("cmrNoTranform"))
+		out << "ENTITY_NO_TRANSF [ ";
+	else
+		out << "ENTITY [ " << entity.getName() << " , ";
 	CMRTransformationBasic::transform(equation, entity);
 	out << " ]";
 }

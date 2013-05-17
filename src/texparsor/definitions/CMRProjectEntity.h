@@ -58,6 +58,9 @@ class CMRProjectEntity
 		const std::string & getLongName(void) const;
 		bool haveCapture( const std::string& name );
 		CMRStringVector getCapturedIndices(void) const;
+		const CMRProjectCaptureDefMap & getIndices(void) const;
+		const CMRProjectCaptureDefMap & getExponents(void) const;
+		const CMRProjectCaptureDefMap & getParameters(void) const;
 		
 		//to overload
 		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context) const = 0;

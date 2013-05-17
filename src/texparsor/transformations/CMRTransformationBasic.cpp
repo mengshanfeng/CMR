@@ -61,7 +61,8 @@ void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation)
 void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation, CMRLatexFormulas2& formula)
 {
 	for (CMRLatexEntityVector2::iterator it = formula.begin() ; it != formula.end() ; ++it)
-		this->transform(equation,**it);
+		if (formula.hasInfo("cmrNoTranform") == false)
+			this->transform(equation,**it);
 }
 
 /*******************  FUNCTION  *********************/
@@ -69,13 +70,16 @@ void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation, CMRLate
 {
 	CMRLatexFormulasVector2 & indices = entity.getIndices();
 	for (CMRLatexFormulasVector2::iterator it = indices.begin() ; it != indices.end() ; ++it)
-		this->transform(equation,**it);
+		if ((*it)->hasInfo("cmrNoTranform") == false)
+			this->transform(equation,**it);
 	
 	CMRLatexFormulasVector2 & exponents = entity.getExponents();
 	for (CMRLatexFormulasVector2::iterator it = exponents.begin() ; it != exponents.end() ; ++it)
-		this->transform(equation,**it);
+		if ((*it)->hasInfo("cmrNoTranform") == false)
+			this->transform(equation,**it);
 	
 	CMRLatexFormulasVector2 & params = entity.getParameters();
 	for (CMRLatexFormulasVector2::iterator it = params.begin() ; it != params.end() ; ++it)
-		this->transform(equation,**it);
+		if ((*it)->hasInfo("cmrNoTranform") == false)
+			this->transform(equation,**it);
 }

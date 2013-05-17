@@ -7,7 +7,7 @@
 ######################################################
 
 ######################################################
-add_library(cmr_tex_transf CMRTransformation.cpp CMRTransformationBasic.cpp )
+add_library(cmr_tex_transf CMRTransformation.cpp CMRTransformationBasic.cpp CMRTransformationMarkNoTransf.cpp)
 target_link_libraries(cmr_tex_transf cmr_tex_project)
 
 ######################################################

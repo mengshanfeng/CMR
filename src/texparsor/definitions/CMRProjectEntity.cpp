@@ -190,13 +190,13 @@ string CMRProjectEntity::getLatexName ( void ) const
 	if (indices.empty() == false)
 	{
 		res += '_';
-		res += formatCaptureList(indices,",","{","}",false);
+		res += formatCaptureList(indices,",","{","}",true);
 	}
 	
 	if (exponents.empty() == false)
 	{
 		res += '^';
-		res += formatCaptureList(exponents,",","{","}",false);
+		res += formatCaptureList(exponents,",","{","}",true);
 	}
 	
 	res += formatCaptureList(parameters,"}{","{","}",true);
@@ -407,4 +407,22 @@ void CMRProjectEntity::printDebug ( ostream& out ) const
 	printDebug(out,"parameters",parameters);
 // 	for (int i = 0 ; i < indices.size() ; i++)
 // 		printf("           * %s [%d]\n",indices[i].c_str(),indicesCapture[i]);
+}
+
+/*******************  FUNCTION  *********************/
+const CMRProjectCaptureDefMap& CMRProjectEntity::getExponents(void ) const
+{
+	return exponents;
+}
+
+/*******************  FUNCTION  *********************/
+const CMRProjectCaptureDefMap& CMRProjectEntity::getIndices(void ) const
+{
+	return indices;
+}
+
+/*******************  FUNCTION  *********************/
+const CMRProjectCaptureDefMap& CMRProjectEntity::getParameters(void ) const
+{
+	return parameters;
 }
