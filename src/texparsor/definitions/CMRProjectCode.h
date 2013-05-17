@@ -74,6 +74,8 @@ class CMRProjectCodeEquation : public CMRProjectCodeEntry
 	public:
 		CMRProjectCodeEquation( const std::string& latexName, const std::string& compute );
 		virtual CMRProjectCodeType getType ( void ) const;
+		CMRLatexFormulas2 & getFormulas(void);
+		CMRLatexEntity2 & getOutput(void);
 	private:
 		CMRLatexEntity2 output;
 		CMRLatexFormulas2 formula;

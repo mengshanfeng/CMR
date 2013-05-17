@@ -149,3 +149,14 @@ CMRProjectCodeEntry::CMRProjectCodeEntry(CMRProjectContext* context)
 {
 
 }
+/*******************  FUNCTION  *********************/
+CMRLatexFormulas2& CMRProjectCodeEquation::getFormulas(void )
+{
+	return formula;
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexEntity2& CMRProjectCodeEquation::getOutput(void )
+{
+	return output;
+}
