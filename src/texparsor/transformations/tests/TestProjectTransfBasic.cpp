@@ -8,7 +8,7 @@
 
 /********************  HEADERS  *********************/
 #include <svUnitTest.h>
-#include "../CMRProjectTransf.h"
+#include "../CMRTransformationBasic.h"
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/CMRProjectIterator.h>
 #include <../definitions/CMRProjectConstant.h>
@@ -19,7 +19,7 @@ using namespace svUnitTest;
 /*********************  CONSTS  *********************/
 
 /*********************  CLASS  **********************/
-class MockTransfBasic : public CMRProjectTransformationBasic
+class MockTransfBasic : public CMRTransformationBasic
 {
 	public:
 		MockTransfBasic(void);
@@ -33,7 +33,7 @@ class MockTransfBasic : public CMRProjectTransformationBasic
 
 /*******************  FUNCTION  *********************/
 MockTransfBasic::MockTransfBasic(void )
-	: CMRProjectTransformationBasic("mock")
+	: CMRTransformationBasic("mock")
 {
 
 }
@@ -42,7 +42,7 @@ MockTransfBasic::MockTransfBasic(void )
 void MockTransfBasic::transform(CMRProjectCodeNode& node)
 {
 	out << "NODE[ ";
-	CMRProjectTransformationBasic::transform(node);
+	CMRTransformationBasic::transform(node);
 	out << " ]"; 
 }
 
@@ -50,7 +50,7 @@ void MockTransfBasic::transform(CMRProjectCodeNode& node)
 void MockTransfBasic::transform(CMRProjectCodeEquation& equation, CMRLatexFormulas2& formula)
 {
 	out << "FORMULA[ ";
-	CMRProjectTransformationBasic::transform(equation,formula);
+	CMRTransformationBasic::transform(equation,formula);
 	out << " ]"; 
 }
 
@@ -58,7 +58,7 @@ void MockTransfBasic::transform(CMRProjectCodeEquation& equation, CMRLatexFormul
 void MockTransfBasic::transform(CMRProjectCodeIteratorLoop& loop)
 {
 	out << "LOOP[ " << loop.getIterator().getLatexName() << " , ";
-	CMRProjectTransformationBasic::transform(loop);
+	CMRTransformationBasic::transform(loop);
 	out << " ]";
 }
 
@@ -66,7 +66,7 @@ void MockTransfBasic::transform(CMRProjectCodeIteratorLoop& loop)
 void MockTransfBasic::transform(CMRProjectCodeEquation& equation, CMRLatexEntity2& entity)
 {
 	out << "ENTITY [ " << entity.getName() << " , ";
-	CMRProjectTransformationBasic::transform(equation, entity);
+	CMRTransformationBasic::transform(equation, entity);
 	out << " ]";
 }
 
@@ -74,7 +74,7 @@ void MockTransfBasic::transform(CMRProjectCodeEquation& equation, CMRLatexEntity
 void MockTransfBasic::transform(CMRProjectCodeEquation& equation)
 {
 	out << "EQUATION [ " << equation.getOutput() << " , ";
-	CMRProjectTransformationBasic::transform(equation);
+	CMRTransformationBasic::transform(equation);
 	out << " ]";
 }
 
@@ -161,6 +161,14 @@ SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformEquation_4)
 	
 	transf.run(root);
 	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ j , FORMULA[ ENTITY [ 1 ,  ]ENTITY [ + ,  ]ENTITY [ () , FORMULA[ ENTITY [ 2 ,  ]ENTITY [ * ,  ]ENTITY [ 3 ,  ] ] ] ] ] ]",transf.out.str());
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testGetName)
+{
+	MockTransfBasic transf;
+	
+	SVUT_ASSERT_EQUAL("mock",transf.getName());
 }
 
 /********************  MACRO  ***********************/

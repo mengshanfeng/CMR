@@ -8,35 +8,18 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "CMRProjectTransf.h"
+#include "CMRTransformationBasic.h"
 #include "../definitions/CMRProjectCode.h"
 
 /*******************  FUNCTION  *********************/
-CMRProjectTransformation::CMRProjectTransformation(const std::string& name)
-{
-	this->name = name;
-}
-
-/*******************  FUNCTION  *********************/
-CMRProjectTransformation::~CMRProjectTransformation(void)
-{
-}
-
-/*******************  FUNCTION  *********************/
-const std::string& CMRProjectTransformation::getName(void ) const
-{
-	return name;
-}
-
-/*******************  FUNCTION  *********************/
-CMRProjectTransformationBasic::CMRProjectTransformationBasic(const std::string& name)
-	: CMRProjectTransformation(name)
+CMRTransformationBasic::CMRTransformationBasic(const std::string& name)
+	: CMRTransformation(name)
 {
 	
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransformationBasic::run(CMRProjectCodeEntry& entry)
+void CMRTransformationBasic::run(CMRProjectCodeEntry& entry)
 {
 	CMRProjectCodeEntry * cur = &entry;
 	assert(cur != NULL);
@@ -52,7 +35,7 @@ void CMRProjectTransformationBasic::run(CMRProjectCodeEntry& entry)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransformationBasic::transform(CMRProjectCodeNode& node)
+void CMRTransformationBasic::transform(CMRProjectCodeNode& node)
 {
 	CMRProjectCodeEntry * cur = node.getFirstChild();
 	while (cur != NULL)
@@ -63,26 +46,26 @@ void CMRProjectTransformationBasic::transform(CMRProjectCodeNode& node)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransformationBasic::transform(CMRProjectCodeIteratorLoop& loop)
+void CMRTransformationBasic::transform(CMRProjectCodeIteratorLoop& loop)
 {
 	this->transform((CMRProjectCodeNode&)loop);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransformationBasic::transform(CMRProjectCodeEquation& equation)
+void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation)
 {
 	this->transform(equation,equation.getFormulas());
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransformationBasic::transform(CMRProjectCodeEquation& equation, CMRLatexFormulas2& formula)
+void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation, CMRLatexFormulas2& formula)
 {
 	for (CMRLatexEntityVector2::iterator it = formula.begin() ; it != formula.end() ; ++it)
 		this->transform(equation,**it);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransformationBasic::transform(CMRProjectCodeEquation& equation, CMRLatexEntity2& entity)
+void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation, CMRLatexEntity2& entity)
 {
 	CMRLatexFormulasVector2 & indices = entity.getIndices();
 	for (CMRLatexFormulasVector2::iterator it = indices.begin() ; it != indices.end() ; ++it)

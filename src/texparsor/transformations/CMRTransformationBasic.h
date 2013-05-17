@@ -7,11 +7,12 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_PROJECT_TRANSFORMATION_H
-#define CMR_PROJECT_TRANSFORMATION_H
+#ifndef CMR_TRANFORMATION_BASIC_H
+#define CMR_TRANFORMATION_BASIC_H
 
 /********************  HEADERS  *********************/
 #include <string>
+#include "CMRTransformation.h"
 
 /*********************  TYPES  **********************/
 class CMRProjectCodeEntry;
@@ -22,22 +23,10 @@ class CMRLatexFormulas2;
 class CMRLatexEntity2;
 
 /*********************  CLASS  **********************/
-class CMRProjectTransformation
+class CMRTransformationBasic : public CMRTransformation
 {
 	public:
-		CMRProjectTransformation(const std::string & name);
-		virtual ~CMRProjectTransformation(void);
-		virtual void run(CMRProjectCodeEntry & entry) = 0;
-		const std::string & getName(void) const;
-	private:
-		std::string name;
-};
-
-/*********************  CLASS  **********************/
-class CMRProjectTransformationBasic : public CMRProjectTransformation
-{
-	public:
-		CMRProjectTransformationBasic(const std::string& name);
+		CMRTransformationBasic(const std::string& name);
 		virtual void run(CMRProjectCodeEntry& entry);
 	protected:
 		virtual void transform(CMRProjectCodeNode & node);
@@ -47,4 +36,4 @@ class CMRProjectTransformationBasic : public CMRProjectTransformation
 		virtual void transform(CMRProjectCodeEquation & equation,CMRLatexEntity2 & entity);
 };
 
-#endif //CMR_PROJECT_TRANSFORMATION_H
+#endif //CMR_TRANFORMATION_BASIC_H
