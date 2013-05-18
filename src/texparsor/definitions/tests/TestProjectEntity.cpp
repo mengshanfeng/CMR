@@ -36,7 +36,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testConstructor)
 SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testGetLatexName)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
-	SVUT_ASSERT_EQUAL("A_{i,j}^2",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
 }
 
 /*******************  FUNCTION  *********************/
@@ -44,9 +44,9 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddIndice_ok)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^2",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
 	entity.addIndice("k");
-	SVUT_ASSERT_EQUAL("A_{i,j,k}^2",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j,k}^{2}",entity.getLatexName());
 	SVUT_ASSERT_NOT_THROW(CMRLatexException, entity.addIndice("i"));
 }
 
@@ -55,7 +55,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddIndice_duplicate)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^2",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
 	SVUT_ASSERT_THROW(CMRLatexException, entity.addIndice("i",CMR_CAPTURE_REQUIRED));
 	entity.addIndice("2");
 }
@@ -65,7 +65,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddExponent_ok)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^2",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
 	entity.addExponent("k");
 	SVUT_ASSERT_EQUAL("A_{i,j}^{2,k}",entity.getLatexName());
 	SVUT_ASSERT_NOT_THROW(CMRLatexException, entity.addExponent("i"));
@@ -76,7 +76,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddExponent_duplicate)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^2",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
 	SVUT_ASSERT_THROW(CMRLatexException, entity.addExponent("i",CMR_CAPTURE_REQUIRED));
 	entity.addExponent("2");
 }
@@ -86,11 +86,11 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddParameter_ok)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^2",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
 	entity.addParameter("k");
-	SVUT_ASSERT_EQUAL("A_{i,j}^2{k}",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j}^{2}{k}",entity.getLatexName());
 	entity.addParameter("l");
-	SVUT_ASSERT_EQUAL("A_{i,j}^2{k}{l}",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j}^{2}{k}{l}",entity.getLatexName());
 	SVUT_ASSERT_NOT_THROW(CMRLatexException, entity.addParameter("i"));
 }
 
@@ -99,7 +99,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddParameter_duplicate)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^2",entity.getLatexName());
+	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
 	SVUT_ASSERT_THROW(CMRLatexException, entity.addParameter("i",CMR_CAPTURE_REQUIRED));
 	entity.addParameter("2");
 }
@@ -164,6 +164,15 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testMatch_5)
 }
 
 /*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testMatch_6)
+{
+	MockProjectEntity entity("A_{eq,k}","test");
+	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
+	CMRLatexEntity2 le("A_{eq,42}^2");
+	SVUT_ASSERT_TRUE(entity.match(le));
+}
+
+/*******************  FUNCTION  *********************/
 SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_1)
 {
 	MockProjectEntity entity("A_{a,b}^{c,d}","test");
@@ -220,6 +229,20 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_3)
 	
 	CMRProjectCaptureMap capture;
 	SVUT_ASSERT_THROW(CMRLatexException, entity.capture(le,capture));
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_4)
+{
+	MockProjectEntity entity("A_{eq,k}","test");
+	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
+	CMRLatexEntity2 le("A_{eq,42}^2");
+	
+	CMRProjectCaptureMap capture;
+	entity.capture(le,capture);
+	
+	SVUT_ASSERT_EQUAL(2,capture.size());
+	SVUT_ASSERT_EQUAL("2",capture["cmrExponent"]->getString());
 }
 
 /*******************  FUNCTION  *********************/

@@ -19,7 +19,7 @@ add_definitions(-DUNITTEST)
 
 ######################################################
 #test list
-set(ALLOC_TEST_LIST TestBasic TestMarkNoTransf TestReplace TestExpandFrac TestImplicitMul)
+set(ALLOC_TEST_LIST TestBasic TestMarkNoTransf TestReplace TestExpandFrac TestImplicitMul TestExpandExpo)
 
 ######################################################
 #Now you can build your tests

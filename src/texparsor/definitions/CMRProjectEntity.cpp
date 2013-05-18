@@ -255,8 +255,13 @@ bool CMRProjectEntity::internalMatch ( const CMRLatexEntity2& entity, CMRProject
 		return false;
 	
 	//check expo
-	if (internalMatch(entity.exponents,exponents,capture) == false)
+	if (exponents.empty() && entity.exponents.size() == 1)
+	{
+		if (capture != NULL)
+			(*capture)["cmrExponent"] = entity.exponents[0];
+	} else if (internalMatch(entity.exponents,exponents,capture) == false) {
 		return false;
+	}
 	
 	//check params
 	if (internalMatch(entity.parameters,parameters,capture) == false)
