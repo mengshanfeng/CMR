@@ -30,6 +30,7 @@ class CMRLatexFormulas2 : public CMRLatexEntityVector2
 	public:
 		CMRLatexFormulas2(void);
 		CMRLatexFormulas2(const std::string & value);
+		CMRLatexFormulas2(const CMRLatexFormulas2 & orig);
 		~CMRLatexFormulas2(void);
 		void parse(const std::string & value);
 		void parse(CMRLatexParsorContext & context);
@@ -45,9 +46,9 @@ class CMRLatexFormulas2 : public CMRLatexEntityVector2
 		void deleteInfo(const std::string & key, bool throwOnError = true);
 		void * getExtraInfo(const std::string & key,bool throwOnError = true);
 		bool hasInfo(const std::string & key) const;
-	private:
-		CMRLatexFormulas2(const CMRLatexFormulas2 & orig);
 		CMRLatexFormulas2 & operator=(const CMRLatexFormulas2 & orig);
+	private:
+		void copy(const CMRLatexFormulas2 & orig);
 		CMRLatexExtraInfo extraInfos;
 };
 

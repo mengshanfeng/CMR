@@ -426,3 +426,18 @@ const CMRProjectCaptureDefMap& CMRProjectEntity::getParameters(void ) const
 {
 	return parameters;
 }
+
+/*******************  FUNCTION  *********************/
+void CMRProjectEntity::markAllCaptureAs(CMRCaptureType capture)
+{
+	markAllCaptureAs(indices,capture);
+	markAllCaptureAs(exponents,capture);
+	markAllCaptureAs(parameters,capture);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectEntity::markAllCaptureAs(CMRProjectCaptureDefMap& map, CMRCaptureType capture)
+{
+	for (CMRProjectCaptureDefMap::iterator it = map.begin() ; it != map.end() ; ++it)
+		it->captureType = capture;
+}

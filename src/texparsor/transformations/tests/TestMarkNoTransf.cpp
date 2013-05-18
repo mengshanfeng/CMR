@@ -85,13 +85,13 @@ void MockTransfBasic::transform(CMRProjectCodeEquation& equation)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testConstructor)
+SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testConstructor)
 {
 	CMRTransformationMarkNoTransf transf;
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformLoop_indice)
+SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testRun_indice)
 {
 	CMRTransformationMarkNoTransf transf;
 	MockTransfBasic ptransf;
@@ -112,7 +112,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformLoop_indice)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformLoop_expo)
+SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testRun_expo)
 {
 	CMRTransformationMarkNoTransf transf;
 	MockTransfBasic ptransf;
@@ -133,7 +133,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformLoop_expo)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformLoop_param)
+SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testRun_param)
 {
 	CMRTransformationMarkNoTransf transf;
 	MockTransfBasic ptransf;

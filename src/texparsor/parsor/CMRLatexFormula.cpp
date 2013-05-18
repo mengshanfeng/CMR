@@ -31,6 +31,12 @@ CMRLatexFormulas2::CMRLatexFormulas2 ( const string& value )
 }
 
 /*******************  FUNCTION  *********************/
+CMRLatexFormulas2::CMRLatexFormulas2(const CMRLatexFormulas2& orig)
+{
+	this->copy(orig);
+}
+
+/*******************  FUNCTION  *********************/
 void CMRLatexFormulas2::parse ( const string& value )
 {
 	//vars
@@ -209,4 +215,24 @@ void* CMRLatexFormulas2::getExtraInfo(const string& key, bool throwOnError)
 bool CMRLatexFormulas2::hasInfo(const string& key) const
 {
 	return extraInfos.find(key) != extraInfos.end();
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexFormulas2::copy(const CMRLatexFormulas2& orig)
+{
+	//replace childs
+	this->clear();
+	for (int i = 0 ; i < orig.size() ; i++)
+		this->push_back(new CMRLatexEntity2(*orig[i]));
+	
+	//setup exta info
+	this->extraInfos.clear();
+	this->extraInfos = orig.extraInfos;
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexFormulas2& CMRLatexFormulas2::operator=(const CMRLatexFormulas2& orig)
+{
+	this->copy(orig);
+	return *this;
 }

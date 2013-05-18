@@ -28,6 +28,7 @@ class CMRLatexEntity2
 	public:
 		CMRLatexEntity2(void);
 		CMRLatexEntity2(const std::string & value);
+		CMRLatexEntity2(const CMRLatexEntity2 & orig);
 		~CMRLatexEntity2(void);
 		std::string getString(void) const;
 		const std::string & getName(void) const;
@@ -53,7 +54,10 @@ class CMRLatexEntity2
 		void deleteInfo(const std::string & key, bool throwOnError = true);
 		void * getExtraInfo(const std::string & key,bool throwOnError = true);
 		bool hasInfo(const std::string & key) const;
+		CMRLatexEntity2 & operator=(const CMRLatexEntity2 & value);
 	protected:
+		void copy(const CMRLatexEntity2 & value);
+		static void copy(CMRLatexFormulasVector2 & vectorOut,const CMRLatexFormulasVector2 & vectorOrig);
 		static void writeFormulaList(std::ostream & out,const CMRLatexFormulasVector2 & value,const std::string & sep=",",const std::string & open = "{",const std::string & close =  "}", bool forceOpenClose = false);
 		void parseSubGroup(CMRLatexParsorContext & context);
 		void parseStandard(CMRLatexParsorContext & context);
@@ -63,9 +67,6 @@ class CMRLatexEntity2
 		void extractParameters(CMRLatexParsorContext & context);
 		static void dumpAsXml(std::ostream & out, int depth,const std::string & name,const CMRLatexFormulasVector2 & list);
 		static void dumpAsTree(std::ostream & out, int depth,const std::string & name,const CMRLatexFormulasVector2 & list);
-	private:
-		CMRLatexEntity2(const CMRLatexEntity2 & orig);
-		CMRLatexEntity2 & operator=(const CMRLatexEntity2 & value);
 	public:
 		CMRLatexEntity2 & operator=(const std::string & value);
 		friend std::ostream & operator << (std::ostream & out,const CMRLatexEntity2 & value);

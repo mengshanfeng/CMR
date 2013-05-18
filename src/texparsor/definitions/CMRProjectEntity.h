@@ -61,6 +61,7 @@ class CMRProjectEntity
 		const CMRProjectCaptureDefMap & getIndices(void) const;
 		const CMRProjectCaptureDefMap & getExponents(void) const;
 		const CMRProjectCaptureDefMap & getParameters(void) const;
+		void markAllCaptureAs(enum CMRCaptureType capture);
 		
 		//to overload
 		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context) const = 0;
@@ -82,6 +83,7 @@ class CMRProjectEntity
 		CMRCaptureDef * findCaptureDef( const std::string& name, bool beCaptured = false );
 		void ensureUniqCapture( const CMRLatexFormulas2& f );
 		static void printDebug( std::ostream& out, const std::string& name, const CMRProjectCaptureDefMap& map );
+		static void markAllCaptureAs(CMRProjectCaptureDefMap & map,enum CMRCaptureType capture);
 	private:
 		std::string shortName;
 		std::string longName;

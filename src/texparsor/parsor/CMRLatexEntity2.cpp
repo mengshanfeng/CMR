@@ -32,6 +32,12 @@ CMRLatexEntity2::CMRLatexEntity2 ( const std::string& value )
 }
 
 /*******************  FUNCTION  *********************/
+CMRLatexEntity2::CMRLatexEntity2(const CMRLatexEntity2& orig)
+{
+	this->copy(orig);
+}
+
+/*******************  FUNCTION  *********************/
 int CMRLatexEntity2::countExponents ( void ) const
 {
 	return exponents.size();
@@ -501,4 +507,41 @@ void* CMRLatexEntity2::getExtraInfo(const string& key, bool throwOnError)
 bool CMRLatexEntity2::hasInfo(const string& key) const
 {
 	return extraInfos.find(key) != extraInfos.end();
+}
+
+/*******************  FUNCTION  *********************/
+CMRLatexEntity2& CMRLatexEntity2::operator=(const CMRLatexEntity2& value)
+{
+	this->copy(value);
+	return *this;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexEntity2::copy(const CMRLatexEntity2& value)
+{
+	//clea childs
+	this->clear();
+
+	//copy name
+	this->name = value.name;
+	
+	//copy indices
+	copy(indices,value.indices);
+	copy(exponents,value.exponents);
+	copy(parameters,value.parameters);
+	
+	//copy extainfo
+	extraInfos.clear();
+	extraInfos = value.extraInfos;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRLatexEntity2::copy(CMRLatexFormulasVector2& vectorOut, const CMRLatexFormulasVector2& vectorOrig)
+{
+	//clear vector
+	vectorOut.clear();
+	
+	//copy all chilsd
+	for (int i = 0 ; i < vectorOrig.size() ; i++)
+		vectorOut.push_back(new CMRLatexFormulas2(*vectorOrig[i]));
 }
