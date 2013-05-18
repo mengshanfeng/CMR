@@ -67,6 +67,7 @@ class CMRLatexEntity2
 		void extractParameters(CMRLatexParsorContext & context);
 		static void dumpAsXml(std::ostream & out, int depth,const std::string & name,const CMRLatexFormulasVector2 & list);
 		static void dumpAsTree(std::ostream & out, int depth,const std::string & name,const CMRLatexFormulasVector2 & list);
+		static bool needProtection( const CMRLatexFormulasVector2& value );
 	public:
 		CMRLatexEntity2 & operator=(const std::string & value);
 		friend std::ostream & operator << (std::ostream & out,const CMRLatexEntity2 & value);

@@ -130,6 +130,21 @@ std::string CMRLatexEntity2::getString ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
+bool CMRLatexEntity2::needProtection ( const CMRLatexFormulasVector2& value )
+{
+	//error
+	assert(value.empty() == false);
+	
+	//cases
+	if (value.size() > 1)
+		return true;
+	else if (value[0]->size() > 1)
+		return true;
+	else
+		return false;
+}
+
+/*******************  FUNCTION  *********************/
 void CMRLatexEntity2::writeFormulaList ( ostream& out, const CMRLatexFormulasVector2& value, const string& sep, const string& open, const string& close, bool forceOpenClose )
 {
 	//trivial
@@ -137,7 +152,7 @@ void CMRLatexEntity2::writeFormulaList ( ostream& out, const CMRLatexFormulasVec
 		return;
 	
 	//open
-	if (forceOpenClose || value.size() > 1)
+	if (forceOpenClose || needProtection(value))
 		out << open;
 	
 	//print elements
@@ -149,7 +164,7 @@ void CMRLatexEntity2::writeFormulaList ( ostream& out, const CMRLatexFormulasVec
 	}
 
 	//close
-	if (forceOpenClose || value.size() > 1)
+	if (forceOpenClose || needProtection(value))
 		out << close;
 }
 

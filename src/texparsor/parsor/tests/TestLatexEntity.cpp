@@ -89,6 +89,20 @@ SVUT_DECLARE_FLAT_TEST(TestLatexEntity,testGetString_4)
 }
 
 /*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestLatexEntity,testGetString_5)
+{
+	CMRLatexEntity2 entity("a^{ab}");
+	SVUT_ASSERT_EQUAL("a^{ab}",entity.getString());
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestLatexEntity,testGetString_6)
+{
+	CMRLatexEntity2 entity("a_{ab}");
+	SVUT_ASSERT_EQUAL("a_{ab}",entity.getString());
+}
+
+/*******************  FUNCTION  *********************/
 SVUT_DECLARE_FLAT_TEST(TestLatexEntity,testCountIndices_1)
 {
 	CMRLatexEntity2 entity(" A_{ 2 }^{ 3 , a } ");
