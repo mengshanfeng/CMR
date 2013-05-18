@@ -17,6 +17,7 @@
 
 /*********************  TYPES  **********************/
 class CMRProjectIterator;
+class CMRProjectCodeNode;
 class CMRProjectCodeEquation;
 class CMRProjectCodeIteratorLoop;
 
@@ -50,6 +51,10 @@ class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
 		CMRProjectCodeEntry(CMRProjectContext * context = NULL);
 		virtual CMRProjectCodeType getType(void) const = 0;
 		CMRProjectContext & getContext(void);
+		CMRProjectCodeNode& addSubBlock( CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
+		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=",CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
+		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 	protected:
 		virtual void onParentChange ( CMRProjectCodeEntry * newParent );
 	protected:
@@ -61,10 +66,6 @@ class CMRProjectCodeNode : public CMRProjectCodeEntry
 {
 	public:
 		CMRProjectCodeNode(CMRProjectContext * context = NULL);
-		CMRProjectCodeNode& addSubBlock( CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
-		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
-		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
-		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		virtual CMRProjectCodeType getType(void ) const;
 };
 
@@ -72,13 +73,16 @@ class CMRProjectCodeNode : public CMRProjectCodeEntry
 class CMRProjectCodeEquation : public CMRProjectCodeEntry
 {
 	public:
-		CMRProjectCodeEquation( const std::string& latexName, const std::string& compute );
+		CMRProjectCodeEquation( const std::string& latexName, const std::string& compute ,const std::string & op = "=");
 		virtual CMRProjectCodeType getType ( void ) const;
 		CMRLatexFormulas2 & getFormulas(void);
 		CMRLatexEntity2 & getOutput(void);
+		const std::string & getOperator(void) const;
+		void setOperator(const std::string & op);
 	private:
 		CMRLatexEntity2 output;
 		CMRLatexFormulas2 formula;
+		std::string op;
 };
 
 /*********************  CLASS  **********************/

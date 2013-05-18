@@ -59,9 +59,10 @@ CMRProjectCodeType CMRProjectCodeNode::getType ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEquation::CMRProjectCodeEquation ( const string& latexName, const string& compute )
+CMRProjectCodeEquation::CMRProjectCodeEquation ( const string& latexName, const string& compute, const std::string &op )
 	:output(latexName)
 	,formula(compute)
+	,op(op)
 {
 	assert(latexName.empty() == false);
 	assert(compute.empty() == false);
@@ -99,7 +100,7 @@ const CMRProjectIterator& CMRProjectCodeIteratorLoop::getIterator(void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeNode& CMRProjectCodeNode::addSubBlock ( CMRProjectCodeTreeInsert location )
+CMRProjectCodeNode& CMRProjectCodeEntry::addSubBlock ( CMRProjectCodeTreeInsert location )
 {
 	CMRProjectCodeNode * res = new CMRProjectCodeNode();
 	this->insert(res,location);
@@ -107,15 +108,15 @@ CMRProjectCodeNode& CMRProjectCodeNode::addSubBlock ( CMRProjectCodeTreeInsert l
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEquation& CMRProjectCodeNode::addEquation ( const string& latexName, const string& compute, CMRProjectCodeTreeInsert location )
+CMRProjectCodeEquation& CMRProjectCodeEntry::addEquation ( const string& latexName, const string& compute, const string& op, CMRProjectCodeTreeInsert location )
 {
-	CMRProjectCodeEquation * eq = new CMRProjectCodeEquation(latexName,compute);
+	CMRProjectCodeEquation * eq = new CMRProjectCodeEquation(latexName,compute,op);
 	this->insert(eq,location);
 	return *eq;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeIteratorLoop & CMRProjectCodeNode::addIteratorLoop ( const string& iterator, CMRProjectCodeTreeInsert location )
+CMRProjectCodeIteratorLoop & CMRProjectCodeEntry::addIteratorLoop ( const string& iterator, CMRProjectCodeTreeInsert location )
 {
 	CMRProjectCodeIteratorLoop * loop = new CMRProjectCodeIteratorLoop(iterator);
 	this->insert(loop,location);
@@ -129,7 +130,7 @@ CMRProjectCodeType CMRProjectCodeIteratorLoop::getType ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectLocalVariable& CMRProjectCodeNode::addLocalVariable ( const string& latexName, const string& longName, const string& type, const string& defaultValue, CMRProjectCodeTreeInsert location )
+CMRProjectLocalVariable& CMRProjectCodeEntry::addLocalVariable ( const string& latexName, const string& longName, const string& type, const string& defaultValue, CMRProjectCodeTreeInsert location )
 {
 	CMRProjectLocalVariable * var = new CMRProjectLocalVariable(latexName,longName,type,defaultValue);
 	this->context.addEntry(var);
@@ -159,4 +160,16 @@ CMRLatexFormulas2& CMRProjectCodeEquation::getFormulas(void )
 CMRLatexEntity2& CMRProjectCodeEquation::getOutput(void )
 {
 	return output;
+}
+
+/*******************  FUNCTION  *********************/
+const string& CMRProjectCodeEquation::getOperator ( void ) const
+{
+	return op;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectCodeEquation::setOperator ( const string& op )
+{
+	this->op = op;
 }

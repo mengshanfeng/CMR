@@ -181,9 +181,6 @@ std::ostream& operator<< ( std::ostream& out, const CMRLatexEntity2& value )
 	} else {
 		//print the name
 		out << value.name;
-		
-		//parameters
-		CMRLatexEntity2::writeFormulaList(out,value.parameters,"}{","{","}",true);
 	}
 		
 	//indices and exponent
@@ -197,6 +194,10 @@ std::ostream& operator<< ( std::ostream& out, const CMRLatexEntity2& value )
 		out << "^";
 		CMRLatexEntity2::writeFormulaList(out,value.exponents);
 	}
+	
+	//parameters
+	if (value.name != "()" && value.name.empty() ==false)
+		CMRLatexEntity2::writeFormulaList(out,value.parameters,"}{","{","}",true);
 
 	return out;
 }
