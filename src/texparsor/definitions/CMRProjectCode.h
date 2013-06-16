@@ -50,6 +50,7 @@ class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
 	public:
 		CMRProjectCodeEntry(CMRProjectContext * context = NULL);
 		virtual CMRProjectCodeType getType(void) const = 0;
+		virtual void setParentContext(CMRProjectContext * parentContext);
 		CMRProjectContext & getContext(void);
 		CMRProjectCodeNode& addSubBlock( CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=",CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);

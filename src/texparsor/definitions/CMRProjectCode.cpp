@@ -44,6 +44,12 @@ CMRProjectContext& CMRProjectCodeEntry::getContext ( void )
 }
 
 /*******************  FUNCTION  *********************/
+void CMRProjectCodeEntry::setParentContext ( CMRProjectContext* parentContext )
+{
+	this->context.setParent(parentContext);
+}
+
+/*******************  FUNCTION  *********************/
 void CMRProjectCodeEntry::onParentChange ( CMRProjectCodeEntry* newParent )
 {
 	if (newParent == NULL)

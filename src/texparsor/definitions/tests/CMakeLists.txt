@@ -21,7 +21,7 @@ add_definitions(-DUNITTEST)
 #test list
 set(ALLOC_TEST_LIST TestProjectEntity TestProjectContext TestGenCode 
 	TestProjectMeshVar TestProjectIterator TestProjectConstant TestProjectCodeTree 
-	TestProjectLocalVariable TestProjectCode)
+	TestProjectLocalVariable TestProjectCode TestProjectDefinition)
 
 ######################################################
 #Now you can build your tests
