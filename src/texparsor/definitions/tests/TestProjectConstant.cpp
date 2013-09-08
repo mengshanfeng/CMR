@@ -65,7 +65,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectConstant,testLoadValue_scalar_invalid)
 	CMRProjectConstant constant("C","testC");
 	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("55;5",0));
 	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("55\\\\5",0));
-	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("",0))
+	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("",0));
 }
 
 /*******************  FUNCTION  *********************/
@@ -87,7 +87,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectConstant,testLoadValue_vector_invalid)
 {
 	CMRProjectConstant constant("C","testC");
 	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("55\\\\5",1));
-	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("",1))
+	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("",1));
 }
 
 /*******************  FUNCTION  *********************/
@@ -108,8 +108,8 @@ SVUT_DECLARE_FLAT_TEST(TestProjectConstant,testLoadValue_matrix)
 SVUT_DECLARE_FLAT_TEST(TestProjectConstant,testLoadValue_scalar_matrix_invalid)
 {
 	CMRProjectConstant constant("C","testC");
-	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("",2))
-	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2\\\\3.1;3.2;3.3",2))
+	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("",2));
+	SVUT_ASSERT_THROW(CMRLatexException,constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2\\\\3.1;3.2;3.3",2));
 }
 
 /*******************  FUNCTION  *********************/
