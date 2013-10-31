@@ -7,14 +7,14 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include "../CMRTransformationBasic.h"
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/CMRProjectIterator.h>
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 
 /*********************  CONSTS  *********************/
 
@@ -82,13 +82,13 @@ void MockTransfBasic::transform(CMRProjectCodeEquation& equation)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testConstructor)
+TEST(TestProjectTransfBasic,testConstructor)
 {
 	MockTransfBasic transf;
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformLoop)
+TEST(TestProjectTransfBasic,testTransformLoop)
 {
 	MockTransfBasic transf;
 	
@@ -99,11 +99,11 @@ SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformLoop)
 	root.addIteratorLoop("k");
 	
 	transf.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ LOOP[ k , NODE[  ] ] ]",transf.out.str());
+	EXPECT_EQ("NODE[ LOOP[ k , NODE[  ] ] ]",transf.out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformEquation_1)
+TEST(TestProjectTransfBasic,testTransformEquation_1)
 {
 	MockTransfBasic transf;
 	
@@ -115,11 +115,11 @@ SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformEquation_1)
 	root.addEquation("j","k * 2");
 	
 	transf.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ j , FORMULA[ ENTITY [ k ,  ]ENTITY [ * ,  ]ENTITY [ 2 ,  ] ] ] ]",transf.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ j , FORMULA[ ENTITY [ k ,  ]ENTITY [ * ,  ]ENTITY [ 2 ,  ] ] ] ]",transf.out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformEquation_2)
+TEST(TestProjectTransfBasic,testTransformEquation_2)
 {
 	MockTransfBasic transf;
 	
@@ -131,11 +131,11 @@ SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformEquation_2)
 	root.addEquation("j","k^{4 + 5}_{9 + 10} * \\frac{1}{2}");
 	
 	transf.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ j , FORMULA[ ENTITY [ k , FORMULA[ ENTITY [ 9 ,  ]ENTITY [ + ,  ]ENTITY [ 10 ,  ] ]FORMULA[ ENTITY [ 4 ,  ]ENTITY [ + ,  ]ENTITY [ 5 ,  ] ] ]ENTITY [ * ,  ]ENTITY [ \\frac , FORMULA[ ENTITY [ 1 ,  ] ]FORMULA[ ENTITY [ 2 ,  ] ] ] ] ] ]",transf.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ j , FORMULA[ ENTITY [ k , FORMULA[ ENTITY [ 9 ,  ]ENTITY [ + ,  ]ENTITY [ 10 ,  ] ]FORMULA[ ENTITY [ 4 ,  ]ENTITY [ + ,  ]ENTITY [ 5 ,  ] ] ]ENTITY [ * ,  ]ENTITY [ \\frac , FORMULA[ ENTITY [ 1 ,  ] ]FORMULA[ ENTITY [ 2 ,  ] ] ] ] ] ]",transf.out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformEquation_3)
+TEST(TestProjectTransfBasic,testTransformEquation_3)
 {
 	MockTransfBasic transf;
 	
@@ -147,11 +147,11 @@ SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformEquation_3)
 	root.addEquation("j","1 + \\frac{1}{2}");
 	
 	transf.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ j , FORMULA[ ENTITY [ 1 ,  ]ENTITY [ + ,  ]ENTITY [ \\frac , FORMULA[ ENTITY [ 1 ,  ] ]FORMULA[ ENTITY [ 2 ,  ] ] ] ] ] ]",transf.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ j , FORMULA[ ENTITY [ 1 ,  ]ENTITY [ + ,  ]ENTITY [ \\frac , FORMULA[ ENTITY [ 1 ,  ] ]FORMULA[ ENTITY [ 2 ,  ] ] ] ] ] ]",transf.out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformEquation_4)
+TEST(TestProjectTransfBasic,testTransformEquation_4)
 {
 	MockTransfBasic transf;
 	
@@ -163,16 +163,13 @@ SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testTransformEquation_4)
 	root.addEquation("j","1 +(2 * 3)");
 	
 	transf.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ j , FORMULA[ ENTITY [ 1 ,  ]ENTITY [ + ,  ]ENTITY [ () , FORMULA[ ENTITY [ 2 ,  ]ENTITY [ * ,  ]ENTITY [ 3 ,  ] ] ] ] ] ]",transf.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ j , FORMULA[ ENTITY [ 1 ,  ]ENTITY [ + ,  ]ENTITY [ () , FORMULA[ ENTITY [ 2 ,  ]ENTITY [ * ,  ]ENTITY [ 3 ,  ] ] ] ] ] ]",transf.out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectTransfBasic,testGetName)
+TEST(TestProjectTransfBasic,testGetName)
 {
 	MockTransfBasic transf;
 	
-	SVUT_ASSERT_EQUAL("mock",transf.getName());
+	EXPECT_EQ("mock",transf.getName());
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

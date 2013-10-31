@@ -7,7 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include "../CMRTransformationMarkNoTransf.h"
 #include <CMRTransformationReplace.h>
 #include <../definitions/CMRProjectCode.h>
@@ -15,19 +15,19 @@
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 
 /*********************  CONSTS  *********************/
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestReplace,testConstructor)
+TEST(TestReplace,testConstructor)
 {
 	CMRProjectCaptureMap map;
 	CMRTransformationReplace transf(&map);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_single)
+TEST(TestReplace,testRun_single)
 {
 	CMRProjectCaptureMap map;
 	CMRLatexFormulas2 f("c");
@@ -43,11 +43,11 @@ SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_single)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("4*c+\\frac{1+c}{c}",eq.getFormulas().getString());
+	EXPECT_EQ("4*c+\\frac{1+c}{c}",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_complex)
+TEST(TestReplace,testRun_complex)
 {
 	CMRProjectCaptureMap map;
 	CMRLatexFormulas2 f("c*c");
@@ -63,8 +63,5 @@ SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_complex)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("4*(c*c)+\\frac{1+(c*c)}{(c*c)}",eq.getFormulas().getString());
+	EXPECT_EQ("4*(c*c)+\\frac{1+(c*c)}{(c*c)}",eq.getFormulas().getString());
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

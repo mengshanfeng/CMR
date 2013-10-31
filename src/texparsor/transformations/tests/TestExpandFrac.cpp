@@ -7,7 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include "../CMRTransformationMarkNoTransf.h"
 #include <CMRTransformationReplace.h>
 #include <CMRTransformationExpandFrac.h>
@@ -16,18 +16,18 @@
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 
 /*********************  CONSTS  *********************/
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExandFrac,testConstructor)
+TEST(TestExandFrac,testConstructor)
 {
 	CMRTransformationExpandFrac transf;
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_single)
+TEST(TestReplace,testRun_single)
 {
 	CMRTransformationExpandFrac transf;
 	
@@ -40,11 +40,11 @@ SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_single)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("4*b+(1/b)",eq.getFormulas().getString());
+	EXPECT_EQ("4*b+(1/b)",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_complex_1)
+TEST(TestReplace,testRun_complex_1)
 {
 	CMRTransformationExpandFrac transf;
 	
@@ -57,11 +57,11 @@ SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_complex_1)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("4*b+((a+b)/(4*c))",eq.getFormulas().getString());
+	EXPECT_EQ("4*b+((a+b)/(4*c))",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_complex_2)
+TEST(TestReplace,testRun_complex_2)
 {
 	CMRTransformationExpandFrac transf;
 	
@@ -74,8 +74,5 @@ SVUT_DECLARE_FLAT_TEST(TestReplace,testRun_complex_2)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("4*b+((a+b)/(4/c))",eq.getFormulas().getString());
+	EXPECT_EQ("4*b+((a+b)/(4/c))",eq.getFormulas().getString());
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

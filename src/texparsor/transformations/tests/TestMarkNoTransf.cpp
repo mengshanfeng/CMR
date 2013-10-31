@@ -7,14 +7,14 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include "../CMRTransformationMarkNoTransf.h"
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/CMRProjectIterator.h>
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 
 /*********************  CONSTS  *********************/
 
@@ -85,13 +85,13 @@ void MockTransfBasic::transform(CMRProjectCodeEquation& equation)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testConstructor)
+TEST(TestMarkNoTransf,testConstructor)
 {
 	CMRTransformationMarkNoTransf transf;
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testRun_indice)
+TEST(TestMarkNoTransf,testRun_indice)
 {
 	CMRTransformationMarkNoTransf transf;
 	MockTransfBasic ptransf;
@@ -104,15 +104,15 @@ SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testRun_indice)
 	root.addEquation("a","p_{bc} + 4");
 	
 	ptransf.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ a , FORMULA[ ENTITY [ p , FORMULA[ ENTITY [ b ,  ]ENTITY [ c ,  ] ] ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ a , FORMULA[ ENTITY [ p , FORMULA[ ENTITY [ b ,  ]ENTITY [ c ,  ] ] ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf.out.str());
 
 	transf.run(root);
 	ptransf2.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ a , FORMULA[ ENTITY [ p ,  ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf2.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ a , FORMULA[ ENTITY [ p ,  ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf2.out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testRun_expo)
+TEST(TestMarkNoTransf,testRun_expo)
 {
 	CMRTransformationMarkNoTransf transf;
 	MockTransfBasic ptransf;
@@ -125,15 +125,15 @@ SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testRun_expo)
 	root.addEquation("a","p^{bc} + 4");
 	
 	ptransf.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ a , FORMULA[ ENTITY [ p , FORMULA[ ENTITY [ b ,  ]ENTITY [ c ,  ] ] ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ a , FORMULA[ ENTITY [ p , FORMULA[ ENTITY [ b ,  ]ENTITY [ c ,  ] ] ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf.out.str());
 
 	transf.run(root);
 	ptransf2.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ a , FORMULA[ ENTITY [ p ,  ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf2.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ a , FORMULA[ ENTITY [ p ,  ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf2.out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testRun_param)
+TEST(TestMarkNoTransf,testRun_param)
 {
 	CMRTransformationMarkNoTransf transf;
 	MockTransfBasic ptransf;
@@ -146,12 +146,9 @@ SVUT_DECLARE_FLAT_TEST(TestMarkNoTransf,testRun_param)
 	root.addEquation("a","\\frac{bc}{cd} + 4");
 	
 	ptransf.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ a , FORMULA[ ENTITY [ \\frac , FORMULA[ ENTITY [ b ,  ]ENTITY [ c ,  ] ]FORMULA[ ENTITY [ c ,  ]ENTITY [ d ,  ] ] ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ a , FORMULA[ ENTITY [ \\frac , FORMULA[ ENTITY [ b ,  ]ENTITY [ c ,  ] ]FORMULA[ ENTITY [ c ,  ]ENTITY [ d ,  ] ] ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf.out.str());
 
 	transf.run(root);
 	ptransf2.run(root);
-	SVUT_ASSERT_EQUAL("NODE[ EQUATION [ a , FORMULA[ ENTITY [ \\frac ,  ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf2.out.str());
+	EXPECT_EQ("NODE[ EQUATION [ a , FORMULA[ ENTITY [ \\frac ,  ]ENTITY [ + ,  ]ENTITY [ 4 ,  ] ] ] ]",ptransf2.out.str());
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

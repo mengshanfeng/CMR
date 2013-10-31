@@ -7,7 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include "../CMRTransformationMarkNoTransf.h"
 #include <CMRTransformationReplace.h>
 #include <CMRTransformationImplicitMul.h>
@@ -17,18 +17,18 @@
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 
 /*********************  CONSTS  *********************/
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testConstructor)
+TEST(TestExpandExpo,testConstructor)
 {
 	CMRTransformationExpandExpo transf;
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_simple_exp2)
+TEST(TestExpandExpo,testRun_simple_exp2)
 {
 	CMRTransformationExpandExpo transf;
 	
@@ -41,11 +41,11 @@ SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_simple_exp2)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("(a*a)",eq.getFormulas().getString());
+	EXPECT_EQ("(a*a)",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_complex_exp2)
+TEST(TestExpandExpo,testRun_complex_exp2)
 {
 	CMRTransformationExpandExpo transf;
 	
@@ -58,11 +58,11 @@ SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_complex_exp2)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("((a+5)*(a+5))",eq.getFormulas().getString());
+	EXPECT_EQ("((a+5)*(a+5))",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_simple_exp3)
+TEST(TestExpandExpo,testRun_simple_exp3)
 {
 	CMRTransformationExpandExpo transf;
 	
@@ -75,11 +75,11 @@ SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_simple_exp3)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("(a*a*a)",eq.getFormulas().getString());
+	EXPECT_EQ("(a*a*a)",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_simple_exp55)
+TEST(TestExpandExpo,testRun_simple_exp55)
 {
 	CMRTransformationExpandExpo transf;
 	
@@ -92,11 +92,11 @@ SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_simple_exp55)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("pow{a,5.5}",eq.getFormulas().getString());
+	EXPECT_EQ("pow{a,5.5}",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_complex_exp55)
+TEST(TestExpandExpo,testRun_complex_exp55)
 {
 	CMRTransformationExpandExpo transf;
 	
@@ -109,11 +109,11 @@ SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_complex_exp55)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("pow{(a+4),5.5}",eq.getFormulas().getString());
+	EXPECT_EQ("pow{(a+4),5.5}",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_simple_sqrt)
+TEST(TestExpandExpo,testRun_simple_sqrt)
 {
 	CMRTransformationExpandExpo transf;
 	
@@ -126,8 +126,5 @@ SVUT_DECLARE_FLAT_TEST(TestExpandExpo,testRun_simple_sqrt)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("sqrt{a}",eq.getFormulas().getString());
+	EXPECT_EQ("sqrt{a}",eq.getFormulas().getString());
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

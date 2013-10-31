@@ -7,7 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include <sstream>
 #include "../CMRTransformationMarkNoTransf.h"
 #include <CMRTransformationReplace.h>
@@ -18,7 +18,7 @@
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 using namespace std;
 
 /*********************  CONSTS  *********************/
@@ -47,13 +47,13 @@ class MockTransfToPrint:  public CMRTransformationBasic
 };
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExtractLoops,testConstructor)
+TEST(TestExtractLoops,testConstructor)
 {
 	CMRTransformationExtractLoops transf;
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExtractLoops,testRun_1)
+TEST(TestExtractLoops,testRun_1)
 {
 	CMRTransformationExtractLoops transf;
 	MockTransfToPrint out;
@@ -70,11 +70,11 @@ SVUT_DECLARE_FLAT_TEST(TestExtractLoops,testRun_1)
 	transf.run(root);
 	out.run(root);
 	
-	SVUT_ASSERT_EQUAL(TEST_STRING_1,out.out.str());
+	EXPECT_EQ(TEST_STRING_1,out.out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExtractLoops,testRun_2)
+TEST(TestExtractLoops,testRun_2)
 {
 	CMRTransformationExtractLoops transf;
 	MockTransfToPrint out;
@@ -91,11 +91,11 @@ SVUT_DECLARE_FLAT_TEST(TestExtractLoops,testRun_2)
 	transf.run(root);
 	out.run(root);
 	
-	SVUT_ASSERT_EQUAL(TEST_STRING_2,out.out.str());
+	EXPECT_EQ(TEST_STRING_2,out.out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestExtractLoops,testRun_3)
+TEST(TestExtractLoops,testRun_3)
 {
 	CMRTransformationExtractLoops transf;
 	MockTransfToPrint out;
@@ -114,8 +114,5 @@ SVUT_DECLARE_FLAT_TEST(TestExtractLoops,testRun_3)
 	transf.run(root);
 	out.run(root);
 	
-	SVUT_ASSERT_EQUAL(TEST_STRING_3,out.out.str());
+	EXPECT_EQ(TEST_STRING_3,out.out.str());
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

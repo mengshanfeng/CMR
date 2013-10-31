@@ -7,7 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include "../CMRTransformationMarkNoTransf.h"
 #include <CMRTransformationReplace.h>
 #include <CMRTransformationImplicitMul.h>
@@ -16,18 +16,18 @@
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 
 /*********************  CONSTS  *********************/
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestImplicitMul,testConstructor)
+TEST(TestImplicitMul,testConstructor)
 {
 	CMRTransformationImplicitMul transf;
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestImplicitMul,testRun_simple)
+TEST(TestImplicitMul,testRun_simple)
 {
 	CMRTransformationImplicitMul transf;
 	
@@ -40,11 +40,11 @@ SVUT_DECLARE_FLAT_TEST(TestImplicitMul,testRun_simple)
 	
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("a*b",eq.getFormulas().getString());
+	EXPECT_EQ("a*b",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestImplicitMul,testRun_complex)
+TEST(TestImplicitMul,testRun_complex)
 {
 	CMRTransformationImplicitMul transf;
 	
@@ -57,11 +57,11 @@ SVUT_DECLARE_FLAT_TEST(TestImplicitMul,testRun_complex)
 
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("a*b^{a*b}+8*a*5*e*\\frac{a*f}{5*e}",eq.getFormulas().getString());
+	EXPECT_EQ("a*b^{a*b}+8*a*5*e*\\frac{a*f}{5*e}",eq.getFormulas().getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestImplicitMul,testRun_start_minus)
+TEST(TestImplicitMul,testRun_start_minus)
 {
 	CMRTransformationImplicitMul transf;
 	
@@ -74,8 +74,5 @@ SVUT_DECLARE_FLAT_TEST(TestImplicitMul,testRun_start_minus)
 
 	transf.run(root);
 	
-	SVUT_ASSERT_EQUAL("-a*b*c+5",eq.getFormulas().getString());
+	EXPECT_EQ("-a*b*c+5",eq.getFormulas().getString());
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN
