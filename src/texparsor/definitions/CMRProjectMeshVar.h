@@ -33,7 +33,7 @@ class CMRProjectMeshVar : public CMRProjectEntity
 		CMRProjectMeshVar ( const std::string& latexName, const std::string& longName, const std::string& type );
 		void addDim( const std::string& name,int size, int start = 0);
 		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
-		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context ) const;
+		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int indent = 0 ) const;
 		std::string getTypeWithDims(void) const;
 		std::ostream & genCPPAccessorDefinition(std::ostream & out);
 		std::ostream & genCPPAccessorAddVar(std::ostream & out);

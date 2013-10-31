@@ -15,6 +15,34 @@
 #include <CMRProjectIterator.h>
 #include <CMRProjectDefinition.h>
 
+/*********************  CONSTS  *********************/
+static const char * CST_VALUE_1 = "//Definition : E : energy\n\
+double compute_energy(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y)\n\
+{\n\
+	double result = 0 ;\n\
+	int tmp = 0 ;\n\
+	result = 4 * 5 ;\n\
+	for(int k = 1 ; k <= 10 ; k++ )\n\
+	{\n\
+		tmp += 3 * k ;\n\
+	}\n\
+	result += tmp * 3 ;\n\
+	return result;\n\
+}\n\n";
+static const char * CST_VALUE_2 = "	//Definition : E : energy\n\
+	double compute_energy(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y)\n\
+	{\n\
+		double result = 0 ;\n\
+		int tmp = 0 ;\n\
+		result = 4 * 5 ;\n\
+		for(int k = 1 ; k <= 10 ; k++ )\n\
+		{\n\
+			tmp += 3 * k ;\n\
+		}\n\
+		result += tmp * 3 ;\n\
+		return result;\n\
+	}\n\n";
+
 /**********************  USING  *********************/
 using namespace svUnitTest;
 using namespace std;
@@ -37,6 +65,7 @@ SVUT_DECLARE_FLAT_TEST(TestProjectDefinition,testAddBasicActions)
 /*******************  FUNCTION  *********************/
 SVUT_DECLARE_FLAT_TEST(TestProjectDefinition,testPrintDebug)
 {
+	SVUT_ASSERT_TODO("todo");
 	CMRProjectDefinition def("E","energy");
 	def.addLocalVariable("t","tmp","int","0");
 	def.addEquation("E","4*5");
@@ -52,7 +81,35 @@ SVUT_DECLARE_FLAT_TEST(TestProjectDefinition,testPrintDebug)
 /*******************  FUNCTION  *********************/
 SVUT_DECLARE_FLAT_TEST(TestProjectDefinition,testGenDefinitionCCode)
 {
-	SVUT_ASSERT_TODO("todo");
+	CMRProjectDefinition def("E","energy");
+	def.addIterator("k","k",1,10);
+	def.addLocalVariable("t","tmp","int","0");
+	def.addEquation("E","4*5");
+	def.addIteratorLoop("k").addEquation("t","3*k","+=");
+	def.addEquation("E","t*3","+=");
+	CMRProjectContext context;
+	
+	stringstream out;
+	def.genDefinitionCCode(out,&context,0);
+	
+	SVUT_ASSERT_EQUAL(CST_VALUE_1,out.str());
+}
+
+/*******************  FUNCTION  *********************/
+SVUT_DECLARE_FLAT_TEST(TestProjectDefinition,testGenDefinitionCCodeIndent)
+{
+	CMRProjectDefinition def("E","energy");
+	def.addIterator("k","k",1,10);
+	def.addLocalVariable("t","tmp","int","0");
+	def.addEquation("E","4*5");
+	def.addIteratorLoop("k").addEquation("t","3*k","+=");
+	def.addEquation("E","t*3","+=");
+	CMRProjectContext context;
+	
+	stringstream out;
+	def.genDefinitionCCode(out,&context,1);
+	
+	SVUT_ASSERT_EQUAL(CST_VALUE_2,out.str());
 }
 
 /*******************  FUNCTION  *********************/

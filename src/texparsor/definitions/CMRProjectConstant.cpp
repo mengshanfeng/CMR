@@ -169,7 +169,7 @@ void CMRProjectConstant::printDebug ( std::ostream & out ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ) const
+void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ,int indent) const
 {
 	//check errors
 	assert(dims.size() <= 2);
@@ -223,6 +223,9 @@ void CMRProjectConstant::genUsageCCode ( ostream& out, const CMRProjectContext& 
 	
 // 	for (CMRIndiceCaptureMap::iterator it = capture.begin() ; it != capture.end() ; ++it)
 // 		cerr << "==> " << it->first << " => " << it->second << endl;
+	
+	//not managed
+	assert(dims.size() <= 2);
 	
 	//matrix
 	if (dims.size() >= 2)

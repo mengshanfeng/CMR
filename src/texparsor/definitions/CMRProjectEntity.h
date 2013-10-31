@@ -40,6 +40,10 @@ typedef std::vector<std::string> CMRStringVector;
 typedef std::map<std::string,const CMRLatexFormulas2 *> CMRProjectCaptureMap;
 typedef std::vector<CMRCaptureDef> CMRProjectCaptureDefMap;
 
+/*******************  FUNCTION  *********************/
+//TODO move
+std::ostream & doIndent(std::ostream & out,int depth);
+
 /*********************  CLASS  **********************/
 class CMRProjectEntity
 {
@@ -64,7 +68,7 @@ class CMRProjectEntity
 		void markAllCaptureAs(enum CMRCaptureType capture);
 		
 		//to overload
-		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context) const = 0;
+		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context, int padding = 0) const = 0;
 		virtual void genUsageCCode(std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false) const = 0;
 		virtual void printDebug(std::ostream & out) const;
 	public:

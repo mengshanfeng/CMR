@@ -77,7 +77,7 @@ ostream& CMRProjectMeshVar::genCPPAccessorConstrAcc(ostream& out)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectMeshVar::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ) const
+void CMRProjectMeshVar::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int indent ) const
 {
 	throw CMRLatexException("Variable must be defined by calling special functions from project structure, not directly by genDefinitionCCode function.");
 }

@@ -13,6 +13,7 @@
 /********************  HEADERS  *********************/
 #include "CMRProjectEntity.h"
 #include "CMRProjectCode.h"
+#include "CMRProjectIterator.h"
 
 /*********************  TYPES  **********************/
 class CMRTransformation;
@@ -22,13 +23,14 @@ class CMRProjectDefinition : public CMRProjectEntity
 {
 	public:
 		CMRProjectDefinition ( const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext = NULL);
-		void printDebug(std::ostream & out) const;
-		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context ) const;
+		virtual void printDebug(std::ostream & out) const;
+		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
 		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
 		void runTransformation(CMRTransformation & transf);
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=");
 		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator);
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue);
+		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
 	protected:
 		static void genParameterListForDef(std::ostream& out,const CMRProjectCaptureDefMap & map);
 		static void genParameterListForUsage( std::ostream& out, const CMRProjectCaptureDefMap& map, CMRProjectCaptureMap& capture );
@@ -39,7 +41,7 @@ class CMRProjectDefinition : public CMRProjectEntity
 		void runTransformation(CMRProjectTransformation & transf);
 		virtual std::ostream& genUsageCCode ( std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const;*/
 	private:
-		CMRProjectCodeNode ops;
+		CMRProjectCodeRootNode ops;
 };
 
 #endif //CMR_PROJECT_DEFINITION_H

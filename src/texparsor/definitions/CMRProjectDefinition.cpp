@@ -19,7 +19,7 @@ CMRProjectDefinition::CMRProjectDefinition ( const string& latexName, const stri
 	: CMRProjectEntity ( latexName, longName )
 	, ops(parentContext)
 {
-	this->ops.addLocalVariable(latexName,"result","float","0");
+	this->ops.addLocalVariable(latexName,"result","double","0");
 }
 
 /*******************  FUNCTION  *********************/
@@ -30,21 +30,20 @@ void CMRProjectDefinition::printDebug ( std::ostream& out ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ) const
+void CMRProjectDefinition::genDefinitionCCode ( ostream& out , const CMRProjectContext& context, int padding) const
 {
-	out << "//Definition : " << this->getLatexName() << " : " << getLongName() << endl;
-	out << "double compute_" << this->getLongName() << "(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y";
+	doIndent(out,padding) << "//Definition : " << this->getLatexName() << " : " << getLongName() << endl;
+	doIndent(out,padding) << "double compute_" << this->getLongName() << "(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y";
 	
 	genParameterListForDef(out,getIndices());
 	genParameterListForDef(out,getExponents());
 	genParameterListForDef(out,getParameters());
-	
 
 	out << ")" << endl;
-	out << "{" << endl;
-// 	ops.genCCode(cout,context,1);
-	out << "\t\treturn result" << endl;
-	out << "}" << endl;
+	doIndent(out,padding) << "{" << endl;
+	ops.genCCode(out,padding);
+	doIndent(out,padding+1) << "return result;" << endl;
+	doIndent(out,padding) << "}" << endl;
 	out << endl;
 }
 
@@ -108,4 +107,10 @@ CMRProjectCodeIteratorLoop& CMRProjectDefinition::addIteratorLoop ( const string
 CMRProjectLocalVariable& CMRProjectDefinition::addLocalVariable ( const string& latexName, const string& longName, const string& type, const string& defaultValue )
 {
 	return ops.addLocalVariable(latexName,longName,type,defaultValue);
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectIterator& CMRProjectDefinition::addIterator ( const string& latexName, const string& longName, int start, int end )
+{
+	return ops.addIterator(latexName,longName,start,end);
 }

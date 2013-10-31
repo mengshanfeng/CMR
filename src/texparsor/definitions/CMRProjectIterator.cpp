@@ -33,16 +33,18 @@ void CMRProjectIterator::printDebug ( std::ostream & out ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectIterator::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ) const
+void CMRProjectIterator::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ,int indent ) const
 {
+	//TODO indent
 	out << "int " << getLongName() << " = " << start << " ; " << getLongName() << " <= " << end << " ; " << getLongName() << "++";
 }
 
 /*******************  FUNCTION  *********************/
 void CMRProjectIterator::genUsageCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
 {
-	stringstream err;
-	err << "Error, iterator may not be used out of loop definition : " << getLatexName() << " : " << start << " -> " << end << endl;
-	context.printDebug(err);
-	throw CMRLatexException(err.str());
+// 	stringstream err;
+// 	err << "Error, iterator may not be used out of loop definition : " << getLatexName() << " : " << start << " -> " << end << endl;
+// 	context.printDebug(err);
+// 	throw CMRLatexException(err.str());
+	out << getLongName();
 }
