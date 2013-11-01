@@ -7,10 +7,8 @@
 ######################################################
 
 ######################################################
-add_library(cmr_tex_project CMRProjectEntity.cpp CMRProjectContext.cpp CMRGenCode.cpp CMRProjectMeshVar.cpp CMRProjectIterator.cpp CMRProjectConstant.cpp CMRProjectCode.cpp CMRProjectDefinition.cpp CMRProjectAction.cpp)
-target_link_libraries(cmr_tex_project cmr_tex_parsor)
+include_directories(../)
 
 ######################################################
-if (NOT DISABLE_TESTS)
-        add_subdirectory(tests)
-endif (NOT DISABLE_TESTS)
+add_executable(texparsor CMRProjectConstant.cpp CMRProjectEntity.cpp CMRProjectEquation.cpp CMRProjectIterator.cpp CMRProjectVariable.cpp CMRProjectAction.cpp CMRProject.cpp main.cpp CMRCodeTree.cpp CMRProjectDefinition.cpp CMRProjectContext.cpp CMRProjectTransformation.cpp CMRGenCode.cpp)
+target_link_libraries(texparsor cmr_tex_parsor)

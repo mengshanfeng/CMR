@@ -7,10 +7,11 @@
 ######################################################
 
 ######################################################
-add_executable(texparsor CMRProjectConstant.cpp CMRProjectEntity.cpp CMRProjectEquation.cpp CMRProjectIterator.cpp CMRProjectVariable.cpp CMRProjectAction.cpp CMRProject.cpp main.cpp CMRCodeTree.cpp CMRProjectDefinition.cpp CMRProjectContext.cpp CMRProjectTransformation.cpp CMRGenCode.cpp)
-target_link_libraries(texparsor cmr_tex_parsor)
-
-######################################################
 add_subdirectory(parsor)
 add_subdirectory(definitions)
 add_subdirectory(transformations)
+add_subdirectory(old_code)
+
+######################################################
+add_executable(texparsor_new main.cpp)
+target_link_libraries(texparsor_new cmr_tex_parsor cmr_tex_project cmr_tex_transf)
