@@ -32,8 +32,9 @@ class CMRProjectDefinition : public CMRProjectEntity
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue);
 		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
 	protected:
-		static void genParameterListForDef(std::ostream& out,const CMRProjectCaptureDefMap & map);
-		static void genParameterListForUsage( std::ostream& out, const CMRProjectCaptureDefMap& map, CMRProjectCaptureMap& capture );
+		void genParameterListForDef(std::ostream& out,const CMRProjectCaptureDefMap & map) const;
+		void genParameterListForUsage( std::ostream& out, const CMRProjectCaptureDefMap& map, CMRProjectCaptureMap& capture ) const;
+		virtual void onUpdateCaptureType ( const std::string& name, CMRCaptureType captureType );
 		/*virtual void addIndice ( const std::string& name, CMRCaptureType capture = CMR_CAPTURE_NONE );
 		virtual void madeCaptureIndice ( const std::string name, CMRCaptureType capture );
 		void printDebug(void) const;
@@ -41,6 +42,7 @@ class CMRProjectDefinition : public CMRProjectEntity
 		void runTransformation(CMRProjectTransformation & transf);
 		virtual std::ostream& genUsageCCode ( std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const;*/
 	private:
+		CMRProjectContext parametersContext;
 		CMRProjectCodeRootNode ops;
 };
 

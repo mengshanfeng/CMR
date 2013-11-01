@@ -17,7 +17,7 @@ using namespace std;
 /*******************  FUNCTION  *********************/
 CMRProjectDefinition::CMRProjectDefinition ( const string& latexName, const string& longName, CMRProjectContext* parentContext ) 
 	: CMRProjectEntity ( latexName, longName )
-	, ops(parentContext)
+	,parametersContext(parentContext), ops(&parametersContext)
 {
 	this->ops.addLocalVariable(latexName,"result","double","0");
 }
@@ -48,18 +48,22 @@ void CMRProjectDefinition::genDefinitionCCode ( ostream& out , const CMRProjectC
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::genParameterListForDef ( ostream& out, const CMRProjectCaptureDefMap& map )
+void CMRProjectDefinition::genParameterListForDef ( ostream& out, const CMRProjectCaptureDefMap& map) const
 {
 	for (CMRProjectCaptureDefMap::const_iterator it = map.begin() ; it != map.end() ; ++it)
 	{
 		assert(it->captureType != CMR_CAPTURE_OPTIONS);
 		if (it->captureType == CMR_CAPTURE_REQUIRED)
-			out << ", int " << it->name;
+		{
+			const CMRProjectEntity * entity = parametersContext.find(it->name);
+			assert(entity != NULL);
+			out << ", int " << entity->getLongName();
+		}
 	}
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::genParameterListForUsage ( ostream& out, const CMRProjectCaptureDefMap& map,CMRProjectCaptureMap & capture )
+void CMRProjectDefinition::genParameterListForUsage ( ostream& out, const CMRProjectCaptureDefMap& map,CMRProjectCaptureMap & capture ) const
 {
 	for (CMRProjectCaptureDefMap::const_iterator it = map.begin() ; it != map.end() ; ++it)
 	{
@@ -82,7 +86,7 @@ void CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext
 	genParameterListForUsage(out,getIndices(),capture);
 	genParameterListForUsage(out,getExponents(),capture);
 	genParameterListForUsage(out,getParameters(),capture);
-	out << ");";
+	out << ")";
 }
 
 /*******************  FUNCTION  *********************/
@@ -113,4 +117,15 @@ CMRProjectLocalVariable& CMRProjectDefinition::addLocalVariable ( const string& 
 CMRProjectIterator& CMRProjectDefinition::addIterator ( const string& latexName, const string& longName, int start, int end )
 {
 	return ops.addIterator(latexName,longName,start,end);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectDefinition::onUpdateCaptureType ( const string& name, CMRCaptureType captureType )
+{
+	if (captureType == CMR_CAPTURE_REQUIRED)
+	{
+		//TODO : create a parameter entity
+		string longName = parametersContext.genTempName("param");
+		this->parametersContext.addEntry(new CMRProjectLocalVariable(name,longName,"int"));
+	}
 }
