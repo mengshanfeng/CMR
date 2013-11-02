@@ -11,7 +11,6 @@
 #define CMR_TRANSFORMATION_REPLACE_H
 
 /********************  HEADERS  *********************/
-#include <string>
 #include "CMRTransformationBasic.h"
 #include "../definitions/CMRProjectEntity.h"
 

@@ -11,7 +11,6 @@
 #define CMR_TRANSFORMATION_IMPLICIT_MUL_H
 
 /********************  HEADERS  *********************/
-#include <string>
 #include "CMRTransformationBasic.h"
 
 /*********************  CLASS  **********************/

@@ -11,7 +11,6 @@
 #define CMR_TRANSFORMATION_EXTRACT_LOOPS_H
 
 /********************  HEADERS  *********************/
-#include <string>
 #include "CMRTransformationBasic.h"
 
 /*********************  CLASS  **********************/

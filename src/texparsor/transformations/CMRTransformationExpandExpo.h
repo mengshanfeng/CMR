@@ -11,7 +11,6 @@
 #define CMR_TRANSFORMATION_EXPAND_EXPO_H
 
 /********************  HEADERS  *********************/
-#include <string>
 #include "CMRTransformationBasic.h"
 
 /*********************  CLASS  **********************/

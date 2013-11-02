@@ -7,7 +7,15 @@
 ######################################################
 
 ######################################################
-add_library(cmr_tex_transf CMRTransformationExtractLoops.cpp CMRTransformationExpandExpo.cpp CMRTransformationReplace.cpp CMRTransformation.cpp CMRTransformationBasic.cpp CMRTransformationMarkNoTransf.cpp CMRTransformationExpandFrac.cpp CMRTransformationImplicitMul.cpp)
+add_library(cmr_tex_transf CMRTransformationExtractLoops.cpp 
+                           CMRTransformationExpandExpo.cpp 
+                           CMRTransformationReplace.cpp 
+                           CMRTransformation.cpp 
+                           CMRTransformationBasic.cpp 
+                           CMRTransformationMarkNoTransf.cpp 
+                           CMRTransformationExpandFrac.cpp 
+                           CMRTransformationImplicitMul.cpp 
+                           CMRModelBasedReplacement.cpp)
 target_link_libraries(cmr_tex_transf cmr_tex_definitions)
 
 ######################################################

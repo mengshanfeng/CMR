@@ -11,7 +11,6 @@
 #define CMR_TRANSFORMATION_MARK_NO_TRANSF_H
 
 /********************  HEADERS  *********************/
-#include <string>
 #include "CMRTransformationBasic.h"
 #include "../definitions/CMRProjectEntity.h"
 
