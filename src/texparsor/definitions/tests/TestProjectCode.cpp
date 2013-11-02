@@ -7,7 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include <CMRProjectCode.h>
 #include <../parsor/CMRLatexFormula.h>
 #include <sstream>
@@ -15,39 +15,39 @@
 #include <CMRProjectIterator.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectCodeNode,testConstructor)
+TEST(TestProjectCodeNode,testConstructor)
 {
 	CMRProjectCodeNode root;
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectCodeNode,testAddSubBlock)
+TEST(TestProjectCodeNode,testAddSubBlock)
 {
 	CMRProjectCodeNode root;
 	
 	CMRProjectCodeNode & child = root.addSubBlock();
 	
-	SVUT_ASSERT_SAME(&root,child.getParent());
-	SVUT_ASSERT_EQUAL(CMR_PROJECT_CODE_NODE,child.getType());
+	EXPECT_EQ(&root,child.getParent());
+	EXPECT_EQ(CMR_PROJECT_CODE_NODE,child.getType());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectCodeNode,testAddEquation)
+TEST(TestProjectCodeNode,testAddEquation)
 {
 	CMRProjectCodeNode root;
 	
 	CMRProjectCodeEquation & eq = root.addEquation("A_i","b * c + 5");
 	
-	SVUT_ASSERT_SAME(&root,eq.getParent());
-	SVUT_ASSERT_EQUAL(CMR_PROJECT_CODE_EQUATION,eq.getType());
+	EXPECT_EQ(&root,eq.getParent());
+	EXPECT_EQ(CMR_PROJECT_CODE_EQUATION,eq.getType());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectCodeNode,testIteratorLoop_ok)
+TEST(TestProjectCodeNode,testIteratorLoop_ok)
 {
 	CMRProjectContext context;	
 	CMRProjectCodeNode root(&context);
@@ -57,28 +57,25 @@ SVUT_DECLARE_FLAT_TEST(TestProjectCodeNode,testIteratorLoop_ok)
 	
 	CMRProjectCodeIteratorLoop & loop = root.addIteratorLoop("k");
 
-	SVUT_ASSERT_SAME(&root,loop.getParent());
-	SVUT_ASSERT_NOT_THROW(CMRLatexException,loop.getIterator());
-	SVUT_ASSERT_EQUAL(CMR_PROJECT_CODE_ITERATOR,loop.getType());
+	EXPECT_EQ(&root,loop.getParent());
+	ASSERT_NO_THROW(loop.getIterator());
+	EXPECT_EQ(CMR_PROJECT_CODE_ITERATOR,loop.getType());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectCodeNode,testIteratorLoop_error)
+TEST(TestProjectCodeNode,testIteratorLoop_error)
 {
 	CMRProjectCodeNode root;
 	
 	CMRProjectCodeIteratorLoop & loop = root.addIteratorLoop("k");
 	
-	SVUT_ASSERT_SAME(&root,loop.getParent());
-	SVUT_ASSERT_THROW(CMRLatexException,loop.getIterator());
+	EXPECT_EQ(&root,loop.getParent());
+	EXPECT_THROW(loop.getIterator(),CMRLatexException);
 }
 
-SVUT_DECLARE_FLAT_TEST(TestProjectCodeNode,testAddLocalVariable)
+TEST(TestProjectCodeNode,testAddLocalVariable)
 {
 	CMRProjectCodeNode root;
 	
 	root.addLocalVariable("k","testK","int","1");
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

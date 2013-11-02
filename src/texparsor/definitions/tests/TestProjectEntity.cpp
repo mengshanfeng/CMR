@@ -7,14 +7,14 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include <CMRProjectEntity.h>
 #include <../parsor/CMRLatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 using namespace std;
 
 /*********************  CONSTS  *********************/
@@ -27,153 +27,153 @@ static const char TEST_CST_1[] = "Entity :\n\
     - parameters : \n";
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testConstructor)
+TEST(TestProjectEntity,testConstructor)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testGetLatexName)
+TEST(TestProjectEntity,testGetLatexName)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
+	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddIndice_ok)
+TEST(TestProjectEntity,testAddIndice_ok)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
+	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
 	entity.addIndice("k");
-	SVUT_ASSERT_EQUAL("A_{i,j,k}^{2}",entity.getLatexName());
-	SVUT_ASSERT_NOT_THROW(CMRLatexException, entity.addIndice("i"));
+	EXPECT_EQ("A_{i,j,k}^{2}",entity.getLatexName());
+	EXPECT_NO_THROW(entity.addIndice("i"));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddIndice_duplicate)
+TEST(TestProjectEntity,testAddIndice_duplicate)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
-	SVUT_ASSERT_THROW(CMRLatexException, entity.addIndice("i",CMR_CAPTURE_REQUIRED));
+	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
+	EXPECT_THROW(entity.addIndice("i",CMR_CAPTURE_REQUIRED),CMRLatexException);
 	entity.addIndice("2");
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddExponent_ok)
+TEST(TestProjectEntity,testAddExponent_ok)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
+	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
 	entity.addExponent("k");
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2,k}",entity.getLatexName());
-	SVUT_ASSERT_NOT_THROW(CMRLatexException, entity.addExponent("i"));
+	EXPECT_EQ("A_{i,j}^{2,k}",entity.getLatexName());
+	EXPECT_NO_THROW(entity.addExponent("i"));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddExponent_duplicate)
+TEST(TestProjectEntity,testAddExponent_duplicate)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
-	SVUT_ASSERT_THROW(CMRLatexException, entity.addExponent("i",CMR_CAPTURE_REQUIRED));
+	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
+	EXPECT_THROW(entity.addExponent("i",CMR_CAPTURE_REQUIRED),CMRLatexException);
 	entity.addExponent("2");
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddParameter_ok)
+TEST(TestProjectEntity,testAddParameter_ok)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
+	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
 	entity.addParameter("k");
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2}{k}",entity.getLatexName());
+	EXPECT_EQ("A_{i,j}^{2}{k}",entity.getLatexName());
 	entity.addParameter("l");
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2}{k}{l}",entity.getLatexName());
-	SVUT_ASSERT_NOT_THROW(CMRLatexException, entity.addParameter("i"));
+	EXPECT_EQ("A_{i,j}^{2}{k}{l}",entity.getLatexName());
+	EXPECT_NO_THROW(entity.addParameter("i"));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testAddParameter_duplicate)
+TEST(TestProjectEntity,testAddParameter_duplicate)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	SVUT_ASSERT_EQUAL("A_{i,j}^{2}",entity.getLatexName());
-	SVUT_ASSERT_THROW(CMRLatexException, entity.addParameter("i",CMR_CAPTURE_REQUIRED));
+	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
+	EXPECT_THROW(entity.addParameter("i",CMR_CAPTURE_REQUIRED),CMRLatexException);
 	entity.addParameter("2");
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testChangeCaptureType_ok)
+TEST(TestProjectEntity,testChangeCaptureType_ok)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testChangeCaptureType_invalid)
+TEST(TestProjectEntity,testChangeCaptureType_invalid)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
-	SVUT_ASSERT_THROW(CMRLatexException,entity.changeCaptureType("m",CMR_CAPTURE_REQUIRED));
+	EXPECT_THROW(entity.changeCaptureType("m",CMR_CAPTURE_REQUIRED),CMRLatexException);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testMatch_1)
+TEST(TestProjectEntity,testMatch_1)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
 	CMRLatexEntity2 le("A_{eq,42}");
-	SVUT_ASSERT_TRUE(entity.match(le));
+	EXPECT_TRUE(entity.match(le));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testMatch_2)
+TEST(TestProjectEntity,testMatch_2)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
 	CMRLatexEntity2 le("A_{eq2,42}");
-	SVUT_ASSERT_FALSE(entity.match(le));
+	EXPECT_FALSE(entity.match(le));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testMatch_3)
+TEST(TestProjectEntity,testMatch_3)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
 	CMRLatexEntity2 le("A_{eq}");
-	SVUT_ASSERT_FALSE(entity.match(le));
+	EXPECT_FALSE(entity.match(le));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testMatch_4)
+TEST(TestProjectEntity,testMatch_4)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
 	CMRLatexEntity2 le("A_{eq,42,43}");
-	SVUT_ASSERT_FALSE(entity.match(le));
+	EXPECT_FALSE(entity.match(le));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testMatch_5)
+TEST(TestProjectEntity,testMatch_5)
 {
 	MockProjectEntity entity("A_{eq,k}^{4}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
 	CMRLatexEntity2 le("A_{eq,42}^4");
-	SVUT_ASSERT_TRUE(entity.match(le));
+	EXPECT_TRUE(entity.match(le));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testMatch_6)
+TEST(TestProjectEntity,testMatch_6)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
 	CMRLatexEntity2 le("A_{eq,42}^2");
-	SVUT_ASSERT_TRUE(entity.match(le));
+	EXPECT_TRUE(entity.match(le));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_1)
+TEST(TestProjectEntity,testCapture_1)
 {
 	MockProjectEntity entity("A_{a,b}^{c,d}","test");
 	entity.changeCaptureType("a",CMR_CAPTURE_REQUIRED);
@@ -183,20 +183,20 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_1)
 
 	CMRLatexEntity2 le("A_{1,2}^{3,4}");
 	
-	SVUT_ASSERT_TRUE(entity.match(le));
+	EXPECT_TRUE(entity.match(le));
 	
 	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);
 	
-	SVUT_ASSERT_EQUAL(4,capture.size());
-	SVUT_ASSERT_EQUAL("1",capture["a"]->getString());
-	SVUT_ASSERT_EQUAL("2",capture["b"]->getString());
-	SVUT_ASSERT_EQUAL("3",capture["c"]->getString());
-	SVUT_ASSERT_EQUAL("4",capture["d"]->getString());
+	EXPECT_EQ(4,capture.size());
+	EXPECT_EQ("1",capture["a"]->getString());
+	EXPECT_EQ("2",capture["b"]->getString());
+	EXPECT_EQ("3",capture["c"]->getString());
+	EXPECT_EQ("4",capture["d"]->getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_2)
+TEST(TestProjectEntity,testCapture_2)
 {
 	MockProjectEntity entity("\\frac{a}{b}","test");
 	entity.changeCaptureType("a",CMR_CAPTURE_REQUIRED);
@@ -204,18 +204,18 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_2)
 
 	CMRLatexEntity2 le("\\frac{1}{2}");
 	
-	SVUT_ASSERT_TRUE(entity.match(le));
+	EXPECT_TRUE(entity.match(le));
 	
 	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);
 	
-	SVUT_ASSERT_EQUAL(2,capture.size());
-	SVUT_ASSERT_EQUAL("1",capture["a"]->getString());
-	SVUT_ASSERT_EQUAL("2",capture["b"]->getString());
+	EXPECT_EQ(2,capture.size());
+	EXPECT_EQ("1",capture["a"]->getString());
+	EXPECT_EQ("2",capture["b"]->getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_3)
+TEST(TestProjectEntity,testCapture_3)
 {
 	MockProjectEntity entity("A_{a,b}^{c,d}","test");
 	entity.changeCaptureType("a",CMR_CAPTURE_REQUIRED);
@@ -225,14 +225,14 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_3)
 
 	CMRLatexEntity2 le("A_{1,2,5}^{3,4}");
 	
-	SVUT_ASSERT_FALSE(entity.match(le));
+	EXPECT_FALSE(entity.match(le));
 	
 	CMRProjectCaptureMap capture;
-	SVUT_ASSERT_THROW(CMRLatexException, entity.capture(le,capture));
+	EXPECT_THROW(entity.capture(le,capture),CMRLatexException);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_4)
+TEST(TestProjectEntity,testCapture_4)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
@@ -241,35 +241,35 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testCapture_4)
 	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);
 	
-	SVUT_ASSERT_EQUAL(2,capture.size());
-	SVUT_ASSERT_EQUAL("2",capture["cmrExponent"]->getString());
+	EXPECT_EQ(2,capture.size());
+	EXPECT_EQ("2",capture["cmrExponent"]->getString());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testGetShortName)
+TEST(TestProjectEntity,testGetShortName)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
-	SVUT_ASSERT_EQUAL("A",entity.getShortName());
+	EXPECT_EQ("A",entity.getShortName());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testGetLongName)
+TEST(TestProjectEntity,testGetLongName)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
-	SVUT_ASSERT_EQUAL("test",entity.getLongName());
+	EXPECT_EQ("test",entity.getLongName());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testOperatorStream)
+TEST(TestProjectEntity,testOperatorStream)
 {
 	MockProjectEntity entity("A_{ i , j }^{ 5 , k}","test");
 	stringstream out;
 	out << entity;
-	SVUT_ASSERT_EQUAL("A_{i,j}^{5,k}",out.str());
+	EXPECT_EQ("A_{i,j}^{5,k}",out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testPrintDebug)
+TEST(TestProjectEntity,testPrintDebug)
 {
 	MockProjectEntity entity("A_{ i , j }^{ 5 , k}","test");
 	entity.changeCaptureType("j",CMR_CAPTURE_REQUIRED);
@@ -277,8 +277,5 @@ SVUT_DECLARE_FLAT_TEST(TestProjectEntity,testPrintDebug)
 	stringstream out;
 	entity.printDebug(out);
 	
-	SVUT_ASSERT_EQUAL(TEST_CST_1,out.str());
+	EXPECT_EQ(TEST_CST_1,out.str());
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

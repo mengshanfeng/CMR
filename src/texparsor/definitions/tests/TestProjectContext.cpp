@@ -7,43 +7,45 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include <CMRProjectContext.h>
 #include <../parsor/CMRLatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 
+#define EXPECT_NULL(ptr) EXPECT_EQ((void*)NULL,(ptr))
+
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testConstructor)
+TEST(TestProjectContext,testConstructor)
 {
 	CMRProjectContext context1;
 	CMRProjectContext context2(&context1);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testCountTotalEntries_none)
+TEST(TestProjectContext,testCountTotalEntries_none)
 {
 	CMRProjectContext context;
-	SVUT_ASSERT_EQUAL(0,context.countTotalEntries());
+	EXPECT_EQ(0,context.countTotalEntries());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testCountTotalEntries_no_parent)
+TEST(TestProjectContext,testCountTotalEntries_no_parent)
 {
 	CMRProjectContext context;
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("B_i","testB");
 	context.addEntry(&entry1);
 	context.addEntry(&entry2);
-	SVUT_ASSERT_EQUAL(2,context.countTotalEntries());
+	EXPECT_EQ(2,context.countTotalEntries());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testCountTotalEntries_parent)
+TEST(TestProjectContext,testCountTotalEntries_parent)
 {
 	CMRProjectContext context;
 	CMRProjectContext context2(&context);
@@ -51,49 +53,49 @@ SVUT_DECLARE_FLAT_TEST(TestProjectContext,testCountTotalEntries_parent)
 	MockProjectEntity entry2("B_i","testB");
 	context.addEntry(&entry1);
 	context2.addEntry(&entry2);
-	SVUT_ASSERT_EQUAL(1,context.countTotalEntries());
-	SVUT_ASSERT_EQUAL(2,context2.countTotalEntries());
+	EXPECT_EQ(1,context.countTotalEntries());
+	EXPECT_EQ(2,context2.countTotalEntries());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testAddEntry_ok)
+TEST(TestProjectContext,testAddEntry_ok)
 {
 	CMRProjectContext context;
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("B_i","testB");
 	MockProjectEntity entry3("B","testC");
 	MockProjectEntity entry4("A_j","testDs");
-	SVUT_ASSERT_NOT_THROW(CMRLatexException,context.addEntry(&entry1));
-	SVUT_ASSERT_NOT_THROW(CMRLatexException,context.addEntry(&entry2));
-	SVUT_ASSERT_NOT_THROW(CMRLatexException,context.addEntry(&entry3));
-	SVUT_ASSERT_NOT_THROW(CMRLatexException,context.addEntry(&entry4));
+	EXPECT_NO_THROW(context.addEntry(&entry1));
+	EXPECT_NO_THROW(context.addEntry(&entry2));
+	EXPECT_NO_THROW(context.addEntry(&entry3));
+	EXPECT_NO_THROW(context.addEntry(&entry4));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testAddEntry_conflict)
+TEST(TestProjectContext,testAddEntry_conflict)
 {
 	CMRProjectContext context;
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("A_i","testB");
 	MockProjectEntity entry3("C_i","testA");
-	SVUT_ASSERT_NOT_THROW(CMRLatexException, context.addEntry(&entry1));
-	SVUT_ASSERT_THROW(CMRLatexException, context.addEntry(&entry2));
-	SVUT_ASSERT_THROW(CMRLatexException, context.addEntry(&entry3));
+	EXPECT_NO_THROW( context.addEntry(&entry1));
+	EXPECT_THROW(context.addEntry(&entry2),CMRLatexException);
+	EXPECT_THROW(context.addEntry(&entry3),CMRLatexException);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testAddEntry_conflict_reverse)
+TEST(TestProjectContext,testAddEntry_conflict_reverse)
 {
 	CMRProjectContext context;
 	MockProjectEntity entry1("A_i","testA");
 	entry1.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
 	MockProjectEntity entry2("A_j","testB");
-	SVUT_ASSERT_NOT_THROW(CMRLatexException, context.addEntry(&entry1));
-	SVUT_ASSERT_THROW(CMRLatexException, context.addEntry(&entry2));
+	EXPECT_NO_THROW(context.addEntry(&entry1));
+	EXPECT_THROW(context.addEntry(&entry2),CMRLatexException);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testFind_ok_local)
+TEST(TestProjectContext,testFind_ok_local)
 {
 	CMRProjectContext context;
 	CMRProjectContext context2(&context);
@@ -103,11 +105,11 @@ SVUT_DECLARE_FLAT_TEST(TestProjectContext,testFind_ok_local)
 	context2.addEntry(&entry2);
 	
 	CMRLatexEntity2 e("A_i");
-	SVUT_ASSERT_SAME(&entry1,context.find(e));
+	EXPECT_EQ(&entry1,context.find(e));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testFind_ok_parent)
+TEST(TestProjectContext,testFind_ok_parent)
 {
 	CMRProjectContext context;
 	CMRProjectContext context2(&context);
@@ -117,11 +119,11 @@ SVUT_DECLARE_FLAT_TEST(TestProjectContext,testFind_ok_parent)
 	context2.addEntry(&entry2);
 	
 	CMRLatexEntity2 e("A_i");
-	SVUT_ASSERT_SAME(&entry1,context2.find(e));
+	EXPECT_EQ(&entry1,context2.find(e));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testFind_not_found)
+TEST(TestProjectContext,testFind_not_found)
 {
 	CMRProjectContext context;
 	CMRProjectContext context2(&context);
@@ -131,11 +133,11 @@ SVUT_DECLARE_FLAT_TEST(TestProjectContext,testFind_not_found)
 	context2.addEntry(&entry2);
 	
 	CMRLatexEntity2 e("C_i");
-	SVUT_ASSERT_NULL(context2.find(e));
+	EXPECT_NULL(context2.find(e));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testPrintDebug)
+TEST(TestProjectContext,testPrintDebug)
 {
 	CMRProjectContext context;
 	CMRProjectContext context2(&context);
@@ -146,38 +148,35 @@ SVUT_DECLARE_FLAT_TEST(TestProjectContext,testPrintDebug)
 	
 	stringstream tmp;
 	context2.printDebug(tmp);
-	SVUT_ASSERT_FALSE(tmp.str().empty());
+	EXPECT_FALSE(tmp.str().empty());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testGetDeph)
+TEST(TestProjectContext,testGetDeph)
 {
 	CMRProjectContext context;
 	CMRProjectContext context2(&context);
 	
-	SVUT_ASSERT_EQUAL(0,context.getDepth());
-	SVUT_ASSERT_EQUAL(1,context2.getDepth());
+	EXPECT_EQ(0,context.getDepth());
+	EXPECT_EQ(1,context2.getDepth());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testGenTempNameLongName)
+TEST(TestProjectContext,testGenTempNameLongName)
 {
 	CMRProjectContext context;
 	CMRProjectContext context2(&context);
 	CMRProjectContext context3(&context);
 	
-	SVUT_ASSERT_EQUAL("temp_0_0",context.genTempName().longName);
-	SVUT_ASSERT_EQUAL("temp_0_1",context.genTempName().longName);
-	SVUT_ASSERT_EQUAL("temp_0_2",context.genTempName().longName);
+	EXPECT_EQ("temp_0_0",context.genTempName().longName);
+	EXPECT_EQ("temp_0_1",context.genTempName().longName);
+	EXPECT_EQ("temp_0_2",context.genTempName().longName);
 	
-	SVUT_ASSERT_EQUAL("temp_1_0",context2.genTempName().longName);
-	SVUT_ASSERT_EQUAL("temp_1_1",context2.genTempName().longName);
-	SVUT_ASSERT_EQUAL("temp_1_2",context2.genTempName().longName);
+	EXPECT_EQ("temp_1_0",context2.genTempName().longName);
+	EXPECT_EQ("temp_1_1",context2.genTempName().longName);
+	EXPECT_EQ("temp_1_2",context2.genTempName().longName);
 	
-	SVUT_ASSERT_EQUAL("temp_1_0",context3.genTempName().longName);
-	SVUT_ASSERT_EQUAL("temp_1_1",context3.genTempName().longName);
-	SVUT_ASSERT_EQUAL("temp_1_2",context3.genTempName().longName);
+	EXPECT_EQ("temp_1_0",context3.genTempName().longName);
+	EXPECT_EQ("temp_1_1",context3.genTempName().longName);
+	EXPECT_EQ("temp_1_2",context3.genTempName().longName);
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

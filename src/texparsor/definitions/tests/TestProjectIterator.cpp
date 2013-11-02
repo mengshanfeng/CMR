@@ -7,7 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include <CMRProjectIterator.h>
 #include <../parsor/CMRLatexFormula.h>
 #include <sstream>
@@ -15,7 +15,7 @@
 #include <CMRProjectContext.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 using namespace std;
 
 /*********************  CONSTS  *********************/
@@ -29,24 +29,24 @@ static const char TEST_CST_1[] = "Entity :\n\
     - values     : 0 .. 9\n";
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectIterator,testConstructor)
+TEST(TestProjectIterator,testConstructor)
 {
 	CMRProjectIterator it("k","testK",0,9);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectIterator,testPrintDebug)
+TEST(TestProjectIterator,testPrintDebug)
 {
 	CMRProjectIterator it("k","testK",0,9);
 	
 	stringstream out;
 	it.printDebug(out);
 	
-	SVUT_ASSERT_EQUAL(TEST_CST_1,out.str());
+	EXPECT_EQ(TEST_CST_1,out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectIterator,testGenDefinitionCCode)
+TEST(TestProjectIterator,testGenDefinitionCCode)
 {
 	CMRProjectIterator it("k","testK",0,9);
 	CMRProjectContext context;
@@ -54,19 +54,16 @@ SVUT_DECLARE_FLAT_TEST(TestProjectIterator,testGenDefinitionCCode)
 	stringstream out;
 	it.genDefinitionCCode(out,context);
 	
-	SVUT_ASSERT_EQUAL("int testK = 0 ; testK <= 9 ; testK++",out.str());
+	EXPECT_EQ("int testK = 0 ; testK <= 9 ; testK++",out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectIterator,testGenUsageCCode)
+TEST(TestProjectIterator,testGenUsageCCode)
 {
 	CMRProjectIterator it("k","testK",0,9);
 	CMRProjectContext context;
 	CMRLatexEntity2 entity("k");
 	
 	stringstream out;
-	SVUT_ASSERT_THROW(CMRLatexException,it.genUsageCCode(out,context,entity));
+	EXPECT_THROW(it.genUsageCCode(out,context,entity),CMRLatexException);
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

@@ -7,7 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include <CMRProjectContext.h>
 #include "../../parsor/CMRLatexFormula.h"
 #include <sstream>
@@ -15,11 +15,11 @@
 #include "../CMRGenCode.h"
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_1)
+TEST(TestGenCode,testCmrGenEqCCode_entity_1)
 {
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i,j}","testAij");
@@ -34,11 +34,11 @@ SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_1)
 	
 	CMRLatexEntity2 e("A_i");
 	cmrGenEqCCode(out,context,e);
-	SVUT_ASSERT_EQUAL("testAi ",out.str());
+	EXPECT_EQ("testAi ",out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_2)
+TEST(TestGenCode,testCmrGenEqCCode_entity_2)
 {
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i,j}","testAij");
@@ -53,11 +53,11 @@ SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_2)
 	
 	CMRLatexEntity2 e("155");
 	cmrGenEqCCode(out,context,e);
-	SVUT_ASSERT_EQUAL("155 ",out.str());
+	EXPECT_EQ("155 ",out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_3)
+TEST(TestGenCode,testCmrGenEqCCode_entity_3)
 {
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i, j}","testAij");
@@ -72,11 +72,11 @@ SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_3)
 	
 	CMRLatexEntity2 e("A_{ i , j }");
 	cmrGenEqCCode(out,context,e);
-	SVUT_ASSERT_EQUAL("testAij ",out.str());
+	EXPECT_EQ("testAij ",out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_4)
+TEST(TestGenCode,testCmrGenEqCCode_entity_4)
 {
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i, j}","testAij");
@@ -91,11 +91,11 @@ SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_4)
 	
 	CMRLatexEntity2 e("B_k");
 	cmrGenEqCCode(out,context,e);
-	SVUT_ASSERT_EQUAL("testB ",out.str());
+	EXPECT_EQ("testB ",out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_5)
+TEST(TestGenCode,testCmrGenEqCCode_entity_5)
 {
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i, j}","testAij");
@@ -109,11 +109,11 @@ SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_5)
 	stringstream out;
 	
 	CMRLatexEntity2 e("Z_k");
-	SVUT_ASSERT_THROW(CMRLatexException, cmrGenEqCCode(out,context,e));
+	EXPECT_THROW(cmrGenEqCCode(out,context,e),CMRLatexException);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_6)
+TEST(TestGenCode,testCmrGenEqCCode_entity_6)
 {
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i, j}","testAij");
@@ -127,11 +127,11 @@ SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_entity_6)
 	stringstream out;
 	
 	CMRLatexEntity2 e("B");
-	SVUT_ASSERT_THROW(CMRLatexException, cmrGenEqCCode(out,context,e));
+	EXPECT_THROW(cmrGenEqCCode(out,context,e),CMRLatexException);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_formula)
+TEST(TestGenCode,testCmrGenEqCCode_formula)
 {
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i,j}","testAij");
@@ -146,11 +146,11 @@ SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrGenEqCCode_formula)
 	
 	CMRLatexFormulas2 e("A_i + A_{i,j} + B_{A_i * 8} + (55 + A_i)");
 	cmrGenEqCCode(out,context,e);
-	SVUT_ASSERT_EQUAL("testAi + testAij + testB + ( 55 + testAi ) ",out.str());
+	EXPECT_EQ("testAi + testAij + testB + ( 55 + testAi ) ",out.str());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrLatexEntityIsInteger)
+TEST(TestGenCode,testCmrLatexEntityIsInteger)
 {
 	CMRLatexEntity2 entity1("155");
 	CMRLatexEntity2 entity2("1");
@@ -159,13 +159,10 @@ SVUT_DECLARE_FLAT_TEST(TestGenCode,testCmrLatexEntityIsInteger)
 	CMRLatexEntity2 entity5("1_2");
 	CMRLatexEntity2 entity6("1^2");
 	
-	SVUT_ASSERT_TRUE(latexEntityIsInteger(entity1));
-	SVUT_ASSERT_TRUE(latexEntityIsInteger(entity2));
-	SVUT_ASSERT_FALSE(latexEntityIsInteger(entity3));
-	SVUT_ASSERT_FALSE(latexEntityIsInteger(entity4));
-	SVUT_ASSERT_FALSE(latexEntityIsInteger(entity5));
-	SVUT_ASSERT_FALSE(latexEntityIsInteger(entity6));
+	EXPECT_TRUE(latexEntityIsInteger(entity1));
+	EXPECT_TRUE(latexEntityIsInteger(entity2));
+	EXPECT_FALSE(latexEntityIsInteger(entity3));
+	EXPECT_FALSE(latexEntityIsInteger(entity4));
+	EXPECT_FALSE(latexEntityIsInteger(entity5));
+	EXPECT_FALSE(latexEntityIsInteger(entity6));
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN
