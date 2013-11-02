@@ -7,164 +7,161 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
 #include <CMRLatexParsorContext.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testConstructor1)
+TEST(TestLatexParsorContext,testConstructor1)
 {
 	CMRLatexParsorContext context1("test");
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testConstructor2)
+TEST(TestLatexParsorContext,testConstructor2)
 {
 	CMRLatexParsorContext context1("test");
 	CMRLatexParsorContext context2(&context1,1,3);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testGetPosition)
+TEST(TestLatexParsorContext,testGetPosition)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_EQUAL(0,context.getPosition());
+	EXPECT_EQ(0,context.getPosition());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testMove)
+TEST(TestLatexParsorContext,testMove)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_EQUAL(0,context.getPosition());
+	EXPECT_EQ(0,context.getPosition());
 	context.move(1);
-	SVUT_ASSERT_EQUAL(1,context.getPosition());
+	EXPECT_EQ(1,context.getPosition());
 	context.move(2);
-	SVUT_ASSERT_EQUAL(3,context.getPosition());
+	EXPECT_EQ(3,context.getPosition());
 	context.move(-1);
-	SVUT_ASSERT_EQUAL(2,context.getPosition());
+	EXPECT_EQ(2,context.getPosition());
 	context.move(5);
-	SVUT_ASSERT_EQUAL(7,context.getPosition());
+	EXPECT_EQ(7,context.getPosition());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testSkipWhiteSpace)
+TEST(TestLatexParsorContext,testSkipWhiteSpace)
 {
 	CMRLatexParsorContext context("  	test");
-	SVUT_ASSERT_EQUAL(0,context.getPosition());
+	EXPECT_EQ(0,context.getPosition());
 	context.skipWhiteSpace();
-	SVUT_ASSERT_EQUAL(3,context.getPosition());
+	EXPECT_EQ(3,context.getPosition());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testIsEnd)
+TEST(TestLatexParsorContext,testIsEnd)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_EQUAL(0,context.getPosition());
-	SVUT_ASSERT_FALSE(context.isEnd());
+	EXPECT_EQ(0,context.getPosition());
+	EXPECT_FALSE(context.isEnd());
 	context.move(8);
-	SVUT_ASSERT_EQUAL(8,context.getPosition());
-	SVUT_ASSERT_TRUE(context.isEnd());
+	EXPECT_EQ(8,context.getPosition());
+	EXPECT_TRUE(context.isEnd());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testOperatorPlusPlus)
+TEST(TestLatexParsorContext,testOperatorPlusPlus)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_EQUAL(0,context.getPosition());
+	EXPECT_EQ(0,context.getPosition());
 	++context;
-	SVUT_ASSERT_EQUAL(1,context.getPosition());
+	EXPECT_EQ(1,context.getPosition());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,getCurrent)
+TEST(TestLatexParsorContext,getCurrent)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_EQUAL('t',context.getCurrent());
+	EXPECT_EQ('t',context.getCurrent());
 	++context;
-	SVUT_ASSERT_EQUAL('e',context.getCurrent());
+	EXPECT_EQ('e',context.getCurrent());
 	++context;
-	SVUT_ASSERT_EQUAL('s',context.getCurrent());
+	EXPECT_EQ('s',context.getCurrent());
 	++context;
-	SVUT_ASSERT_EQUAL('t',context.getCurrent());
+	EXPECT_EQ('t',context.getCurrent());
 	++context;
-	SVUT_ASSERT_EQUAL('\0',context.getCurrent());
+	EXPECT_EQ('\0',context.getCurrent());
 	++context;
-	SVUT_ASSERT_EQUAL('\0',context.getCurrent());
+	EXPECT_EQ('\0',context.getCurrent());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testGetCurAndMove)
+TEST(TestLatexParsorContext,testGetCurAndMove)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_EQUAL(0,context.getPosition());
-	SVUT_ASSERT_EQUAL('t',context.getCurAndMove());
-	SVUT_ASSERT_EQUAL(1,context.getPosition());
-	SVUT_ASSERT_EQUAL('e',context.getCurAndMove());
-	SVUT_ASSERT_EQUAL(2,context.getPosition());
-	SVUT_ASSERT_EQUAL('s',context.getCurAndMove());
-	SVUT_ASSERT_EQUAL(3,context.getPosition());
-	SVUT_ASSERT_EQUAL('t',context.getCurAndMove());
-	SVUT_ASSERT_EQUAL(4,context.getPosition());
-	SVUT_ASSERT_EQUAL('\0',context.getCurAndMove());
-	SVUT_ASSERT_EQUAL(4,context.getPosition());
-	SVUT_ASSERT_EQUAL('\0',context.getCurAndMove());
-	SVUT_ASSERT_EQUAL(4,context.getPosition());
+	EXPECT_EQ(0,context.getPosition());
+	EXPECT_EQ('t',context.getCurAndMove());
+	EXPECT_EQ(1,context.getPosition());
+	EXPECT_EQ('e',context.getCurAndMove());
+	EXPECT_EQ(2,context.getPosition());
+	EXPECT_EQ('s',context.getCurAndMove());
+	EXPECT_EQ(3,context.getPosition());
+	EXPECT_EQ('t',context.getCurAndMove());
+	EXPECT_EQ(4,context.getPosition());
+	EXPECT_EQ('\0',context.getCurAndMove());
+	EXPECT_EQ(4,context.getPosition());
+	EXPECT_EQ('\0',context.getCurAndMove());
+	EXPECT_EQ(4,context.getPosition());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testGetValue)
+TEST(TestLatexParsorContext,testGetValue)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_EQUAL("test",context.getValue());
+	EXPECT_EQ("test",context.getValue());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testStartBy_string)
+TEST(TestLatexParsorContext,testStartBy_string)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_TRUE(context.startBy("te"));
-	SVUT_ASSERT_FALSE(context.startBy("es"));
+	EXPECT_TRUE(context.startBy("te"));
+	EXPECT_FALSE(context.startBy("es"));
 	
 	context.move(8);
-	SVUT_ASSERT_FALSE(context.startBy("te"));
+	EXPECT_FALSE(context.startBy("te"));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testStartBy_char)
+TEST(TestLatexParsorContext,testStartBy_char)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_TRUE(context.startBy('t'));
-	SVUT_ASSERT_FALSE(context.startBy('e'));
+	EXPECT_TRUE(context.startBy('t'));
+	EXPECT_FALSE(context.startBy('e'));
 	
 	context.move(8);
-	SVUT_ASSERT_FALSE(context.startBy('e'));
+	EXPECT_FALSE(context.startBy('e'));
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testExtractSubZone_ok)
+TEST(TestLatexParsorContext,testExtractSubZone_ok)
 {
 	CMRLatexParsorContext context("test(ok)");
 	context.move(4);
 	CMRLatexParsorContext res = context.extractSubZone('(',')');
-	SVUT_ASSERT_EQUAL("ok",res.getValue());
+	EXPECT_EQ("ok",res.getValue());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testExtractSubZone_error)
+TEST(TestLatexParsorContext,testExtractSubZone_error)
 {
 	CMRLatexParsorContext context("test(ok");
 	context.move(4);
-	SVUT_ASSERT_THROW(CMRLatexException,context.extractSubZone('(',')'));
+	EXPECT_THROW(context.extractSubZone('(',')'),CMRLatexException);
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestLatexParsorContext,testFatal)
+TEST(TestLatexParsorContext,testFatal)
 {
 	CMRLatexParsorContext context("test");
-	SVUT_ASSERT_THROW(CMRLatexException,context.fatal("short message"));
+	EXPECT_THROW(context.fatal("short message"),CMRLatexException);
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN
