@@ -12,13 +12,13 @@
 
 /********************  HEADERS  *********************/
 #include <vector>
-#include "CMRProjectEntity.h"
-#include "CMRProjectContext.h"
-#include "CMRProjectConstant.h"
-#include "CMRProjectMeshVar.h"
-#include "CMRProjectAction.h"
-#include "CMRProjectIterator.h"
-#include "CMRProjectDefinition.h"
+#include "../definitions/CMRProjectEntity.h"
+#include "../definitions/CMRProjectContext.h"
+#include "../definitions/CMRProjectConstant.h"
+#include "../definitions/CMRProjectMeshVar.h"
+#include "../definitions/CMRProjectAction.h"
+#include "../definitions/CMRProjectIterator.h"
+#include "../definitions/CMRProjectDefinition.h"
 #include "../transformations/CMRTransformation.h"
 
 /*********************  TYPES  **********************/

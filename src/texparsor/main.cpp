@@ -1,7 +1,7 @@
 /********************  HEADERS  *********************/
 #include <cstdlib>
 #include <iostream>
-#include "definitions/CMRProject.h"
+#include "project/CMRProject.h"
 #include "transformations/CMRTransformationExtractLoops.h"
 #include "transformations/CMRTransformationImplicitMul.h"
 #include "transformations/CMRTransformationExpandFrac.h"
