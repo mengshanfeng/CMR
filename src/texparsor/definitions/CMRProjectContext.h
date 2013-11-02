@@ -18,6 +18,13 @@
 /*********************  TYPES  **********************/
 typedef std::vector <CMRProjectEntity*> CMRProjectEntityList;
 
+/*********************  STRUCT  *********************/
+struct CMRTempNames
+{
+	std::string shortName;
+	std::string longName;
+};
+
 /*********************  CLASS  **********************/
 class CMRProjectContext
 {
@@ -30,12 +37,11 @@ class CMRProjectContext
 		const CMRProjectEntity * find( const CMRLatexEntity2& entity ) const;
 		const CMRProjectEntity * findInParent( const CMRLatexEntity2& entity ) const;
 		int getDepth(void) const;
-		std::string genTempName( const std::string& base = "temp");
+		CMRTempNames genTempName( const std::string& base = "temp");
 		void setParent(const CMRProjectContext * parent);
 	private:
 		const CMRProjectContext * parent;
 		CMRProjectEntityList entities;
-		int tmpCnt;
 };
 
 #endif //CMR_PROJECT_CONTEXT_H

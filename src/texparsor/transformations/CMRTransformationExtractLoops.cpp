@@ -52,17 +52,16 @@ void CMRTransformationExtractLoops::transform ( CMRProjectCodeEquation& equation
 		assert(entity.parameters.size() == 1);
 		
 		//setup temp variable
-		std::string tmpShort = getTempName(1);
-		std::string tmpLong = equation.getContext().genTempName();
-		equation.getParent()->addLocalVariable(tmpShort,tmpLong,"int","0");
+		CMRTempNames tmp = equation.getContext().genTempName();
+		equation.getParent()->addLocalVariable(tmp.shortName,tmp.longName,"int","0");
 		
 		//create loop
 		cout << "Replace loops with iterator (" << *entity.indices[0] << ") and core (" << *entity.parameters[0] << ")" << endl;
 		CMRProjectCodeIteratorLoop & loop = equation.addIteratorLoop(entity.indices[0]->getString(),CMR_INSERT_BEFORE);
-		loop.addEquation(tmpShort,entity.parameters[0]->getString(),op);
+		loop.addEquation(tmp.shortName,entity.parameters[0]->getString(),op);
 		
 		//replace current entity
-		entity.parse(tmpShort);
+		entity.parse(tmp.shortName);
 		
 		//recursive run on loop
 		this->run(loop);

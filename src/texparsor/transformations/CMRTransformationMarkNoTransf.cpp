@@ -40,9 +40,9 @@ void CMRTransformationMarkNoTransf::transform(CMRProjectCodeEquation& equation, 
 bool CMRTransformationMarkNoTransf::markChildElements(CMRLatexFormulasVector2& childs, const CMRProjectCaptureDefMap& defMap)
 {
 	//errors
-	assert(childs.size() == defMap.size());
+	assert(childs.size() >= defMap.size());
 	
-	for (int i = 0 ; i < childs.size() ; i++)
+	for (int i = 0 ; i < defMap.size() ; i++)
 		if (defMap[i].captureType == CMR_CAPTURE_NONE)
 			childs[i]->setExtraInfo("cmrNoTranform",NULL);
 

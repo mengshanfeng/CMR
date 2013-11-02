@@ -8,6 +8,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
+#include <typeinfo>
 #include "CMRTransformationBasic.h"
 #include "../definitions/CMRProjectCode.h"
 
@@ -25,13 +26,18 @@ void CMRTransformationBasic::run(CMRProjectCodeEntry& entry)
 	assert(cur != NULL);
 	
 	if (dynamic_cast<CMRProjectCodeEquation*>(cur) != NULL)
+	{
 		this->transform(*dynamic_cast<CMRProjectCodeEquation*>(cur));
-	else if (dynamic_cast<CMRProjectCodeIteratorLoop*>(cur) != NULL)
+	} else if (dynamic_cast<CMRProjectCodeIteratorLoop*>(cur) != NULL) {
 		this->transform(*dynamic_cast<CMRProjectCodeIteratorLoop*>(cur));
-	else if (dynamic_cast<CMRProjectCodeNode*>(cur) != NULL)
+	} else if (dynamic_cast<CMRProjectCodeNode*>(cur) != NULL) {
 		this->transform(*dynamic_cast<CMRProjectCodeNode*>(cur));
-	else
-		throw CMRLatexException("Unknown code entry type !");
+	} else if (dynamic_cast<CMRProjectCodeVarDecl*>(cur) != NULL) {
+		//DO NOTHING
+	} else {
+		std::string tmp = std::string("Unknown code entry type : ") + typeid(*cur).name();
+		throw CMRLatexException(tmp);
+	}
 }
 
 /*******************  FUNCTION  *********************/

@@ -125,7 +125,7 @@ void CMRProjectDefinition::onUpdateCaptureType ( const string& name, CMRCaptureT
 	if (captureType == CMR_CAPTURE_REQUIRED)
 	{
 		//TODO : create a parameter entity
-		string longName = parametersContext.genTempName("param");
+		string longName = parametersContext.genTempName("param").longName;
 		this->parametersContext.addEntry(new CMRProjectLocalVariable(name,longName,"int"));
 	}
 }

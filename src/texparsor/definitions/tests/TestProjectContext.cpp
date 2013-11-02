@@ -160,23 +160,23 @@ SVUT_DECLARE_FLAT_TEST(TestProjectContext,testGetDeph)
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestProjectContext,testGenTempName)
+SVUT_DECLARE_FLAT_TEST(TestProjectContext,testGenTempNameLongName)
 {
 	CMRProjectContext context;
 	CMRProjectContext context2(&context);
 	CMRProjectContext context3(&context);
 	
-	SVUT_ASSERT_EQUAL("temp_0_0",context.genTempName());
-	SVUT_ASSERT_EQUAL("temp_0_1",context.genTempName());
-	SVUT_ASSERT_EQUAL("temp_0_2",context.genTempName());
+	SVUT_ASSERT_EQUAL("temp_0_0",context.genTempName().longName);
+	SVUT_ASSERT_EQUAL("temp_0_1",context.genTempName().longName);
+	SVUT_ASSERT_EQUAL("temp_0_2",context.genTempName().longName);
 	
-	SVUT_ASSERT_EQUAL("temp_1_0",context2.genTempName());
-	SVUT_ASSERT_EQUAL("temp_1_1",context2.genTempName());
-	SVUT_ASSERT_EQUAL("temp_1_2",context2.genTempName());
+	SVUT_ASSERT_EQUAL("temp_1_0",context2.genTempName().longName);
+	SVUT_ASSERT_EQUAL("temp_1_1",context2.genTempName().longName);
+	SVUT_ASSERT_EQUAL("temp_1_2",context2.genTempName().longName);
 	
-	SVUT_ASSERT_EQUAL("temp_1_0",context3.genTempName());
-	SVUT_ASSERT_EQUAL("temp_1_1",context3.genTempName());
-	SVUT_ASSERT_EQUAL("temp_1_2",context3.genTempName());
+	SVUT_ASSERT_EQUAL("temp_1_0",context3.genTempName().longName);
+	SVUT_ASSERT_EQUAL("temp_1_1",context3.genTempName().longName);
+	SVUT_ASSERT_EQUAL("temp_1_2",context3.genTempName().longName);
 }
 
 /********************  MACRO  ***********************/

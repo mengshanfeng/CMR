@@ -58,7 +58,7 @@ class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
 		CMRProjectCodeNode& addSubBlock( CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=",CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
-		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue, CMRProjectCodeTreeInsert		location = CMR_INSERT_LAST_CHILD);
+		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue, CMRProjectCodeTreeInsert		location = CMR_INSERT_FIRST_CHILD);
 		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start,int end);
 		virtual void genCCode(std::ostream & out,int padding = 0) const = 0;
 		virtual void genChildCCode(std::ostream & out,int padding = 0) const;

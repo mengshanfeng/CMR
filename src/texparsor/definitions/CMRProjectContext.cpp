@@ -16,6 +16,9 @@
 
 using namespace std;
 
+#warning remove this
+static int tmpCnt = 0;
+
 /*******************  FUNCTION  *********************/
 CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
 {
@@ -24,7 +27,6 @@ CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
 	
 	//setup
 	this->parent = parent;
-	this->tmpCnt = 0;
 }
 
 /*******************  FUNCTION  *********************/
@@ -154,11 +156,21 @@ int CMRProjectContext::getDepth ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-string CMRProjectContext::genTempName ( const std::string & base )
+CMRTempNames CMRProjectContext::genTempName ( const std::string & base )
 {
-	stringstream tmp;
-	tmp << base << "_" << getDepth() << "_" << tmpCnt++;
-	return tmp.str();	
+	CMRTempNames res;
+
+	stringstream tmpLong;
+	tmpLong << base << "_" << getDepth() << "_" << tmpCnt;
+	res.longName = tmpLong.str();
+
+	stringstream tmpShort;
+	tmpShort << "\\CMRTMP^"<< getDepth() <<"{" << tmpCnt << "}";
+	res.shortName = tmpShort.str();
+
+	tmpCnt++;
+
+	return res;
 }
 
 /*******************  FUNCTION  *********************/
