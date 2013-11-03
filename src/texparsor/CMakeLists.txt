@@ -7,6 +7,10 @@
 ######################################################
 
 ######################################################
+find_package(LibXml2 REQUIRED)
+include_directories(${LIBXML2_INCLUDE_DIR})
+ 
+######################################################
 add_subdirectory(parsor)
 add_subdirectory(project)
 add_subdirectory(definitions)
