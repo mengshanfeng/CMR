@@ -5,6 +5,13 @@
 /********************  HEADERS  *********************/
 #include "CMRProjectEntity.h"
 
+/*********************  TYPES  **********************/
+class CMRTransformation;
+class CMRModelBasedReplacement;
+
+/*********************  TYPES  **********************/
+typedef std::vector<CMRLatexFormulas2> CMRConstantFormulaVector;
+
 /*********************  CLASS  **********************/
 class CMRProjectConstant : public CMRProjectEntity
 {
@@ -20,9 +27,12 @@ class CMRProjectConstant : public CMRProjectEntity
 		void loadValuesScalar(const std::string & data);
 		void loadValuesVector(const std::string & data);
 		void loadValuesMatrix(const std::string & data);
+		void transform(void);
+		void transform(CMRLatexFormulas2& formula, CMRModelBasedReplacement & action);
+		void transform(CMRLatexEntity2& entity, CMRModelBasedReplacement & action);
 	protected:
 		CMRConstantDimensionsVector dims;
-		CMRConstantValueVector values;
+		CMRConstantFormulaVector formulas;
 };
 
 #endif //CMR_PROJECT_CONSTANT_H

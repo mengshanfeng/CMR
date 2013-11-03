@@ -53,6 +53,29 @@ void CMRProjectAction::runTransformation ( CMRTransformation& transf )
 }
 
 /*******************  FUNCTION  *********************/
+CMRProjectCodeEquation& CMRProjectAction::addEquation ( const string& eq )
+{
+	//search position of =
+	int equalPos = -1;
+	for (int i = 0 ; i < eq.size() ; i++)
+	{
+		if (eq[i] == '=')
+		{
+			equalPos = i;
+			break;
+		}
+	}
+	
+	//split
+	string left = eq.substr(0,equalPos);
+	string op = "=";
+	string right = eq.substr(equalPos+1, string::npos);
+	//cout << "Splitting of eq : ==>" << left << "<== , operator '" << op << "' ==>" << right << "<==" << endl;
+	
+	return addEquation(left,right,op);
+}
+
+/*******************  FUNCTION  *********************/
 void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int padding ) const
 {
 	doIndent(out,padding) << "//" << this->descr << endl;

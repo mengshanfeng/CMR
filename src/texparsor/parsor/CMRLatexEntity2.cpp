@@ -401,6 +401,7 @@ void CMRLatexEntity2::clear ( void )
 	this->exponents.clear();
 	this->parameters.clear();
 	this->name.clear();
+	this->extraInfos.clear();
 }
 
 /*******************  FUNCTION  *********************/

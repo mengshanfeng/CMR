@@ -15,7 +15,9 @@
 #include <sstream>
 #include "CMRProjectConstant.h"
 #include "../parsor/CMRParsorBasics.h"
+#include "../parsor/CMRLatexFormula.h"
 #include "CMRGenCode.h"
+#include "../transformations/CMRModelBasedReplacement.h"
 
 /********************  NAMESPACE  *******************/
 using namespace std;
@@ -29,7 +31,7 @@ CMRProjectConstant::CMRProjectConstant ( const string& latexName, const string& 
 /*******************  FUNCTION  *********************/
 void CMRProjectConstant::loadValues ( const string& data, int dimensions )
 {
-	assert(values.empty());
+	assert(formulas.empty());
 	switch(dimensions)
 	{
 		case 0:
@@ -46,6 +48,7 @@ void CMRProjectConstant::loadValues ( const string& data, int dimensions )
 			err << "Unsupported constent dimension : " << dimensions << endl;
 			throw CMRLatexException(err.str());
 	}
+	transform();
 }
 
 /*******************  FUNCTION  *********************/
@@ -61,7 +64,7 @@ void CMRProjectConstant::loadValuesScalar ( const string& data )
 	if (vs1.size() > 1 || vs2.size() > 1)
 		throw CMRLatexException("Caution, you say scalar but provide vector or matrix as data !");
 	
-	values.push_back(data);
+	formulas.push_back(CMRLatexFormulas2(data));
 }
 
 /*******************  FUNCTION  *********************/
@@ -77,12 +80,12 @@ void CMRProjectConstant::loadValuesVector ( const string& data )
 		throw CMRLatexException("Caution, you say vector but provide matrix as data !");
 	
 	//split
-	CMRStringVector vs = cmrStringSplit(data,";");
+	CMRStringVector vs = cmrStringSplit(data,"&");
 	addDimension(vs.size());
 	
 	//push all
 	for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
-		values.push_back(*it);
+		formulas.push_back(CMRLatexFormulas2(*it));
 	
 // 	if (values.size() == 1)
 // 		fprintf(stderr,"Warning, you get a unique 0.0 value for a vector, maybe this is a mistake !\n");
@@ -104,7 +107,7 @@ void CMRProjectConstant::loadValuesMatrix ( const string& data )
 	
 	for (CMRStringVector::const_iterator it = ms.begin() ; it != ms.end() ; ++it)
 	{
-		CMRStringVector vs = cmrStringSplit(*it,";");
+		CMRStringVector vs = cmrStringSplit(*it,"&");
 		if (dim2 == -1)
 		{
 			dim2 = vs.size();
@@ -112,7 +115,7 @@ void CMRProjectConstant::loadValuesMatrix ( const string& data )
 			throw CMRLatexException("Caution you prides lines which do not have the same size !");
 		}
 		for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
-			values.push_back(*it);
+			formulas.push_back(CMRLatexFormulas2(*it));
 	}
 	
 	addDimension(dim2);
@@ -159,11 +162,11 @@ void CMRProjectConstant::printDebug ( std::ostream & out ) const
 	
 	//values
 	out << "    - values     :";
-	for (size_t i = 0 ; i < values.size() ; i++)
+	for (size_t i = 0 ; i < formulas.size() ; i++)
 	{
 		if ( i > 0 )
 			out << ", ";
-		out << values[i];
+		out << formulas[i];
 	}
 	out << endl;
 }
@@ -183,13 +186,14 @@ void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectCont
 			out << "[" << dims[i] << "]";
 		out << "=";
 		out << "{";
-		for (size_t i = 0 ; i < values.size() ; i++)
+		for (size_t i = 0 ; i < formulas.size() ; i++)
 		{
 			if (dims.size()==2 && i % dims[0] == 0 && i > 0)
 				out << "},";
-			if (dims.size()==2 && i % dims[0] == 0 && i < values.size() - 1)
+			if (dims.size()==2 && i % dims[0] == 0 && i < formulas.size() - 1)
 				out << "{";
-			out << values[i] << ",";
+			cmrGenEqCCode(out,context,formulas[i]);
+			out << ",";
 		}
 		if (dims.size() == 2)
 			out << "}";
@@ -201,7 +205,9 @@ void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectCont
 		else if (dims.size() == 2)
 			out << "const CMRMathMatrix " << getLongName() << "(TMP_VALUE_" << getLongName() << ","<< dims[0] << ","<< dims[1] << ");" << endl;
 	} else {
-		out << "const float " << getLongName() << " = " << values[0] << ";" << endl;
+		out << "const float " << getLongName() << " = ";
+		cmrGenEqCCode(out,context,formulas[0]);
+		out << ";" << endl;
 	}
 }
 
@@ -250,21 +256,58 @@ void CMRProjectConstant::printValues ( ostream& out ) const
 	switch(dims.size())
 	{
 		case 0:
-			out << values[0];
+			out << formulas[0];
 			break;
 		case 1:
 			for (int i = 0 ; i < dims[0] ; i++)
-				out << values[i] << " ";
+				out << formulas[i] << " ";
 			break;
 		case 2:
 			for (int j = 0 ; j < dims[1] ; j++)
 			{
 				for (int i = 0 ; i < dims[0] ; i++)
-					out << values[dims[0]*j+i] << " ";
+					out << formulas[dims[0]*j+i] << " ";
 				out << endl;
 			}
 			break;
 		default:
 			throw CMRLatexException("Dims > 2 not suppported !");
 	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectConstant::transform ( void )
+{
+	CMRModelBasedReplacement frac("\\frac{a}{b}","a/b");
+	for (CMRConstantFormulaVector::iterator it = formulas.begin() ; it != formulas.end() ; ++it)
+		transform(*it,frac);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectConstant::transform ( CMRLatexFormulas2& formula, CMRModelBasedReplacement& action )
+{
+	for (CMRLatexEntityVector2::iterator it = formula.begin() ; it != formula.end() ; ++it)
+		if (formula.hasInfo("cmrNoTranform") == false)
+			this->transform(**it,action);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectConstant::transform ( CMRLatexEntity2& entity, CMRModelBasedReplacement& action )
+{
+	action.apply(entity);
+	
+	CMRLatexFormulasVector2 & indices = entity.getIndices();
+	for (CMRLatexFormulasVector2::iterator it = indices.begin() ; it != indices.end() ; ++it)
+		if ((*it)->hasInfo("cmrNoTranform") == false)
+			this->transform(**it,action);
+	
+	CMRLatexFormulasVector2 & exponents = entity.getExponents();
+	for (CMRLatexFormulasVector2::iterator it = exponents.begin() ; it != exponents.end() ; ++it)
+		if ((*it)->hasInfo("cmrNoTranform") == false)
+			this->transform(**it,action);
+	
+	CMRLatexFormulasVector2 & params = entity.getParameters();
+	for (CMRLatexFormulasVector2::iterator it = params.begin() ; it != params.end() ; ++it)
+		if ((*it)->hasInfo("cmrNoTranform") == false)
+			this->transform(**it,action);
 }

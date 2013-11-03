@@ -42,6 +42,7 @@ CMRProjectEntity & CMRProjectContext::addEntry(CMRProjectEntity* entry)
 	conflict = checkUnique(*entry);
 	if (conflict != NULL)
 	{
+		printDebug();
 		stringstream tmp;
 		tmp << "Caution, entity " << entry->getLatexName() << " (" << entry->getLongName()
 			<< ") conflicts with another definition : " << conflict->getLatexName()

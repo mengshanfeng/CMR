@@ -7,7 +7,7 @@
 ######################################################
 
 ######################################################
-add_library(cmr_tex_project CMRXmlDoc.cpp CMRProject.cpp)
+add_library(cmr_tex_project CMRProjectXMLLoader.cpp CMRXmlDoc.cpp CMRProject.cpp)
 target_link_libraries(cmr_tex_project cmr_tex_parsor)
 
 ######################################################

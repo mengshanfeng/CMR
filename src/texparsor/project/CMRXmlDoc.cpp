@@ -260,15 +260,25 @@ CMRXmlNode CMRXmlNode::getNextSibiling ( void )
 }
 
 /*******************  FUNCTION  *********************/
-string CMRXmlNode::getChildContent ( const string& tagname )
+CMRXmlNode CMRXmlNode::getUniqChild ( const string& tagname )
 {
 	CMRXmlNode cur = getFirstChild(tagname);
-	if (cur.isValid() == false)
+	if (cur.isValid())
+	{
+		assert(cur.isNamed(tagname));
+		if (cur.getNextSibiling().isValid())
+			throw CMRLatexException("Caution, you want to get a tag value, but there is multiple instances of this tag.");
+	}
+	return cur;
+}
+
+/*******************  FUNCTION  *********************/
+string CMRXmlNode::getChildContent ( const string& tagname )
+{
+	CMRXmlNode node = getUniqChild(tagname);
+	if (node.isValid() == false)
 		throw CMRLatexException("Failed to find the requested tagname.");
-	if (cur.getNextSibiling().isValid())
-		throw CMRLatexException("Caution, you want to get a tag value, but there is multiple instances of this tag.");
-	assert(cur.isNamed(tagname));
-	return cur.getContent();
+	return node.getContent();
 }
 
 /*******************  FUNCTION  *********************/
@@ -289,4 +299,13 @@ string CMRXmlNode::getProperty ( const string& name ) const
 		return "";
 	else
 		return (char*)attr->children->content;
+}
+
+/*******************  FUNCTION  *********************/
+string CMRXmlNode::getNonEmptyProperty ( const string& name ) const
+{
+	string res = getProperty(name);
+	if (res.empty())
+		throw CMRLatexException("Caution, get empty property XXX while readine XML.");
+	return res;
 }

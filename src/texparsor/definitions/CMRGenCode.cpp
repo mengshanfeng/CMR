@@ -36,7 +36,28 @@ bool latexEntityIsInteger(const CMRLatexEntity2 & entity)
 	for (int i = 0 ; i < tmp.size() ; i++)
 		if (!cmrIsNum(tmp[i]))
 			return false;
+
+	//ok this is good
+	return true;
+}
+
+/*******************  FUNCTION  *********************/
+bool latexEntityIsNum(const CMRLatexEntity2 & entity)
+{
+	//check if name is empty
+	if (entity.getName().empty() == true)
+		return false;
+
+	//check if have expo, indices or params
+	if (entity.isOnlyOneName() == false)
+		return false;
 	
+	//loop on chars of name
+	const string tmp = entity.getName();
+	for (int i = 0 ; i < tmp.size() ; i++)
+		if (!cmrIsNumFloat(tmp[i]))
+			return false;
+
 	//ok this is good
 	return true;
 }
@@ -53,7 +74,7 @@ std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, c
 /*******************  FUNCTION  *********************/
 std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity)
 {
-	if (latexEntityIsInteger(entity))
+	if (latexEntityIsNum(entity))
 	{
 		out << entity.getName() << " ";
 	} else if (entity.getName().size() == 1 && entity.isOnlyOneName() && cmrIsOperator(entity.getName()[0])) {

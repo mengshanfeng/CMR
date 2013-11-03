@@ -41,7 +41,7 @@ bool cmrIsOperator(char value)
 /*******************  FUNCTION  *********************/
 bool cmrIsWhiteSpace(char value)
 {
-	return (value == ' ' || value == '\t');
+	return (value == ' ' || value == '\t' || value == '\n');
 }
 
 /*******************  FUNCTION  *********************/

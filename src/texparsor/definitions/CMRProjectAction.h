@@ -26,10 +26,12 @@ class CMRProjectAction
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
 		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
 		void runTransformation(CMRTransformation & transf);
+		CMRProjectCodeEquation & addEquation(const std::string& eq);
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=");
 		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator);
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue);
 		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
+		void changeCaptureType(const std::string & name, enum CMRCaptureType captureType) { assert(false);};
 	private:
 		CMRProjectCodeRootNode ops;
 		std::string name;

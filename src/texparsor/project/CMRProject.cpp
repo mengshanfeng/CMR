@@ -100,6 +100,7 @@ void CMRProject2::genCCodeOfConsts ( std::ostream& out )
 	out << "/************************ CONSTS **********************/" << endl;
 	for (CMRProjectConstantVector::iterator it = constants.begin() ; it != constants.end() ; ++it)
 		(*it)->genDefinitionCCode(out,rootContext);
+	out << endl;
 }
 
 /*******************  FUNCTION  *********************/
@@ -177,12 +178,17 @@ void CMRProject2::genCCodeOfDefinitions ( ostream& out )
 	out << "/********************* DEFINITIONS ********************/" << endl;
 	for (CMRProjectDefinitionVector::iterator it = definitions.begin() ; it != definitions.end() ; ++it)
 		(*it)->genDefinitionCCode(out,rootContext);
+	out << endl;
 }
 
 /*******************  FUNCTION  *********************/
 void CMRProject2::genCCodeOfActions ( ostream& out )
 {
+	if (actions.empty())
+		return;
+
 	out << "/*********************** ACTIONS *********************/" << endl;
 	for (CMRProjectActionVector::iterator it = actions.begin() ; it != actions.end() ; ++it)
 		(*it)->genDefinitionCCode(out,rootContext);
+	out << endl;
 }

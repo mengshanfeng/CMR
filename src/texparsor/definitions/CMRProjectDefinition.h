@@ -28,6 +28,7 @@ class CMRProjectDefinition : public CMRProjectEntity
 		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
 		void runTransformation(CMRTransformation & transf);
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=");
+		CMRProjectCodeEquation & addEquation(const std::string& eq);
 		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator);
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue);
 		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);

@@ -59,6 +59,29 @@ void CMRProjectCodeEntry::onParentChange ( CMRProjectCodeEntry* newParent )
 }
 
 /*******************  FUNCTION  *********************/
+CMRProjectCodeEquation& CMRProjectCodeEntry::addEquation ( const string& eq )
+{
+	//search position of =
+	int equalPos = -1;
+	for (int i = 0 ; i < eq.size() ; i++)
+	{
+		if (eq[i] == '=')
+		{
+			equalPos = i;
+			break;
+		}
+	}
+	
+	//split
+	string left = eq.substr(0,equalPos);
+	string op = "=";
+	string right = eq.substr(equalPos+1, string::npos);
+	//cout << "Splitting of eq : ==>" << left << "<== , operator '" << op << "' ==>" << right << "<==" << endl;
+	
+	return addEquation(left,right,op);
+}
+
+/*******************  FUNCTION  *********************/
 CMRProjectCodeType CMRProjectCodeNode::getType ( void ) const
 {
 	return CMR_PROJECT_CODE_NODE;

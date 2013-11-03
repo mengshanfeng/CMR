@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cmr>
+	<project>
+		<name>LBM</name>
+		<authors>
+			<author mail='sebastien.valat@gmail.com'>Sébastien Valat</author>
+		</authors>
+		<version>1.0</version>
+	</project>
+	<elements>
+		<!-- ********************* CONSTS **************** -->
+		<consts>
+			<const mathname='M^{dir}' longname='direction_matrix' dims='2' doc="Matrice associant un ID (ligne) à une direction spatiale 2D (colonne).">
+					+0.0 &amp; +0.0 \\ 
+					 1.0 &amp; +0.0 \\ 
+					+0.0 &amp; +1.0 \\ 
+					-1.0 &amp; +0.0 \\ 
+					+0.0 &amp; -1.0 \\
+					+1.0 &amp; +1.0 \\
+					-1.0 &amp; +1.0 \\
+					-1.0 &amp; -1.0 \\
+					+1.0 &amp; -1.0
+			</const>
+			<const mathname='W' longname='equi_weight' dims='1' doc='Poids corrigeant les différences de normes de différentes directions dans une maille carrée.'>
+				\frac{4.0}{9.0} &amp; \frac{1.0}{9.0} &amp; \frac{1.0}{9.0} &amp; 
+				\frac{1.0}{9.0} &amp; \frac{1.0}{9.0} &amp; \frac{1.0}{36.0}&amp; 
+				\frac{1.0}{36.0}&amp; \frac{1.0}{36.0}&amp; \frac{1.0}{36.0}
+			</const>
+			<const mathname='o' longname='opposite_of' dims='1' doc="Definition de l'ID de la direction oposée dans la matrice $M^{dir}$.">
+				0 &amp; 3 &amp; 4 &amp; 1 &amp; 2 &amp; 7 &amp; 8 &amp; 5 &amp; 6
+			</const>
+			<!-- ***** -->
+			<const mathname='R' longname='REYNOLDS'>300</const>
+			<const mathname='V' longname='INFLOW_MAX_VELOCITY'>0.1</const>
+		</consts>
+		<!-- ********************* MESH ****************** -->
+		<mesh>
+			<var mathname='f_{i,j,k}' longname='pdf' type='double' doc='Densité de particule dans différentes directions.'>
+				<extradims>
+					<extradim mathname='k' longname='direction' size='9' start='0' doc="Direction à l'interieur de la maille."/>
+				</extradims>
+			</var>
+		</mesh>
+		<!-- ****************** ITERATORS **************** -->
+		<iterators>
+			<iterator mathname='k' longname='k' start='1' end='9' doc='Iterateur sur les 9 directions.'/>
+			<iterator mathname='s' longname='s' start='1' end='2' doc='Iterateur sur les 2 dimensions spatiales.'/>
+		</iterators>
+		<!-- ***************** DEFINITIONS **************** -->
+		<defs>
+			<def mathname='d_{i,j}' longname='density' doc="Calcul de la densité macroscopique locale (somme des densités microscopiques).">
+				<mathstep>d_{i,j}=\sum_{k}{f_{i,j,k}}</mathstep>
+			</def>
+			<def mathname='v_{i,j,l}' longname='celerity' doc="Vitesse (au sens vecteur) macroscopique de la maille (somme des vitesses pondérées par la densité et les poids ($W$)).">
+				<defparameter mathname='l' longname='l' type='int' doc='Coordonnée spatiale (1 ou 2) considérée.'/>
+				<mathstep>v_{i,j,l} = \frac{\sum_k{f_{i,j,k} M^{dir}_{k,l}}} {d_{i,j}}</mathstep>
+			</def>
+			<def mathname='v^2' longname='v2' doc='Norme au carrée de la vitesse macroscopique de la maille.'>
+				<mathstep>v^2 = \sum_s{v_{i,j,s} * v_{i,j,s}}</mathstep>
+			</def>
+			<!--<def mathname='p' longname='p' doc='Norme de la quantité de mouvement macroscopique de la maille.'>
+				<mathstep>p = \sum_s{M^{dir}_{k,s} * v_{i,j,s}}</mathstep>
+			</def>-->
+			<def mathname='f_{eq,i,j,k}' longname='pdf_eq' doc="Distribution des probabilité de présence à l'équilibre locale suivant la direction $k$.">
+				<defparameter mathname='k' longname='k' type='int' doc='Direction considérée (1 à 9).'/>
+				<declvar mathname='p' longname='p' type='double' default='0'/>
+				<mathstep>p = \sum_s{M^{dir}_{k,s} * v_{i,j,s}}</mathstep>
+ 				<mathstep>f_{eq,i,j,k} = 1 + 3p + \frac{9}{2}p^2 - \frac{3}{2}v^2</mathstep> 
+			</def>
+			<def mathname='v_{pois,i}' longname='poiseuil' doc='Fonction de poiseuil pour une hauteur de fluide donnée.'>
+				<declvar mathname='y' longname='y' type='int' default='0'/>
+				<declvar mathname='L' longname='L' type='int' default='0'/>
+				<declvar mathname='H' longname='H' type='int' default='0'/>
+				<mathstep>y = i - 1</mathstep>
+				<mathstep>L = H - 1</mathstep>
+				<mathstep>v_{pois,i} = \frac{4V}{L^2} (Ly - y^2)</mathstep>
+			</def>
+		</defs>
+		<!-- *************** CELLACTION *************-** -->
+		<cellactions>
+			<cellaction name='bounce_back' doc='Applique une réflexion des densités microscopiques comme un mirroir.'>
+				<foreach iterator='k'>
+					<mathstep>f_{i,j,k} = f_{i,j,o_k}</mathstep>
+				</foreach>
+			</cellaction>
+			<cellaction name='zou_he_poiseuil' doc='Applique des conditions de Zou He en considérant un profile de poiseuil ver la droite (fluide entrant par la gauche).'>
+				<alias>L = f_{i,j}</alias><!-- <<< TODO -->
+				<declvar mathname='d' longname='d' type='double' default='0' doc='Densité moyenne locale.'/>
+				<declvar mathname='v' longname='v' type='double' default='0' doc='Vistesse moyenne locale.'/>
+				<mathstep>v = v_{pois,i}</mathstep>
+				<mathstep>d = \frac{L_0 + L_2 + L_4 + 2 (L_3 + L_6 + L_7)}{1-v}</mathstep>
+				<mathstep>f_{i,j,1} = L_3</mathstep>
+				<mathstep>f_{i,j,5} = L_7-\frac{1}{2}(L_2 - L_4) + \frac{1}{6}(dv)</mathstep>
+				<mathstep>f_{i,j,8} = L_6 + \frac{1}{2}(L_2 - L_4) + \frac{1}{6}(dv)</mathstep>
+			</cellaction>
+			<cellaction name='zou_he_const_dentity' doc='Applique des conditions de Zou He en considérant une densité constante (fluide sortant par la droite).'>
+				<alias>L = f_{i,j}</alias><!-- <<< TODO -->
+				<declvar mathname='d' longname='d' type='double' default='0' doc='Densité moyenne locale.'/>
+				<declvar mathname='v' longname='v' type='double' default='0' doc='Vistesse moyenne locale.'/>
+				<mathstep>v = -1 + \frac{1}{d} (L_0+L_2+L_4+2(L_1+L_5+L_8))</mathstep>
+				<mathstep>f_{i,j,3} = L_1 - \frac{2}{3} dv</mathstep>
+				<mathstep>f_{i,j,7} = L_5 - \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv</mathstep>
+				<mathstep>f_{i,j,6} = L_8 + \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv</mathstep>
+			</cellaction>
+			<cellaction name='special_cells' doc='Applique les opérations en fonction du type de cellule.'>
+				<switch select='T_{i,j}'>
+					<case select='CELL_FLUID'></case>
+					<case select='CELL_BOUNCE_BACK'><callsubaction name='bounce_back'/></case>
+					<case select='CELL_LEFT_IN'><callsubaction name='zou_he_poiseuil'/></case>
+					<case select='CELL_RIGHT_OUT'><callsubaction name='zou_he_const_dentity'/></case>
+				</switch>
+			</cellaction>
+			<cellaction name='propagation' doc='Propage les densité microscopiques entre cellule (copie vers la cellule locale).'>
+				<declvar mathname='I' longname='I' type='int'/>
+				<declvar mathname='J' longname='J' type='int'/>
+				<foreach iterator='k'>
+					<mathstep>I = i - M^{dir}_{k,0}</mathstep>
+					<mathstep>J = j - M^{dir}_{k,1}</mathstep>
+					<mathstep>f_{i,j,k} = f_{I,J,k}</mathstep>
+				</foreach>
+			</cellaction>
+			<!--<cellaction name='collision' doc='Applique les équation de collision pour re-répartir les densités microscopiques.'>
+				<alias>d = d_{i,j}</alias>
+				<alias>v = v_{i,j}</alias>
+				<foreach iterator='k'>
+				;double $p = D_{k} * v$</br>
+				&nbsp;&nbsp;&nbsp;&nbsp;double $f_eq = (1.0 + (3 * p) + ((9/2) * p^2 - (3/2) * v^2) * W_{k} * d$</br>
+				&nbsp;&nbsp;&nbsp;&nbsp;$D'_{i,j,k} = D_{i,j,k} - R * (D_{i,j,k} - f_eq)$</br>
+				</cellaction>-->
+		</cellactions>
+		<mainloop>
+			
+		</mainloop>
+	</elements>
+</cmr>
+
+<!--
+
+-->

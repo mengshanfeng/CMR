@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "project/CMRProject.h"
+#include "project/CMRProjectXMLLoader.h"
 #include "transformations/CMRTransformationExtractLoops.h"
 #include "transformations/CMRTransformationImplicitMul.h"
 #include "transformations/CMRTransformationExpandFrac.h"
@@ -12,20 +13,19 @@
 using namespace std;
 
 /*******************  FUNCTION  *********************/
-int main(int argc, char ** argv)
+void test1(void)
 {
-	
 	cout << "===================================================" << endl;
 	CMRProject2 project;
 	CMRProjectConstant & direction_matrix = project.addConstant("M","direction_matrix");
-	direction_matrix.loadValues("0.0 ; 0.0 \\\\ 1.0 ; 0.0 \\\\ 0.0 ; 1.0 \\\\ -1.0 ; 0.0 \\\\ 0.0 ; -1.0 \\\\ 1.0 ; 1.0 \\\\ -1.0 ; 1.0 \\\\ -1.0 ; -1.0 \\\\ 1.0 ; -1.0",2);
+	direction_matrix.loadValues("0.0 & 0.0 \\\\ 1.0 & 0.0 \\\\ 0.0 & 1.0 \\\\ -1.0 & 0.0 \\\\ 0.0 & -1.0 \\\\ 1.0 & 1.0 \\\\ -1.0 & 1.0 \\\\ -1.0 & -1.0 \\\\ 1.0 & -1.0",2);
 	//cst2.addIndice("k",CMR_CAPTURE_REQUIRED);
 		
 	CMRProjectConstant & equi_weight = project.addConstant("W","equi_weight");
-	equi_weight.loadValues("4.0/9.0 ; 1.0/9.0 ; 1.0/9.0 ; 1.0/9.0 ; 1.0/9.0 ; 1.0/36.0 ; 1.0/36.0 ; 1.0/36.0 ; 1.0/36.0",1);
+	equi_weight.loadValues("4.0/9.0 & 1.0/9.0 & 1.0/9.0 & 1.0/9.0 & 1.0/9.0 & 1.0/36.0 & 1.0/36.0 & 1.0/36.0 & 1.0/36.0",1);
 		
 	CMRProjectConstant & opposite_of = project.addConstant("o","opposite_of");
-	opposite_of.loadValues("0;3;4;1;2;7;8;5;6",1);
+	opposite_of.loadValues("0 & 3 & 4 & 1 & 2 & 7 & 8 & 5 & 6",1);
 		
 	CMRProjectConstant & reynolds = project.addConstant("R","reynolds");
 	reynolds.loadValues("300",0);
@@ -105,6 +105,44 @@ int main(int argc, char ** argv)
 	cout << "================================================" << endl;
 	project.genCCode(cout);
 	cout << "================================================" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void test2(std::string fname)
+{
+	CMRProject2 project;
+	CMRProjectXMLLoader loader;
+	loader.load(project,fname);
+	
+	project.printDebug();
+	CMRTransformationExtractLoops extractLoops;
+	project.runTransformation(extractLoops);
+	project.printDebug();
+	CMRTransformationMarkNoTransf noTransf;
+	project.runTransformation(noTransf);
+	project.printDebug();
+	CMRTransformationImplicitMul implicitMul;
+	project.runTransformation(implicitMul);
+	project.printDebug();
+	CMRTransformationExpandFrac expandFrac;
+	project.runTransformation(expandFrac);
+	project.printDebug();
+	CMRTransformationExpandExpo expandExpo;
+	project.runTransformation(expandExpo);
+	project.printDebug();
+	
+	cout << "================================================" << endl;
+	project.genCCode(cout);
+	cout << "================================================" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+int main(int argc, char ** argv)
+{
+	if (argc == 2)
+		test2(argv[1]);
+	else
+		test1();
 
 	return EXIT_SUCCESS;
 }

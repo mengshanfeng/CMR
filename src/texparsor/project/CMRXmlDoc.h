@@ -29,6 +29,8 @@ class CMRXmlNode
 		CMRXmlNode getNext(void);
 		std::string getChildContent( const std::string& tagname );
 		std::string getProperty(const std::string & name) const;
+		std::string getNonEmptyProperty(const std::string & name) const;
+		CMRXmlNode getUniqChild( const std::string& tagname );
 	private:
 		xmlNodePtr node;
 };
