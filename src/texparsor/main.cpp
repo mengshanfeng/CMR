@@ -14,7 +14,7 @@ using namespace std;
 
 /*******************  FUNCTION  *********************/
 void test1(void)
-{
+{	
 	cout << "===================================================" << endl;
 	CMRProject2 project;
 	CMRProjectConstant & direction_matrix = project.addConstant("M","direction_matrix");
