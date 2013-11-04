@@ -7,25 +7,19 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_LATEX_EXCEPTION_H
-#define CMR_LATEX_EXCEPTION_H
+#ifndef CMR_TRANSFORMATION_REPLACE_ALIAS_H
+#define CMR_TRANSFORMATION_REPLACE_ALIAS_H
 
 /********************  HEADERS  *********************/
-#include <exception>
-#include <string>
+#include "CMRTransformationBasic.h"
 
 /*********************  CLASS  **********************/
-class CMRLatexException : public std::exception
+class CMRTransformationReplaceAlias : public CMRTransformationBasic
 {
 	public:
-		CMRLatexException(void) throw();
-		CMRLatexException(std::string message) throw();
-		virtual ~CMRLatexException(void) throw();
-		virtual const char* what() const  throw();
-		virtual std::string getMessage(void) const;
-		void fatal(void);
-	private:
-		std::string message;
+		CMRTransformationReplaceAlias(void);
+	protected:
+		virtual void transform(CMRProjectCodeEquation & equation,CMRLatexEntity2 & entity);
 };
 
-#endif //CMR_LATEX_EXCEPTION_H
+#endif //CMR_TRANSFORMATION_REPLACE_ALIAS_H

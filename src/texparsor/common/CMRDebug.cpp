@@ -12,13 +12,13 @@
 #include <cassert>
 #include <cstdarg>
 #include <cstdlib>
+#include <unistd.h>
 #include "CMRDebug.h"
 
 /*********************  CONSTS  *********************/
 /**
  * Define usage of shell colors if enabled.
 **/
-#ifdef CMR_ENABLE_COLOR
 static const char * CMR_MESG_COLOR[5] = {
 	"\033[40m\033[36m", //debug
 	"\033[40m\033[1;37m", //info
@@ -26,9 +26,7 @@ static const char * CMR_MESG_COLOR[5] = {
 	"\033[40m\033[33m", //warning
 	"\033[40m\033[31m", //error
 };
-#else
-static const char * CMR_MESG_COLOR[5] = { "", "", "" , "" , "" };
-#endif
+static const char * CMR_MESG_NO_COLOR[5] = { "", "", "" , "" , "" };
 
 /*******************  FUNCTION  *********************/
 /**
@@ -52,6 +50,13 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 	assert(line > 0);
 	assert(format != NULL);
 	assert(title != NULL);
+	
+	//select color mode
+	#ifdef CMR_ENABLE_COLOR
+	static const char ** colors = (isatty(1) == 1) ? CMR_MESG_COLOR : CMR_MESG_NO_COLOR;
+	#else
+	static const char ** colors = CMR_MESG_NO_COLOR;
+	#endif
 
 	//allocate buffer for message
 	size = strlen(format) * 4 + 1024;
@@ -71,10 +76,18 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 	assert(res <= size);
 
 	//print
-	if (condition == NULL)
-		fprintf(stderr,"%s%-7s (%s:%d) : %s%s\n",CMR_MESG_COLOR[level],title,basename(fname),line,buffer,CMR_MESG_COLOR[CMR_DEBUG_NORMAL]);
-	else
-		fprintf(stderr,"%s%-7s (%s:%d) : %s\n        %s%s\n",CMR_MESG_COLOR[level],title,basename(fname),line,condition,buffer,CMR_MESG_COLOR[CMR_DEBUG_NORMAL]);
+	if (level >= CMR_DEBUG_WARNING)
+	{
+		if (condition == NULL)
+			fprintf(stderr,"%s%-7s (%s:%d) : %s%s\n",colors[level],title,basename(fname),line,buffer,colors[CMR_DEBUG_NORMAL]);
+		else
+			fprintf(stderr,"%s%-7s (%s:%d) : %s\n        %s%s\n",colors[level],title,basename(fname),line,condition,buffer,colors[CMR_DEBUG_NORMAL]);
+	} else {
+		if (condition == NULL)
+			fprintf(stderr,"%s%-7s : %s%s\n",colors[level],title,buffer,colors[CMR_DEBUG_NORMAL]);
+		else
+			fprintf(stderr,"%s%-7s : %s\n        %s%s\n",colors[level],title,condition,buffer,colors[CMR_DEBUG_NORMAL]);
+	}
 
 	//free buffers
 	free(buffer);

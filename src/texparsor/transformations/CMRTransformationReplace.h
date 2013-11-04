@@ -22,6 +22,7 @@ class CMRTransformationReplace : public CMRTransformationBasic
 		virtual void transform(CMRProjectCodeEquation & equation,CMRLatexEntity2 & entity);
 		static void replaceAll(const CMRProjectCaptureMap& replaceMap, CMRLatexEntity2& entity);
 		static void replaceAll(const CMRProjectCaptureMap& replaceMap, CMRLatexFormulas2& formula);
+		static void replaceAll( const CMRProjectCaptureMap& replaceMap, CMRLatexFormulasVector2& formulas );
 		static const CMRLatexFormulas2* searchReplaceValue(const CMRProjectCaptureMap& replaceMap, const CMRLatexEntity2& entity);
 	private:
 		const CMRProjectCaptureMap * replaceMap;

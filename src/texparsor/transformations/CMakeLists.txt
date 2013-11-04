@@ -15,7 +15,8 @@ add_library(cmr_tex_transf CMRTransformationExtractLoops.cpp
                            CMRTransformationMarkNoTransf.cpp 
                            CMRTransformationExpandFrac.cpp 
                            CMRTransformationImplicitMul.cpp 
-                           CMRModelBasedReplacement.cpp)
+                           CMRModelBasedReplacement.cpp
+                           CMRTransformationReplaceAlias.cpp)
 target_link_libraries(cmr_tex_transf cmr_tex_definitions)
 
 ######################################################

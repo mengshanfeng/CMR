@@ -84,7 +84,7 @@
 				</foreach>
 			</cellaction>
 			<cellaction name='zou_he_poiseuil' doc='Applique des conditions de Zou He en considérant un profile de poiseuil ver la droite (fluide entrant par la gauche).'>
-				<alias>L = f_{i,j}</alias><!-- <<< TODO -->
+				<alias mathname="L_k">f_{i,j,k}</alias>
 				<declvar mathname='d' longname='d' type='double' default='0' doc='Densité moyenne locale.'/>
 				<declvar mathname='v' longname='v' type='double' default='0' doc='Vistesse moyenne locale.'/>
 				<mathstep>v = v_{pois,i}</mathstep>
@@ -94,7 +94,7 @@
 				<mathstep>f_{i,j,8} = L_6 + \frac{1}{2}(L_2 - L_4) + \frac{1}{6}(dv)</mathstep>
 			</cellaction>
 			<cellaction name='zou_he_const_dentity' doc='Applique des conditions de Zou He en considérant une densité constante (fluide sortant par la droite).'>
-				<alias>L = f_{i,j}</alias><!-- <<< TODO -->
+				<alias mathname="L_k">f_{i,j,k}</alias>
 				<declvar mathname='d' longname='d' type='double' default='0' doc='Densité moyenne locale.'/>
 				<declvar mathname='v' longname='v' type='double' default='0' doc='Vistesse moyenne locale.'/>
 				<mathstep>v = -1 + \frac{1}{d} (L_0+L_2+L_4+2(L_1+L_5+L_8))</mathstep>
@@ -102,7 +102,7 @@
 				<mathstep>f_{i,j,7} = L_5 - \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv</mathstep>
 				<mathstep>f_{i,j,6} = L_8 + \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv</mathstep>
 			</cellaction>
-			<cellaction name='special_cells' doc='Applique les opérations en fonction du type de cellule.'>
+<!--			<cellaction name='special_cells' doc='Applique les opérations en fonction du type de cellule.'>
 				<switch select='T_{i,j}'>
 					<case select='CELL_FLUID'></case>
 					<case select='CELL_BOUNCE_BACK'><callsubaction name='bounce_back'/></case>
@@ -118,7 +118,7 @@
 					<mathstep>J = j - M^{dir}_{k,1}</mathstep>
 					<mathstep>f_{i,j,k} = f_{I,J,k}</mathstep>
 				</foreach>
-			</cellaction>
+			</cellaction>-->
 			<!--<cellaction name='collision' doc='Applique les équation de collision pour re-répartir les densités microscopiques.'>
 				<alias>d = d_{i,j}</alias>
 				<alias>v = v_{i,j}</alias>

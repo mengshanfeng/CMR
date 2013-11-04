@@ -7,8 +7,8 @@
 ######################################################
 
 ######################################################
-add_library(cmr_tex_project CMRProjectXMLLoader.cpp CMRXmlDoc.cpp CMRProject.cpp)
-target_link_libraries(cmr_tex_project cmr_tex_parsor)
+add_library(cmr_tex_project STATIC CMRProjectXMLLoader.cpp CMRXmlDoc.cpp CMRProject.cpp)
+target_link_libraries(cmr_tex_project cmr_tex_parsor cmr_tex_common)
 
 ######################################################
 add_subdirectory(tests)

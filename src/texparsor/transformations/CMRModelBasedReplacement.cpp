@@ -12,9 +12,10 @@
 #include "CMRModelBasedReplacement.h"
 #include "CMRTransformationReplace.h"
 #include "../parsor/CMRLatexFormula.h"
+#include "../common/CMRDebug.h"
 
 /*******************  FUNCTION  *********************/
-CMRModelBasedReplacement::CMRModelBasedReplacement(const std::string& model, const std::string result)
+CMRModelBasedReplacement::CMRModelBasedReplacement(const std::string& model, const std::string result, bool captureAll)
 	:CMRProjectEntity(model,"model")
 {
 	//errors
@@ -25,11 +26,12 @@ CMRModelBasedReplacement::CMRModelBasedReplacement(const std::string& model, con
 	this->result = result;
 	
 	//mark all as capture
-	this->markAllCaptureAs(CMR_CAPTURE_REQUIRED);
+	if (captureAll)
+		this->markAllCaptureAs(CMR_CAPTURE_REQUIRED);
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRModelBasedReplacement::apply(CMRLatexEntity2& entity)
+bool CMRModelBasedReplacement::apply( CMRLatexEntity2& entity ) const
 {
 	//try to match
 	if (this->match(entity) == false)
@@ -54,16 +56,18 @@ bool CMRModelBasedReplacement::apply(CMRLatexEntity2& entity)
 		entity.parameters.push_back(newEntity);
 		entity.name = "()";
 	}
+	
+	return true;
 }
 
 /*******************  FUNCTION  *********************/
 void CMRModelBasedReplacement::genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int indent ) const
 {
-	assert(false);
+	cmrFatal("Caution, CMRModelBasedReplacement objects cannot be translated to C++ code.");
 }
 
 /*******************  FUNCTION  *********************/
 void CMRModelBasedReplacement::genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
 {
-	assert(false);
+	cmrFatal("Caution, CMRModelBasedReplacement objects cannot be translated to C++ code.");
 }

@@ -3,6 +3,8 @@
 #include "CMRProject.h"
 #include "CMRXmlDoc.h"
 #include "CMRProjectXMLLoader.h"
+#include "../common/CMRDebug.h"
+#include "../definitions/CMRProjectAlias.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -26,6 +28,7 @@ const char * CMR_NODE_DECL_VAR = "declvar";
 const char * CMR_NODE_CELL_ACTIONS = "cellactions";
 const char * CMR_NODE_CELL_ACTION = "cellaction";
 const char * CMR_NODE_FOREACH = "foreach";
+const char * CMR_NODE_ALIAS = "alias";
 //properties
 const char * CMR_PROP_MATHNAME = "mathname";
 const char * CMR_PROP_LONGNAME = "longname";
@@ -128,7 +131,7 @@ void CMRProjectXMLLoader::loadConst ( CMRProject2& project, CMRXmlNode& node )
 	
 	//errors
 	assert(dims >=0 && dims <= 2);
-	cout << "Load constant : " << mathName << endl;
+	cmrDebug("Load constant : %s",mathName.c_str());
 	
 	//insert in project
 	CMRProjectConstant & entity = project.addConstant(mathName,longName);
@@ -165,7 +168,7 @@ void CMRProjectXMLLoader::loadMeshVar ( CMRProject2& project, CMRXmlNode& node )
 	string mathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
 	string longName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
 	string type = node.getNonEmptyProperty("type");
-	cout << "Load mesh variable " << mathName << " -> " << longName << endl;
+	cmrDebug("Load mesh variable %s -> %s",mathName.c_str(),longName.c_str());
 
 	//create
 	CMRProjectMeshVar & var = project.addvariable(mathName,longName,type);
@@ -224,7 +227,7 @@ void CMRProjectXMLLoader::loadGlobIterator ( CMRProject2& project, CMRXmlNode& n
 	string longName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
 	int start = atoi(node.getNonEmptyProperty("start").c_str());
 	int end = atoi(node.getNonEmptyProperty("end").c_str());
-	cout << "Load global iterator " << mathName << endl;
+	cmrDebug("Load global iterator : %s",mathName.c_str());
 
 	//create
 	project.addIterator(mathName,longName,start,end);
@@ -260,27 +263,31 @@ void CMRProjectXMLLoader::loadCode ( CMRProject2& project, T& parent, CMRXmlNode
 		if (cur.isNamed(CMR_NODE_MATHSTEP))
 		{
 			string buffer = cur.getContent();
-			cout << "   -> mathstep : " << buffer << endl;
+			cmrDebug("   -> mathstep : %s",buffer.c_str());
 			parent.addEquation(buffer);
 		} else if (cur.isNamed(CMR_NODE_DEF_PARAM)) {
 			string paramMathName = cur.getNonEmptyProperty(CMR_PROP_MATHNAME);
 			string paramLongName = cur.getNonEmptyProperty(CMR_PROP_LONGNAME);
 			string type = cur.getNonEmptyProperty("type");
-			cout << "   -> param : " << paramMathName << endl;
+			cmrDebug("   -> param : %s",paramMathName.c_str());
 			parent.changeCaptureType(paramMathName,CMR_CAPTURE_REQUIRED);
 		} else if (cur.isNamed(CMR_NODE_DECL_VAR)) {
 			string declVarMathName = cur.getNonEmptyProperty(CMR_PROP_MATHNAME);
 			string declVarLongName = cur.getNonEmptyProperty(CMR_PROP_LONGNAME);
-			string declVarDefault = cur.getContent();
+			string declVarDefault = cur.getNonEmptyProperty("default");
 			string declVarType = cur.getNonEmptyProperty("type");
-			cout << "   -> declarvar : " << declVarMathName << endl;
+			cmrDebug("   -> declarvar : %s",declVarMathName.c_str());
 			parent.addLocalVariable(declVarMathName,declVarLongName,declVarType,declVarDefault);
 		} else if (cur.isNamed(CMR_NODE_FOREACH)) {
 			string loopIterator = cur.getNonEmptyProperty("iterator");
 			CMRProjectCodeIteratorLoop & loop = parent.addIteratorLoop(loopIterator);
 			loadCode(project,loop,cur);
+		} else if (cur.isNamed(CMR_NODE_ALIAS)) {
+			string aliasMathName = cur.getNonEmptyProperty(CMR_PROP_MATHNAME);
+			string aliasBody = cur.getContent();
+			parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody));
 		} else {
-			throw CMRLatexException("Invalid tag name while loading project definitions actions in XML file.");
+			cmrFatal("Invalid tag name <%s> while loading project definitions actions in XML file.",cur.getName().c_str());
 		}
 		cur = cur.getNext();
 	}

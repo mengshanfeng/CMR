@@ -100,3 +100,9 @@ void CMRProjectAction::printDebug ( ostream& out ) const
 {
 	out << "TODO" << endl;
 }
+
+/*******************  FUNCTION  *********************/
+CMRProjectContext& CMRProjectAction::getContext ( void )
+{
+	return ops.getContext();
+}

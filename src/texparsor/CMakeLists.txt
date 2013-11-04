@@ -9,7 +9,6 @@
 ######################################################
 find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
-include_directories(../lib/common/)
  
 ######################################################
 add_subdirectory(parsor)

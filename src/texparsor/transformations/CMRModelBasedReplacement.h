@@ -15,11 +15,11 @@
 #include "../definitions/CMRProjectEntity.h"
 
 /*********************  CLASS  **********************/
-class CMRModelBasedReplacement : private CMRProjectEntity
+class CMRModelBasedReplacement : public CMRProjectEntity
 {
 	public:
-		CMRModelBasedReplacement(const std::string & model,const std::string result);
-		bool apply(CMRLatexEntity2 & entity);
+		CMRModelBasedReplacement(const std::string & model,const std::string result, bool captureAll = true);
+		bool apply(CMRLatexEntity2 & entity) const;
 	private:
 		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context, int indent = 0) const;
 		virtual void genUsageCCode(std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false) const;

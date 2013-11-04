@@ -13,6 +13,7 @@
 #include <cstdarg>
 #include <cstdlib>
 #include <mpi.h>
+#include <unistd.h>
 #include "CMRDebug.h"
 #include "CMRCommon.h"
 
@@ -20,7 +21,6 @@
 /**
  * Define usage of shell colors if enabled.
 **/
-#ifdef CMR_ENABLE_COLOR
 static const char * CMR_MESG_COLOR[5] = {
 	"\033[40m\033[36m", //debug
 	"\033[40m\033[1;37m", //info
@@ -28,9 +28,7 @@ static const char * CMR_MESG_COLOR[5] = {
 	"\033[40m\033[33m", //warning
 	"\033[40m\033[31m", //error
 };
-#else
-static const char * CMR_MESG_COLOR[5] = { "", "", "" , "" , "" };
-#endif
+static const char * CMR_MESG_NO_COLOR[5] = { "", "", "" , "" , "" };
 
 /*******************  FUNCTION  *********************/
 /**
@@ -54,6 +52,13 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 	assert(line > 0);
 	assert(format != NULL);
 	assert(title != NULL);
+	
+	//select color mode
+	#ifdef CMR_ENABLE_COLOR
+	static const char ** colors = (isatty(1) == 1) ? CMR_MESG_COLOR : CMR_MESG_NO_COLOR;
+	#else
+	static const char ** colors = CMR_MESG_NO_COLOR;
+	#endif
 
 	//allocate buffer for message
 	size = strlen(format) * 4 + 1024;

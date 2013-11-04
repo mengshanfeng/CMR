@@ -23,7 +23,7 @@ include_directories(${UNITTEST_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 ######################################################
 #test list
-set(ALLOC_GTEST_LIST TestBasic TestExpandExpo TestExpandFrac TestMarkNoTransf TestReplace TestImplicitMul TestExtractLoops)
+set(ALLOC_GTEST_LIST TestBasic TestExpandExpo TestExpandFrac TestMarkNoTransf TestReplace TestImplicitMul TestExtractLoops TestReplaceAlias)
 
 ######################################################
 #Now you can build your tests

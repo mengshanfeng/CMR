@@ -152,3 +152,9 @@ void CMRProjectDefinition::onUpdateCaptureType ( const string& name, CMRCaptureT
 		this->parametersContext.addEntry(new CMRProjectLocalVariable(name,longName,"int"));
 	}
 }
+
+/*******************  FUNCTION  *********************/
+CMRProjectContext& CMRProjectDefinition::getContext ( void )
+{
+	return ops.getContext();
+}

@@ -8,6 +8,7 @@
 #include "transformations/CMRTransformationExpandFrac.h"
 #include "transformations/CMRTransformationExpandExpo.h"
 #include "transformations/CMRTransformationMarkNoTransf.h"
+#include "transformations/CMRTransformationReplaceAlias.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -114,6 +115,9 @@ void test2(std::string fname)
 	CMRProjectXMLLoader loader;
 	loader.load(project,fname);
 	
+	project.printDebug();
+	CMRTransformationReplaceAlias alias;
+	project.runTransformation(alias);
 	project.printDebug();
 	CMRTransformationExtractLoops extractLoops;
 	project.runTransformation(extractLoops);

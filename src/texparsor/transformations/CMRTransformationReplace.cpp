@@ -46,6 +46,13 @@ const CMRLatexFormulas2* CMRTransformationReplace::searchReplaceValue(const CMRP
 }
 
 /*******************  FUNCTION  *********************/
+void CMRTransformationReplace::replaceAll ( const CMRProjectCaptureMap& replaceMap, CMRLatexFormulasVector2& formulas )
+{
+	for (CMRLatexFormulasVector2::iterator it = formulas.begin() ; it != formulas.end() ; ++it)
+		replaceAll(replaceMap,**it);
+}
+
+/*******************  FUNCTION  *********************/
 void CMRTransformationReplace::replaceAll(const CMRProjectCaptureMap & replaceMap, CMRLatexEntity2& entity)
 {
 	//Vars
@@ -64,6 +71,11 @@ void CMRTransformationReplace::replaceAll(const CMRProjectCaptureMap & replaceMa
 			entity.name = "()";
 		}
 	}
+
+	//recurse in childs
+	replaceAll(replaceMap,entity.getExponents());
+	replaceAll(replaceMap,entity.getIndices());
+	replaceAll(replaceMap,entity.getParameters());
 }
 
 /*******************  FUNCTION  *********************/

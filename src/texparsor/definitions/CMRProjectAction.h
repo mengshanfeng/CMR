@@ -32,6 +32,7 @@ class CMRProjectAction
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue);
 		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
 		void changeCaptureType(const std::string & name, enum CMRCaptureType captureType) { assert(false);};
+		CMRProjectContext & getContext(void);
 	private:
 		CMRProjectCodeRootNode ops;
 		std::string name;
