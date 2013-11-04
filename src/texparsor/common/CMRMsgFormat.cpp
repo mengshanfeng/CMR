@@ -67,7 +67,7 @@ CMRMsgFormat& CMRMsgFormat::arg ( const string& arg )
 	size_t size = sprintf(buffer,"%%%d",++cntArg);
 	size_t pos = value.find(buffer);
 	if (pos != string::npos)
-		this->value = value.replace(pos, size-1, arg);
+		this->value = value.replace(pos, size, arg);
 	return *this;
 }
 

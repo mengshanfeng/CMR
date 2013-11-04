@@ -246,6 +246,68 @@ TEST(TestProjectEntity,testCapture_4)
 }
 
 /*******************  FUNCTION  *********************/
+TEST(TestProjectEntity,testCapture_wildcard_1)
+{
+	MockProjectEntity entity("x_{eq,k}","test");
+	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
+	entity.captureName();
+	CMRLatexEntity2 le("A_{eq,42}^2");
+	
+	CMRProjectCaptureMap capture;
+	entity.capture(le,capture);
+	
+	EXPECT_EQ(3,capture.size());
+	EXPECT_EQ("2",capture["cmrExponent"]->getString());
+	EXPECT_EQ("A",capture["x"]->getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestProjectEntity,testCapture_wildcard_2)
+{
+	MockProjectEntity entity("x^2","test");
+	entity.captureName();
+	CMRLatexEntity2 le("A^2");
+	
+	CMRProjectCaptureMap capture;
+	entity.capture(le,capture);
+	
+	EXPECT_EQ(1,capture.size());
+	EXPECT_EQ("A",capture["x"]->getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestProjectEntity,testCapture_wildcard_3)
+{
+	MockProjectEntity entity("x^a","test");
+	entity.changeCaptureType("a",CMR_CAPTURE_REQUIRED);
+	entity.captureName();
+	CMRLatexEntity2 le("A^2");
+	
+	CMRProjectCaptureMap capture;
+	entity.capture(le,capture);
+	
+	EXPECT_EQ(2,capture.size());
+	EXPECT_EQ("2",capture["a"]->getString());
+	EXPECT_EQ("A",capture["x"]->getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestProjectEntity,testCapture_wildcard_4)
+{
+	MockProjectEntity entity("x^a","test");
+	entity.changeCaptureType("a",CMR_CAPTURE_REQUIRED);
+	entity.captureName();
+	CMRLatexEntity2 le("(A+B)^2");
+	
+	CMRProjectCaptureMap capture;
+	entity.capture(le,capture);
+	
+	EXPECT_EQ(2,capture.size());
+	EXPECT_EQ("2",capture["a"]->getString());
+	EXPECT_EQ("A+B",capture["x"]->getString());
+}
+
+/*******************  FUNCTION  *********************/
 TEST(TestProjectEntity,testGetShortName)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");

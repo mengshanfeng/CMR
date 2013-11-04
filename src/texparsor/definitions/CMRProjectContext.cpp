@@ -79,21 +79,29 @@ CMRProjectEntity * CMRProjectContext::checkUnique(const CMRProjectEntity & entry
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectEntity* CMRProjectContext::findInParent(const CMRLatexEntity2& entity) const
+const CMRProjectEntity* CMRProjectContext::findInParent(const CMRLatexEntity2& entity, bool onlyWildCardNames) const
 {
 	if (parent == NULL)
 		return NULL;
 	else
-		return parent->find(entity);
+		return parent->find(entity,onlyWildCardNames);
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectEntity* CMRProjectContext::find( const CMRLatexEntity2 & entity ) const
+const CMRProjectEntity* CMRProjectContext::find( const CMRLatexEntity2 & entity , bool onlyWildCardNames) const
 {
+	//check wildcard name in parent
+	if (parent != NULL)
+	{
+		const CMRProjectEntity* res = parent->find(entity,true);
+		if (res != NULL)
+			return res;
+	}
+
 	//searh in list
 	for (CMRProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
 	{
-		if ((*it)->match(entity))
+		if ((onlyWildCardNames == false || (*it)->isWildcardName()) && (*it)->match(entity))
 			return *it;
 	}
 	

@@ -162,7 +162,7 @@ void CMRLatexParsorContext::fatal ( const string& message ) const throw(CMRLatex
 		
 		//move to parent
 		curPos += cur->relToParent;
-		cur = parent;
+		cur = cur->parent;
 	}
 	
 	//finish by exit

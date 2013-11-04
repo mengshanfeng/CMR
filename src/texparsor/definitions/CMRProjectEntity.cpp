@@ -22,6 +22,7 @@ using namespace std;
 /*******************  FUNCTION  *********************/
 CMRProjectEntity::CMRProjectEntity ( const string& latexName, const string& longName )
 {
+	this->capName = false;
 	this->longName = longName;
 	this->applyLatexName(latexName);
 }
@@ -247,7 +248,7 @@ ostream& operator<< ( ostream& out, const CMRProjectEntity& value )
 bool CMRProjectEntity::internalMatch ( const CMRLatexEntity2& entity, CMRProjectCaptureMap* capture ) const
 {
 	//check name
-	if (entity.name != this->shortName)
+	if (entity.name != this->shortName && this->capName == false)
 		return false;
 	
 	//check indices
@@ -264,9 +265,18 @@ bool CMRProjectEntity::internalMatch ( const CMRLatexEntity2& entity, CMRProject
 	}
 	
 	//check params
-	if (internalMatch(entity.parameters,parameters,capture) == false)
-		return false;
+	if (entity.name == "()" && this->capName == true)
+	{
+		if (capture != NULL)
+			(*capture)[this->shortName] = entity.parameters[0];
+	} else if (internalMatch(entity.parameters,parameters,capture) == false) {
+			return false;
+	}
 	
+	//capture name if wildcars
+	if (capture != NULL && this->capName && entity.name != "()")
+		(*capture)[this->shortName] = new CMRLatexFormulas2(entity.name);
+
 	return true;
 }
 
@@ -445,4 +455,16 @@ void CMRProjectEntity::markAllCaptureAs(CMRProjectCaptureDefMap& map, CMRCapture
 {
 	for (CMRProjectCaptureDefMap::iterator it = map.begin() ; it != map.end() ; ++it)
 		it->captureType = capture;
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRProjectEntity::captureName ( void )
+{
+	this->capName = true;
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRProjectEntity::isWildcardName ( void )
+{
+	return this->capName;
 }

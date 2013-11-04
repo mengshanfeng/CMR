@@ -11,6 +11,7 @@
 #include <cassert>
 #include "../parsor/CMRLatexException.h"
 #include "CMRXmlDoc.h"
+#include "../common/CMRMsgFormat.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -306,6 +307,6 @@ string CMRXmlNode::getNonEmptyProperty ( const string& name ) const
 {
 	string res = getProperty(name);
 	if (res.empty())
-		throw CMRLatexException("Caution, get empty property XXX while readine XML.");
+		CMRMsgFormat("Caution, get empty property '%1' while readine XML.").arg(name).exception();
 	return res;
 }

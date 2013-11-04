@@ -66,6 +66,8 @@ class CMRProjectEntity
 		const CMRProjectCaptureDefMap & getExponents(void) const;
 		const CMRProjectCaptureDefMap & getParameters(void) const;
 		void markAllCaptureAs(enum CMRCaptureType capture);
+		bool captureName(void);
+		bool isWildcardName(void);
 		
 		//to overload
 		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context, int padding = 0) const = 0;
@@ -94,6 +96,7 @@ class CMRProjectEntity
 		CMRProjectCaptureDefMap indices;
 		CMRProjectCaptureDefMap exponents;
 		CMRProjectCaptureDefMap parameters;
+		bool capName;
 };
 
 #endif //CMR_PROJECT_ENTIT_H

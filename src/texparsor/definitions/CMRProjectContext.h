@@ -34,8 +34,8 @@ class CMRProjectContext
 		void printDebug(std::ostream & out = std::cerr) const;
 		CMRProjectEntity & addEntry(CMRProjectEntity * entry);
 		CMRProjectEntity* checkUnique( const CMRProjectEntity& entry );
-		const CMRProjectEntity * find( const CMRLatexEntity2& entity ) const;
-		const CMRProjectEntity * findInParent( const CMRLatexEntity2& entity ) const;
+		const CMRProjectEntity * find( const CMRLatexEntity2& entity, bool onlyWildCardNames = false ) const;
+		const CMRProjectEntity * findInParent( const CMRLatexEntity2& entity, bool onlyWildCardNames = false ) const;
 		int getDepth(void) const;
 		CMRTempNames genTempName( const std::string& base = "temp");
 		void setParent(const CMRProjectContext * parent);

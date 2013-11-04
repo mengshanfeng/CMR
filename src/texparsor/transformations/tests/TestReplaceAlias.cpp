@@ -27,7 +27,7 @@ TEST(TestRepalceAlias,testConstructor)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_simple)
+TEST(TestRepalceAlias,testRun_simple_1)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -38,6 +38,24 @@ TEST(TestRepalceAlias,testRun_simple)
 	root.addLocalVariable("c","testC","int","0");
 	context.addEntry(new CMRProjectAlias("L","a"));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L");
+	
+	transf.run(root);
+	
+	EXPECT_EQ("4*b+\\frac{1}{b}+a",eq.getFormulas().getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestRepalceAlias,testRun_simple_2)
+{
+	CMRTransformationReplaceAlias transf;
+	
+	CMRProjectContext context;
+	CMRProjectCodeNode root(&context);
+	root.addLocalVariable("a","testA","int","0");
+	root.addLocalVariable("b","testB","int","0");
+	root.addLocalVariable("c","testC","int","0");
+	context.addEntry(new CMRProjectAlias("L^2","a",false));
+	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L^2");
 	
 	transf.run(root);
 	
@@ -172,4 +190,52 @@ TEST(TestRepalceAlias,testRun_partial_capture)
 	transf.run(root);
 	
 	EXPECT_EQ("4*b+\\frac{1}{b}+d_{i,j,b}",eq.getFormulas().getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestRepalceAlias,testRun_wildcard_alias_expo_1)
+{
+	CMRTransformationReplaceAlias transf;
+	
+	CMRProjectContext context;
+	CMRProjectCodeNode root(&context);
+	root.addLocalVariable("a","testA","int","0");
+	context.addEntry(new CMRProjectAlias("x^4","x*x*x*x",false)).captureName();
+	CMRProjectCodeEquation & eq = root.addEquation("a","a^4");
+	
+	transf.run(root);
+	
+	EXPECT_EQ("(a*a*a*a)",eq.getFormulas().getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestRepalceAlias,testRun_wildcard_alias_expo_2)
+{
+	CMRTransformationReplaceAlias transf;
+	
+	CMRProjectContext context;
+	CMRProjectCodeNode root(&context);
+	root.addLocalVariable("a","testA","int","0");
+	context.addEntry(new CMRProjectAlias("x^4","x*x*x*x",false)).captureName();
+	CMRProjectCodeEquation & eq = root.addEquation("a","(a+b)^4");
+	
+	transf.run(root);
+	
+	EXPECT_EQ("((a+b)*(a+b)*(a+b)*(a+b))",eq.getFormulas().getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestRepalceAlias,testRun_wildcard_alias_expo_3)
+{
+	CMRTransformationReplaceAlias transf;
+	
+	CMRProjectContext context;
+	CMRProjectCodeNode root(&context);
+	root.addLocalVariable("a","testA","int","0");
+	context.addEntry(new CMRProjectAlias("x^4","x*x*x*x",false)).captureName();
+	CMRProjectCodeEquation & eq = root.addEquation("a","(\\frac{a}{2})^4");
+	
+	transf.run(root);
+	
+	EXPECT_EQ("(\\frac{a}{2}*\\frac{a}{2}*\\frac{a}{2}*\\frac{a}{2})",eq.getFormulas().getString());
 }

@@ -6,6 +6,9 @@
 			<author mail='sebastien.valat@gmail.com'>Sébastien Valat</author>
 		</authors>
 		<version>1.0</version>
+		<headers>
+			<include>LBMStructs.h</include>
+		</headers>
 	</project>
 	<elements>
 		<!-- ********************* CONSTS **************** -->
@@ -40,6 +43,8 @@
 					<extradim mathname='k' longname='direction' size='9' start='0' doc="Direction à l'interieur de la maille."/>
 				</extradims>
 			</var>
+			<var mathname='T_{i,j}' longname='cell_type' type='LBMCellType'   doc='Type de cellule.'/>
+			<var mathname='F_{i,j}' longname='fileout'   type='LBMFileHeader' doc='Structure de stokage pour la sortie.'/>
 		</mesh>
 		<!-- ****************** ITERATORS **************** -->
 		<iterators>
@@ -109,16 +114,18 @@
 					<case select='CELL_LEFT_IN'><callsubaction name='zou_he_poiseuil'/></case>
 					<case select='CELL_RIGHT_OUT'><callsubaction name='zou_he_const_dentity'/></case>
 				</switch>
-			</cellaction>
+				</cellaction>-->
 			<cellaction name='propagation' doc='Propage les densité microscopiques entre cellule (copie vers la cellule locale).'>
 				<declvar mathname='I' longname='I' type='int'/>
 				<declvar mathname='J' longname='J' type='int'/>
+				<!--<alias mathname="x^8" captureall="false" capturename="true">x*x*x*x*x*x*x</alias>-->
 				<foreach iterator='k'>
 					<mathstep>I = i - M^{dir}_{k,0}</mathstep>
 					<mathstep>J = j - M^{dir}_{k,1}</mathstep>
 					<mathstep>f_{i,j,k} = f_{I,J,k}</mathstep>
+					<!--<mathstep>f_{i,j,k} = I^8</mathstep>-->
 				</foreach>
-			</cellaction>-->
+			</cellaction>
 			<!--<cellaction name='collision' doc='Applique les équation de collision pour re-répartir les densités microscopiques.'>
 				<alias>d = d_{i,j}</alias>
 				<alias>v = v_{i,j}</alias>

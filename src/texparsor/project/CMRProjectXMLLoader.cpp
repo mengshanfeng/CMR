@@ -274,7 +274,7 @@ void CMRProjectXMLLoader::loadCode ( CMRProject2& project, T& parent, CMRXmlNode
 		} else if (cur.isNamed(CMR_NODE_DECL_VAR)) {
 			string declVarMathName = cur.getNonEmptyProperty(CMR_PROP_MATHNAME);
 			string declVarLongName = cur.getNonEmptyProperty(CMR_PROP_LONGNAME);
-			string declVarDefault = cur.getNonEmptyProperty("default");
+			string declVarDefault = cur.getProperty("default");
 			string declVarType = cur.getNonEmptyProperty("type");
 			cmrDebug("   -> declarvar : %s",declVarMathName.c_str());
 			parent.addLocalVariable(declVarMathName,declVarLongName,declVarType,declVarDefault);
@@ -285,7 +285,13 @@ void CMRProjectXMLLoader::loadCode ( CMRProject2& project, T& parent, CMRXmlNode
 		} else if (cur.isNamed(CMR_NODE_ALIAS)) {
 			string aliasMathName = cur.getNonEmptyProperty(CMR_PROP_MATHNAME);
 			string aliasBody = cur.getContent();
-			parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody));
+			bool aliasWildcardName = cur.getProperty("capturename") == "true";
+			string aliasCaptureAllStr = cur.getProperty("captureall");
+			bool aliasCaptureAll = (aliasCaptureAllStr.empty() || aliasCaptureAllStr == "true");
+			if (aliasWildcardName)
+				parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll)).captureName();
+			else
+				parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll));
 		} else {
 			cmrFatal("Invalid tag name <%s> while loading project definitions actions in XML file.",cur.getName().c_str());
 		}
