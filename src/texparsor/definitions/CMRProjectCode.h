@@ -12,6 +12,7 @@
 
 /********************  HEADERS  *********************/
 #include <ostream>
+#include <list>
 #include "CMRProjectCodeTree.h"
 #include "CMRProjectIterator.h"
 #include "../parsor/CMRLatexFormula.h"
@@ -33,7 +34,20 @@ enum CMRProjectCodeType
 	CMR_PROJECT_CODE_ITERATOR,
 	//Var decl
 	CMR_PROJECT_CODE_VAR_DECL,
+	//C code simple
+	CMR_PROJECT_CODE_CSIMPLE,
 };
+
+/*********************  STRUCT  *********************/
+struct ExtractionLocus
+{
+	bool isAutoEntry;
+	int id;
+	int position;
+};
+
+/*********************  TYPES  **********************/
+typedef std::list<ExtractionLocus> ExtractionLocusList;
 
 /*********************  CLASS  **********************/
 class CMRProjectLocalVariable : public CMRProjectEntity
@@ -127,6 +141,35 @@ class CMRProjectCodeVarDecl : public CMRProjectCodeEntry
 		virtual void genCCode ( std::ostream& out ,int padding = 0 ) const;
 	private:
 		CMRProjectLocalVariable * variable;
+};
+
+/*********************  CLASS  **********************/
+class CMRProjectCConstruct
+{
+	public:
+		CMRProjectCConstruct(const std::string & code);
+		CMRProjectCConstruct & arg(const std::string & value);
+		void genCCode( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
+	private:
+		void loadCode(const std::string & code);
+		void extractReplacementLocus( ExtractionLocusList& locusList ) const;
+		const CMRLatexFormulas2 * getLocusValue(const ExtractionLocus & locus) const;
+	private:
+		CMRLatexFormulasVector2 args;
+		CMRLatexFormulasVector2 autoArgs;
+		std::string code;
+};
+
+/*********************  CLASS  **********************/
+class CMRProjectCSimpleConstruct : public CMRProjectCodeNode
+{
+	public:
+		CMRProjectCSimpleConstruct( CMRProjectContext * parentContext,const std::string & code);
+		CMRProjectCSimpleConstruct & arg(const std::string & value);
+		virtual CMRProjectCodeType getType(void) const;
+		virtual void genCCode ( std::ostream& out ,int padding = 0 ) const;
+	private:
+		CMRProjectCConstruct construct;
 };
 
 #endif //CMR_PROJECT_CODE_H

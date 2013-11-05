@@ -8,6 +8,9 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
+#include <sstream>
+#include <cstdio>
+#include "../common/CMRDebug.h"
 #include "CMRProjectCode.h"
 #include "CMRGenCode.h"
 #include "CMRProjectIterator.h"
@@ -331,4 +334,153 @@ void CMRProjectCodeVarDecl::genCCode ( ostream& out ,int padding ) const
 std::ostream & CMRProjectCodeEntry::doIndent ( ostream& out, int baseOffset ) const
 {
 	return ::doIndent(out,baseOffset + getDepth());
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCConstruct::CMRProjectCConstruct ( const string& code )
+{
+	this->loadCode(code);
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCConstruct& CMRProjectCConstruct::arg ( const string& value )
+{
+	this->args.push_back(new CMRLatexFormulas2(value));
+	return *this;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectCConstruct::loadCode ( const string& code )
+{
+	//errors
+	assert(this->code.empty());
+	assert(this->autoArgs.empty());
+	assert(this->args.empty());
+
+	//some vars
+	string buffer;
+	bool capture = false;
+	char prev = '\0';
+	int cnt = 1;
+	stringstream codePattern;
+	
+	//fill code while searching $....$ values, extract them and replace by %a1, %a2.
+	for (int i = 0 ; i < code.size() ; i++)
+	{
+		//escape sequence
+		if (code[i] == '$' && prev != '\\') {
+			if (capture)
+			{
+				this->autoArgs.push_back(new CMRLatexFormulas2(buffer));
+				codePattern << "%a" << cnt++;
+			} else {
+				buffer.clear();
+			}
+			capture = !capture;
+		} else if (capture) {
+			buffer += code[i];
+		} else {
+			codePattern << code[i];
+		}
+
+		prev = code[i];
+	}
+	
+	//setup pattern
+	this->code = codePattern.str();
+	//cmrDebug("Extracted code template is : %s",this->code.c_str());
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectCConstruct::extractReplacementLocus ( ExtractionLocusList& locusList ) const
+{
+	//var
+	ExtractionLocus locus;
+	char prev = '\0';
+	
+	//errors
+	assert(locusList.empty());
+	
+	//loop to search %[0-9]+ or %a[0-9]+
+	for (int i = 0 ; i < code.size() ; i++)
+	{
+		if (code[i] == '%' && prev != '\\')
+		{
+			locus.isAutoEntry = (code[i+1] == 'a');
+			locus.id = atoi(code.c_str()+i+(locus.isAutoEntry?2:1));
+			locus.position = i;
+			cmrAssume("Invalid locus definition '%s...'",code.substr(i,4).c_str());
+			locusList.push_back(locus);
+		}
+		prev = code[i];
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectCConstruct::genCCode ( ostream& out, const CMRProjectContext& context, int padding ) const
+{
+	//vars
+	ExtractionLocusList locusList;
+	string res = code;
+	char tmp[16];
+	int size;
+	
+	//Errors
+	assert(padding >= 0);
+	
+	//extract locus list
+	extractReplacementLocus(locusList);
+	
+	//loop on all locus and replace, replace by end, so position are still known after first replace
+	for (ExtractionLocusList::const_reverse_iterator it = locusList.rbegin() ; it != locusList.rend() ; ++it)
+	{
+		const CMRLatexFormulas2 * formula = getLocusValue(*it);
+		assert(formula != NULL);
+		stringstream buffer;
+		cmrGenEqCCode(buffer,context,*formula);
+		size = sprintf(tmp,"%%%s%d",(it->isAutoEntry?"a":""),it->id);
+		res = res.replace(it->position, size, buffer.str());
+	}
+	
+	doIndent(out,padding) << res << endl;
+}
+
+/*******************  FUNCTION  *********************/
+const CMRLatexFormulas2* CMRProjectCConstruct::getLocusValue ( const ExtractionLocus& locus ) const
+{
+	cmrAssume(locus.id > 0,"Locus ID must be greater than 0 (%d)",locus.id);
+	if (locus.isAutoEntry)
+	{
+		cmrAssume(autoArgs.size() >= locus.id,"Invalid locus ID in automatic entry of CConstruct : %d",locus.id);
+		return autoArgs[locus.id-1];
+	} else {
+		cmrAssume(args.size() >= locus.id,"Invalid locus ID in automatic entry of CConstruct : %d",locus.id);
+		return args[locus.id-1];
+	}
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCSimpleConstruct::CMRProjectCSimpleConstruct ( CMRProjectContext * parentContext, const string& code ) 
+	: CMRProjectCodeNode(parentContext), construct(code)
+{
+	
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCSimpleConstruct& CMRProjectCSimpleConstruct::arg ( const string& value )
+{
+	construct.arg(value);
+	return *this;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCodeType CMRProjectCSimpleConstruct::getType ( void ) const
+{
+	return CMR_PROJECT_CODE_CSIMPLE;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectCSimpleConstruct::genCCode ( ostream& out, int padding ) const
+{
+	construct.genCCode(out,context,padding);
 }

@@ -84,6 +84,9 @@ std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, con
 		assert(entity.getParameter(0) != NULL);
 		cmrGenEqCCode(out,context,*entity.getParameter(0));
 		out << ") ";
+	} else if (entity.name == "\\cmrsubaction") {
+		#warning "Remove this from here"
+		out << "Action" << *entity.getParameter(0) << "::cellAction(in,out,pos,x,y)";
 	} else {
 		//search matching in context
 		const CMRProjectEntity * def = context.find(entity);

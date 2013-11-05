@@ -48,8 +48,13 @@ string cmrExtractName(const string & value,int & start)
 	if (value[start] == '\\')
 	{
 		res+=value[start++];
-		while(cmrIsAlphaNum(value[start]))
+		#warning cleanup this way to do escape
+		while(cmrIsAlphaNum(value[start]) || (value[start] == '\\' && value[start] == '_'))
+		{
+			if (value[start] == '\\')
+				start++;
 			res+=value[start++];
+		}
 	} else if (cmrIsNum(value[start])) {
 		while(cmrIsNumFloat(value[start]))
 			res+=value[start++];
@@ -148,6 +153,8 @@ int cmrRequireParameters(const string & name,const string & value,int pos)
 		return 1;
 	} else if (name == "\\cmr"){
 		return 2;
+	} else if (name == "\\cmrsubaction") {
+		return 1;
 	} else {
 		cmrParsorError(value,pos,"Invalid latex command.");
 		return -1;
@@ -168,6 +175,8 @@ int cmrRequireParameters(const string & name,CMRLatexParsorContext & context)
 		return 1;
 	} else if (name == "\\cmr"){
 		return 2;
+	} else if (name == "\\cmrsubaction") {
+		return 1;
 	} else {
 		context.fatal("Invalid latex command.");
 		return -1;

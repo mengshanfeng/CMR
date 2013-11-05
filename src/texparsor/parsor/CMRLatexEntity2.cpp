@@ -278,8 +278,11 @@ std::string CMRLatexEntity2::extractName ( CMRLatexParsorContext& context )
 	assert(context.isEnd() == false);
 	
 	//long names
-	if (context.startBy('\\'))
+	if (context.startBy("\\_"))
 	{
+		res += "_";
+		context.move(2);
+	} else if (context.startBy('\\')) {
 		res+=context.getCurAndMove();
 		while(cmrIsAlphaNum(context.getCurrent()))
 			res+=context.getCurAndMove();

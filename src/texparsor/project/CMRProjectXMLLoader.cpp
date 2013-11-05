@@ -29,6 +29,7 @@ const char * CMR_NODE_CELL_ACTIONS = "cellactions";
 const char * CMR_NODE_CELL_ACTION = "cellaction";
 const char * CMR_NODE_FOREACH = "foreach";
 const char * CMR_NODE_ALIAS = "alias";
+const char * CMR_NODE_CCODE = "ccode";
 //properties
 const char * CMR_PROP_MATHNAME = "mathname";
 const char * CMR_PROP_LONGNAME = "longname";
@@ -288,10 +289,15 @@ void CMRProjectXMLLoader::loadCode ( CMRProject2& project, T& parent, CMRXmlNode
 			bool aliasWildcardName = cur.getProperty("capturename") == "true";
 			string aliasCaptureAllStr = cur.getProperty("captureall");
 			bool aliasCaptureAll = (aliasCaptureAllStr.empty() || aliasCaptureAllStr == "true");
+			cmrDebug("    -> Alias : %s",aliasMathName.c_str());
 			if (aliasWildcardName)
 				parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll)).captureName();
 			else
 				parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll));
+		} else if (cur.isNamed(CMR_NODE_CCODE)) {
+			string codeContent = cur.getContent();
+			cmrDebug("    -> CCode : %s",codeContent.c_str());
+			parent.insert(new CMRProjectCSimpleConstruct(&parent.getContext(),codeContent));
 		} else {
 			cmrFatal("Invalid tag name <%s> while loading project definitions actions in XML file.",cur.getName().c_str());
 		}

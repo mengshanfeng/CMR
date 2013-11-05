@@ -203,8 +203,15 @@ TEST(TestLatexEntity,testDumpAsTree)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestLatexEntity,testExpreession_ExponentOnParenthesis)
+TEST(TestLatexEntity,testExpression_ExponentOnParenthesis)
 {
 	CMRLatexEntity2 entity("( a + 5 )^2");
 	EXPECT_EQ("(a+5)^2",entity.getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestLatexEntity,testCmrSubactionNameEscapte)
+{
+	CMRLatexEntity2 entity("\\cmrsubaction{bounce\\_back}");
+	EXPECT_EQ("\\cmrsubaction{bounce_back}",entity.getString());
 }

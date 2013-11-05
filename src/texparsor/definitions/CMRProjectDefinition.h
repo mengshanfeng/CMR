@@ -33,6 +33,7 @@ class CMRProjectDefinition : public CMRProjectEntity
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue);
 		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
 		CMRProjectContext & getContext(void);
+		CMRProjectCodeEntry * insert(CMRProjectCodeEntry * entry,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 	protected:
 		void genParameterListForDef(std::ostream& out,const CMRProjectCaptureDefMap & map) const;
 		void genParameterListForUsage( std::ostream& out, const CMRProjectCaptureDefMap& map, CMRProjectCaptureMap& capture ) const;

@@ -90,6 +90,7 @@ const CMRProjectEntity* CMRProjectContext::findInParent(const CMRLatexEntity2& e
 /*******************  FUNCTION  *********************/
 const CMRProjectEntity* CMRProjectContext::find( const CMRLatexEntity2 & entity , bool onlyWildCardNames) const
 {
+	#warning "Do some stuff on priority rules when found multiple matches (similar to what CSS dores)"
 	//check wildcard name in parent
 	if (parent != NULL)
 	{

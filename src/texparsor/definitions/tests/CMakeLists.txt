@@ -33,6 +33,7 @@ set(ALLOC_GTEST_LIST TestProjectDefinition
                      TestProjectEntity
                      TestProjectIterator
                      TestProjectMeshVar
+                     TestProjectCConstruct
                      TestProjectLocalVariable)
 
 ######################################################

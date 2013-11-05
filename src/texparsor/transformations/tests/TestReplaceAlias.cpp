@@ -21,13 +21,13 @@ using namespace testing;
 /*********************  CONSTS  *********************/
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testConstructor)
+TEST(TestReplaceAlias,testConstructor)
 {
 	CMRTransformationReplaceAlias transf;
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_simple_1)
+TEST(TestReplaceAlias,testRun_simple_1)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -45,7 +45,7 @@ TEST(TestRepalceAlias,testRun_simple_1)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_simple_2)
+TEST(TestReplaceAlias,testRun_simple_2)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -63,7 +63,7 @@ TEST(TestRepalceAlias,testRun_simple_2)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_composed_1)
+TEST(TestReplaceAlias,testRun_composed_1)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -81,7 +81,7 @@ TEST(TestRepalceAlias,testRun_composed_1)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_composed_2)
+TEST(TestReplaceAlias,testRun_composed_2)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -99,7 +99,7 @@ TEST(TestRepalceAlias,testRun_composed_2)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_composed_capture_1)
+TEST(TestReplaceAlias,testRun_composed_capture_1)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -117,7 +117,7 @@ TEST(TestRepalceAlias,testRun_composed_capture_1)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_composed_capture_2)
+TEST(TestReplaceAlias,testRun_composed_capture_2)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -135,7 +135,7 @@ TEST(TestRepalceAlias,testRun_composed_capture_2)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_composed_capture_3)
+TEST(TestReplaceAlias,testRun_composed_capture_3)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -153,7 +153,7 @@ TEST(TestRepalceAlias,testRun_composed_capture_3)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_frac)
+TEST(TestReplaceAlias,testRun_frac)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -171,7 +171,7 @@ TEST(TestRepalceAlias,testRun_frac)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_partial_capture)
+TEST(TestReplaceAlias,testRun_partial_capture)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -193,7 +193,7 @@ TEST(TestRepalceAlias,testRun_partial_capture)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_wildcard_alias_expo_1)
+TEST(TestReplaceAlias,testRun_wildcard_alias_expo_1)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -209,7 +209,7 @@ TEST(TestRepalceAlias,testRun_wildcard_alias_expo_1)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_wildcard_alias_expo_2)
+TEST(TestReplaceAlias,testRun_wildcard_alias_expo_2)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -225,7 +225,7 @@ TEST(TestRepalceAlias,testRun_wildcard_alias_expo_2)
 }
 
 /*******************  FUNCTION  *********************/
-TEST(TestRepalceAlias,testRun_wildcard_alias_expo_3)
+TEST(TestReplaceAlias,testRun_wildcard_alias_expo_3)
 {
 	CMRTransformationReplaceAlias transf;
 	
@@ -239,3 +239,21 @@ TEST(TestRepalceAlias,testRun_wildcard_alias_expo_3)
 	
 	EXPECT_EQ("(\\frac{a}{2}*\\frac{a}{2}*\\frac{a}{2}*\\frac{a}{2})",eq.getFormulas().getString());
 }
+
+// /*******************  FUNCTION  *********************/
+// TEST(TestReplaceAlias,testRun_wildcard_alias_convar_contravar)
+// {
+// 	CMRTransformationReplaceAlias transf;
+// 	
+// 	CMRProjectContext context;
+// 	CMRProjectCodeNode root(&context);
+// 	root.addLocalVariable("a","testA","int","0");
+// 	root.addLocalVariable("b","testB","int","0");
+// 	root.addLocalVariable("c","testC","int","0");
+// 	context.addEntry(new CMRProjectAlias("x^i_j","x_i^j",true)).captureName();
+// 	CMRProjectCodeEquation & eq = root.addEquation("a","a^b_c");
+// 	
+// 	transf.run(root);
+// 	
+// 	EXPECT_EQ("a^c_b",eq.getFormulas().getString());
+// }

@@ -94,7 +94,7 @@ bool CMRLatexParsorContext::startBy ( const string& value ) const
 	if (value.size() + this->position > this->value.size())
 		return false;
 	else
-		return this->value.substr(0,value.size()) == value;
+		return this->value.substr(this->position,value.size()) == value;
 }
 
 /*******************  FUNCTION  *********************/

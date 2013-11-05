@@ -33,6 +33,7 @@ class CMRProjectAction
 		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
 		void changeCaptureType(const std::string & name, enum CMRCaptureType captureType) { assert(false);};
 		CMRProjectContext & getContext(void);
+		CMRProjectCodeEntry * insert(CMRProjectCodeEntry * entry,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 	private:
 		CMRProjectCodeRootNode ops;
 		std::string name;

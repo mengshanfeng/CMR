@@ -107,14 +107,29 @@
 				<mathstep>f_{i,j,7} = L_5 - \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv</mathstep>
 				<mathstep>f_{i,j,6} = L_8 + \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv</mathstep>
 			</cellaction>
-<!--			<cellaction name='special_cells' doc='Applique les opérations en fonction du type de cellule.'>
-				<switch select='T_{i,j}'>
+			<cellaction name='special_cells' doc='Applique les opérations en fonction du type de cellule.'>
+				<ccode>switch($T_{i,j}$)                             </ccode>
+				<ccode>{                                             </ccode>
+				<ccode>	case CELL_FLUID:                             </ccode>
+				<ccode>		//do nothing                             </ccode>
+				<ccode>		break;                                   </ccode>
+				<ccode>	case CELL_BOUNCE_BACK:                       </ccode>
+				<ccode>		$\cmrsubaction{bounce\_back}$;           </ccode>
+				<ccode>		break;                                   </ccode>
+				<ccode>	case CELL_LEFT_IN:                           </ccode>
+				<ccode>		$\cmrsubaction{zou\_he\_poiseuil}$;      </ccode>
+				<ccode>		break;                                   </ccode>
+				<ccode>	case CELL_RIGHT_OUT:                         </ccode>
+				<ccode>		$\cmrsubaction{zou\_he\_const_dentity}$; </ccode>
+				<ccode>		break;                                   </ccode>
+				<ccode>}                                             </ccode>
+				<!--<switch select='T_{i,j}'>
 					<case select='CELL_FLUID'></case>
 					<case select='CELL_BOUNCE_BACK'><callsubaction name='bounce_back'/></case>
 					<case select='CELL_LEFT_IN'><callsubaction name='zou_he_poiseuil'/></case>
 					<case select='CELL_RIGHT_OUT'><callsubaction name='zou_he_const_dentity'/></case>
-				</switch>
-				</cellaction>-->
+				</switch>-->
+			</cellaction>
 			<cellaction name='propagation' doc='Propage les densité microscopiques entre cellule (copie vers la cellule locale).'>
 				<declvar mathname='I' longname='I' type='int'/>
 				<declvar mathname='J' longname='J' type='int'/>

@@ -158,3 +158,9 @@ CMRProjectContext& CMRProjectDefinition::getContext ( void )
 {
 	return ops.getContext();
 }
+
+/*******************  FUNCTION  *********************/
+CMRProjectCodeEntry* CMRProjectDefinition::insert ( CMRProjectCodeEntry* entry, CMRProjectCodeTreeInsert location )
+{
+	return ops.insert(entry,location);
+}
