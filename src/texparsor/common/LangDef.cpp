@@ -7,9 +7,13 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "CMRDebug.h"
-#include "CMRLangDef.h"
-#include "CMRCodeTemplate.h"
+#include "Debug.h"
+#include "LangDef.h"
+#include "CodeTemplate.h"
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*********************  CONSTS  *********************/
 static const char * CELL_ACTION_BODY = "//@descr@\n\
@@ -22,27 +26,29 @@ struct Action@name@\n\
 };\n\n";
 
 /*******************  FUNCTION  *********************/
-CMRLangDef::CMRLangDef ( void )
+LangDef::LangDef ( void )
 {
 	setup("cellActionBodyCode",CELL_ACTION_BODY);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLangDef::setup ( const std::string& name, const char* value )
+void LangDef::setup ( const std::string& name, const char* value )
 {
-	this->templates[name] = new CMRCodeTemplate(value);
+	this->templates[name] = new CodeTemplate(value);
 }
 
 /*******************  FUNCTION  *********************/
-const CMRCodeTemplate& CMRLangDef::getCodeTemplate ( const std::string& name ) const
+const CodeTemplate& LangDef::getCodeTemplate ( const std::string& name ) const
 {
-	CMRCodeTemplateMap::const_iterator it = templates.find(name);
+	CodeTemplateMap::const_iterator it = templates.find(name);
 	cmrAssume(it != templates.end(),"Invalid langauge definition '%s'.",name.c_str());
 	return *(it->second);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLangDef::applyOn ( std::ostream& out, const std::string& templateName, const CMRCodeTemplateValueDic& dic, int indentLevel ) const
+void LangDef::applyOn ( std::ostream& out, const std::string& templateName, const CodeTemplateValueDic& dic, int indentLevel ) const
 {
 	getCodeTemplate(templateName).applyOn(out,dic,indentLevel);
 }
+
+};

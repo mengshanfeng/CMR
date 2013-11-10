@@ -10,7 +10,7 @@
 /********************  HEADERS  *********************/
 #include <sstream>
 #include <cstdio>
-#include "../common/CMRDebug.h"
+#include "../common/Debug.h"
 #include "CMRProjectCode.h"
 #include "CMRGenCode.h"
 #include "common/Common.h"

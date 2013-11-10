@@ -3,6 +3,7 @@
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProject2::CMRProject2(void)
@@ -182,7 +183,7 @@ void CMRProject2::genCCodeOfDefinitions ( ostream& out )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProject2::genCCodeOfActions ( ostream& out, CMRLangDef & lang )
+void CMRProject2::genCCodeOfActions ( ostream& out, CMRCompiler::LangDef & lang )
 {
 	if (actions.empty())
 		return;

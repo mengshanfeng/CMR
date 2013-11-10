@@ -3,7 +3,7 @@
 #include "CMRProject.h"
 #include "CMRXmlDoc.h"
 #include "CMRProjectXMLLoader.h"
-#include "../common/CMRDebug.h"
+#include "../common/Debug.h"
 #include "../definitions/CMRProjectAlias.h"
 
 /**********************  USING  *********************/

@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <string>
 #include <exception>
-#include "CMRDebug.h"
+#include "Debug.h"
 #include "Exception.h"
 
 /********************  NAMESPACE  *******************/

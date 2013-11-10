@@ -8,23 +8,26 @@
 
 /********************  HEADERS  *********************/
 #include <cassert>
-#include "CMRDebug.h"
+#include "Debug.h"
 #include "Common.h"
-#include "CMRCodeTemplate.h"
-#include "CMRCodeTemplateDic.h"
+#include "CodeTemplate.h"
+#include "CodeTemplateDic.h"
 
 /**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
-CMRCodeTemplate::CMRCodeTemplate ( const std::string& model )
+CodeTemplate::CodeTemplate ( const std::string& model )
 {
 	this->setModel(model);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRCodeTemplate::setModel ( const std::string& model )
+void CodeTemplate::setModel ( const std::string& model )
 {
 	//vars
 	string buffer;
@@ -39,14 +42,14 @@ void CMRCodeTemplate::setModel ( const std::string& model )
 		{
 			if (buffer.empty() == false)
 			{
-				this->model.push_back(CMRCodeTemplateEntry(buffer,capture,indent));
+				this->model.push_back(CodeTemplateEntry(buffer,capture,indent));
 				buffer.clear();
 				indent = -1;
 			}
 			capture = !capture;
 		} else if (model[i] == '\n') {
 			buffer += model[i];
-			this->model.push_back(CMRCodeTemplateEntry(buffer,capture,indent));
+			this->model.push_back(CodeTemplateEntry(buffer,capture,indent));
 			indent = 0;
 			buffer.clear();
 		} else if (model[i] == '\t' && indent != -1) {
@@ -61,14 +64,14 @@ void CMRCodeTemplate::setModel ( const std::string& model )
 	cmrAssume(capture == false,"Missing end of variable name in current code model, please check your @ splitting : '%s'",model.c_str());
 	
 	//flush last
-	this->model.push_back(CMRCodeTemplateEntry(buffer,capture));
+	this->model.push_back(CodeTemplateEntry(buffer,capture));
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRCodeTemplate::applyOn ( ostream& out, const CMRCodeTemplateValueDic& dic, int indentLevel ) const
+ostream& CodeTemplate::applyOn ( ostream& out, const CodeTemplateValueDic& dic, int indentLevel ) const
 {
 	//loop on model parts
-	for (CMRCodeTemplateEntries::const_iterator it = model.begin() ; it != model.end() ; ++it)
+	for (CodeTemplateEntries::const_iterator it = model.begin() ; it != model.end() ; ++it)
 	{
 		if (it->replacedValue == true)
 		{
@@ -88,7 +91,7 @@ ostream& CMRCodeTemplate::applyOn ( ostream& out, const CMRCodeTemplateValueDic&
 }
 
 /*******************  FUNCTION  *********************/
-CMRCodeTemplateEntry::CMRCodeTemplateEntry ( const string& value, bool replacedValue, int indent )
+CodeTemplateEntry::CodeTemplateEntry ( const string& value, bool replacedValue, int indent )
 {
 	this->value = value;
 	this->replacedValue = replacedValue;
@@ -96,47 +99,47 @@ CMRCodeTemplateEntry::CMRCodeTemplateEntry ( const string& value, bool replacedV
 }
 
 /*******************  FUNCTION  *********************/
-CMRCodeTemplateValue& CMRCodeTemplateValueDic::get ( const string& name ) const
+CodeTemplateValue& CodeTemplateValueDic::get ( const string& name ) const
 {
-	CMRValueDicMap::const_iterator it = values.find(name);
+	ValueDicMap::const_iterator it = values.find(name);
 	cmrAssume(it != values.end(),"Request invalid key in current code value directonnary : '%s', list of keys is : %s",name.c_str(),strKeyList().c_str());
 	return *(it->second);
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRCodeTemplateValueDic::has ( const string name ) const
+bool CodeTemplateValueDic::has ( const string name ) const
 {
-	CMRValueDicMap::const_iterator it = values.find(name);
+	ValueDicMap::const_iterator it = values.find(name);
 	return (it != values.end());
 }
 
 /*******************  FUNCTION  *********************/
-CMRCodeTemplateValueDic& CMRCodeTemplateValueDic::set ( const string& name, const char* value )
+CodeTemplateValueDic& CodeTemplateValueDic::set ( const string& name, const char* value )
 {
-	this->values[name] = new CMRCodeTemplateValueString(value);
+	this->values[name] = new CodeTemplateValueString(value);
 }
 
 /*******************  FUNCTION  *********************/
-CMRCodeTemplateValueDic& CMRCodeTemplateValueDic::set ( const string& name, const string& value )
+CodeTemplateValueDic& CodeTemplateValueDic::set ( const string& name, const string& value )
 {
-	this->values[name] = new CMRCodeTemplateValueString(value);
+	this->values[name] = new CodeTemplateValueString(value);
 }
 
 /*******************  FUNCTION  *********************/
-CMRCodeTemplateValueDic& CMRCodeTemplateValueDic::set ( const string& name, CMRCodeTemplateValue* value )
+CodeTemplateValueDic& CodeTemplateValueDic::set ( const string& name, CodeTemplateValue* value )
 {
 	assert(value != NULL);
 	this->values[name] = value;
 }
 
 /*******************  FUNCTION  *********************/
-string CMRCodeTemplateValueDic::strKeyList ( void ) const
+string CodeTemplateValueDic::strKeyList ( void ) const
 {
 	//vars
 	string res;
 	
 	//loop on all keys
-	for (CMRValueDicMap::const_iterator it = values.begin() ; it != values.end() ; ++it)
+	for (ValueDicMap::const_iterator it = values.begin() ; it != values.end() ; ++it)
 	{
 		if (res.empty() == false)
 			res += ", ";
@@ -147,13 +150,13 @@ string CMRCodeTemplateValueDic::strKeyList ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-string CMRCodeTemplate::strRequiredVars ( void ) const
+string CodeTemplate::strRequiredVars ( void ) const
 {
 	//var
 	string res;
 	
 	//loop on model parts
-	for (CMRCodeTemplateEntries::const_iterator it = model.begin() ; it != model.end() ; ++it)
+	for (CodeTemplateEntries::const_iterator it = model.begin() ; it != model.end() ; ++it)
 	{
 		if (it->replacedValue == true)
 		{
@@ -167,13 +170,13 @@ string CMRCodeTemplate::strRequiredVars ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRCodeTemplateValueString::CMRCodeTemplateValueString ( const string& value )
+CodeTemplateValueString::CodeTemplateValueString ( const string& value )
 {
 	this->value = value;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRCodeTemplateValueString::genCode ( ostream& out, int indent ) const
+void CodeTemplateValueString::genCode ( ostream& out, int indent ) const
 {
 	if (indent <= 0 || value.empty())
 	{
@@ -189,3 +192,5 @@ void CMRCodeTemplateValueString::genCode ( ostream& out, int indent ) const
 		}
 	}
 }
+
+};

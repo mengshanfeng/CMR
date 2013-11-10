@@ -10,8 +10,8 @@
 /********************  HEADERS  *********************/
 #include "../transformations/CMRTransformation.h"
 #include "common/Common.h"
-#include "../common/CMRCodeTemplate.h"
-#include "../common/CMRLangDef.h"
+#include "../common/CodeTemplate.h"
+#include "../common/LangDef.h"
 #include "CMRProjectAction.h"
 
 /**********************  USING  *********************/
@@ -79,9 +79,9 @@ CMRProjectCodeEquation& CMRProjectAction::addEquation ( const string& eq )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRLangDef & lang,const CMRProjectContext& context, int padding ) const
+void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::LangDef & lang,const CMRProjectContext& context, int padding ) const
 {
-	CMRCodeTemplateValueDic dic;
+	CMRCompiler::CodeTemplateValueDic dic;
 	dic.set("descr",this->descr);
 	dic.set("name",this->name);
 	dic.set("code",new CMRCodeValueForCodeEntry(&this->ops,-1));

@@ -7,8 +7,8 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_COMMON_H
-#define CMR_COMMON_H
+#ifndef CMR_COMPILER_COMMON_H
+#define CMR_COMPILER_COMMON_H
 
 /********************  HEADERS  *********************/
 #include <ostream>
@@ -22,4 +22,4 @@ std::ostream & doIndent(std::ostream & out,int depth);
 
 };
 
-#endif //CMR_COMMON_H
+#endif //CMR_COMPILER_COMMON_H

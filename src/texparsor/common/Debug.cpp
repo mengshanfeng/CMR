@@ -13,7 +13,11 @@
 #include <cstdarg>
 #include <cstdlib>
 #include <unistd.h>
-#include "CMRDebug.h"
+#include "Debug.h"
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*********************  CONSTS  *********************/
 /**
@@ -38,7 +42,7 @@ static const char * CMR_MESG_NO_COLOR[5] = { "", "", "" , "" , "" };
  * @param line The line in source file which call this function.
  * @param format The string format of the message itself.
 **/
-void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * condition,const char * fname,int line,const char * format,...)
+void cmrDebugMessage(DebugMessageLevel level,const char * title,const char * condition,const char * fname,int line,const char * format,...)
 {
 	//vars
 	int size = 0;
@@ -76,25 +80,25 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 	assert(res <= size);
 
 	//print
-	if (level >= CMR_DEBUG_WARNING)
+	if (level >= DEBUG_WARNING)
 	{
 		if (condition == NULL)
-			fprintf(stderr,"%s%-7s (%s:%d) : %s%s\n",colors[level],title,basename(fname),line,buffer,colors[CMR_DEBUG_NORMAL]);
+			fprintf(stderr,"%s%-7s (%s:%d) : %s%s\n",colors[level],title,basename(fname),line,buffer,colors[DEBUG_NORMAL]);
 		else
-			fprintf(stderr,"%s%-7s (%s:%d) : %s\n        %s%s\n",colors[level],title,basename(fname),line,condition,buffer,colors[CMR_DEBUG_NORMAL]);
+			fprintf(stderr,"%s%-7s (%s:%d) : %s\n        %s%s\n",colors[level],title,basename(fname),line,condition,buffer,colors[DEBUG_NORMAL]);
 	} else {
 		if (condition == NULL)
-			fprintf(stderr,"%s%-7s : %s%s\n",colors[level],title,buffer,colors[CMR_DEBUG_NORMAL]);
+			fprintf(stderr,"%s%-7s : %s%s\n",colors[level],title,buffer,colors[DEBUG_NORMAL]);
 		else
-			fprintf(stderr,"%s%-7s : %s\n        %s%s\n",colors[level],title,condition,buffer,colors[CMR_DEBUG_NORMAL]);
+			fprintf(stderr,"%s%-7s : %s\n        %s%s\n",colors[level],title,condition,buffer,colors[DEBUG_NORMAL]);
 	}
 
 	//free buffers
 	free(buffer);
 
 	//if error, abort
-	if (level >= CMR_DEBUG_ERROR)
+	if (level >= DEBUG_ERROR)
 		abort();
 }
 
-
+};

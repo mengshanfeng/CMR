@@ -10,11 +10,15 @@
 #define CMR_CODE_TEMPLATE_DIC_IMPL_H
 
 /********************  HEADERS  *********************/
-#include "CMRCodeTemplateDic.h"
+#include "CodeTemplateDic.h"
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 template <class T>
-CMRCodeTemplateValueDic& CMRCodeTemplateValueDic::setString ( const std::string& name, const T& value )
+CodeTemplateValueDic& CodeTemplateValueDic::setString ( const std::string& name, const T& value )
 {
 	std::stringstream buffer;
 	buffer << value;
@@ -23,16 +27,18 @@ CMRCodeTemplateValueDic& CMRCodeTemplateValueDic::setString ( const std::string&
 
 /*******************  FUNCTION  *********************/
 template <class T>
-CMRCodeTemplateValueDic& CMRCodeTemplateValueDic::setCodeGen ( const std::string& name, const T* value , const std::string & codeType)
+CodeTemplateValueDic& CodeTemplateValueDic::setCodeGen ( const std::string& name, const T* value , const std::string & codeType)
 {
-	values[name] = new CMRCodeTemplateValueCodeGenWidthCodeType<T>(value,codeType);
+	values[name] = new CodeTemplateValueCodeGenWidthCodeType<T>(value,codeType);
 }
 
 /*******************  FUNCTION  *********************/
 template <class T>
-CMRCodeTemplateValueDic& CMRCodeTemplateValueDic::setCodeGen ( const std::string& name, const T* value)
+CodeTemplateValueDic& CodeTemplateValueDic::setCodeGen ( const std::string& name, const T* value)
 {
-	values[name] = new CMRCodeTemplateValueCodeGen<T>(value);
+	values[name] = new CodeTemplateValueCodeGen<T>(value);
 }
+
+};
 
 #endif //CMR_CODE_TEMPLATE_DIC_IMPL_H

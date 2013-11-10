@@ -12,7 +12,7 @@
 #include "CMRModelBasedReplacement.h"
 #include "CMRTransformationReplace.h"
 #include "../parsor/CMRLatexFormula.h"
-#include "../common/CMRDebug.h"
+#include "../common/Debug.h"
 
 /*******************  FUNCTION  *********************/
 CMRModelBasedReplacement::CMRModelBasedReplacement(const std::string& model, const std::string result, bool captureAll)

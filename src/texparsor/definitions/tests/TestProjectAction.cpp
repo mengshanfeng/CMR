@@ -11,11 +11,12 @@
 #include <CMRProjectCode.h>
 #include <sstream>
 #include <CMRProjectAction.h>
-#include <../common/CMRLangDef.h>
+#include <../common/LangDef.h>
 
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char * CST_VALUE_1 = "//blablablalbl\n\
@@ -69,7 +70,7 @@ TEST(TestProjectAction,testAddBasicActions)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectAction,testGenDefinitionCCode)
 {
-	CMRLangDef def;
+	LangDef def;
 	CMRProjectAction action("update_enery","blablablalbl");
 	action.addLocalVariable("E","enegry","double","0");
 	action.addIterator("k","k",1,10);

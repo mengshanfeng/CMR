@@ -8,7 +8,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "../common/CMRDebug.h"
+#include "../common/Debug.h"
 #include "CMRProjectAlias.h"
 
 /*******************  FUNCTION  *********************/

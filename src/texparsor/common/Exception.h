@@ -10,8 +10,8 @@
 #define CMR_COMPILER_EXCEPTION_H
 
 /********************  HEADERS  *********************/
-#include <exception>
 #include <string>
+#include <exception>
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler

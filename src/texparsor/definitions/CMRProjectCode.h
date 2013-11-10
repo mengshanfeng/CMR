@@ -16,8 +16,8 @@
 #include "CMRProjectCodeTree.h"
 #include "CMRProjectIterator.h"
 #include "../parsor/CMRLatexFormula.h"
-#include "../common/CMRCodeTemplate.h"
-#include "../common/CMRCodeTemplateDic.h"
+#include "../common/CodeTemplate.h"
+#include "../common/CodeTemplateDic.h"
 
 /*********************  TYPES  **********************/
 class CMRProjectIterator;
@@ -89,7 +89,7 @@ class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
 };
 
 /*********************  CLASS  **********************/
-class CMRCodeValueForCodeEntry : public CMRCodeTemplateValue
+class CMRCodeValueForCodeEntry : public CMRCompiler::CodeTemplateValue
 {
 	public:
 		CMRCodeValueForCodeEntry(const CMRProjectCodeEntry * obj, int correctIndent = 0) {this->obj = obj;this->correctIndent = correctIndent;};

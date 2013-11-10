@@ -9,38 +9,39 @@
 /********************  HEADERS  *********************/
 #include <sstream>
 #include <gtest/gtest.h>
-#include "CMRCodeTemplate.h"
-#include "CMRCodeTemplateDic.h"
+#include "CodeTemplate.h"
+#include "CodeTemplateDic.h"
 
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 TEST(TestCodeTemplate,testConstructor1)
 {
-	CMRCodeTemplate code("constant string, no variables.");
+	CodeTemplate code("constant string, no variables.");
 	EXPECT_EQ("",code.strRequiredVars());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestCodeTemplate,testConstructor2)
 {
-	CMRCodeTemplate code("real string, with variables : @test@.");
+	CodeTemplate code("real string, with variables : @test@.");
 	EXPECT_EQ("test",code.strRequiredVars());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestCodeTemplate,testConstructor3)
 {
-	CMRCodeTemplate code("real string, with variables : @test1@, and escapte one \\@test2");
+	CodeTemplate code("real string, with variables : @test1@, and escapte one \\@test2");
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestCodeTemplate, testApplyOn_1)
 {
-	CMRCodeTemplate code("real string, with variables : @test1@, @test2@ and escapte one \\@test3");
-	CMRCodeTemplateValueDic values;
+	CodeTemplate code("real string, with variables : @test1@, @test2@ and escapte one \\@test3");
+	CodeTemplateValueDic values;
 	values.set("test1","value1");
 	values.set("test2","value2");
 	values.set("test3","value3");
@@ -54,8 +55,8 @@ TEST(TestCodeTemplate, testApplyOn_1)
 /*******************  FUNCTION  *********************/
 TEST(TestCodeTemplate, testApplyOn_2)
 {
-	CMRCodeTemplate code("real string, with variables : @test1@, @test2@ and escapte one \\@test3");
-	CMRCodeTemplateValueDic values;
+	CodeTemplate code("real string, with variables : @test1@, @test2@ and escapte one \\@test3");
+	CodeTemplateValueDic values;
 	values.set("test1","value1");
 	values.set("test2","value2");
 	values.set("test3","value3");
@@ -69,8 +70,8 @@ TEST(TestCodeTemplate, testApplyOn_2)
 /*******************  FUNCTION  *********************/
 TEST(TestCodeTemplate, testApplyOn_3)
 {
-	CMRCodeTemplate code("for {\n\tif(@test1@ == @test2@)\n\t\tabort();\n\t}\n");
-	CMRCodeTemplateValueDic values;
+	CodeTemplate code("for {\n\tif(@test1@ == @test2@)\n\t\tabort();\n\t}\n");
+	CodeTemplateValueDic values;
 	values.set("test1","value1");
 	values.set("test2","value2");
 	values.set("test3","value3");
@@ -84,8 +85,8 @@ TEST(TestCodeTemplate, testApplyOn_3)
 /*******************  FUNCTION  *********************/
 TEST(TestCodeTemplate, testApplyOn_4)
 {
-	CMRCodeTemplate code("for {\n\tif(@test1@ == @test2@)\n\t\t@test3@\n\t}\n");
-	CMRCodeTemplateValueDic values;
+	CodeTemplate code("for {\n\tif(@test1@ == @test2@)\n\t\t@test3@\n\t}\n");
+	CodeTemplateValueDic values;
 	values.set("test1","value1");
 	values.set("test2","value2");
 	values.set("test3","abort();\nabort();");

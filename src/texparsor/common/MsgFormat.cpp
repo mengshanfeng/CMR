@@ -7,12 +7,12 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
-#include <cstdio>
-#include "CMRDebug.h"
-#include "MsgFormat.h"
+#include "Debug.h"
 #include "Exception.h"
+#include "MsgFormat.h"
 
 /**********************  USING  *********************/
 using namespace std;

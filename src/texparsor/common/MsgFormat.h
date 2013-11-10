@@ -6,15 +6,14 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_MSG_FORMAT_H
-#define CMR_MSG_FORMAT_H
+#ifndef CMR_COMPILER_MSG_FORMAT_H
+#define CMR_COMPILER_MSG_FORMAT_H
 
 /********************  HEADERS  *********************/
 #include <string>
 #include <ostream>
-#include <exception>
 #include <sstream>
-#include "Common.h"
+#include <exception>
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -49,4 +48,4 @@ MsgFormat& MsgFormat::arg ( const T& arg)
 
 };
 
-#endif //CMR_MSG_FORMAT_H
+#endif //CMR_COMPILER_MSG_FORMAT_H
