@@ -85,6 +85,8 @@ void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::Lan
 	dic.set("descr",this->descr);
 	dic.set("name",this->name);
 	dic.set("code",new CMRCodeValueForCodeEntry(&this->ops,-1));
+	dic.set("params",new CodeTemplateValueActionParameters(&parameters,",",true));
+	dic.set("storage",new CodeTemplateValueActionParameters(&parameters,";",false,true,true));
 	
 	lang.applyOn(out,"cellActionBodyCode", dic,padding);
 }
@@ -111,4 +113,72 @@ CMRProjectContext& CMRProjectAction::getContext ( void )
 CMRProjectCodeEntry* CMRProjectAction::insert ( CMRProjectCodeEntry* entry, CMRProjectCodeTreeInsert location )
 {
 	return ops.insert(entry,location);
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectActionParameter& CMRProjectAction::addParameter ( const string& latexName, const string& longName, const string& type )
+{
+	CMRProjectActionParameter * res = new CMRProjectActionParameter(latexName,longName,type);
+	parameters.push_back(res);
+	ops.getContext().addEntry(res);
+	return *res;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectActionParameter::CMRProjectActionParameter ( const string& latexName, const string& longName, const string& type ) 
+	: CMRProjectEntity ( latexName, longName )
+{
+	this->type = type;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectActionParameter::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int padding ) const
+{
+	return;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectActionParameter::genUsageCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
+{
+	out << this->getLongName();
+}
+
+/*******************  FUNCTION  *********************/
+const string& CMRProjectActionParameter::getType ( void ) const
+{
+	return this->type;
+}
+
+/*******************  FUNCTION  *********************/
+CodeTemplateValueActionParameters::CodeTemplateValueActionParameters ( const CMRProjectActionParameterVector* list, const string& separator, bool firstSeparator, bool lastSeparator, bool indentEach )
+{
+	assert(list != NULL);
+	this->list = list;
+	this->separator = separator;
+	this->firstSeparator = firstSeparator;
+	this->lastSeparator = lastSeparator;
+	this->indentEach = indentEach;
+}
+
+/*******************  FUNCTION  *********************/
+void CodeTemplateValueActionParameters::genCode ( ostream& out, int indent ) const
+{
+	if (firstSeparator)
+		out << separator;
+	
+	for (CMRProjectActionParameterVector::const_iterator it = list->begin() ; it != list->end() ; ++it)
+	{
+		if (it != list->begin())
+			out << separator;
+		if (indentEach)
+		{
+			if (it != list->begin())
+				out << endl;
+			CMRCompiler::doIndent(out,indent);
+		}
+		out << (*it)->getType() << " " << (*it)->getLongName();
+	}
+	
+	if (lastSeparator)
+		out << separator;
 }

@@ -35,6 +35,7 @@
 			<!-- ***** -->
 			<const mathname='R' longname='REYNOLDS'>300</const>
 			<const mathname='V' longname='INFLOW_MAX_VELOCITY'>0.1</const>
+			<const mathname='r' longname='RELAX_PARAMETER'>1.0</const>
 		</consts>
 		<!-- ********************* MESH ****************** -->
 		<mesh>
@@ -141,17 +142,63 @@
 					<!--<mathstep>f_{i,j,k} = I^8</mathstep>-->
 				</foreach>
 			</cellaction>
-			<!--<cellaction name='collision' doc='Applique les équation de collision pour re-répartir les densités microscopiques.'>
-				<alias>d = d_{i,j}</alias>
-				<alias>v = v_{i,j}</alias>
+			<cellaction name='collision' doc='Applique les équation de collision pour re-répartir les densités microscopiques.'>
 				<foreach iterator='k'>
-				;double $p = D_{k} * v$</br>
-				&nbsp;&nbsp;&nbsp;&nbsp;double $f_eq = (1.0 + (3 * p) + ((9/2) * p^2 - (3/2) * v^2) * W_{k} * d$</br>
-				&nbsp;&nbsp;&nbsp;&nbsp;$D'_{i,j,k} = D_{i,j,k} - R * (D_{i,j,k} - f_eq)$</br>
-				</cellaction>-->
+					<mathstep>f_{i,j,k} = f_{i,j,k} - r * (f_{i,j,k} - f_{eq,i,j,k})</mathstep>
+				</foreach>
+			</cellaction>
+			<cellaction name='InitCellType' doc='Initialise le contenue des types de cellule.'>
+				<defparameter mathname='t' longname='cellType' type='LBMCellType' doc="Definit le type a affecter à l'ensemble des cellules retenues."/>
+				<mathstep>T_{i,j} = t</mathstep>
+			</cellaction>
+			<cellaction name='InitStatePoiseuil' doc="Initialise le contenu des cellules avec un profile de poinseuil à l'équilibre allant vers la droite.">
+				<foreach iterator='k'>
+					<mathstep>f_{i,j,k} = f_{eq,i,j,k}</mathstep>
+				</foreach>
+			</cellaction>			
 		</cellactions>
+		<init>
+			<callaction name="InitStatePoiseuil">
+				<zone>locale.expend(1)</zone>
+			</callaction>
+			<callaction name="InitCellType">
+				<parameter mathname='t'>CELL_LEFT_IN</parameter>
+				<zone>global.expended(1).getBorder(CMR_RIGHT)</zone>
+			</callaction>
+			<callaction name="InitCellType">
+				<parameter mathname='t'>CELL_RIGHT_OUT</parameter>
+				<zone>global.expended(1).getBorder(CMR_RIGHT)</zone>
+			</callaction>
+			<callaction name="InitCellType">
+				<parameter mathname='t'>CELL_BOUNCE_BACK</parameter>
+				<zone>global.expended(1).getBorder(CMR_TOP)</zone>
+				<zone>global.expended(1).getBorder(CMR_BOTTOM)</zone>
+			</callaction>
+			<callaction name="ActionSetupObstable">
+				<parameter>WIDTH/10.0</parameter>
+				<parameter>1.0,HEIGHT/2.0+3.0</parameter>
+				<zone>global</zone>
+			</callaction>
+		</init>
 		<mainloop>
+			<!-- ************* -->
+			<callaction name="SpecialCells">
+				<zone>local.exapended(1)</zone>
+			</callaction>
+			<meshforward><all/></meshforward>
+			<!-- ************* -->
+			<callaction name="Collision">
+				<zone>local</zone>
+			</callaction>
+			<meshforward><all/></meshforward>
 			
+			<!--//propagate values from node to neighboors
+			//lbm_comm_ghost_exchange( &mesh_comm, &temp );-->
+			
+			<!-- ************* -->
+			<callaction name="Propagation">
+				<zone>local</zone>
+			</callaction>
 		</mainloop>
 	</elements>
 </cmr>

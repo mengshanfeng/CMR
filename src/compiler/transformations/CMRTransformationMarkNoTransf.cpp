@@ -37,7 +37,7 @@ void CMRTransformationMarkNoTransf::transform(CMRProjectCodeEquation& equation, 
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRTransformationMarkNoTransf::markChildElements(CMRLatexFormulasVector2& childs, const CMRProjectCaptureDefMap& defMap)
+void CMRTransformationMarkNoTransf::markChildElements(CMRLatexFormulasVector2& childs, const CMRProjectCaptureDefMap& defMap)
 {
 	//errors
 	assert(childs.size() >= defMap.size());

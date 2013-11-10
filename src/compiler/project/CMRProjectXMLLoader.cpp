@@ -255,52 +255,64 @@ void CMRProjectXMLLoader::loadDefinitions ( CMRProject2& project, CMRXmlNode& no
 
 /*******************  FUNCTION  *********************/
 template <class T>
+bool CMRProjectXMLLoader::loadCodeNode ( CMRProject2& project, T& parent, CMRXmlNode& node )
+{
+	bool res = true;
+
+	if (node.isNamed(CMR_NODE_MATHSTEP))
+	{
+		string buffer = node.getContent();
+		cmrDebug("   -> mathstep : %s",buffer.c_str());
+		parent.addEquation(buffer);
+	} else if (node.isNamed(CMR_NODE_DEF_PARAM)) {
+		string paramMathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
+		string paramLongName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
+		string type = node.getNonEmptyProperty("type");
+		cmrDebug("   -> param : %s",paramMathName.c_str());
+		parent.changeCaptureType(paramMathName,CMR_CAPTURE_REQUIRED);
+	} else if (node.isNamed(CMR_NODE_DECL_VAR)) {
+		string declVarMathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
+		string declVarLongName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
+		string declVarDefault = node.getProperty("default");
+		string declVarType = node.getNonEmptyProperty("type");
+		cmrDebug("   -> declarvar : %s",declVarMathName.c_str());
+		parent.addLocalVariable(declVarMathName,declVarLongName,declVarType,declVarDefault);
+	} else if (node.isNamed(CMR_NODE_FOREACH)) {
+		string loopIterator = node.getNonEmptyProperty("iterator");
+		CMRProjectCodeIteratorLoop & loop = parent.addIteratorLoop(loopIterator);
+		loadCode(project,loop,node);
+	} else if (node.isNamed(CMR_NODE_ALIAS)) {
+		string aliasMathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
+		string aliasBody = node.getContent();
+		bool aliasWildcardName = node.getProperty("capturename") == "true";
+		string aliasCaptureAllStr = node.getProperty("captureall");
+		bool aliasCaptureAll = (aliasCaptureAllStr.empty() || aliasCaptureAllStr == "true");
+		cmrDebug("    -> Alias : %s",aliasMathName.c_str());
+		if (aliasWildcardName)
+			parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll)).captureName();
+		else
+			parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll));
+	} else if (node.isNamed(CMR_NODE_CCODE)) {
+		string codeContent = node.getContent();
+		cmrDebug("    -> CCode : %s",codeContent.c_str());
+		parent.insert(new CMRProjectCSimpleConstruct(&parent.getContext(),codeContent));
+	} else {
+		res = false;
+	}
+	
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+template <class T>
 void CMRProjectXMLLoader::loadCode ( CMRProject2& project, T& parent, CMRXmlNode& node )
 {
 	//loop on childs to load actions
 	CMRXmlNode cur = node.getFirstChild();
 	while (cur.isValid())
 	{
-		if (cur.isNamed(CMR_NODE_MATHSTEP))
-		{
-			string buffer = cur.getContent();
-			cmrDebug("   -> mathstep : %s",buffer.c_str());
-			parent.addEquation(buffer);
-		} else if (cur.isNamed(CMR_NODE_DEF_PARAM)) {
-			string paramMathName = cur.getNonEmptyProperty(CMR_PROP_MATHNAME);
-			string paramLongName = cur.getNonEmptyProperty(CMR_PROP_LONGNAME);
-			string type = cur.getNonEmptyProperty("type");
-			cmrDebug("   -> param : %s",paramMathName.c_str());
-			parent.changeCaptureType(paramMathName,CMR_CAPTURE_REQUIRED);
-		} else if (cur.isNamed(CMR_NODE_DECL_VAR)) {
-			string declVarMathName = cur.getNonEmptyProperty(CMR_PROP_MATHNAME);
-			string declVarLongName = cur.getNonEmptyProperty(CMR_PROP_LONGNAME);
-			string declVarDefault = cur.getProperty("default");
-			string declVarType = cur.getNonEmptyProperty("type");
-			cmrDebug("   -> declarvar : %s",declVarMathName.c_str());
-			parent.addLocalVariable(declVarMathName,declVarLongName,declVarType,declVarDefault);
-		} else if (cur.isNamed(CMR_NODE_FOREACH)) {
-			string loopIterator = cur.getNonEmptyProperty("iterator");
-			CMRProjectCodeIteratorLoop & loop = parent.addIteratorLoop(loopIterator);
-			loadCode(project,loop,cur);
-		} else if (cur.isNamed(CMR_NODE_ALIAS)) {
-			string aliasMathName = cur.getNonEmptyProperty(CMR_PROP_MATHNAME);
-			string aliasBody = cur.getContent();
-			bool aliasWildcardName = cur.getProperty("capturename") == "true";
-			string aliasCaptureAllStr = cur.getProperty("captureall");
-			bool aliasCaptureAll = (aliasCaptureAllStr.empty() || aliasCaptureAllStr == "true");
-			cmrDebug("    -> Alias : %s",aliasMathName.c_str());
-			if (aliasWildcardName)
-				parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll)).captureName();
-			else
-				parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll));
-		} else if (cur.isNamed(CMR_NODE_CCODE)) {
-			string codeContent = cur.getContent();
-			cmrDebug("    -> CCode : %s",codeContent.c_str());
-			parent.insert(new CMRProjectCSimpleConstruct(&parent.getContext(),codeContent));
-		} else {
+		if (loadCodeNode(project,parent,cur) == false)
 			cmrFatal("Invalid tag name <%s> while loading project definitions actions in XML file.",cur.getName().c_str());
-		}
 		cur = cur.getNext();
 	}
 }
@@ -357,7 +369,22 @@ void CMRProjectXMLLoader::loadCellAction ( CMRProject2& project, CMRXmlNode& nod
 	CMRProjectAction & action = project.addAction(name);
 
 	//load code
-	loadCode(project,action,node);
+	CMRXmlNode cur = node.getFirstChild();
+	while (cur.isValid())
+	{
+		
+		if(cur.isNamed(CMR_NODE_DEF_PARAM)) 
+		{
+			string paramMathName = cur.getNonEmptyProperty(CMR_PROP_MATHNAME);
+			string paramLongName = cur.getNonEmptyProperty(CMR_PROP_LONGNAME);
+			string type = cur.getNonEmptyProperty("type");
+			cmrDebug("   -> param : %s",paramMathName.c_str());
+			action.addParameter(paramMathName,paramLongName,type);
+		} else if (loadCodeNode(project,action,cur) == false) { 
+			cmrFatal("Invalid tag name <%s> while loading project definitions actions in XML file.",cur.getName().c_str());
+		}
+		cur = cur.getNext();
+	}
 }
 
 

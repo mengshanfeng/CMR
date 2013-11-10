@@ -19,10 +19,11 @@ namespace CMRCompiler
 static const char * CELL_ACTION_BODY = "//@descr@\n\
 struct Action@name@\n\
 {\n\
-	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)\n\
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y@params@)\n\
 	{\n\
 		@code@\n\
 	}\n\
+	@storage@\n\
 };\n\n";
 
 /*******************  FUNCTION  *********************/

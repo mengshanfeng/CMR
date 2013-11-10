@@ -40,7 +40,7 @@ set(ALLOC_GTEST_LIST TestProjectDefinition
 #Now you can build your tests
 foreach(i ${ALLOC_GTEST_LIST})
 	add_executable(${i} ${i}.cpp)
-	target_link_libraries(${i} ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES} cmr_tex_definitions cmr_tex_transf ${MPI_CXX_LIBRARIES})
+	target_link_libraries(${i} ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES} cmr_tex_definitions cmr_tex_transf)
 	cmr_add_gtest(${i})
 endforeach(i)
 

@@ -62,7 +62,7 @@ class CMRProjectEntity
 		const CMRProjectCaptureDefMap & getExponents(void) const;
 		const CMRProjectCaptureDefMap & getParameters(void) const;
 		void markAllCaptureAs(enum CMRCaptureType capture);
-		bool captureName(void);
+		void captureName( void );
 		bool isWildcardName(void);
 		
 		//to overload

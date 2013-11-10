@@ -458,7 +458,7 @@ void CMRProjectEntity::markAllCaptureAs(CMRProjectCaptureDefMap& map, CMRCapture
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity::captureName ( void )
+void CMRProjectEntity::captureName ( void )
 {
 	this->capName = true;
 }

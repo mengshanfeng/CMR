@@ -21,7 +21,7 @@ class CMRTransformationMarkNoTransf : public CMRTransformationBasic
 		CMRTransformationMarkNoTransf(void);
 	protected:
 		virtual void transform(CMRProjectCodeEquation & equation,CMRLatexEntity2 & entity);
-		bool markChildElements(CMRLatexFormulasVector2 & childs,const CMRProjectCaptureDefMap & defMap);
+		void markChildElements( CMRLatexFormulasVector2& childs, const CMRProjectCaptureDefMap& defMap );
 };
 
 #endif //CMR_TRANSFORMATION_MARK_NO_TRANSF_H

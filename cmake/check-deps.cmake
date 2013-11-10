@@ -7,6 +7,5 @@
 ######################################################
 
 ######################################################
-find_package(MPI REQUIRED)
 find_package(svUnitTest QUIET)
 setup_internal_gmock_and_gtest()

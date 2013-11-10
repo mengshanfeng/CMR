@@ -116,13 +116,16 @@ bool CodeTemplateValueDic::has ( const string name ) const
 /*******************  FUNCTION  *********************/
 CodeTemplateValueDic& CodeTemplateValueDic::set ( const string& name, const char* value )
 {
+	assert(value != NULL);
 	this->values[name] = new CodeTemplateValueString(value);
+	return *this;
 }
 
 /*******************  FUNCTION  *********************/
 CodeTemplateValueDic& CodeTemplateValueDic::set ( const string& name, const string& value )
 {
 	this->values[name] = new CodeTemplateValueString(value);
+	return *this;
 }
 
 /*******************  FUNCTION  *********************/
@@ -130,6 +133,7 @@ CodeTemplateValueDic& CodeTemplateValueDic::set ( const string& name, CodeTempla
 {
 	assert(value != NULL);
 	this->values[name] = value;
+	return *this;
 }
 
 /*******************  FUNCTION  *********************/
