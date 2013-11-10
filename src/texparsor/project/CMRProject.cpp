@@ -86,7 +86,7 @@ void CMRProject2::genCCode ( std::ostream& out )
 	genCCodeOfConsts(out);
 	genCCodeOfVariables(out);
 	genCCodeOfDefinitions(out);
-	genCCodeOfActions(out);
+	genCCodeOfActions(out,lang);
 }
 
 /*******************  FUNCTION  *********************/
@@ -182,13 +182,13 @@ void CMRProject2::genCCodeOfDefinitions ( ostream& out )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProject2::genCCodeOfActions ( ostream& out )
+void CMRProject2::genCCodeOfActions ( ostream& out, CMRLangDef & lang )
 {
 	if (actions.empty())
 		return;
 
 	out << "/*********************** ACTIONS *********************/" << endl;
 	for (CMRProjectActionVector::iterator it = actions.begin() ; it != actions.end() ; ++it)
-		(*it)->genDefinitionCCode(out,rootContext);
+		(*it)->genDefinitionCCode(out,lang,rootContext);
 	out << endl;
 }

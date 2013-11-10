@@ -11,20 +11,11 @@
 #include "../transformations/CMRTransformation.h"
 #include "../common/CMRCommon.h"
 #include "../common/CMRCodeTemplate.h"
+#include "../common/CMRLangDef.h"
 #include "CMRProjectAction.h"
 
 /**********************  USING  *********************/
 using namespace std;
-
-/*********************  CONSTS  *********************/
-static const char * CMR_PROJECT_ACTION_CODE = "//@descr@\n\
-struct Action@name@\n\
-{\n\
-	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)\n\
-	{\n\
-		@code@\n\
-	}\n\
-};\n\n";
 
 /*******************  FUNCTION  *********************/
 CMRProjectAction::CMRProjectAction ( const string& name, const string& descr, CMRProjectContext* parentContext )
@@ -88,16 +79,14 @@ CMRProjectCodeEquation& CMRProjectAction::addEquation ( const string& eq )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int padding ) const
+void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRLangDef & lang,const CMRProjectContext& context, int padding ) const
 {
-	CMRCodeTemplate codeTemplate(CMR_PROJECT_ACTION_CODE);
 	CMRCodeTemplateValueDic dic;
-	
 	dic.set("descr",this->descr);
 	dic.set("name",this->name);
 	dic.set("code",new CMRCodeValueForCodeEntry(&this->ops,-1));
 	
-	codeTemplate.applyOn(out,dic,padding);
+	lang.applyOn(out,"cellActionBodyCode", dic,padding);
 }
 
 /*******************  FUNCTION  *********************/

@@ -20,6 +20,7 @@
 #include "../definitions/CMRProjectIterator.h"
 #include "../definitions/CMRProjectDefinition.h"
 #include "../transformations/CMRTransformation.h"
+#include "../common/CMRLangDef.h"
 
 /*********************  TYPES  **********************/
 typedef std::vector <CMRProjectConstant*> CMRProjectConstantVector;
@@ -46,7 +47,7 @@ class CMRProject2
 		void genCCodeOfConsts(std::ostream & out);
 		void genCCodeOfVariables(std::ostream & out);
 		void genCCodeOfDefinitions(std::ostream& out);
-		void genCCodeOfActions(std::ostream& out);
+		void genCCodeOfActions( std::ostream& out, CMRLangDef& lang );
 	private:
 		CMRProjectConstantVector constants;
 		CMRProjectVariableVector variables;
@@ -54,6 +55,7 @@ class CMRProject2
 		CMRProjectDefinitionVector definitions;
 		CMRProjectIteratorVector iterators;
 		CMRProjectContext rootContext;
+		CMRLangDef lang;
 };
 
 #endif //CMR_PROJECT_H

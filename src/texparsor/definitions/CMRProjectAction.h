@@ -16,6 +16,7 @@
 
 /*********************  TYPES  **********************/
 class CMRTransformation;
+class CMRLangDef;
 
 /*********************  CLASS  **********************/
 class CMRProjectAction
@@ -23,7 +24,7 @@ class CMRProjectAction
 	public:
 		CMRProjectAction ( const std::string & name, const std::string & descr,CMRProjectContext * parentContext = NULL);
 		virtual void printDebug(std::ostream & out) const;
-		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
+		virtual void genDefinitionCCode ( std::ostream& out, const CMRLangDef & lang, const CMRProjectContext& context, int padding = 0 ) const;
 		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
 		void runTransformation(CMRTransformation & transf);
 		CMRProjectCodeEquation & addEquation(const std::string& eq);

@@ -11,6 +11,7 @@
 #include <CMRProjectCode.h>
 #include <sstream>
 #include <CMRProjectAction.h>
+#include <../common/CMRLangDef.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -68,6 +69,7 @@ TEST(TestProjectAction,testAddBasicActions)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectAction,testGenDefinitionCCode)
 {
+	CMRLangDef def;
 	CMRProjectAction action("update_enery","blablablalbl");
 	action.addLocalVariable("E","enegry","double","0");
 	action.addIterator("k","k",1,10);
@@ -78,7 +80,7 @@ TEST(TestProjectAction,testGenDefinitionCCode)
 	CMRProjectContext context;
 	
 	stringstream out;
-	action.genDefinitionCCode(out,&context,0);
+	action.genDefinitionCCode(out,def,&context,0);
 	
 	EXPECT_EQ(CST_VALUE_1,out.str());
 }
