@@ -9,6 +9,7 @@
 
 /********************  HEADERS  *********************/
 #include "CMRProjectDefinition.h"
+#include "../common/CMRCommon.h"
 #include "../transformations/CMRTransformation.h"
 
 /**********************  USING  *********************/

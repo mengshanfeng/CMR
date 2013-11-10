@@ -9,10 +9,22 @@
 
 /********************  HEADERS  *********************/
 #include "../transformations/CMRTransformation.h"
+#include "../common/CMRCommon.h"
+#include "../common/CMRCodeTemplate.h"
 #include "CMRProjectAction.h"
 
 /**********************  USING  *********************/
 using namespace std;
+
+/*********************  CONSTS  *********************/
+static const char * CMR_PROJECT_ACTION_CODE = "//@descr@\n\
+struct Action@name@\n\
+{\n\
+	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)\n\
+	{\n\
+		@code@\n\
+	}\n\
+};\n\n";
 
 /*******************  FUNCTION  *********************/
 CMRProjectAction::CMRProjectAction ( const string& name, const string& descr, CMRProjectContext* parentContext )
@@ -78,15 +90,14 @@ CMRProjectCodeEquation& CMRProjectAction::addEquation ( const string& eq )
 /*******************  FUNCTION  *********************/
 void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int padding ) const
 {
-	doIndent(out,padding) << "//" << this->descr << endl;
-	doIndent(out,padding) << "struct Action" << this->name << endl;
-	doIndent(out,padding) << "{" << endl;
-	doIndent(out,padding+1) << "static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)" << endl;
-	doIndent(out,padding+1) << "{" << endl;
-	ops.genCCode(out,padding+1);
-	doIndent(out,padding+1) << "}" << endl;
-	doIndent(out,padding) << "};" << endl;
-	out << endl;
+	CMRCodeTemplate codeTemplate(CMR_PROJECT_ACTION_CODE);
+	CMRCodeTemplateValueDic dic;
+	
+	dic.set("descr",this->descr);
+	dic.set("name",this->name);
+	dic.set("code",new CMRCodeValueForCodeEntry(&this->ops,-1));
+	
+	codeTemplate.applyOn(out,dic,padding);
 }
 
 /*******************  FUNCTION  *********************/

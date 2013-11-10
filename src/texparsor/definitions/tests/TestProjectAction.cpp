@@ -22,14 +22,14 @@ struct Actionupdate_enery\n\
 {\n\
 	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)\n\
 	{\n\
-		double enegry = 0 ;\n\
 		int tmp = 0 ;\n\
+		double enegry = 0 ;\n\
 		enegry = 4 * 5 ;\n\
 		for(int k = 1 ; k <= 10 ; k++ )\n\
 		{\n\
 			tmp += 3 * k ;\n\
 		}\n\
-		enegry += tmp * 3 ;\n\
+		enegry += tmp * 3 ;\n\n\
 	}\n\
 };\n\n";
 

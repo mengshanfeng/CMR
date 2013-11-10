@@ -16,6 +16,7 @@
 #include "CMRProjectCodeTree.h"
 #include "CMRProjectIterator.h"
 #include "../parsor/CMRLatexFormula.h"
+#include "../common/CMRCodeTemplate.h"
 
 /*********************  TYPES  **********************/
 class CMRProjectIterator;
@@ -84,6 +85,17 @@ class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
 		virtual void onParentChange ( CMRProjectCodeEntry * newParent );
 	protected:
 		CMRProjectContext context;
+};
+
+/*********************  CLASS  **********************/
+class CMRCodeValueForCodeEntry : public CMRCodeTemplateValue
+{
+	public:
+		CMRCodeValueForCodeEntry(const CMRProjectCodeEntry * obj, int correctIndent = 0) {this->obj = obj;this->correctIndent = correctIndent;};
+		virtual void genCode(std::ostream & out ,int indent) const {obj->genCCode(out,indent+this->correctIndent);};
+	private:
+		const CMRProjectCodeEntry * obj;
+		int correctIndent;
 };
 
 /*********************  CLASS  **********************/

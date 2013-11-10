@@ -13,6 +13,7 @@
 #include "../common/CMRDebug.h"
 #include "CMRProjectCode.h"
 #include "CMRGenCode.h"
+#include "../common/CMRCommon.h"
 #include "CMRProjectIterator.h"
 
 /**********************  USING  *********************/
@@ -289,14 +290,6 @@ void CMRProjectCodeEquation::genCCode ( ostream& out, int padding ) const
 // 	cmrGenEqCCode(out,context,eq->formula);
 // 	
 // 	out << ";" << endl;
-}
-
-/*******************  FUNCTION  *********************/
-ostream& doIndent ( ostream& out, int depth )
-{
-	for (int i = 0 ; i < depth ; i++)
-		out << "\t";
-	return out;
 }
 
 /*******************  FUNCTION  *********************/

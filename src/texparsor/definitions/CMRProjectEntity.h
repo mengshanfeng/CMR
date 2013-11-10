@@ -40,10 +40,6 @@ typedef std::vector<std::string> CMRStringVector;
 typedef std::map<std::string,const CMRLatexFormulas2 *> CMRProjectCaptureMap;
 typedef std::vector<CMRCaptureDef> CMRProjectCaptureDefMap;
 
-/*******************  FUNCTION  *********************/
-//TODO move
-std::ostream & doIndent(std::ostream & out,int depth);
-
 /*********************  CLASS  **********************/
 class CMRProjectEntity
 {
