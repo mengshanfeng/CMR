@@ -10,6 +10,8 @@ CMRProject2::CMRProject2(void)
 {
 	rootContext.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	rootContext.addEntry(new CMRProjectLocalVariable("j","y","int"));
+	rootContext.addEntry(new CMRProjectLocalVariable("x","pos.getAbsX()","int"));
+	rootContext.addEntry(new CMRProjectLocalVariable("y","pos.getAbsY()","int"));
 }
 
 /*******************  FUNCTION  *********************/
@@ -88,6 +90,9 @@ void CMRProject2::genCCode ( std::ostream& out )
 	genCCodeOfVariables(out);
 	genCCodeOfDefinitions(out);
 	genCCodeOfActions(out,lang);
+	genCCodeOfInit(out,lang);
+	genCCodeOfMainLoop(out,lang);
+	genCCodeOfMain(out,lang);
 }
 
 /*******************  FUNCTION  *********************/
@@ -192,4 +197,87 @@ void CMRProject2::genCCodeOfActions ( ostream& out, CMRCompiler::LangDef & lang 
 	for (CMRProjectActionVector::iterator it = actions.begin() ; it != actions.end() ; ++it)
 		(*it)->genDefinitionCCode(out,lang,rootContext);
 	out << endl;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCallAction& CMRProject2::addInitCallAction ( const string& actionName )
+{
+	CMRProjectCallAction * action = new CMRProjectCallAction(actionName);
+	this->initActions.push_back(action);
+	return *action;
+}
+
+/*******************  FUNCTION  *********************/
+CMRProjectCallAction& CMRProject2::addMainLoopCallAction ( const string& actionName )
+{
+	CMRProjectCallAction * action = new CMRProjectCallAction(actionName);
+	this->loopActions.push_back(action);
+	return *action;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject2::genCCodeOfInit ( ostream& out, LangDef& lang )
+{
+	int cnt = 1;
+
+	out << "/*******************  FUNCTION  *********************/" << endl;
+	out << "void setup_init_state(VarSystem & sys,const CMRRect & global,const CMRRect & local)" << endl;
+	out << "{" << endl;
+	for (CMRProjectCallActionVector::const_iterator it = initActions.begin() ; it != initActions.end() ; ++it)
+		(*it)->genCode(out,lang,cnt++);
+	out << "}" << endl;
+	out << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject2::genCCodeOfMainLoop ( ostream& out, LangDef& lang )
+{
+	int cnt = 1;
+
+	out << "/*******************  FUNCTION  *********************/" << endl;
+	out << "void main_loop(VarSystem & sys,const CMRRect & global,const CMRRect & local)" << endl;
+	out << "{" << endl;
+	for (CMRProjectCallActionVector::const_iterator it = loopActions.begin() ; it != loopActions.end() ; ++it)
+		(*it)->genCode(out,lang,cnt++);
+	out << "}" << endl;
+	out << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProject2::genCCodeOfMain ( ostream& out, LangDef& lang )
+{
+	out << "/*******************  FUNCTION  *********************/" << endl;
+	out << "int main(void)" << endl;
+	out << "{" << endl;
+	out << "\t//init MPI" << endl;
+	out << "\tMPI_Init(&argc,&argv);" << endl;
+	out << "\tinfo_on_master(\"Start with np = %d\",cmrGetMPISize());" << endl;
+	out << "\tMPI_Barrier(MPI_COMM_WORLD);" << endl << endl;
+	
+	out << "\t//try space splitter" << endl;
+	out << "\tCMRRect globalRect(0,0,WIDTH,HEIGHT);" << endl;
+	out << "\tCMRBasicSpaceSplitter splitter(globalRect,cmrGetMPISize(),0);" << endl;
+	out << "\tsplitter.printDebug(CMR_MPI_MASTER);" << endl << endl;
+	
+	out << "\t//try system computation" << endl;
+	out << "\tCMRMPIDomainBuilder builder(&splitter);" << endl;
+	out << "\tVarSystem sys(&builder);" << endl << endl;
+	
+	out << "\t//get local domaine" << endl;
+	out << "\tCMRRect localDomain = splitter.getLocalDomain(cmrGetMPIRank());" << endl << endl;
+	
+	out << "\t//init CURRENT and PREV" << endl;
+	out << "\tsetup_init_state(sys,globalRect,localDomain);" << endl;
+	out << "\tsys.permutVar(CMR_ALL);" << endl;
+	out << "\tsetup_init_state(sys,globalRect,localDomain);" << endl;
+	
+	out << "\t//time steps" << endl;
+	out << "\tfor ( int i = 1 ; i < ITERATIONS ; i++ )" << endl;
+	out << "\t{" << endl;
+	out << "\t\t//progression" << endl;
+	out << "\t\tif (i % 10 == 0)" << endl;
+	out << "\t\t\tinfo_on_master(\"Progress [%5d / %5d]\",i,ITERATIONS);" << endl;
+	out << "\t\tmain_loop(sys,globalRect,localDomain);" << endl;
+	out << "\t}" << endl;
+	out << "}" << endl;
 }

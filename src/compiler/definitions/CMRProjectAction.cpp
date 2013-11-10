@@ -163,7 +163,7 @@ CodeTemplateValueActionParameters::CodeTemplateValueActionParameters ( const CMR
 /*******************  FUNCTION  *********************/
 void CodeTemplateValueActionParameters::genCode ( ostream& out, int indent ) const
 {
-	if (firstSeparator)
+	if (firstSeparator && list->empty() == false)
 		out << separator;
 	
 	for (CMRProjectActionParameterVector::const_iterator it = list->begin() ; it != list->end() ; ++it)
@@ -179,6 +179,6 @@ void CodeTemplateValueActionParameters::genCode ( ostream& out, int indent ) con
 		out << (*it)->getType() << " " << (*it)->getLongName();
 	}
 	
-	if (lastSeparator)
+	if (lastSeparator && list->empty() == false)
 		out << separator;
 }

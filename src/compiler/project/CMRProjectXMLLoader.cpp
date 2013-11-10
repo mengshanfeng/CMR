@@ -96,6 +96,16 @@ void CMRProjectXMLLoader::loadElements ( CMRProject2& project, CMRXmlNode& node 
 	CMRXmlNode actionsNode = node.getUniqChild(CMR_NODE_CELL_ACTIONS);
 	if (actionsNode.isValid())
 		loadCellActions(project,actionsNode);
+	
+	//load iterators
+	CMRXmlNode initNode = node.getUniqChild("init");
+	if (initNode.isValid())
+		loadInitCallActions(project,initNode);
+	
+	//load iterators
+	CMRXmlNode mainNode = node.getUniqChild("mainloop");
+	if (mainNode.isValid())
+		loadMainCallActions(project,mainNode);
 }
 
 /*******************  FUNCTION  *********************/
@@ -387,6 +397,100 @@ void CMRProjectXMLLoader::loadCellAction ( CMRProject2& project, CMRXmlNode& nod
 	}
 }
 
+/*******************  FUNCTION  *********************/
+void CMRProjectXMLLoader::loadInitCallActions ( CMRProject2& project, CMRXmlNode& node )
+{
+	//check
+	assert(node.isValid());
+	assert(node.isNamed("init"));
+	
+	//loop on childs
+	CMRXmlNode cur = node.getFirstChild();
+	while (cur.isValid())
+	{
+		if (cur.isNamed("callaction"))
+			loadInitCallAction(project,cur);
+		else
+			throw CMRLatexException("Invalid tag name while loading project init in XML file.");
+		cur = cur.getNext();
+	}
+}
 
-// <defparameter mathname='l' longname='l' type='int' doc='Direction (1 ou 2) considérée.'/>
-//<declvar mathname='p' longname='p' type='double' default='0'/>
+/*******************  FUNCTION  *********************/
+void CMRProjectXMLLoader::loadMainCallActions ( CMRProject2& project, CMRXmlNode& node )
+{
+	//check
+	assert(node.isValid());
+	assert(node.isNamed("mainloop"));
+	
+	//loop on childs
+	CMRXmlNode cur = node.getFirstChild();
+	while (cur.isValid())
+	{
+		if (cur.isNamed("callaction"))
+			loadMainCallAction(project,cur);
+		else
+			throw CMRLatexException("Invalid tag name while loading project init in XML file.");
+		cur = cur.getNext();
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectXMLLoader::loadInitCallAction ( CMRProject2& project, CMRXmlNode& node )
+{
+	//check
+	assert(node.isValid());
+	assert(node.isNamed("callaction"));
+	
+	//extract info
+	string name = node.getNonEmptyProperty("name");
+	CMRProjectCallAction & action = project.addInitCallAction(name);
+	
+	//loop on childs
+	CMRXmlNode cur = node.getFirstChild();
+	while (cur.isValid())
+	{
+		if (cur.isNamed("parameter"))
+		{
+			string mathName = cur.getNonEmptyProperty("mathname");
+			string value = cur.getContent();
+			action.addParameter(mathName,value);
+		} else if (cur.isNamed("zone")) {
+			string value = cur.getContent();
+			action.addZone(value);
+		} else {
+			throw CMRLatexException("Invalid tag name while loading project init in XML file.");
+		}
+		cur = cur.getNext();
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectXMLLoader::loadMainCallAction ( CMRProject2& project, CMRXmlNode& node )
+{
+	//check
+	assert(node.isValid());
+	assert(node.isNamed("callaction"));
+	
+	//extract info
+	string name = node.getNonEmptyProperty("name");
+	CMRProjectCallAction & action = project.addMainLoopCallAction(name);
+	
+	//loop on childs
+	CMRXmlNode cur = node.getFirstChild();
+	while (cur.isValid())
+	{
+		if (cur.isNamed("parameter"))
+		{
+			string mathName = cur.getNonEmptyProperty("mathname");
+			string value = cur.getContent();
+			action.addParameter(mathName,value);
+		} else if (cur.isNamed("zone")) {
+			string value = cur.getContent();
+			action.addZone(value);
+		} else {
+			throw CMRLatexException("Invalid tag name while loading project init in XML file.");
+		}
+		cur = cur.getNext();
+	}
+}

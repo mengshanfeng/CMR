@@ -19,6 +19,7 @@
 #include "../definitions/CMRProjectAction.h"
 #include "../definitions/CMRProjectIterator.h"
 #include "../definitions/CMRProjectDefinition.h"
+#include <definitions/CMRProjectCallAction.h>
 #include "../transformations/CMRTransformation.h"
 #include "../common/LangDef.h"
 
@@ -28,6 +29,7 @@ typedef std::vector <CMRProjectMeshVar*> CMRProjectVariableVector;
 typedef std::vector <CMRProjectIterator*> CMRProjectIteratorVector;
 typedef std::vector <CMRProjectAction*> CMRProjectActionVector;
 typedef std::vector <CMRProjectDefinition*> CMRProjectDefinitionVector;
+typedef std::vector <CMRProjectCallAction*> CMRProjectCallActionVector;
 
 /*********************  CLASS  **********************/
 class CMRProject2
@@ -40,6 +42,8 @@ class CMRProject2
 		CMRProjectDefinition & addDefinition(const std::string& latexName, const std::string& longName);
 		CMRProjectDefinition& addDefinition( const std::string& latexName, const std::string& longName, const std::string& compute );
 		CMRProjectIterator & addIterator(const std::string& latexName, const std::string& longName ,int start, int end);
+		CMRProjectCallAction & addInitCallAction(const std::string & actionName);
+		CMRProjectCallAction & addMainLoopCallAction(const std::string & actionName);
 		void runTransformation(CMRTransformation & transf);
 		void genCCode(std::ostream & out);
 		void printDebug(void);
@@ -48,12 +52,17 @@ class CMRProject2
 		void genCCodeOfVariables(std::ostream & out);
 		void genCCodeOfDefinitions(std::ostream& out);
 		void genCCodeOfActions( std::ostream& out, CMRCompiler::LangDef& lang );
+		void genCCodeOfInit( std::ostream & out, CMRCompiler::LangDef& lang );
+		void genCCodeOfMainLoop( std::ostream & out, CMRCompiler::LangDef& lang );
+		void genCCodeOfMain( std::ostream & out, CMRCompiler::LangDef& lang );
 	private:
 		CMRProjectConstantVector constants;
 		CMRProjectVariableVector variables;
 		CMRProjectActionVector actions;
 		CMRProjectDefinitionVector definitions;
 		CMRProjectIteratorVector iterators;
+		CMRProjectCallActionVector initActions;
+		CMRProjectCallActionVector loopActions;
 		CMRProjectContext rootContext;
 		CMRCompiler::LangDef lang;
 };

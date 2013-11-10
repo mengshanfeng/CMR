@@ -23,6 +23,10 @@ class CMRProjectXMLLoader
 		void loadDefinition(CMRProject2 & project, CMRXmlNode & node);
 		void loadCellActions(CMRProject2 & project, CMRXmlNode & node);
 		void loadCellAction(CMRProject2 & project, CMRXmlNode & node);
+		void loadInitCallActions(CMRProject2 & project, CMRXmlNode & node);
+		void loadInitCallAction(CMRProject2 & project, CMRXmlNode & node);
+		void loadMainCallActions(CMRProject2 & project, CMRXmlNode & node);
+		void loadMainCallAction(CMRProject2 & project, CMRXmlNode & node);
 		template <class T> void loadCode(CMRProject2 & project, T & parent , CMRXmlNode & node);
 		template <class T> bool loadCodeNode(CMRProject2 & project, T & parent , CMRXmlNode & node);
 };

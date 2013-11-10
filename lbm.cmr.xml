@@ -36,6 +36,7 @@
 			<const mathname='R' longname='REYNOLDS'>300</const>
 			<const mathname='V' longname='INFLOW_MAX_VELOCITY'>0.1</const>
 			<const mathname='r' longname='RELAX_PARAMETER'>1.0</const>
+			<const mathname='O_R' longname='OBSTABLE_R'>1.0</const>
 		</consts>
 		<!-- ********************* MESH ****************** -->
 		<mesh>
@@ -155,28 +156,35 @@
 				<foreach iterator='k'>
 					<mathstep>f_{i,j,k} = f_{eq,i,j,k}</mathstep>
 				</foreach>
-			</cellaction>			
+			</cellaction>
+			<cellaction name='SetupObstable' doc="Configure les cellules de l'obstable.">
+				<defparameter mathname="O_x" longname="obstacle_x" type='double'/>
+				<defparameter mathname="O_y" longname="obstacle_y" type='double'/>
+				<ccode>if ( ( $(x-O_x)^2$ + $(x-O_y)^2$ ) &lt;= $(O_R)^2$ ) {</ccode>
+				<ccode>T_{i,j} = CELL_BOUNCE_BACK</ccode>
+				<ccode>}</ccode>
+			</cellaction>
 		</cellactions>
 		<init>
 			<callaction name="InitStatePoiseuil">
 				<zone>locale.expend(1)</zone>
 			</callaction>
 			<callaction name="InitCellType">
-				<parameter mathname='t'>CELL_LEFT_IN</parameter>
+				<parameter mathname='cellType'>CELL_LEFT_IN</parameter>
 				<zone>global.expended(1).getBorder(CMR_RIGHT)</zone>
 			</callaction>
 			<callaction name="InitCellType">
-				<parameter mathname='t'>CELL_RIGHT_OUT</parameter>
+				<parameter mathname='cellType'>CELL_RIGHT_OUT</parameter>
 				<zone>global.expended(1).getBorder(CMR_RIGHT)</zone>
 			</callaction>
 			<callaction name="InitCellType">
-				<parameter mathname='t'>CELL_BOUNCE_BACK</parameter>
+				<parameter mathname='cellType'>CELL_BOUNCE_BACK</parameter>
 				<zone>global.expended(1).getBorder(CMR_TOP)</zone>
 				<zone>global.expended(1).getBorder(CMR_BOTTOM)</zone>
 			</callaction>
-			<callaction name="ActionSetupObstable">
-				<parameter>WIDTH/10.0</parameter>
-				<parameter>1.0,HEIGHT/2.0+3.0</parameter>
+			<callaction name="SetupObstable">
+				<parameter mathname="obstacle_x">WIDTH/10.0</parameter>
+				<parameter mathname="obstacle_y">1.0,HEIGHT/2.0+3.0</parameter>
 				<zone>global</zone>
 			</callaction>
 		</init>
@@ -185,12 +193,12 @@
 			<callaction name="SpecialCells">
 				<zone>local.exapended(1)</zone>
 			</callaction>
-			<meshforward><all/></meshforward>
+<!-- 			<meshforward><all/></meshforward> -->
 			<!-- ************* -->
 			<callaction name="Collision">
 				<zone>local</zone>
 			</callaction>
-			<meshforward><all/></meshforward>
+<!-- 			<meshforward><all/></meshforward> -->
 			
 			<!--//propagate values from node to neighboors
 			//lbm_comm_ghost_exchange( &mesh_comm, &temp );-->
