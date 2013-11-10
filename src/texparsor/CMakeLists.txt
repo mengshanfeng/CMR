@@ -7,8 +7,13 @@
 ######################################################
 
 ######################################################
+#Check for libxml
 find_package(LibXml2 REQUIRED)
 include_directories(${LIBXML2_INCLUDE_DIR})
+
+######################################################
+#Setup some include dirs
+include_directories(./)
  
 ######################################################
 add_subdirectory(parsor)

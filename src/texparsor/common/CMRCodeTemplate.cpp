@@ -11,6 +11,7 @@
 #include "CMRDebug.h"
 #include "CMRCommon.h"
 #include "CMRCodeTemplate.h"
+#include "CMRCodeTemplateDic.h"
 
 /**********************  USING  *********************/
 using namespace std;

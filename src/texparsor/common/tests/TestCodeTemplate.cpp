@@ -10,6 +10,7 @@
 #include <sstream>
 #include <gtest/gtest.h>
 #include "CMRCodeTemplate.h"
+#include "CMRCodeTemplateDic.h"
 
 /**********************  USING  *********************/
 using namespace testing;

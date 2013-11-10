@@ -17,6 +17,7 @@
 #include "CMRProjectIterator.h"
 #include "../parsor/CMRLatexFormula.h"
 #include "../common/CMRCodeTemplate.h"
+#include "../common/CMRCodeTemplateDic.h"
 
 /*********************  TYPES  **********************/
 class CMRProjectIterator;

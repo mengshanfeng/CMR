@@ -19,7 +19,8 @@ add_definitions(-DUNITTEST)
 ######################################################
 include_directories(${GMOCK_INCLUDE_DIRS})
 include_directories(${GTEST_INCLUDE_DIRS})
-include_directories(${UNITTEST_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/..)
+include_directories(${UNITTEST_INCLUDE_DIR})
+include_directories(../)
 
 ######################################################
 #test list
@@ -29,6 +30,6 @@ set(ALLOC_GTEST_LIST TestCodeTemplate)
 #Now you can build your tests
 foreach(i ${ALLOC_GTEST_LIST})
 	add_executable(${i} ${i}.cpp)
-	target_link_libraries(${i} ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES} cmr_tex_common ${MPI_CXX_LIBRARIES})
+	target_link_libraries(${i} ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES} cmr_tex_common)
 	cmr_add_gtest(${i})
 endforeach(i)
