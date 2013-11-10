@@ -8,4 +8,4 @@
 
 ######################################################
 add_subdirectory(lib)
-add_subdirectory(texparsor)
+add_subdirectory(compiler)
