@@ -13,7 +13,7 @@ include_directories(${LIBXML2_INCLUDE_DIR})
 
 ######################################################
 #Setup some include dirs
-include_directories(./)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
  
 ######################################################
 add_subdirectory(parsor)

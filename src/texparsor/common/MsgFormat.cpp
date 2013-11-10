@@ -11,57 +11,25 @@
 #include <iostream>
 #include <cstdio>
 #include "CMRDebug.h"
-#include "CMRMsgFormat.h"
+#include "MsgFormat.h"
+#include "Exception.h"
 
 /**********************  USING  *********************/
 using namespace std;
 
-/*******************  FUNCTION  *********************/
-CMRMsgException::CMRMsgException ( void ) throw()
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
 {
 
-}
-
 /*******************  FUNCTION  *********************/
-CMRMsgException::CMRMsgException ( std::string message ) throw()
-{
-	this->message = message;
-}
-
-/*******************  FUNCTION  *********************/
-CMRMsgException::~CMRMsgException ( void ) throw()
-{
-
-}
-
-/*******************  FUNCTION  *********************/
-std::string CMRMsgException::getMessage ( void ) const
-{
-	return message;
-}
-
-/*******************  FUNCTION  *********************/
-const char* CMRMsgException::what() const  throw()
-{
-	return message.c_str();
-}
-
-/*******************  FUNCTION  *********************/
-void CMRMsgException::fatal()
-{
-	cerr << message << endl;
-	abort();
-}
-
-/*******************  FUNCTION  *********************/
-CMRMsgFormat::CMRMsgFormat ( const string& format )
+MsgFormat::MsgFormat ( const string& format )
 {
 	this->value = format;
 	this->cntArg = 0;
 }
 
 /*******************  FUNCTION  *********************/
-CMRMsgFormat& CMRMsgFormat::arg ( const string& arg )
+MsgFormat& MsgFormat::arg ( const string& arg )
 {
 	char buffer[30];
 	size_t size = sprintf(buffer,"%%%d",++cntArg);
@@ -72,38 +40,40 @@ CMRMsgFormat& CMRMsgFormat::arg ( const string& arg )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRMsgFormat::debug ( void ) const
+void MsgFormat::debug ( void ) const
 {
 	cmrDebug("%s",value.c_str());
 }
 
 /*******************  FUNCTION  *********************/
-void CMRMsgFormat::exception ( void ) const
+void MsgFormat::exception ( void ) const
 {
-	throw CMRMsgException(value);
+	throw Exception(value);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRMsgFormat::fatal ( void ) const
+void MsgFormat::fatal ( void ) const
 {
 	cmrFatal("%s",value.c_str());
 }
 
 /*******************  FUNCTION  *********************/
-void CMRMsgFormat::warning ( void ) const
+void MsgFormat::warning ( void ) const
 {
 	cmrWarning("%s",value.c_str());
 }
 
 /*******************  FUNCTION  *********************/
-ostream& operator<< ( ostream& out, const CMRMsgFormat& msg )
+ostream& operator<< ( ostream& out, const MsgFormat& msg )
 {
 	out << msg.value;
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-const string& CMRMsgFormat::str ( void ) const
+const string& MsgFormat::str ( void ) const
 {
 	return value;
 }
+
+};

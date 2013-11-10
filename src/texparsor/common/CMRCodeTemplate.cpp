@@ -9,12 +9,13 @@
 /********************  HEADERS  *********************/
 #include <cassert>
 #include "CMRDebug.h"
-#include "CMRCommon.h"
+#include "Common.h"
 #include "CMRCodeTemplate.h"
 #include "CMRCodeTemplateDic.h"
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRCodeTemplate::CMRCodeTemplate ( const std::string& model )

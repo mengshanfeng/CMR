@@ -13,11 +13,12 @@
 #include "../common/CMRDebug.h"
 #include "CMRProjectCode.h"
 #include "CMRGenCode.h"
-#include "../common/CMRCommon.h"
+#include "common/Common.h"
 #include "CMRProjectIterator.h"
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectLocalVariable::CMRProjectLocalVariable ( const std::string& latexName, const std::string& longName , const std::string & type,const std::string & defaultValue) 

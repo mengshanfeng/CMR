@@ -9,11 +9,12 @@
 
 /********************  HEADERS  *********************/
 #include "CMRProjectDefinition.h"
-#include "../common/CMRCommon.h"
+#include "common/Common.h"
 #include "../transformations/CMRTransformation.h"
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectDefinition::CMRProjectDefinition ( const string& latexName, const string& longName, CMRProjectContext* parentContext ) 

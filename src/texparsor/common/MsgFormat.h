@@ -14,29 +14,20 @@
 #include <ostream>
 #include <exception>
 #include <sstream>
+#include "Common.h"
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*********************  CLASS  **********************/
-class CMRMsgException : public std::exception
+class MsgFormat
 {
 	public:
-		CMRMsgException(void) throw();
-		CMRMsgException(std::string message) throw();
-		virtual ~CMRMsgException(void) throw();
-		virtual const char* what() const  throw();
-		virtual std::string getMessage(void) const;
-		void fatal();
-	private:
-		std::string message;
-};
-
-/*********************  CLASS  **********************/
-class CMRMsgFormat
-{
-	public:
-		CMRMsgFormat(const std::string & format);
-		CMRMsgFormat & arg(const std::string & arg);
-		template<class T> CMRMsgFormat & arg(const T & arg);
-		friend std::ostream& operator<< (std::ostream &out, const CMRMsgFormat & msg);
+		MsgFormat(const std::string & format);
+		MsgFormat & arg(const std::string & arg);
+		template<class T> MsgFormat & arg(const T & arg);
+		friend std::ostream& operator<< (std::ostream &out, const MsgFormat & msg);
 		void fatal(void) const;
 		void warning(void) const;
 		void debug(void) const;
@@ -49,12 +40,13 @@ class CMRMsgFormat
 
 /*******************  FUNCTION  *********************/
 template <class T>
-CMRMsgFormat& CMRMsgFormat::arg ( const T& arg)
+MsgFormat& MsgFormat::arg ( const T& arg)
 {
 	std::stringstream tmp;
 	tmp << arg;
 	return this->arg(tmp.str());
 }
 
+};
 
 #endif //CMR_MSG_FORMAT_H

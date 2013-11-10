@@ -14,10 +14,11 @@
 #include "CMRTransformationExtractLoops.h"
 #include "../parsor/CMRLatexEntity2.h"
 #include "../definitions/CMRProjectCode.h"
-#include "../common/CMRMsgFormat.h"
+#include "common/MsgFormat.h"
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRTransformationExtractLoops::CMRTransformationExtractLoops ( void ) 
@@ -57,7 +58,7 @@ void CMRTransformationExtractLoops::transform ( CMRProjectCodeEquation& equation
 		equation.getParent()->addLocalVariable(tmp.shortName,tmp.longName,"int","0");
 		
 		//create loop
-		CMRMsgFormat("Replace loops with iterator (%1) and core (%2)").arg(*entity.indices[0]).arg(*entity.parameters[0]).debug();
+		MsgFormat("Replace loops with iterator (%1) and core (%2)").arg(*entity.indices[0]).arg(*entity.parameters[0]).debug();
 		CMRProjectCodeIteratorLoop & loop = equation.addIteratorLoop(entity.indices[0]->getString(),CMR_INSERT_BEFORE);
 		loop.addEquation(tmp.shortName,entity.parameters[0]->getString(),op);
 		

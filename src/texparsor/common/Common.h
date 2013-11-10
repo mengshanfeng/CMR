@@ -13,7 +13,13 @@
 /********************  HEADERS  *********************/
 #include <ostream>
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
 std::ostream & doIndent(std::ostream & out,int depth);
+
+};
 
 #endif //CMR_COMMON_H

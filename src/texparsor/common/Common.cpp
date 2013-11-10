@@ -8,10 +8,14 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "CMRCommon.h"
+#include "Common.h"
 
 /**********************  USING  *********************/
 using namespace std;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 ostream& doIndent ( ostream& out, int depth )
@@ -20,3 +24,5 @@ ostream& doIndent ( ostream& out, int depth )
 		out << "\t";
 	return out;
 }
+
+};

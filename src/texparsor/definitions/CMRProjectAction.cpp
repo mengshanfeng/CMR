@@ -9,7 +9,7 @@
 
 /********************  HEADERS  *********************/
 #include "../transformations/CMRTransformation.h"
-#include "../common/CMRCommon.h"
+#include "common/Common.h"
 #include "../common/CMRCodeTemplate.h"
 #include "../common/CMRLangDef.h"
 #include "CMRProjectAction.h"
