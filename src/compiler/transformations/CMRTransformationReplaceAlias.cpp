@@ -13,6 +13,8 @@
 #include "../definitions/CMRProjectAlias.h"
 #include "CMRTransformationReplaceAlias.h"
 
+using namespace CMRCompiler;
+
 /*******************  FUNCTION  *********************/
 CMRTransformationReplaceAlias::CMRTransformationReplaceAlias ( void ) 
 	: CMRTransformationBasic("CMRTransformationReplaceAlias")
@@ -20,7 +22,7 @@ CMRTransformationReplaceAlias::CMRTransformationReplaceAlias ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationReplaceAlias::transform ( CMRProjectCodeEquation& equation, CMRLatexEntity2& entity )
+void CMRTransformationReplaceAlias::transform ( CMRProjectCodeEquation& equation, LatexEntity& entity )
 {
 	//search entity
 	const CMRProjectEntity * match = equation.getContext().find(entity);

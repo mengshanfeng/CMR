@@ -13,11 +13,12 @@
 #include <iostream>
 #include <iomanip>
 #include "CMRProjectEntity.h"
-#include "../parsor/CMRLatexFormula.h"
-#include "../parsor/CMRParsorBasics.h"
+#include "../parsor/LatexFormula.h"
+#include "../parsor/ParsorBasics.h"
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectEntity::CMRProjectEntity ( const string& latexName, const string& longName )
@@ -38,14 +39,14 @@ void CMRProjectEntity::applyLatexName ( const string& latexName )
 {
 	//check if empty
 	if (latexName.empty())
-		throw CMRLatexException("ERROR: you profide an empty latex name to define new entity !");
+		throw LatexException("ERROR: you profide an empty latex name to define new entity !");
 
 	//parse latex name
-	CMRLatexFormulas2 f(latexName);
+	LatexFormulas f(latexName);
 	
 	//check if get a uniq entity
 	if (f.isSimpleEntity() == false)
-		throw CMRLatexException(string("ERROR: you provide a complex equation to define a project entity, this is not valid : ") + latexName);
+		throw LatexException(string("ERROR: you provide a complex equation to define a project entity, this is not valid : ") + latexName);
 	
 	//extract name
 	this->shortName = f[0]->getName();
@@ -57,13 +58,13 @@ void CMRProjectEntity::applyLatexName ( const string& latexName )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity::fillCapture ( CMRProjectCaptureDefMap& capture, CMRLatexFormulasVector2& formulaList )
+void CMRProjectEntity::fillCapture ( CMRProjectCaptureDefMap& capture, LatexFormulasVector& formulaList )
 {
 	//clear old list
 	capture.clear();
 	
 	//loop on elements and fill
-	for (CMRLatexFormulasVector2::const_iterator it = formulaList.begin() ; it != formulaList.end() ; ++it)
+	for (LatexFormulasVector::const_iterator it = formulaList.begin() ; it != formulaList.end() ; ++it)
 	{
 		addCapture(capture,**it,CMR_CAPTURE_NONE);
 	}
@@ -91,17 +92,17 @@ void CMRProjectEntity::addParameter ( const string& name, CMRCaptureType capture
 void CMRProjectEntity::addCapture ( CMRProjectCaptureDefMap& capture, const string& value, CMRCaptureType captureType )
 {
 	assert(captureType != CMR_CAPTURE_OPTIONS);
-	CMRLatexFormulas2 f(value);
+	LatexFormulas f(value);
 	addCapture(capture,f,captureType);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity::addCapture ( CMRProjectCaptureDefMap& capture, const CMRLatexFormulas2& formula, CMRCaptureType captureType )
+void CMRProjectEntity::addCapture ( CMRProjectCaptureDefMap& capture, const LatexFormulas& formula, CMRCaptureType captureType )
 {
 	assert(captureType != CMR_CAPTURE_OPTIONS);
 	//check if get a uniq entity
 	if (captureType != CMR_CAPTURE_NONE && formula.isSimpleEntity() == false)
-		throw CMRLatexException(string("ERROR: you provide a complex equation to to capture fields : ") + formula.getString());
+		throw LatexException(string("ERROR: you provide a complex equation to to capture fields : ") + formula.getString());
 	if (captureType != CMR_CAPTURE_NONE)
 		ensureUniqCapture(formula);
 	capture.push_back(CMRCaptureDef(formula.getString(),captureType));
@@ -114,12 +115,12 @@ void CMRProjectEntity::changeCaptureType ( const string& name, CMRCaptureType ca
 	bool res;
 	
 	//regen the name without spaces and good order
-	CMRLatexFormulas2 f(name);
+	LatexFormulas f(name);
 	string tmp = f.getString();
 	
 	//check if get a uniq entity
 	if (captureType != CMR_CAPTURE_NONE && f.isSimpleEntity() == false)
-		throw CMRLatexException(string("ERROR: you provide a complex equation to to capture fields : ") + tmp);
+		throw LatexException(string("ERROR: you provide a complex equation to to capture fields : ") + tmp);
 	
 	//indices
 	res = changeCaptureType(indices,tmp,captureType);
@@ -133,7 +134,7 @@ void CMRProjectEntity::changeCaptureType ( const string& name, CMRCaptureType ca
 		res = changeCaptureType(parameters,tmp,captureType);
 	
 	if (res == false)
-		throw CMRLatexException(string("Invalid name to change capture type (") + tmp + string(") in : ") + getLatexName());
+		throw LatexException(string("Invalid name to change capture type (") + tmp + string(") in : ") + getLatexName());
 	
 	//call user fonction
 	onUpdateCaptureType(name,captureType);
@@ -218,17 +219,17 @@ const string& CMRProjectEntity::getShortName ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity::match ( const CMRLatexEntity2& entity ) const
+bool CMRProjectEntity::match ( const LatexEntity& entity ) const
 {
 	return internalMatch(entity,NULL);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity::capture ( const CMRLatexEntity2& entity, CMRProjectCaptureMap& capture ) const
+void CMRProjectEntity::capture ( const LatexEntity& entity, CMRProjectCaptureMap& capture ) const
 {
 	bool res = internalMatch(entity,&capture);
 	if (res == false)
-		throw CMRLatexException(string("Try to capture values in non mathing entities : ")+entity.getString()+ string(" != ")+getLatexName());
+		throw LatexException(string("Try to capture values in non mathing entities : ")+entity.getString()+ string(" != ")+getLatexName());
 }
 
 /*******************  FUNCTION  *********************/
@@ -245,7 +246,7 @@ ostream& operator<< ( ostream& out, const CMRProjectEntity& value )
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity::internalMatch ( const CMRLatexEntity2& entity, CMRProjectCaptureMap* capture ) const
+bool CMRProjectEntity::internalMatch ( const LatexEntity& entity, CMRProjectCaptureMap* capture ) const
 {
 	//check name
 	if (entity.name != this->shortName && this->capName == false)
@@ -275,13 +276,13 @@ bool CMRProjectEntity::internalMatch ( const CMRLatexEntity2& entity, CMRProject
 	
 	//capture name if wildcars
 	if (capture != NULL && this->capName && entity.name != "()")
-		(*capture)[this->shortName] = new CMRLatexFormulas2(entity.name);
+		(*capture)[this->shortName] = new LatexFormulas(entity.name);
 
 	return true;
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity::internalMatch ( const CMRLatexFormulasVector2& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap* captureOut ) const
+bool CMRProjectEntity::internalMatch ( const LatexFormulasVector& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap* captureOut ) const
 {
 	//trivial
 	if (formulaList.size() != captureDef.size())
@@ -345,7 +346,7 @@ CMRCaptureDef* CMRProjectEntity::findCaptureDef ( const string& name, bool beCap
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectEntity::ensureUniqCapture ( const CMRLatexFormulas2& f )
+void CMRProjectEntity::ensureUniqCapture ( const LatexFormulas& f )
 {
 	//vars
 	std::string value = f.getString();
@@ -355,14 +356,14 @@ void CMRProjectEntity::ensureUniqCapture ( const CMRLatexFormulas2& f )
 	
 	//cehck error
 	if (def != NULL)
-		throw CMRLatexException(string("Caution, cannot add capture for ")+value+string(" as it was already defined !"));
+		throw LatexException(string("Caution, cannot add capture for ")+value+string(" as it was already defined !"));
 }
 
 /*******************  FUNCTION  *********************/
 bool CMRProjectEntity::match ( const string& value ) const
 {
 	//convert
-	CMRLatexEntity2 e(value);
+	LatexEntity e(value);
 	
 	//do mathcing
 	return match(e);

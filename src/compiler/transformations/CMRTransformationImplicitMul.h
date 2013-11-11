@@ -19,7 +19,7 @@ class CMRTransformationImplicitMul : public CMRTransformationBasic
 	public:
 		CMRTransformationImplicitMul(void);
 	protected:
-		virtual void transform ( CMRProjectCodeEquation& equation, CMRLatexFormulas2& formula );
+		virtual void transform ( CMRProjectCodeEquation& equation, CMRCompiler::LatexFormulas& formula );
 };
 
 #endif //CMR_TRANSFORMATION_IMPLICIT_MUL_H

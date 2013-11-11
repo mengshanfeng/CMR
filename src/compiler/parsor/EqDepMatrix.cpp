@@ -8,21 +8,25 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <cstring>
 #include <cstdio>
+#include <cstring>
 #include <cassert>
 #include <cstdlib>
-#include "CMREqDepMatrix.h"
+#include "EqDepMatrix.h"
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
-CMREqDepMatrix::CMREqDepMatrix(void)
+EqDepMatrix::EqDepMatrix(void)
 {
 	maxDepth = 0;
 	memset(access,0,sizeof(access));
 }
 
 /*******************  FUNCTION  *********************/
-void CMREqDepMatrix::markAccess ( int dx, int dy, bool write )
+void EqDepMatrix::markAccess ( int dx, int dy, bool write )
 {
 	assert(dx >= -5 && dx <= 5);
 	assert(dy >= -5 && dy <= 5);
@@ -35,7 +39,7 @@ void CMREqDepMatrix::markAccess ( int dx, int dy, bool write )
 }
 
 /*******************  FUNCTION  *********************/
-void CMREqDepMatrix::printDebug ( void )
+void EqDepMatrix::printDebug ( void )
 {
 	for (int j = 5-maxDepth ; j <= 5+maxDepth ; j++)
 	{
@@ -44,3 +48,5 @@ void CMREqDepMatrix::printDebug ( void )
 		printf("\n");
 	}		
 }
+
+};

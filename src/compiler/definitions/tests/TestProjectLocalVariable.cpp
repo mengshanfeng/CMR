@@ -9,13 +9,14 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <CMRProjectCode.h>
-#include <../parsor/CMRLatexFormula.h>
+#include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectLocalVariable,testConstructor)
@@ -29,7 +30,7 @@ TEST(TestProjectLocalVariable,testGenUsageCCode)
 	CMRProjectLocalVariable var("A_i","toto","int","1");
 	
 	CMRProjectContext context;
-	CMRLatexEntity2 entity("A_i");
+	LatexEntity entity("A_i");
 	
 	stringstream out1;
 	var.genUsageCCode(out1,context,entity,true);
@@ -50,7 +51,7 @@ TEST(TestProjectLocalVariable,testGenDefinitionCCode)
 	CMRProjectLocalVariable var("A_i","toto","int","1");
 	
 	CMRProjectContext context;
-	CMRLatexEntity2 entity("A_i");
+	LatexEntity entity("A_i");
 	
 	stringstream out1;
 	var.genDefinitionCCode(out1,context);

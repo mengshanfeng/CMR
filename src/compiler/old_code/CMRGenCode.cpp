@@ -11,15 +11,16 @@
 #include <cassert>
 #include <iostream>
 #include <cstdlib>
-#include "parsor/CMRParsorBasics.h"
-#include "parsor/CMRLatexEntity.h"
+#include "parsor/ParsorBasics.h"
+#include "parsor/LatexEntityOld.h"
 #include "CMRGenCode.h"
 #include "CMRProjectContext.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
-bool latexEntityIsInteger(CMRLatexEntity & entity)
+bool latexEntityIsInteger(LatexEntityOld & entity)
 {
 	if (entity.totalValue.empty() == true)
 		return false;
@@ -30,16 +31,16 @@ bool latexEntityIsInteger(CMRLatexEntity & entity)
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, CMRLatexFormulas& formula )
+std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, LatexFormulasOld& formula )
 {
-	CMRLatexEntityVector & elems = formula.childs;
-	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
+	LatexEntityVectorOld & elems = formula.childs;
+	for (LatexEntityVectorOld::iterator it = elems.begin() ;  it != elems.end() ; ++it)
 		cmrGenEqCCode(out,context,**it);
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity)
+std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, LatexEntityOld& entity)
 {
 	if (latexEntityIsInteger(entity))
 	{

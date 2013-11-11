@@ -16,6 +16,7 @@
 
 /**********************  USING  *********************/
 using namespace testing;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 
@@ -30,7 +31,7 @@ TEST(TestReplace,testConstructor)
 TEST(TestReplace,testRun_single)
 {
 	CMRProjectCaptureMap map;
-	CMRLatexFormulas2 f("c");
+	LatexFormulas f("c");
 	map["b"] = &f;
 	CMRTransformationReplace transf(&map);
 	
@@ -50,7 +51,7 @@ TEST(TestReplace,testRun_single)
 TEST(TestReplace,testRun_complex)
 {
 	CMRProjectCaptureMap map;
-	CMRLatexFormulas2 f("c*c");
+	LatexFormulas f("c*c");
 	map["b"] = &f;
 	CMRTransformationReplace transf(&map);
 	
@@ -70,8 +71,8 @@ TEST(TestReplace,testRun_complex)
 TEST(TestReplace,testRun_recurse)
 {
 	CMRProjectCaptureMap map;
-	CMRLatexFormulas2 f1("c*c");
-	CMRLatexFormulas2 f2("d*a");
+	LatexFormulas f1("c*c");
+	LatexFormulas f2("d*a");
 	map["a"] = &f1;
 	map["b"] = &f2;
 	CMRTransformationReplace transf(&map);

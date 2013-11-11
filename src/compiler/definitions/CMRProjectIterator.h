@@ -20,7 +20,7 @@ class CMRProjectIterator : public CMRProjectEntity
 		CMRProjectIterator ( const std::string& latexName, const std::string& longName ,int start, int end);
 		void printDebug(std::ostream & out) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context ,int indent = 0) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
 	private:
 		int start;
 		int end;

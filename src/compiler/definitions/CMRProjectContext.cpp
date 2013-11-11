@@ -15,6 +15,7 @@
 #include "CMRProjectContext.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 #warning remove this
 static int tmpCnt = 0;
@@ -47,7 +48,7 @@ CMRProjectEntity & CMRProjectContext::addEntry(CMRProjectEntity* entry)
 		tmp << "Caution, entity " << entry->getLatexName() << " (" << entry->getLongName()
 			<< ") conflicts with another definition : " << conflict->getLatexName()
 			<< " (" << conflict->getLongName() << ")." << endl;
-		throw CMRLatexException(tmp.str());
+		throw LatexException(tmp.str());
 	}
 	
 	//add it
@@ -79,7 +80,7 @@ CMRProjectEntity * CMRProjectContext::checkUnique(const CMRProjectEntity & entry
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectEntity* CMRProjectContext::findInParent(const CMRLatexEntity2& entity, bool onlyWildCardNames) const
+const CMRProjectEntity* CMRProjectContext::findInParent(const LatexEntity& entity, bool onlyWildCardNames) const
 {
 	if (parent == NULL)
 		return NULL;
@@ -88,7 +89,7 @@ const CMRProjectEntity* CMRProjectContext::findInParent(const CMRLatexEntity2& e
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectEntity* CMRProjectContext::find( const CMRLatexEntity2 & entity , bool onlyWildCardNames) const
+const CMRProjectEntity* CMRProjectContext::find( const LatexEntity & entity , bool onlyWildCardNames) const
 {
 	#warning "Do some stuff on priority rules when found multiple matches (similar to what CSS dores)"
 	//check wildcard name in parent

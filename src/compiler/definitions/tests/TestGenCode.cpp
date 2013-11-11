@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <CMRProjectContext.h>
-#include "../../parsor/CMRLatexFormula.h"
+#include "../../parsor/LatexFormula.h"
 #include <sstream>
 #include "MockProjectEntity.h"
 #include "../CMRGenCode.h"
@@ -17,6 +17,7 @@
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 TEST(TestGenCode,testCmrGenEqCCode_entity_1)
@@ -32,7 +33,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_1)
 	
 	stringstream out;
 	
-	CMRLatexEntity2 e("A_i");
+	LatexEntity e("A_i");
 	cmrGenEqCCode(out,context,e);
 	EXPECT_EQ("testAi ",out.str());
 }
@@ -51,7 +52,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_2)
 	
 	stringstream out;
 	
-	CMRLatexEntity2 e("155");
+	LatexEntity e("155");
 	cmrGenEqCCode(out,context,e);
 	EXPECT_EQ("155 ",out.str());
 }
@@ -70,7 +71,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_3)
 	
 	stringstream out;
 	
-	CMRLatexEntity2 e("A_{ i , j }");
+	LatexEntity e("A_{ i , j }");
 	cmrGenEqCCode(out,context,e);
 	EXPECT_EQ("testAij ",out.str());
 }
@@ -89,7 +90,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_4)
 	
 	stringstream out;
 	
-	CMRLatexEntity2 e("B_k");
+	LatexEntity e("B_k");
 	cmrGenEqCCode(out,context,e);
 	EXPECT_EQ("testB ",out.str());
 }
@@ -108,8 +109,8 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_5)
 	
 	stringstream out;
 	
-	CMRLatexEntity2 e("Z_k");
-	EXPECT_THROW(cmrGenEqCCode(out,context,e),CMRLatexException);
+	LatexEntity e("Z_k");
+	EXPECT_THROW(cmrGenEqCCode(out,context,e),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -126,8 +127,8 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_6)
 	
 	stringstream out;
 	
-	CMRLatexEntity2 e("B");
-	EXPECT_THROW(cmrGenEqCCode(out,context,e),CMRLatexException);
+	LatexEntity e("B");
+	EXPECT_THROW(cmrGenEqCCode(out,context,e),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -144,7 +145,7 @@ TEST(TestGenCode,testCmrGenEqCCode_formula)
 	
 	stringstream out;
 	
-	CMRLatexFormulas2 e("A_i + A_{i,j} + B_{A_i * 8} + (55 + A_i)");
+	LatexFormulas e("A_i + A_{i,j} + B_{A_i * 8} + (55 + A_i)");
 	cmrGenEqCCode(out,context,e);
 	EXPECT_EQ("testAi + testAij + testB + ( 55 + testAi ) ",out.str());
 }
@@ -152,12 +153,12 @@ TEST(TestGenCode,testCmrGenEqCCode_formula)
 /*******************  FUNCTION  *********************/
 TEST(TestGenCode,testCmrLatexEntityIsInteger)
 {
-	CMRLatexEntity2 entity1("155");
-	CMRLatexEntity2 entity2("1");
-	CMRLatexEntity2 entity3("A");
-	CMRLatexEntity2 entity4("15.3");
-	CMRLatexEntity2 entity5("1_2");
-	CMRLatexEntity2 entity6("1^2");
+	LatexEntity entity1("155");
+	LatexEntity entity2("1");
+	LatexEntity entity3("A");
+	LatexEntity entity4("15.3");
+	LatexEntity entity5("1_2");
+	LatexEntity entity6("1^2");
 	
 	EXPECT_TRUE(latexEntityIsInteger(entity1));
 	EXPECT_TRUE(latexEntityIsInteger(entity2));

@@ -14,7 +14,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "../parsor/CMRLatexEntity2.h"
+#include "../parsor/LatexEntity.h"
 
 /********************  ENUM  ************************/
 enum CMRCaptureType
@@ -37,7 +37,7 @@ class CMRProjectContext;
 typedef std::vector<int> CMRConstantDimensionsVector;
 typedef std::vector<std::string> CMRConstantValueVector;
 typedef std::vector<std::string> CMRStringVector;
-typedef std::map<std::string,const CMRLatexFormulas2 *> CMRProjectCaptureMap;
+typedef std::map<std::string,const CMRCompiler::LatexFormulas *> CMRProjectCaptureMap;
 typedef std::vector<CMRCaptureDef> CMRProjectCaptureDefMap;
 
 /*********************  CLASS  **********************/
@@ -50,9 +50,9 @@ class CMRProjectEntity
 		void addExponent(const std::string & name,CMRCaptureType captureType = CMR_CAPTURE_NONE);
 		void addParameter(const std::string & name,CMRCaptureType captureType = CMR_CAPTURE_NONE);
 		void changeCaptureType(const std::string & name, enum CMRCaptureType captureType);
-		bool match(const CMRLatexEntity2 & entity) const;
+		bool match(const CMRCompiler::LatexEntity & entity) const;
 		bool match(const std::string & value) const;
-		void capture( const CMRLatexEntity2& entity, CMRProjectCaptureMap& capture ) const;
+		void capture( const CMRCompiler::LatexEntity& entity, CMRProjectCaptureMap& capture ) const;
 		std::string getLatexName(void) const;
 		const std::string & getShortName(void) const;
 		const std::string & getLongName(void) const;
@@ -67,23 +67,23 @@ class CMRProjectEntity
 		
 		//to overload
 		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context, int padding = 0) const = 0;
-		virtual void genUsageCCode(std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false) const = 0;
+		virtual void genUsageCCode(std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false) const = 0;
 		virtual void printDebug(std::ostream & out) const;
 	public:
 		friend std::ostream & operator << (std::ostream & out,const CMRProjectEntity & value);
 	protected:
 		virtual void onUpdateCaptureType(const std::string & name,enum CMRCaptureType captureType);
-		bool internalMatch(const CMRLatexEntity2 & entity,CMRProjectCaptureMap * capture) const;
-		bool internalMatch( const CMRLatexFormulasVector2& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap* captureOut ) const;
+		bool internalMatch(const CMRCompiler::LatexEntity & entity,CMRProjectCaptureMap * capture) const;
+		bool internalMatch( const CMRCompiler::LatexFormulasVector& formulaList, const CMRProjectCaptureDefMap& captureDef, CMRProjectCaptureMap* captureOut ) const;
 		void applyLatexName(const std::string & latexName);
-		void fillCapture(CMRProjectCaptureDefMap & capture,CMRLatexFormulasVector2 & formulaList);
+		void fillCapture(CMRProjectCaptureDefMap & capture,CMRCompiler::LatexFormulasVector & formulaList);
 		void addCapture(CMRProjectCaptureDefMap & capture,const std::string & value,CMRCaptureType captureType);
-		void addCapture( CMRProjectCaptureDefMap& capture, const CMRLatexFormulas2& formula, CMRCaptureType captureType );
+		void addCapture( CMRProjectCaptureDefMap& capture, const CMRCompiler::LatexFormulas& formula, CMRCaptureType captureType );
 		bool changeCaptureType(CMRProjectCaptureDefMap & capture, const std::string & name, enum CMRCaptureType captureType);
 		static std::string formatCaptureList ( const CMRProjectCaptureDefMap& value, const std::string& sep, const std::string& open, const std::string& close, bool forceOpenClose);
 		CMRCaptureDef * findCaptureDef( CMRProjectCaptureDefMap& value, const std::string& name, bool beCaptured = false );
 		CMRCaptureDef * findCaptureDef( const std::string& name, bool beCaptured = false );
-		void ensureUniqCapture( const CMRLatexFormulas2& f );
+		void ensureUniqCapture( const CMRCompiler::LatexFormulas& f );
 		static void printDebug( std::ostream& out, const std::string& name, const CMRProjectCaptureDefMap& map );
 		static void markAllCaptureAs(CMRProjectCaptureDefMap & map,enum CMRCaptureType capture);
 	private:

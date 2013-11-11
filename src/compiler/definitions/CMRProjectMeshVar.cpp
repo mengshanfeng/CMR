@@ -16,6 +16,7 @@
 #include "CMRGenCode.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectMeshVar::CMRProjectMeshVar ( const string& latexName, const string& longName , const std::string & type) 
@@ -79,7 +80,7 @@ ostream& CMRProjectMeshVar::genCPPAccessorConstrAcc(ostream& out)
 /*******************  FUNCTION  *********************/
 void CMRProjectMeshVar::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int indent ) const
 {
-	throw CMRLatexException("Variable must be defined by calling special functions from project structure, not directly by genDefinitionCCode function.");
+	throw LatexException("Variable must be defined by calling special functions from project structure, not directly by genDefinitionCCode function.");
 }
 
 /*******************  FUNCTION  *********************/
@@ -93,7 +94,7 @@ string CMRProjectMeshVar::getTypeWithDims ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
+void CMRProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	CMRProjectCaptureMap capture;
 

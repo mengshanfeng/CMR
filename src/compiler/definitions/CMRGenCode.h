@@ -14,13 +14,16 @@
 #include <ostream>
 
 /*********************  TYPES  **********************/
-class CMRLatexFormulas2;
-class CMRLatexEntity2;
+namespace CMRCompiler
+{
+	class LatexFormulas;
+	class LatexEntity;
+};
 class CMRProjectContext;
 
 /*******************  FUNCTION  *********************/
-std::ostream& cmrGenEqCCode(std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity);
-std::ostream& cmrGenEqCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexFormulas2& formula );
-bool latexEntityIsInteger(const CMRLatexEntity2 & entity);
+std::ostream& cmrGenEqCCode(std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity);
+std::ostream& cmrGenEqCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexFormulas& formula );
+bool latexEntityIsInteger(const CMRCompiler::LatexEntity & entity);
 
 #endif //CMR_GEN_CODE_H

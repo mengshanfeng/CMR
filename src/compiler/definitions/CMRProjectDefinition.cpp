@@ -76,7 +76,7 @@ void CMRProjectDefinition::genParameterListForUsage ( ostream& out, const CMRPro
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
+void CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	//extract matching
 	CMRProjectCaptureMap capture;

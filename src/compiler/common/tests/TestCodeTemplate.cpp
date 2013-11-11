@@ -13,8 +13,8 @@
 #include "CodeTemplateDic.h"
 
 /**********************  USING  *********************/
-using namespace testing;
 using namespace std;
+using namespace testing;
 using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/

@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <CMRProjectCode.h>
-#include <../parsor/CMRLatexFormula.h>
+#include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 #include <CMRProjectIterator.h>
@@ -18,6 +18,7 @@
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char * CST_VALUE_1 = "//Definition : E : energy\n\
@@ -156,7 +157,7 @@ TEST(TestProjectDefinition,testGenUsageCCodeRead)
 	CMRProjectContext context;
 	
 	stringstream out;
-	CMRLatexEntity2 entity("E");
+	LatexEntity entity("E");
 	def.genUsageCCode(out,&context,entity);
 	
 	EXPECT_EQ("compute_energy(in,out,x,y)",out.str());
@@ -175,7 +176,7 @@ TEST(TestProjectDefinition,testGenUsageCCodeParamsRead)
 	CMRProjectContext context;
 	
 	stringstream out;
-	CMRLatexEntity2 entity("E_{i,j,3}");
+	LatexEntity entity("E_{i,j,3}");
 	def.genUsageCCode(out,&context,entity);
 	
 	EXPECT_EQ("compute_energy(in,out,x,y, (3))",out.str());

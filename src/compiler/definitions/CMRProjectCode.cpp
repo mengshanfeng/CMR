@@ -37,7 +37,7 @@ void CMRProjectLocalVariable::genDefinitionCCode ( std::ostream& out, const CMRP
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectLocalVariable::genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
+void CMRProjectLocalVariable::genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	out << getLongName();
 }
@@ -142,11 +142,11 @@ const CMRProjectIterator& CMRProjectCodeIteratorLoop::getIterator(void ) const
 	//build iterator loop
 	const CMRProjectEntity * entity = context.findInParent(iterator);
 	if (entity == NULL)
-		throw CMRLatexException("Invalid iterator name : "+iterator);
+		throw LatexException("Invalid iterator name : "+iterator);
 
 	const CMRProjectIterator * it = dynamic_cast<const CMRProjectIterator*>(entity);
 	if (it == NULL)
-		throw CMRLatexException("Invalid iterator type : "+iterator);
+		throw LatexException("Invalid iterator type : "+iterator);
 	
 	return *it;
 }
@@ -213,13 +213,13 @@ CMRProjectCodeEntry::CMRProjectCodeEntry(CMRProjectContext* context)
 
 }
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2& CMRProjectCodeEquation::getFormulas(void )
+LatexFormulas& CMRProjectCodeEquation::getFormulas(void )
 {
 	return formula;
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity2& CMRProjectCodeEquation::getOutput(void )
+LatexEntity& CMRProjectCodeEquation::getOutput(void )
 {
 	return output;
 }
@@ -339,7 +339,7 @@ CMRProjectCConstruct::CMRProjectCConstruct ( const string& code )
 /*******************  FUNCTION  *********************/
 CMRProjectCConstruct& CMRProjectCConstruct::arg ( const string& value )
 {
-	this->args.push_back(new CMRLatexFormulas2(value));
+	this->args.push_back(new LatexFormulas(value));
 	return *this;
 }
 
@@ -365,7 +365,7 @@ void CMRProjectCConstruct::loadCode ( const string& code )
 		if (code[i] == '$' && prev != '\\') {
 			if (capture)
 			{
-				this->autoArgs.push_back(new CMRLatexFormulas2(buffer));
+				this->autoArgs.push_back(new LatexFormulas(buffer));
 				codePattern << "%a" << cnt++;
 			} else {
 				buffer.clear();
@@ -428,7 +428,7 @@ void CMRProjectCConstruct::genCCode ( ostream& out, const CMRProjectContext& con
 	//loop on all locus and replace, replace by end, so position are still known after first replace
 	for (ExtractionLocusList::const_reverse_iterator it = locusList.rbegin() ; it != locusList.rend() ; ++it)
 	{
-		const CMRLatexFormulas2 * formula = getLocusValue(*it);
+		const LatexFormulas * formula = getLocusValue(*it);
 		assert(formula != NULL);
 		stringstream buffer;
 		cmrGenEqCCode(buffer,context,*formula);
@@ -440,7 +440,7 @@ void CMRProjectCConstruct::genCCode ( ostream& out, const CMRProjectContext& con
 }
 
 /*******************  FUNCTION  *********************/
-const CMRLatexFormulas2* CMRProjectCConstruct::getLocusValue ( const ExtractionLocus& locus ) const
+const LatexFormulas* CMRProjectCConstruct::getLocusValue ( const ExtractionLocus& locus ) const
 {
 	cmrAssume(locus.id > 0,"Locus ID must be greater than 0 (%d)",locus.id);
 	if (locus.isAutoEntry)

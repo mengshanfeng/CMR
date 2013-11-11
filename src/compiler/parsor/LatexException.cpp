@@ -10,44 +10,50 @@
 /********************  HEADERS  *********************/
 #include <iostream>
 #include <cstdlib>
-#include "CMRLatexException.h"
+#include "LatexException.h"
 
 /**********************  USING  *********************/
 using namespace std;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
-CMRLatexException::CMRLatexException ( void ) throw()
+LatexException::LatexException ( void ) throw()
 {
 
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexException::CMRLatexException ( std::string message ) throw()
+LatexException::LatexException ( std::string message ) throw()
 {
 	this->message = message;
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexException::~CMRLatexException ( void ) throw()
+LatexException::~LatexException ( void ) throw()
 {
 
 }
 
 /*******************  FUNCTION  *********************/
-std::string CMRLatexException::getMessage ( void ) const
+std::string LatexException::getMessage ( void ) const
 {
 	return message;
 }
 
 /*******************  FUNCTION  *********************/
-const char* CMRLatexException::what() const  throw()
+const char* LatexException::what() const  throw()
 {
 	return message.c_str();
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexException::fatal()
+void LatexException::fatal()
 {
 	cerr << message << endl;
 	abort();
 }
+
+};

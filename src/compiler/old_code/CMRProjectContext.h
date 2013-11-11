@@ -26,7 +26,7 @@ struct CMRProjectContext
 	CMRProjectEntity & addEntry(CMRProjectEntity * entry);
 	CMRProjectEntity* checkUnique(CMRProjectEntity & entry);
 // 	CMREntity * find(CMRLatexEntity & entity);
-	const CMRProjectEntity * find(CMRLatexEntity & entity) const;
+	const CMRProjectEntity * find(CMRCompiler::LatexEntityOld & entity) const;
 	const CMRProjectContext * parent;
 	CMRProjectEntityList entities;
 };

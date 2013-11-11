@@ -7,36 +7,42 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_LATEX_PARSOR_CONTEXT_H
-#define CMR_LATEX_PARSOR_CONTEXT_H
+#ifndef CMR_COMPILER_LATEX_PARSOR_CONTEXT_H
+#define CMR_COMPILER_LATEX_PARSOR_CONTEXT_H
 
 /********************  HEADERS  *********************/
 #include <string>
-#include "CMRLatexException.h"
+#include "LatexException.h"
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*********************  CLASS  **********************/
-class CMRLatexParsorContext
+class LatexParsorContext
 {
 	public:
-		CMRLatexParsorContext(const std::string & value);
-		CMRLatexParsorContext(const CMRLatexParsorContext * parent,int start,int end);
+		LatexParsorContext(const std::string & value);
+		LatexParsorContext(const LatexParsorContext * parent,int start,int end);
 		int getPosition(void) const;
 		int move( int delta );
 		void skipWhiteSpace(void);
 		bool isEnd(void) const;
-		CMRLatexParsorContext & operator++(void);
+		LatexParsorContext & operator++(void);
 		char getCurrent(void) const;
 		char getCurAndMove( int delta = 1 );
 		bool startBy(const std::string & value) const;
 		bool startBy(char value) const;
-		CMRLatexParsorContext extractSubZone( char delimOpen, char delimClose );
-		void fatal(const std::string & message) const throw(CMRLatexException);
+		LatexParsorContext extractSubZone( char delimOpen, char delimClose );
+		void fatal(const std::string & message) const throw(LatexException);
 		const std::string & getValue(void) const;
 	private:
 		int position;
 		std::string value;
-		const CMRLatexParsorContext * parent;
+		const LatexParsorContext * parent;
 		int relToParent;
 };
 
-#endif //CMR_LATEX_PARSOR_CONTEXT_H
+};
+
+#endif //CMR_COMPILER_LATEX_PARSOR_CONTEXT_H

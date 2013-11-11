@@ -9,13 +9,14 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <CMRProjectEntity.h>
-#include <../parsor/CMRLatexFormula.h>
+#include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char TEST_CST_1[] = "Entity :\n\
@@ -56,7 +57,7 @@ TEST(TestProjectEntity,testAddIndice_duplicate)
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
 	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
-	EXPECT_THROW(entity.addIndice("i",CMR_CAPTURE_REQUIRED),CMRLatexException);
+	EXPECT_THROW(entity.addIndice("i",CMR_CAPTURE_REQUIRED),LatexException);
 	entity.addIndice("2");
 }
 
@@ -77,7 +78,7 @@ TEST(TestProjectEntity,testAddExponent_duplicate)
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
 	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
-	EXPECT_THROW(entity.addExponent("i",CMR_CAPTURE_REQUIRED),CMRLatexException);
+	EXPECT_THROW(entity.addExponent("i",CMR_CAPTURE_REQUIRED),LatexException);
 	entity.addExponent("2");
 }
 
@@ -100,7 +101,7 @@ TEST(TestProjectEntity,testAddParameter_duplicate)
 	MockProjectEntity entity("A_{i,j}^2","test");
 	entity.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
 	EXPECT_EQ("A_{i,j}^{2}",entity.getLatexName());
-	EXPECT_THROW(entity.addParameter("i",CMR_CAPTURE_REQUIRED),CMRLatexException);
+	EXPECT_THROW(entity.addParameter("i",CMR_CAPTURE_REQUIRED),LatexException);
 	entity.addParameter("2");
 }
 
@@ -115,7 +116,7 @@ TEST(TestProjectEntity,testChangeCaptureType_ok)
 TEST(TestProjectEntity,testChangeCaptureType_invalid)
 {
 	MockProjectEntity entity("A_{i,j}^2","test");
-	EXPECT_THROW(entity.changeCaptureType("m",CMR_CAPTURE_REQUIRED),CMRLatexException);
+	EXPECT_THROW(entity.changeCaptureType("m",CMR_CAPTURE_REQUIRED),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -123,7 +124,7 @@ TEST(TestProjectEntity,testMatch_1)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
-	CMRLatexEntity2 le("A_{eq,42}");
+	LatexEntity le("A_{eq,42}");
 	EXPECT_TRUE(entity.match(le));
 }
 
@@ -132,7 +133,7 @@ TEST(TestProjectEntity,testMatch_2)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
-	CMRLatexEntity2 le("A_{eq2,42}");
+	LatexEntity le("A_{eq2,42}");
 	EXPECT_FALSE(entity.match(le));
 }
 
@@ -141,7 +142,7 @@ TEST(TestProjectEntity,testMatch_3)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
-	CMRLatexEntity2 le("A_{eq}");
+	LatexEntity le("A_{eq}");
 	EXPECT_FALSE(entity.match(le));
 }
 
@@ -150,7 +151,7 @@ TEST(TestProjectEntity,testMatch_4)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
-	CMRLatexEntity2 le("A_{eq,42,43}");
+	LatexEntity le("A_{eq,42,43}");
 	EXPECT_FALSE(entity.match(le));
 }
 
@@ -159,7 +160,7 @@ TEST(TestProjectEntity,testMatch_5)
 {
 	MockProjectEntity entity("A_{eq,k}^{4}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
-	CMRLatexEntity2 le("A_{eq,42}^4");
+	LatexEntity le("A_{eq,42}^4");
 	EXPECT_TRUE(entity.match(le));
 }
 
@@ -168,7 +169,7 @@ TEST(TestProjectEntity,testMatch_6)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
-	CMRLatexEntity2 le("A_{eq,42}^2");
+	LatexEntity le("A_{eq,42}^2");
 	EXPECT_TRUE(entity.match(le));
 }
 
@@ -181,7 +182,7 @@ TEST(TestProjectEntity,testCapture_1)
 	entity.changeCaptureType("c",CMR_CAPTURE_REQUIRED);
 	entity.changeCaptureType("d",CMR_CAPTURE_REQUIRED);
 
-	CMRLatexEntity2 le("A_{1,2}^{3,4}");
+	LatexEntity le("A_{1,2}^{3,4}");
 	
 	EXPECT_TRUE(entity.match(le));
 	
@@ -202,7 +203,7 @@ TEST(TestProjectEntity,testCapture_2)
 	entity.changeCaptureType("a",CMR_CAPTURE_REQUIRED);
 	entity.changeCaptureType("b",CMR_CAPTURE_REQUIRED);
 
-	CMRLatexEntity2 le("\\frac{1}{2}");
+	LatexEntity le("\\frac{1}{2}");
 	
 	EXPECT_TRUE(entity.match(le));
 	
@@ -223,12 +224,12 @@ TEST(TestProjectEntity,testCapture_3)
 	entity.changeCaptureType("c",CMR_CAPTURE_REQUIRED);
 	entity.changeCaptureType("d",CMR_CAPTURE_REQUIRED);
 
-	CMRLatexEntity2 le("A_{1,2,5}^{3,4}");
+	LatexEntity le("A_{1,2,5}^{3,4}");
 	
 	EXPECT_FALSE(entity.match(le));
 	
 	CMRProjectCaptureMap capture;
-	EXPECT_THROW(entity.capture(le,capture),CMRLatexException);
+	EXPECT_THROW(entity.capture(le,capture),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -236,7 +237,7 @@ TEST(TestProjectEntity,testCapture_4)
 {
 	MockProjectEntity entity("A_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
-	CMRLatexEntity2 le("A_{eq,42}^2");
+	LatexEntity le("A_{eq,42}^2");
 	
 	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);
@@ -251,7 +252,7 @@ TEST(TestProjectEntity,testCapture_wildcard_1)
 	MockProjectEntity entity("x_{eq,k}","test");
 	entity.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
 	entity.captureName();
-	CMRLatexEntity2 le("A_{eq,42}^2");
+	LatexEntity le("A_{eq,42}^2");
 	
 	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);
@@ -266,7 +267,7 @@ TEST(TestProjectEntity,testCapture_wildcard_2)
 {
 	MockProjectEntity entity("x^2","test");
 	entity.captureName();
-	CMRLatexEntity2 le("A^2");
+	LatexEntity le("A^2");
 	
 	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);
@@ -281,7 +282,7 @@ TEST(TestProjectEntity,testCapture_wildcard_3)
 	MockProjectEntity entity("x^a","test");
 	entity.changeCaptureType("a",CMR_CAPTURE_REQUIRED);
 	entity.captureName();
-	CMRLatexEntity2 le("A^2");
+	LatexEntity le("A^2");
 	
 	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);
@@ -297,7 +298,7 @@ TEST(TestProjectEntity,testCapture_wildcard_4)
 	MockProjectEntity entity("x^a","test");
 	entity.changeCaptureType("a",CMR_CAPTURE_REQUIRED);
 	entity.captureName();
-	CMRLatexEntity2 le("(A+B)^2");
+	LatexEntity le("(A+B)^2");
 	
 	CMRProjectCaptureMap capture;
 	entity.capture(le,capture);

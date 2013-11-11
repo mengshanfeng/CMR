@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <CMRProjectConstant.h>
-#include <../parsor/CMRLatexFormula.h>
+#include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 #include <CMRProjectContext.h>
@@ -17,6 +17,7 @@
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char TEST_CST_1[] = "Entity :\n\
@@ -63,9 +64,9 @@ TEST(TestProjectConstant,testLoadValue_scalar)
 TEST(TestProjectConstant,testLoadValue_scalar_invalid)
 {
 	CMRProjectConstant constant("C","testC");
-	EXPECT_THROW(constant.loadValues("55;5",0),CMRLatexException);
-	EXPECT_THROW(constant.loadValues("55\\\\5",0),CMRLatexException);
-	EXPECT_THROW(constant.loadValues("",0),CMRLatexException);
+	EXPECT_THROW(constant.loadValues("55;5",0),LatexException);
+	EXPECT_THROW(constant.loadValues("55\\\\5",0),LatexException);
+	EXPECT_THROW(constant.loadValues("",0),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -86,8 +87,8 @@ TEST(TestProjectConstant,testLoadValue_vector)
 TEST(TestProjectConstant,testLoadValue_vector_invalid)
 {
 	CMRProjectConstant constant("C","testC");
-	EXPECT_THROW(constant.loadValues("55\\\\5",1),CMRLatexException);
-	EXPECT_THROW(constant.loadValues("",1),CMRLatexException);
+	EXPECT_THROW(constant.loadValues("55\\\\5",1),LatexException);
+	EXPECT_THROW(constant.loadValues("",1),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -108,8 +109,8 @@ TEST(TestProjectConstant,testLoadValue_matrix)
 TEST(TestProjectConstant,testLoadValue_scalar_matrix_invalid)
 {
 	CMRProjectConstant constant("C","testC");
-	EXPECT_THROW(constant.loadValues("",2),CMRLatexException);
-	EXPECT_THROW(constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2\\\\3.1;3.2;3.3",2),CMRLatexException);
+	EXPECT_THROW(constant.loadValues("",2),LatexException);
+	EXPECT_THROW(constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2\\\\3.1;3.2;3.3",2),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -170,7 +171,7 @@ TEST(TestProjectConstant,testGenUsageCCode_scalar)
 	constant.loadValues("1",0);
 	
 	CMRProjectContext context;
-	CMRLatexEntity2 entity("C");
+	LatexEntity entity("C");
 	stringstream out;
 	constant.genUsageCCode(out,context,entity);
 	
@@ -186,7 +187,7 @@ TEST(TestProjectConstant,testGenUsageCCode_vector)
 	CMRProjectContext context;
 	MockProjectEntity var("m","testM");
 	context.addEntry(&var);
-	CMRLatexEntity2 entity("C_{m +5}");
+	LatexEntity entity("C_{m +5}");
 	stringstream out;
 	constant.genUsageCCode(out,context,entity);
 	
@@ -202,7 +203,7 @@ TEST(TestProjectConstant,testGenUsageCCode_matrix)
 	CMRProjectContext context;
 	MockProjectEntity var("m","testM");
 	context.addEntry(&var);
-	CMRLatexEntity2 entity("C_{m +5,m*2}");
+	LatexEntity entity("C_{m +5,m*2}");
 	stringstream out;
 	constant.genUsageCCode(out,context,entity);
 	

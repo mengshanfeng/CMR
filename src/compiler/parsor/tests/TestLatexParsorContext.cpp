@@ -8,35 +8,36 @@
 
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
-#include <CMRLatexParsorContext.h>
+#include <LatexParsorContext.h>
 
 /**********************  USING  *********************/
 using namespace testing;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testConstructor1)
 {
-	CMRLatexParsorContext context1("test");
+	LatexParsorContext context1("test");
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testConstructor2)
 {
-	CMRLatexParsorContext context1("test");
-	CMRLatexParsorContext context2(&context1,1,3);
+	LatexParsorContext context1("test");
+	LatexParsorContext context2(&context1,1,3);
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testGetPosition)
 {
-	CMRLatexParsorContext context("test");
+	LatexParsorContext context("test");
 	EXPECT_EQ(0,context.getPosition());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testMove)
 {
-	CMRLatexParsorContext context("test");
+	LatexParsorContext context("test");
 	EXPECT_EQ(0,context.getPosition());
 	context.move(1);
 	EXPECT_EQ(1,context.getPosition());
@@ -51,7 +52,7 @@ TEST(TestLatexParsorContext,testMove)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testSkipWhiteSpace)
 {
-	CMRLatexParsorContext context("  	test");
+	LatexParsorContext context("  	test");
 	EXPECT_EQ(0,context.getPosition());
 	context.skipWhiteSpace();
 	EXPECT_EQ(3,context.getPosition());
@@ -60,7 +61,7 @@ TEST(TestLatexParsorContext,testSkipWhiteSpace)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testIsEnd)
 {
-	CMRLatexParsorContext context("test");
+	LatexParsorContext context("test");
 	EXPECT_EQ(0,context.getPosition());
 	EXPECT_FALSE(context.isEnd());
 	context.move(8);
@@ -71,7 +72,7 @@ TEST(TestLatexParsorContext,testIsEnd)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testOperatorPlusPlus)
 {
-	CMRLatexParsorContext context("test");
+	LatexParsorContext context("test");
 	EXPECT_EQ(0,context.getPosition());
 	++context;
 	EXPECT_EQ(1,context.getPosition());
@@ -80,7 +81,7 @@ TEST(TestLatexParsorContext,testOperatorPlusPlus)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,getCurrent)
 {
-	CMRLatexParsorContext context("test");
+	LatexParsorContext context("test");
 	EXPECT_EQ('t',context.getCurrent());
 	++context;
 	EXPECT_EQ('e',context.getCurrent());
@@ -97,7 +98,7 @@ TEST(TestLatexParsorContext,getCurrent)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testGetCurAndMove)
 {
-	CMRLatexParsorContext context("test");
+	LatexParsorContext context("test");
 	EXPECT_EQ(0,context.getPosition());
 	EXPECT_EQ('t',context.getCurAndMove());
 	EXPECT_EQ(1,context.getPosition());
@@ -116,14 +117,14 @@ TEST(TestLatexParsorContext,testGetCurAndMove)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testGetValue)
 {
-	CMRLatexParsorContext context("test");
+	LatexParsorContext context("test");
 	EXPECT_EQ("test",context.getValue());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testStartBy_string)
 {
-	CMRLatexParsorContext context("test");
+	LatexParsorContext context("test");
 	EXPECT_TRUE(context.startBy("te"));
 	EXPECT_FALSE(context.startBy("es"));
 	
@@ -134,7 +135,7 @@ TEST(TestLatexParsorContext,testStartBy_string)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testStartBy_char)
 {
-	CMRLatexParsorContext context("test");
+	LatexParsorContext context("test");
 	EXPECT_TRUE(context.startBy('t'));
 	EXPECT_FALSE(context.startBy('e'));
 	
@@ -145,23 +146,23 @@ TEST(TestLatexParsorContext,testStartBy_char)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testExtractSubZone_ok)
 {
-	CMRLatexParsorContext context("test(ok)");
+	LatexParsorContext context("test(ok)");
 	context.move(4);
-	CMRLatexParsorContext res = context.extractSubZone('(',')');
+	LatexParsorContext res = context.extractSubZone('(',')');
 	EXPECT_EQ("ok",res.getValue());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testExtractSubZone_error)
 {
-	CMRLatexParsorContext context("test(ok");
+	LatexParsorContext context("test(ok");
 	context.move(4);
-	EXPECT_THROW(context.extractSubZone('(',')'),CMRLatexException);
+	EXPECT_THROW(context.extractSubZone('(',')'),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexParsorContext,testFatal)
 {
-	CMRLatexParsorContext context("test");
-	EXPECT_THROW(context.fatal("short message"),CMRLatexException);
+	LatexParsorContext context("test");
+	EXPECT_THROW(context.fatal("short message"),LatexException);
 }

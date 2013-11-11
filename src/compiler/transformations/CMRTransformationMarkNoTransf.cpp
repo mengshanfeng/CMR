@@ -13,6 +13,8 @@
 #include "../definitions/CMRProjectEntity.h"
 #include "../definitions/CMRProjectCode.h"
 
+using namespace CMRCompiler;
+
 /*******************  FUNCTION  *********************/
 CMRTransformationMarkNoTransf::CMRTransformationMarkNoTransf(void )
 	: CMRTransformationBasic("CMRTransformationMarkNoTransf")
@@ -20,7 +22,7 @@ CMRTransformationMarkNoTransf::CMRTransformationMarkNoTransf(void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationMarkNoTransf::transform(CMRProjectCodeEquation& equation, CMRLatexEntity2& entity)
+void CMRTransformationMarkNoTransf::transform(CMRProjectCodeEquation& equation, LatexEntity& entity)
 {
 	//find entity
 	const CMRProjectEntity * definition = equation.getContext().find(entity);
@@ -37,7 +39,7 @@ void CMRTransformationMarkNoTransf::transform(CMRProjectCodeEquation& equation, 
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationMarkNoTransf::markChildElements(CMRLatexFormulasVector2& childs, const CMRProjectCaptureDefMap& defMap)
+void CMRTransformationMarkNoTransf::markChildElements(LatexFormulasVector& childs, const CMRProjectCaptureDefMap& defMap)
 {
 	//errors
 	assert(childs.size() >= defMap.size());

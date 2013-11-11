@@ -16,6 +16,7 @@
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectAction::CMRProjectAction ( const string& name, const string& descr, CMRProjectContext* parentContext )
@@ -92,7 +93,7 @@ void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::Lan
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genUsageCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
+void CMRProjectAction::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	assert(false);
 }
@@ -138,7 +139,7 @@ void CMRProjectActionParameter::genDefinitionCCode ( ostream& out, const CMRProj
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectActionParameter::genUsageCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
+void CMRProjectActionParameter::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	out << this->getLongName();
 }

@@ -14,13 +14,14 @@
 #include <iostream>
 #include <sstream>
 #include "CMRProjectConstant.h"
-#include "../parsor/CMRParsorBasics.h"
-#include "../parsor/CMRLatexFormula.h"
+#include "../parsor/ParsorBasics.h"
+#include "../parsor/LatexFormula.h"
 #include "CMRGenCode.h"
 #include "../transformations/CMRModelBasedReplacement.h"
 
 /********************  NAMESPACE  *******************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectConstant::CMRProjectConstant ( const string& latexName, const string& longName) 
@@ -46,7 +47,7 @@ void CMRProjectConstant::loadValues ( const string& data, int dimensions )
 		default:
 			stringstream err;
 			err << "Unsupported constent dimension : " << dimensions << endl;
-			throw CMRLatexException(err.str());
+			throw LatexException(err.str());
 	}
 	transform();
 }
@@ -56,15 +57,15 @@ void CMRProjectConstant::loadValuesScalar ( const string& data )
 {
 	//errors
 	if(data.empty())
-		throw CMRLatexException("Invalid empty data to be loaded as scalar !");
+		throw LatexException("Invalid empty data to be loaded as scalar !");
 	
 	//error
 	CMRStringVector vs1 = cmrStringSplit(data,";");
 	CMRStringVector vs2 = cmrStringSplit(data,"\\\\");
 	if (vs1.size() > 1 || vs2.size() > 1)
-		throw CMRLatexException("Caution, you say scalar but provide vector or matrix as data !");
+		throw LatexException("Caution, you say scalar but provide vector or matrix as data !");
 	
-	formulas.push_back(CMRLatexFormulas2(data));
+	formulas.push_back(LatexFormulas(data));
 }
 
 /*******************  FUNCTION  *********************/
@@ -72,12 +73,12 @@ void CMRProjectConstant::loadValuesVector ( const string& data )
 {
 	//errors
 	if(data.empty())
-		throw CMRLatexException("Invalid empty data to be loaded as scalar !");
+		throw LatexException("Invalid empty data to be loaded as scalar !");
 	
 	//error
 	CMRStringVector vs2 = cmrStringSplit(data,"\\\\");
 	if (vs2.size() > 1)
-		throw CMRLatexException("Caution, you say vector but provide matrix as data !");
+		throw LatexException("Caution, you say vector but provide matrix as data !");
 	
 	//split
 	CMRStringVector vs = cmrStringSplit(data,"&");
@@ -85,7 +86,7 @@ void CMRProjectConstant::loadValuesVector ( const string& data )
 	
 	//push all
 	for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
-		formulas.push_back(CMRLatexFormulas2(*it));
+		formulas.push_back(LatexFormulas(*it));
 	
 // 	if (values.size() == 1)
 // 		fprintf(stderr,"Warning, you get a unique 0.0 value for a vector, maybe this is a mistake !\n");
@@ -100,7 +101,7 @@ void CMRProjectConstant::loadValuesMatrix ( const string& data )
 	
 	//errors
 	if(data.empty())
-		throw CMRLatexException("Invalid empty data to be loaded as scalar !");
+		throw LatexException("Invalid empty data to be loaded as scalar !");
 	
 	CMRStringVector ms = cmrStringSplit(data,"\\\\");
 	dim1 = ms.size();
@@ -112,10 +113,10 @@ void CMRProjectConstant::loadValuesMatrix ( const string& data )
 		{
 			dim2 = vs.size();
 		} else if(dim2 != vs.size()) {
-			throw CMRLatexException("Caution you prides lines which do not have the same size !");
+			throw LatexException("Caution you prides lines which do not have the same size !");
 		}
 		for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
-			formulas.push_back(CMRLatexFormulas2(*it));
+			formulas.push_back(LatexFormulas(*it));
 	}
 	
 	addDimension(dim2);
@@ -140,7 +141,7 @@ void CMRProjectConstant::addDimension ( int size )
 		default:
 			stringstream err;
 			err << "Unsupported constent dimension : " << size << endl;
-			throw CMRLatexException(err.str());
+			throw LatexException(err.str());
 	}
 }
 
@@ -212,14 +213,14 @@ void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectCont
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::genUsageCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
+void CMRProjectConstant::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	//extract matching
 	CMRProjectCaptureMap capture;
 	
 	//error
 	if (write)
-		throw CMRLatexException("Constant cannot be used to write in !");
+		throw LatexException("Constant cannot be used to write in !");
 	
 	//extract matching
 	this->capture(entity,capture);
@@ -271,7 +272,7 @@ void CMRProjectConstant::printValues ( ostream& out ) const
 			}
 			break;
 		default:
-			throw CMRLatexException("Dims > 2 not suppported !");
+			throw LatexException("Dims > 2 not suppported !");
 	}
 }
 
@@ -284,30 +285,30 @@ void CMRProjectConstant::transform ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::transform ( CMRLatexFormulas2& formula, CMRModelBasedReplacement& action )
+void CMRProjectConstant::transform ( LatexFormulas& formula, CMRModelBasedReplacement& action )
 {
-	for (CMRLatexEntityVector2::iterator it = formula.begin() ; it != formula.end() ; ++it)
+	for (LatexEntityVector::iterator it = formula.begin() ; it != formula.end() ; ++it)
 		if (formula.hasInfo("cmrNoTranform") == false)
 			this->transform(**it,action);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::transform ( CMRLatexEntity2& entity, CMRModelBasedReplacement& action )
+void CMRProjectConstant::transform ( LatexEntity& entity, CMRModelBasedReplacement& action )
 {
 	action.apply(entity);
 	
-	CMRLatexFormulasVector2 & indices = entity.getIndices();
-	for (CMRLatexFormulasVector2::iterator it = indices.begin() ; it != indices.end() ; ++it)
+	LatexFormulasVector & indices = entity.getIndices();
+	for (LatexFormulasVector::iterator it = indices.begin() ; it != indices.end() ; ++it)
 		if ((*it)->hasInfo("cmrNoTranform") == false)
 			this->transform(**it,action);
 	
-	CMRLatexFormulasVector2 & exponents = entity.getExponents();
-	for (CMRLatexFormulasVector2::iterator it = exponents.begin() ; it != exponents.end() ; ++it)
+	LatexFormulasVector & exponents = entity.getExponents();
+	for (LatexFormulasVector::iterator it = exponents.begin() ; it != exponents.end() ; ++it)
 		if ((*it)->hasInfo("cmrNoTranform") == false)
 			this->transform(**it,action);
 	
-	CMRLatexFormulasVector2 & params = entity.getParameters();
-	for (CMRLatexFormulasVector2::iterator it = params.begin() ; it != params.end() ; ++it)
+	LatexFormulasVector & params = entity.getParameters();
+	for (LatexFormulasVector::iterator it = params.begin() ; it != params.end() ; ++it)
 		if ((*it)->hasInfo("cmrNoTranform") == false)
 			this->transform(**it,action);
 }

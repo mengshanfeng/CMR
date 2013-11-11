@@ -11,7 +11,9 @@
 #include <cassert>
 #include "CMRTransformationExpandFrac.h"
 #include "CMRTransformationReplace.h"
-#include "../parsor/CMRLatexFormula.h"
+#include "../parsor/LatexFormula.h"
+
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRTransformationExpandFrac::CMRTransformationExpandFrac(void )
@@ -22,7 +24,7 @@ CMRTransformationExpandFrac::CMRTransformationExpandFrac(void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationExpandFrac::transform(CMRProjectCodeEquation& equation, CMRLatexEntity2& entity)
+void CMRTransformationExpandFrac::transform(CMRProjectCodeEquation& equation, LatexEntity& entity)
 {
 	rules.apply(entity);
 	

@@ -14,8 +14,8 @@
 #include <sstream>
 #include "CMRProjectAction.h"
 #include "CMRProject.h"
-#include "parsor/CMRTexParsor.h"
-#include "parsor/CMRParsorBasics.h"
+#include "parsor/TexParsor.h"
+#include "parsor/ParsorBasics.h"
 #include "CMRProjectIterator.h"
 #include "CMRGenCode.h"
 

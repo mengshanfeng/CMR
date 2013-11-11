@@ -13,7 +13,7 @@ class CMREntityConstant : public CMRProjectEntity
 		CMREntityConstant( const std::string& latexName, const std::string& longName );
 		void loadValues(const std::string & data,int dimensions);
 		virtual void printDebug(void) const;
-		virtual std::ostream& genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const;
+		virtual std::ostream& genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRCompiler::LatexEntityOld& entity) const;
 		void printCPPCode(void) const;
 	protected:
 		void addDimension(int size);

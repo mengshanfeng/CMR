@@ -20,7 +20,7 @@ class CMRProjectAlias : public CMRModelBasedReplacement
 	public:
 		CMRProjectAlias ( const std::string& latexName, const std::string & result, bool captureAll = true );
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
 };
 
 #endif //CMR_PROJECT_ALIAS_H

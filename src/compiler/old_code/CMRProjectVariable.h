@@ -12,7 +12,7 @@
 
 
 #include "CMRProjectEntity.h"
-#include "parsor/CMRParsorBasics.h"
+#include "parsor/ParsorBasics.h"
 
 /*********************  CLASS  **********************/
 class CMRProjectVariable : public CMRProjectEntity
@@ -21,7 +21,7 @@ class CMRProjectVariable : public CMRProjectEntity
 		CMRProjectVariable ( const std::string& latexName, const std::string& longName, const std::string& type );
 		void addDim( int size, const std::string& name, int start = 0);
 		void printCPPCode(void) const;
-		virtual std::ostream& genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const;
+		virtual std::ostream& genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRCompiler::LatexEntityOld& entity) const;
 		std::string getTypeWithDims(void) const;
 		std::ostream & genCPPAccessorDefinition(std::ostream & out);
 		std::ostream & genCPPAccessorAddVar(std::ostream & out);
@@ -33,7 +33,7 @@ class CMRProjectVariable : public CMRProjectEntity
 		std::string memoryModel;
 		CMRConstantDimensionsVector dims;
 		CMRConstantDimensionsVector dimStart;
-		CMRStringVector dimNames;
+		CMRCompiler::StringVector dimNames;
 };
 
 #endif //CMR_PROJECT_VARIABLE_H

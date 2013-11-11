@@ -21,7 +21,7 @@ class CMRTransformationExpandFrac : public CMRTransformationBasic
 	public:
 		CMRTransformationExpandFrac(void);
 	protected:
-		virtual void transform(CMRProjectCodeEquation & equation,CMRLatexEntity2 & entity);
+		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
 		CMRModelBasedReplacement rules;
 };
 

@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <CMRProjectContext.h>
-#include <../parsor/CMRLatexFormula.h>
+#include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 
@@ -18,6 +18,7 @@
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testConstructor)
@@ -79,8 +80,8 @@ TEST(TestProjectContext,testAddEntry_conflict)
 	MockProjectEntity entry2("A_i","testB");
 	MockProjectEntity entry3("C_i","testA");
 	EXPECT_NO_THROW( context.addEntry(&entry1));
-	EXPECT_THROW(context.addEntry(&entry2),CMRLatexException);
-	EXPECT_THROW(context.addEntry(&entry3),CMRLatexException);
+	EXPECT_THROW(context.addEntry(&entry2),LatexException);
+	EXPECT_THROW(context.addEntry(&entry3),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -91,7 +92,7 @@ TEST(TestProjectContext,testAddEntry_conflict_reverse)
 	entry1.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
 	MockProjectEntity entry2("A_j","testB");
 	EXPECT_NO_THROW(context.addEntry(&entry1));
-	EXPECT_THROW(context.addEntry(&entry2),CMRLatexException);
+	EXPECT_THROW(context.addEntry(&entry2),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -104,7 +105,7 @@ TEST(TestProjectContext,testFind_ok_local)
 	context.addEntry(&entry1);
 	context2.addEntry(&entry2);
 	
-	CMRLatexEntity2 e("A_i");
+	LatexEntity e("A_i");
 	EXPECT_EQ(&entry1,context.find(e));
 }
 
@@ -118,7 +119,7 @@ TEST(TestProjectContext,testFind_ok_parent)
 	context.addEntry(&entry1);
 	context2.addEntry(&entry2);
 	
-	CMRLatexEntity2 e("A_i");
+	LatexEntity e("A_i");
 	EXPECT_EQ(&entry1,context2.find(e));
 }
 
@@ -132,7 +133,7 @@ TEST(TestProjectContext,testFind_not_found)
 	context.addEntry(&entry1);
 	context2.addEntry(&entry2);
 	
-	CMRLatexEntity2 e("C_i");
+	LatexEntity e("C_i");
 	EXPECT_NULL(context2.find(e));
 }
 

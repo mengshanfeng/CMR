@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <CMRProjectIterator.h>
-#include <../parsor/CMRLatexFormula.h>
+#include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 #include <CMRProjectContext.h>
@@ -17,6 +17,7 @@
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char TEST_CST_1[] = "Entity :\n\
@@ -62,8 +63,8 @@ TEST(TestProjectIterator,testGenUsageCCode)
 {
 	CMRProjectIterator it("k","testK",0,9);
 	CMRProjectContext context;
-	CMRLatexEntity2 entity("k");
+	LatexEntity entity("k");
 	
 	stringstream out;
-	EXPECT_THROW(it.genUsageCCode(out,context,entity),CMRLatexException);
+	EXPECT_THROW(it.genUsageCCode(out,context,entity),LatexException);
 }

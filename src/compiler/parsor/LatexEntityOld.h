@@ -7,44 +7,45 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_LATEX_ENTITY_H
-#define CMR_LATEX_ENTITY_H
+#ifndef CMR_COMPILER_LATEX_ENTITY_OLD_H
+#define CMR_COMPILER_LATEX_ENTITY_OLD_H
 
 /********************  HEADERS  *********************/
-#include <ostream>
 #include <vector>
 #include <string>
-#include "CMRLatexException.h"
-#include "CMRLatexEntity2.h"
 
-class CMRLatexParsorContext;
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
-struct CMRLatexEntity;
-struct CMRLatexFormulas;
-typedef std::vector<CMRLatexFormulas*> CMRLatexFormulasList;
-typedef std::vector<CMRLatexEntity*> CMRLatexEntityVector;
+class LatexParsorContext;
+struct LatexEntityOld;
+struct LatexFormulasOld;
+typedef std::vector<LatexFormulasOld*> LatexFormulasListOld;
+typedef std::vector<LatexEntityOld*> LatexEntityVectorOld;
 
 /*********************  STRUCT  *********************/
-struct CMRLatexFormulas
+struct LatexFormulasOld
 {
-	CMRLatexEntityVector childs;
+	LatexEntityVectorOld childs;
 	std::string string;
 };
 
 /*********************  STRUCT  *********************/
-struct CMRLatexEntity
+struct LatexEntityOld
 {
-	CMRLatexEntity(void);
-	~CMRLatexEntity(void);
+	LatexEntityOld(void);
+	~LatexEntityOld(void);
 	void print(int depth, int pos);
 	int countIndices(void) const;
-	CMRLatexFormulasList getIndices( void );
+	LatexFormulasListOld getIndices( void );
 	std::string getString(void) const;
 	std::string name;
 	std::string parent;
-	CMRLatexFormulasList subscript;
-	CMRLatexFormulasList superscript;
-	CMRLatexFormulasList params;
+	LatexFormulasListOld subscript;
+	LatexFormulasListOld superscript;
+	LatexFormulasListOld params;
 	int from;
 	int to;
 	std::string totalValue;
@@ -54,7 +55,9 @@ struct CMRLatexEntity
 };
 
 /*******************  FUNCTION  *********************/
-void cmrPrintFormula(const CMRLatexFormulasList & formulas,int depth);
-void cmrPrintFormula(const CMRLatexFormulas & formula,int depth);
+void cmrPrintFormula(const LatexFormulasListOld & formulas,int depth);
+void cmrPrintFormula(const LatexFormulasOld & formula,int depth);
 
-#endif //CMR_LATEX_ENTITY_H
+};
+
+#endif //CMR_LATEX_ENTITY_OLD_H

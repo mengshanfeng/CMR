@@ -7,12 +7,15 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
+#include <sstream>
 #include <gtest/gtest.h>
-#include <CMRLatexFormula.h>
-#include <CMRLatexParsorContext.h>
+#include <LatexFormula.h>
+#include <LatexParsorContext.h>
 
 /**********************  USING  *********************/
+using namespace std;
 using namespace testing;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char TEST_CST_1[] = "<formula>\n\
@@ -70,14 +73,14 @@ static const char TEST_CST_2[] = "formula:\n\
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testConstructor_1)
 {
-	CMRLatexFormulas2 f;
+	LatexFormulas f;
 	EXPECT_TRUE(f.empty());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testConstructor_2)
 {
-	CMRLatexFormulas2 f("A_2 * B_3");
+	LatexFormulas f("A_2 * B_3");
 	EXPECT_EQ(3,f.size());
 	EXPECT_EQ("A_2*B_3",f.getString());
 }
@@ -85,7 +88,7 @@ TEST(TestLatexFormula,testConstructor_2)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testParse_1)
 {
-	CMRLatexFormulas2 f;
+	LatexFormulas f;
 	f.parse("A_2 * B_3");
 	EXPECT_EQ(3,f.size());
 	EXPECT_EQ("A_2*B_3",f.getString());
@@ -94,8 +97,8 @@ TEST(TestLatexFormula,testParse_1)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testParse_2)
 {
-	CMRLatexFormulas2 f;
-	CMRLatexParsorContext context("A_2 * B_3");
+	LatexFormulas f;
+	LatexParsorContext context("A_2 * B_3");
 	EXPECT_EQ(0,context.getPosition());
 	f.parse(context);
 	EXPECT_TRUE(context.isEnd());
@@ -106,16 +109,16 @@ TEST(TestLatexFormula,testParse_2)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testParse_3)
 {
-	CMRLatexFormulas2 f;
-	EXPECT_THROW(f.parse("A_{2"),CMRLatexException);
+	LatexFormulas f;
+	EXPECT_THROW(f.parse("A_{2"),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testSplit_1)
 {
-	CMRLatexFormulas2 f("A_2,B_3");
+	LatexFormulas f("A_2,B_3");
 	EXPECT_EQ(3,f.size());
-	CMRLatexFormulasVector2 vect;
+	LatexFormulasVector vect;
 	f.split(vect,",");
 	EXPECT_EQ(2,vect.size());
 	EXPECT_EQ("A_2",vect[0]->getString());
@@ -126,9 +129,9 @@ TEST(TestLatexFormula,testSplit_1)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testSplit_2)
 {
-	CMRLatexFormulas2 f("A_2");
+	LatexFormulas f("A_2");
 	EXPECT_EQ(1,f.size());
-	CMRLatexFormulasVector2 vect;
+	LatexFormulasVector vect;
 	f.split(vect,",");
 	EXPECT_EQ(1,vect.size());
 	EXPECT_EQ("A_2",vect[0]->getString());
@@ -138,15 +141,15 @@ TEST(TestLatexFormula,testSplit_2)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testGetString)
 {
-	CMRLatexFormulas2 f("  5 + ( A_2 * B_3 )  ");
+	LatexFormulas f("  5 + ( A_2 * B_3 )  ");
 	EXPECT_EQ("5+(A_2*B_3)",f.getString());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testDumpAsXml)
 {
-	CMRLatexFormulas2 f("  5 + ( A_2 * B_3 )  ");
-	std::stringstream tmp;
+	LatexFormulas f("  5 + ( A_2 * B_3 )  ");
+	stringstream tmp;
 	f.dumpAsXml(tmp);
 	EXPECT_EQ(TEST_CST_1,tmp.str());
 }
@@ -154,8 +157,8 @@ TEST(TestLatexFormula,testDumpAsXml)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testDumpAsTree)
 {
-	CMRLatexFormulas2 f("  5 + ( A_2 * B_3 )  ");
-	std::stringstream tmp;
+	LatexFormulas f("  5 + ( A_2 * B_3 )  ");
+	stringstream tmp;
 	f.dumpAsTree(tmp);
 	EXPECT_EQ(TEST_CST_2,tmp.str());
 }
@@ -163,7 +166,7 @@ TEST(TestLatexFormula,testDumpAsTree)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testClear)
 {
-	CMRLatexFormulas2 f("  5 + ( A_2 * B_3 )  ");
+	LatexFormulas f("  5 + ( A_2 * B_3 )  ");
 	EXPECT_FALSE(f.empty());
 	f.clear();
 	EXPECT_TRUE(f.empty());
@@ -172,20 +175,20 @@ TEST(TestLatexFormula,testClear)
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testIsOnlyOneName_1)
 {
-	CMRLatexFormulas2 f("A");
+	LatexFormulas f("A");
 	EXPECT_TRUE(f.isOnlyOneName());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testIsOnlyOneName_2)
 {
-	CMRLatexFormulas2 f("A_2");
+	LatexFormulas f("A_2");
 	EXPECT_FALSE(f.isOnlyOneName());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestLatexFormula,testIsOnlyOneName_3)
 {
-	CMRLatexFormulas2 f("A+B");
+	LatexFormulas f("A+B");
 	EXPECT_FALSE(f.isOnlyOneName());
 }

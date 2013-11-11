@@ -19,7 +19,7 @@ class CMRTransformationExpandExpo : public CMRTransformationBasic
 	public:
 		CMRTransformationExpandExpo(void);
 	protected:
-		virtual void transform ( CMRProjectCodeEquation& equation, CMRLatexEntity2& entity );
+		virtual void transform ( CMRProjectCodeEquation& equation, CMRCompiler::LatexEntity& entity );
 };
 
 #endif //CMR_TRANSFORMATION_EXPAND_EXPO_H

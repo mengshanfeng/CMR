@@ -14,6 +14,7 @@
 #include "CMRProjectContext.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
@@ -55,7 +56,7 @@ CMRProjectEntity * CMRProjectContext::checkUnique(CMRProjectEntity & entry)
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectEntity* CMRProjectContext::find( CMRLatexEntity& entity ) const
+const CMRProjectEntity* CMRProjectContext::find( LatexEntityOld& entity ) const
 {
 	for (CMRProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
 	{

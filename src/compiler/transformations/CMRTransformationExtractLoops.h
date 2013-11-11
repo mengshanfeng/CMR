@@ -19,7 +19,7 @@ class CMRTransformationExtractLoops : public CMRTransformationBasic
 	public:
 		CMRTransformationExtractLoops(void);
 	protected:
-		virtual void transform ( CMRProjectCodeEquation& equation, CMRLatexEntity2& entity );
+		virtual void transform ( CMRProjectCodeEquation& equation, CMRCompiler::LatexEntity& entity );
 };
 
 #endif //CMR_TRANSFORMATION_EXTRACT_LOOPS_H

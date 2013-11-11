@@ -1,11 +1,12 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include "CMRXmlDoc.h"
-#include <../parsor/CMRLatexException.h>
+#include <../parsor/LatexException.h>
 
 /**********************  USING  *********************/
 using namespace std;
 using namespace testing;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char * CST_VALUE_1 = "<?xml version='1.0' encoding='UTF-8'?>\n<test parama='a' paramb='b'>\n\
@@ -117,14 +118,14 @@ TEST_F(TestXmlDoc,getChildContent_ok)
 TEST_F(TestXmlDoc,getChildContent_multi)
 {
 	CMRXmlNode node = doc.getRootNode();
-	EXPECT_THROW(node.getChildContent("childA"),CMRLatexException);
+	EXPECT_THROW(node.getChildContent("childA"),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
 TEST_F(TestXmlDoc,getChildContent_none)
 {
 	CMRXmlNode node = doc.getRootNode();
-	EXPECT_THROW(node.getChildContent("childD"),CMRLatexException);
+	EXPECT_THROW(node.getChildContent("childD"),LatexException);
 }
 
 /*******************  FUNCTION  *********************/

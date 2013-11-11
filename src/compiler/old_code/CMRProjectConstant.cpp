@@ -13,11 +13,12 @@
 #include <cassert>
 #include <iostream>
 #include "CMRProjectConstant.h"
-#include "parsor/CMRParsorBasics.h"
+#include "parsor/ParsorBasics.h"
 #include "CMRGenCode.h"
 
 /********************  NAMESPACE  *******************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMREntityConstant::CMREntityConstant ( const string& latexName, const string& longName) 
@@ -61,10 +62,10 @@ void CMREntityConstant::loadValuesVector ( const string& data )
 	//errors
 	assert(data.empty() == false);
 	
-	CMRStringVector vs = cmrStringSplit(data,";");
+	StringVector vs = cmrStringSplit(data,";");
 	addDimension(vs.size());
 	
-	for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
+	for (StringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
 		values.push_back(*it);
 	
 // 	if (values.size() == 1)
@@ -81,19 +82,19 @@ void CMREntityConstant::loadValuesMatrix ( const string& data )
 	//errors
 	assert(data.empty() == false);
 	
-	CMRStringVector ms = cmrStringSplit(data,"\\\\");
+	StringVector ms = cmrStringSplit(data,"\\\\");
 	dim1 = ms.size();
 	
-	for (CMRStringVector::const_iterator it = ms.begin() ; it != ms.end() ; ++it)
+	for (StringVector::const_iterator it = ms.begin() ; it != ms.end() ; ++it)
 	{
-		CMRStringVector vs = cmrStringSplit(*it,";");
+		StringVector vs = cmrStringSplit(*it,";");
 		if (dim2 == -1)
 		{
 			dim2 = vs.size();
 		} else {
 			assert(dim2 == vs.size());
 		}
-		for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
+		for (StringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
 			values.push_back(*it);
 	}
 	
@@ -172,7 +173,7 @@ void CMREntityConstant::printCPPCode ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMREntityConstant::genUsageCCode(ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const
+ostream& CMREntityConstant::genUsageCCode(ostream& out, const CMRProjectContext& context, LatexEntityOld& entity) const
 {
 	//extract matching
 	CMRProjectCaptureMap capture;

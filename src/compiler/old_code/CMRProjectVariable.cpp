@@ -16,6 +16,7 @@
 #include "CMRGenCode.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectVariable::CMRProjectVariable ( const string& latexName, const string& longName , const std::string & type) 
@@ -106,7 +107,7 @@ string CMRProjectVariable::getTypeWithDims ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectVariable::genUsageCCode(ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const
+ostream& CMRProjectVariable::genUsageCCode(ostream& out, const CMRProjectContext& context, LatexEntityOld& entity) const
 {
 	CMRProjectCaptureMap capture;
 
@@ -117,7 +118,7 @@ ostream& CMRProjectVariable::genUsageCCode(ostream& out, const CMRProjectContext
 	else
 		abort();
 	
-	CMRLatexEntity tmp = entity;
+	LatexEntityOld tmp = entity;
 	tmp.name = shortName;
 	bool res = match(tmp,capture);
 	assert(res == true);

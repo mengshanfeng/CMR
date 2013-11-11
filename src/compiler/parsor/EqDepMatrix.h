@@ -10,14 +10,20 @@
 #ifndef CMR_EQ_DEP_MATRIX_H
 #define CMR_EQ_DEP_MATRIX_H
 
-/*******************  FUNCTION  *********************/
-struct CMREqDepMatrix
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
 {
-	CMREqDepMatrix(void);
+
+/*******************  FUNCTION  *********************/
+struct EqDepMatrix
+{
+	EqDepMatrix(void);
 	void markAccess(int dx,int dy,bool write);
 	void printDebug(void);
 	unsigned char access[11][11];
 	int maxDepth;
+};
+
 };
 
 #endif //CMR_EQ_DEP_MATRIX_H

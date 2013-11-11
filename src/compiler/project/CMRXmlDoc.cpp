@@ -9,7 +9,7 @@
 
 /********************  HEADERS  *********************/
 #include <cassert>
-#include "../parsor/CMRLatexException.h"
+#include "../parsor/LatexException.h"
 #include "CMRXmlDoc.h"
 #include "common/MsgFormat.h"
 
@@ -41,10 +41,10 @@ void CMRXmlDoc::loadFromMem ( const string& xml )
 {
 	doc = xmlParseMemory(xml.c_str(),xml.size());
 	if (doc == NULL)
-		throw CMRLatexException("Invalid xml format.");
+		throw LatexException("Invalid xml format.");
 	rootNode = xmlDocGetRootElement(doc);
 	if (rootNode == NULL)
-		throw CMRLatexException("Fail to get root element in XML document.");
+		throw LatexException("Fail to get root element in XML document.");
 }
 
 /*******************  FUNCTION  *********************/
@@ -52,10 +52,10 @@ void CMRXmlDoc::loadFromFile ( const string& xmlFile )
 {
 	doc = xmlParseFile(xmlFile.c_str());
 	if (doc == NULL)
-		throw CMRLatexException("Invalid filename.");
+		throw LatexException("Invalid filename.");
 	rootNode = xmlDocGetRootElement(doc);
 	if (rootNode == NULL)
-		throw CMRLatexException("Fail to get root element in XML document.");
+		throw LatexException("Fail to get root element in XML document.");
 	
 }
 
@@ -103,7 +103,7 @@ void CMRXmlDoc::validateWithDTD ( const string& dtdFile )
 	 xmlFreeValidCtxt(vctxt);
 
 	if (!status)
-		throw CMRLatexException("XML file is invalid.");
+		throw LatexException("XML file is invalid.");
 }
 
 /*******************  FUNCTION  *********************/
@@ -154,7 +154,7 @@ void CMRXmlDoc::validateWithSchema ( const string& xsltFile )
 	xmlSchemaFreeValidCtxt(vctxt);
 
 	if (!status)
-		throw CMRLatexException("XML file is invalid.");
+		throw LatexException("XML file is invalid.");
 }
 
 /*******************  FUNCTION  *********************/
@@ -269,7 +269,7 @@ CMRXmlNode CMRXmlNode::getUniqChild ( const string& tagname )
 	{
 		assert(cur.isNamed(tagname));
 		if (cur.getNextSibiling().isValid())
-			throw CMRLatexException("Caution, you want to get a tag value, but there is multiple instances of this tag.");
+			throw LatexException("Caution, you want to get a tag value, but there is multiple instances of this tag.");
 	}
 	return cur;
 }
@@ -279,7 +279,7 @@ string CMRXmlNode::getChildContent ( const string& tagname )
 {
 	CMRXmlNode node = getUniqChild(tagname);
 	if (node.isValid() == false)
-		throw CMRLatexException("Failed to find the requested tagname.");
+		throw LatexException("Failed to find the requested tagname.");
 	return node.getContent();
 }
 

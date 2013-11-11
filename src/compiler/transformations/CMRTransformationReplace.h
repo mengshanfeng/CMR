@@ -19,11 +19,11 @@ class CMRTransformationReplace : public CMRTransformationBasic
 {
 	public:
 		CMRTransformationReplace(const CMRProjectCaptureMap * replaceMap);
-		virtual void transform(CMRProjectCodeEquation & equation,CMRLatexEntity2 & entity);
-		static void replaceAll(const CMRProjectCaptureMap& replaceMap, CMRLatexEntity2& entity);
-		static void replaceAll(const CMRProjectCaptureMap& replaceMap, CMRLatexFormulas2& formula);
-		static void replaceAll( const CMRProjectCaptureMap& replaceMap, CMRLatexFormulasVector2& formulas );
-		static const CMRLatexFormulas2* searchReplaceValue(const CMRProjectCaptureMap& replaceMap, const CMRLatexEntity2& entity);
+		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
+		static void replaceAll(const CMRProjectCaptureMap& replaceMap, CMRCompiler::LatexEntity& entity);
+		static void replaceAll(const CMRProjectCaptureMap& replaceMap, CMRCompiler::LatexFormulas& formula);
+		static void replaceAll( const CMRProjectCaptureMap& replaceMap, CMRCompiler::LatexFormulasVector& formulas );
+		static const CMRCompiler::LatexFormulas* searchReplaceValue(const CMRProjectCaptureMap& replaceMap, const CMRCompiler::LatexEntity& entity);
 	private:
 		const CMRProjectCaptureMap * replaceMap;
 };

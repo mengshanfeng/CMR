@@ -8,6 +8,7 @@
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 const char * CMR_NODE_ROOT = "cmr";
@@ -122,7 +123,7 @@ void CMRProjectXMLLoader::loadConsts ( CMRProject2& project, CMRXmlNode& node )
 		if (cur.isNamed(CMR_NODE_CONST))
 			loadConst(project,cur);
 		else
-			throw CMRLatexException("Invalid tag name while loading project constants in XML file.");
+			throw LatexException("Invalid tag name while loading project constants in XML file.");
 		cur = cur.getNext();
 	}
 }
@@ -163,7 +164,7 @@ void CMRProjectXMLLoader::loadMesh ( CMRProject2& project, CMRXmlNode& node )
 		if (cur.isNamed(CMR_NODE_MESH_VAR))
 			loadMeshVar(project,cur);
 		else
-			throw CMRLatexException("Invalid tag name while loading project mesh in XML file.");
+			throw LatexException("Invalid tag name while loading project mesh in XML file.");
 		cur = cur.getNext();
 	}
 }
@@ -200,7 +201,7 @@ void CMRProjectXMLLoader::loadMeshVar ( CMRProject2& project, CMRXmlNode& node )
 				assert(dimSize > 1);
 				var.addDim(dimMathName,dimSize,dimStart);
 			} else {
-				throw CMRLatexException("Invalid tag name while loading project mesh var in XML file.");
+				throw LatexException("Invalid tag name while loading project mesh var in XML file.");
 			}
 			cur = cur.getNext();
 		}
@@ -221,7 +222,7 @@ void CMRProjectXMLLoader::loadGlobIterators ( CMRProject2& project, CMRXmlNode& 
 		if (cur.isNamed(CMR_NODE_ITERATOR))
 			loadGlobIterator(project,cur);
 		else
-			throw CMRLatexException("Invalid tag name while loading project iterators in XML file.");
+			throw LatexException("Invalid tag name while loading project iterators in XML file.");
 		cur = cur.getNext();
 	}
 }
@@ -258,7 +259,7 @@ void CMRProjectXMLLoader::loadDefinitions ( CMRProject2& project, CMRXmlNode& no
 		if (cur.isNamed(CMR_NODE_DEFINITION))
 			loadDefinition(project,cur);
 		else
-			throw CMRLatexException("Invalid tag name while loading project definitions in XML file.");
+			throw LatexException("Invalid tag name while loading project definitions in XML file.");
 		cur = cur.getNext();
 	}
 }
@@ -360,7 +361,7 @@ void CMRProjectXMLLoader::loadCellActions ( CMRProject2& project, CMRXmlNode& no
 		if (cur.isNamed(CMR_NODE_CELL_ACTION))
 			loadCellAction(project,cur);
 		else
-			throw CMRLatexException("Invalid tag name while loading project cell action in XML file.");
+			throw LatexException("Invalid tag name while loading project cell action in XML file.");
 		cur = cur.getNext();
 	}
 }
@@ -411,7 +412,7 @@ void CMRProjectXMLLoader::loadInitCallActions ( CMRProject2& project, CMRXmlNode
 		if (cur.isNamed("callaction"))
 			loadInitCallAction(project,cur);
 		else
-			throw CMRLatexException("Invalid tag name while loading project init in XML file.");
+			throw LatexException("Invalid tag name while loading project init in XML file.");
 		cur = cur.getNext();
 	}
 }
@@ -430,7 +431,7 @@ void CMRProjectXMLLoader::loadMainCallActions ( CMRProject2& project, CMRXmlNode
 		if (cur.isNamed("callaction"))
 			loadMainCallAction(project,cur);
 		else
-			throw CMRLatexException("Invalid tag name while loading project init in XML file.");
+			throw LatexException("Invalid tag name while loading project init in XML file.");
 		cur = cur.getNext();
 	}
 }
@@ -459,7 +460,7 @@ void CMRProjectXMLLoader::loadInitCallAction ( CMRProject2& project, CMRXmlNode&
 			string value = cur.getContent();
 			action.addZone(value);
 		} else {
-			throw CMRLatexException("Invalid tag name while loading project init in XML file.");
+			throw LatexException("Invalid tag name while loading project init in XML file.");
 		}
 		cur = cur.getNext();
 	}
@@ -489,7 +490,7 @@ void CMRProjectXMLLoader::loadMainCallAction ( CMRProject2& project, CMRXmlNode&
 			string value = cur.getContent();
 			action.addZone(value);
 		} else {
-			throw CMRLatexException("Invalid tag name while loading project init in XML file.");
+			throw LatexException("Invalid tag name while loading project init in XML file.");
 		}
 		cur = cur.getNext();
 	}

@@ -16,6 +16,7 @@
 #include "CMRProjectContext.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectIterator::CMRProjectIterator ( const string& latexName, const string& longName, int start, int end ) 
@@ -40,7 +41,7 @@ void CMRProjectIterator::genDefinitionCCode ( ostream& out, const CMRProjectCont
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectIterator::genUsageCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
+void CMRProjectIterator::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 // 	stringstream err;
 // 	err << "Error, iterator may not be used out of loop definition : " << getLatexName() << " : " << start << " -> " << end << endl;

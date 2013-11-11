@@ -13,11 +13,12 @@
 #include <sstream>
 #include "CMRProjectTransformation.h"
 #include "CMRProjectAction.h"
-#include "parsor/CMRTexParsor.h"
-#include "parsor/CMRLatexEntity.h"
-#include "parsor/CMRParsorBasics.h"
+#include "parsor/TexParsor.h"
+#include "parsor/LatexEntityOld.h"
+#include "parsor/ParsorBasics.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectTransformation::CMRProjectTransformation ( bool loopOnLatexEntities)
@@ -133,7 +134,7 @@ static std::string getLongTempName(int id)
 /*******************  FUNCTION  *********************/
 CMRProjectAction::Iterator CMRProjectTransfExtractLoops::transform ( CMRProjectAction::Iterator action, int depth )
 {
-	CMRLatexEntity * term;
+	LatexEntityOld * term;
 	string op;
 
 	if (action->getName() == "cmrEquation")
@@ -146,7 +147,7 @@ CMRProjectAction::Iterator CMRProjectTransfExtractLoops::transform ( CMRProjectA
 				op = " + ";
 			else
 				assert(false);
-			CMRLatexFormulas f;
+			LatexFormulasOld f;
 			string tmpName = getTempName(tmpId);
 			string longTmpName = getLongTempName(tmpId);
 			tmpId++;
@@ -171,27 +172,27 @@ CMRProjectTransfImplicitMul::CMRProjectTransfImplicitMul ( void )
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity * simpleEntity(const std::string & value)
+LatexEntityOld * simpleEntity(const std::string & value)
 {
 	int tmp = 0;
-	CMRLatexEntity * e = cmrParseLatexEntitySimple(value,tmp);
+	LatexEntityOld * e = cmrParseLatexEntitySimple(value,tmp);
 	return e;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfImplicitMul::replaceImplMul ( CMRLatexFormulasList& formula )
+void CMRProjectTransfImplicitMul::replaceImplMul ( LatexFormulasListOld& formula )
 {
-	for (CMRLatexFormulasList::iterator it = formula.begin() ;  it != formula.end() ; ++it)
+	for (LatexFormulasListOld::iterator it = formula.begin() ;  it != formula.end() ; ++it)
 		replaceImplMul(**it);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfImplicitMul::replaceImplMul ( CMRLatexFormulas & formula )
+void CMRProjectTransfImplicitMul::replaceImplMul ( LatexFormulasOld & formula )
 {
 	int cnt = 0;
-	CMRLatexEntityVector & elems = formula.childs;
-	CMRLatexEntityVector newList;
-	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
+	LatexEntityVectorOld & elems = formula.childs;
+	LatexEntityVectorOld newList;
+	for (LatexEntityVectorOld::iterator it = elems.begin() ;  it != elems.end() ; ++it)
 	{
 		if (cnt % 2 == 1 && !cmrIsOperator((*it)->totalValue[0]))
 		{
@@ -205,7 +206,7 @@ void CMRProjectTransfImplicitMul::replaceImplMul ( CMRLatexFormulas & formula )
 		replaceImplMul((*it)->subscript);
 		replaceImplMul((*it)->superscript);
 		
-		for (CMRLatexFormulasList::iterator itf = (*it)->params.begin() ; itf != (*it)->params.end() ; ++itf)
+		for (LatexFormulasListOld::iterator itf = (*it)->params.begin() ; itf != (*it)->params.end() ; ++itf)
 			replaceImplMul(**itf);
 	}
 	
@@ -236,13 +237,13 @@ CMRProjectAction::Iterator CMRProjectTransfExpandFrac::transform ( CMRProjectAct
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity * securedEntity(CMRLatexFormulas & formula)
+LatexEntityOld * securedEntity(LatexFormulasOld & formula)
 {
 	if (formula.childs.size() == 1)
 	{
 		return formula.childs[0];
 	} else {
-		CMRLatexEntity * e = new CMRLatexEntity;
+		LatexEntityOld * e = new LatexEntityOld;
 		e->name = "(";
 		e->params.push_back(&formula);
 		return e;
@@ -250,12 +251,12 @@ CMRLatexEntity * securedEntity(CMRLatexFormulas & formula)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfExpandFrac::expandFrac ( CMRLatexEntity& entity )
+void CMRProjectTransfExpandFrac::expandFrac ( LatexEntityOld& entity )
 {
 	if (entity.name == "\\frac")
 	{
 		entity.name = "(";
-		CMRLatexFormulas * f = new CMRLatexFormulas;
+		LatexFormulasOld * f = new LatexFormulasOld;
 		f->childs.push_back(securedEntity(*entity.params[0]));
 		f->childs.push_back(simpleEntity("/"));
 		f->childs.push_back(securedEntity(*entity.params[1]));
@@ -267,22 +268,22 @@ void CMRProjectTransfExpandFrac::expandFrac ( CMRLatexEntity& entity )
 	expandFrac(entity.subscript);
 	expandFrac(entity.superscript);
 		
-	for (CMRLatexFormulasList::iterator itf = entity.params.begin() ; itf != entity.params.end() ; ++itf)
+	for (LatexFormulasListOld::iterator itf = entity.params.begin() ; itf != entity.params.end() ; ++itf)
 		expandFrac(**itf);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfExpandFrac::expandFrac ( CMRLatexFormulasList& forumlas )
+void CMRProjectTransfExpandFrac::expandFrac ( LatexFormulasListOld& forumlas )
 {
-	for (CMRLatexFormulasList::iterator it = forumlas.begin() ;  it != forumlas.end() ; ++it)
+	for (LatexFormulasListOld::iterator it = forumlas.begin() ;  it != forumlas.end() ; ++it)
 		expandFrac(**it);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfExpandFrac::expandFrac ( CMRLatexFormulas& forumlas )
+void CMRProjectTransfExpandFrac::expandFrac ( LatexFormulasOld& forumlas )
 {
-	CMRLatexEntityVector & elems = forumlas.childs;
-	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
+	LatexEntityVectorOld & elems = forumlas.childs;
+	for (LatexEntityVectorOld::iterator it = elems.begin() ;  it != elems.end() ; ++it)
 		expandFrac(**it);
 }
 
@@ -298,15 +299,15 @@ CMRProjectAction::Iterator CMRProjectTransfExpendExponent::transform ( CMRProjec
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexFormulas& formulas,CMRProjectAction & action)
+void CMRProjectTransfExpendExponent::expandExponent ( LatexFormulasOld& formulas,CMRProjectAction & action)
 {
-	CMRLatexEntityVector & elems = formulas.childs;
-	for (CMRLatexEntityVector::iterator it = elems.begin() ;  it != elems.end() ; ++it)
+	LatexEntityVectorOld & elems = formulas.childs;
+	for (LatexEntityVectorOld::iterator it = elems.begin() ;  it != elems.end() ; ++it)
 		expandExponent(**it,action);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexEntity& entity ,CMRProjectAction & action)
+void CMRProjectTransfExpendExponent::expandExponent ( LatexEntityOld& entity ,CMRProjectAction & action)
 {
 	if (entity.name[0] == '\\' || entity.superscript.empty())
 		return;
@@ -319,20 +320,20 @@ void CMRProjectTransfExpendExponent::expandExponent ( CMRLatexEntity& entity ,CM
 	{
 		if (entity.superscript[0]->string == "2")
 		{
-			CMRLatexEntity * e = new CMRLatexEntity();
+			LatexEntityOld * e = new LatexEntityOld();
 			*e = entity;
 			entity.name = "(";
-			CMRLatexFormulas * f = new CMRLatexFormulas;
+			LatexFormulasOld * f = new LatexFormulasOld;
 			f->childs.push_back(e);
 			f->childs.push_back(simpleEntity("*"));
 			f->childs.push_back(e);
 			entity.params.clear();
 			entity.params.push_back(f);
 		} else if (entity.superscript[0]->string == "3") {
-			CMRLatexEntity * e = new CMRLatexEntity();
+			LatexEntityOld * e = new LatexEntityOld();
 			*e = entity;
 			entity.name = "(";
-			CMRLatexFormulas * f = new CMRLatexFormulas;
+			LatexFormulasOld * f = new LatexFormulasOld;
 			f->childs.push_back(e);
 			f->childs.push_back(simpleEntity("*"));
 			f->childs.push_back(e);

@@ -44,16 +44,16 @@ class CMRProjectAlias : public CMRProjectEntity
 {
 	public:
 		CMRProjectAlias(CMRProjectEntity * entity, const std::string & alias,const std::string & longAlias) : CMRProjectEntity(entity->latexName,entity->longName) { this->real = entity; this->shortName = alias; this->latexEntity.name = alias; this->longName = longAlias;};
-		virtual bool match(CMRLatexEntity& entity, CMRProjectCaptureMap& capture) const
+		virtual bool match(CMRCompiler::LatexEntityOld& entity, CMRProjectCaptureMap& capture) const
 		{
 			if (entity.name != shortName)
 				return false;
 			
-			CMRLatexEntity tmp = entity;
+			CMRCompiler::LatexEntityOld tmp = entity;
 			tmp.name = real->shortName;
 			return real->match(tmp,capture);
 		}
-		virtual std::ostream& genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const {return real->genUsageCCode(out,context,entity);};
+		virtual std::ostream& genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRCompiler::LatexEntityOld& entity) const {return real->genUsageCCode(out,context,entity);};
 	private:
 		CMRProjectEntity * real;
 };

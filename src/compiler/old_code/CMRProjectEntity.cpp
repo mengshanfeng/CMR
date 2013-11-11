@@ -11,11 +11,12 @@
 #include <cstdio>
 #include <cassert>
 #include <cstdlib>
-#include "parsor/CMRTexParsor.h"
+#include "parsor/TexParsor.h"
 #include "CMRProjectEntity.h"
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectEntity::CMRProjectEntity ( const string& latexName, const string& longName )
@@ -50,7 +51,7 @@ void CMRProjectEntity::addIndice ( const string& name ,CMRCaptureType capture)
 void CMRProjectEntity::applyLatexName ( const string& latexName )
 {
 	//vars
-	CMRLatexFormulas f;
+	LatexFormulasOld f;
 
 	//errors
 	assert(latexName.empty() == false);
@@ -60,7 +61,7 @@ void CMRProjectEntity::applyLatexName ( const string& latexName )
 	
 	//check only one element and extract it
 	assert(f.childs.size() == 1);
-	CMRLatexEntity * entity = f.childs[0];
+	LatexEntityOld * entity = f.childs[0];
 	
 	//get name and exponent
 	this->shortName = entity->name;
@@ -68,7 +69,7 @@ void CMRProjectEntity::applyLatexName ( const string& latexName )
 	this->latexEntity = *entity;
 	
 	//extract subscript info
-	for (CMRLatexFormulasList::iterator it = entity->subscript.begin() ; it != entity->subscript.end() ; ++it)
+	for (LatexFormulasListOld::iterator it = entity->subscript.begin() ; it != entity->subscript.end() ; ++it)
 		this->addIndice((*it)->string,CMR_CAPTURE_NONE);
 	
 	this->latexName = latexName;
@@ -88,14 +89,14 @@ void CMRProjectEntity::printDebug ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRProjectEntity::match ( CMRLatexEntity& entity, CMRProjectCaptureMap& capture) const
+bool CMRProjectEntity::match ( LatexEntityOld& entity, CMRProjectCaptureMap& capture) const
 {
 	if (entity.name != shortName || (entity.superscriptTotalValue != exponent && exponent.empty() == false))
 		return false;
 	
 	assert(indices.size() == indicesCapture.size());
 	
-	CMRLatexFormulasList tmp = entity.getIndices();
+	LatexFormulasListOld tmp = entity.getIndices();
 	if (tmp.size() <= indices.size() && tmp.size() >= requiredIndices)
 	{
 		//capture

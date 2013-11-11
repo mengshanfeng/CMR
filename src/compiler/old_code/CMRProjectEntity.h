@@ -14,7 +14,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "parsor/CMRLatexEntity.h"
+#include "parsor/LatexEntityOld.h"
 
 /********************  ENUM  ************************/
 enum CMRCaptureType
@@ -30,7 +30,7 @@ typedef std::vector<std::string> CMREntityIndiceVector;
 typedef std::vector<CMRCaptureType> CMREntityIndiceCaptureVector;
 typedef std::vector<int> CMRConstantDimensionsVector;
 typedef std::vector<std::string> CMRConstantValueVector;
-typedef std::map<std::string,CMRLatexFormulas *> CMRProjectCaptureMap;
+typedef std::map<std::string,CMRCompiler::LatexFormulasOld *> CMRProjectCaptureMap;
 
 /*********************  CLASS  **********************/
 class CMRProjectEntity
@@ -41,8 +41,8 @@ class CMRProjectEntity
 		virtual void addIndice(const std::string & name,CMRCaptureType capture = CMR_CAPTURE_NONE);
 		virtual void setCaptureExponent(bool status = true);
 		virtual void printDebug(void) const;
-		virtual bool match(CMRLatexEntity & entity,CMRProjectCaptureMap & capture) const;
-		virtual std::ostream & genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity) const { out << longName; return out;};
+		virtual bool match(CMRCompiler::LatexEntityOld & entity,CMRProjectCaptureMap & capture) const;
+		virtual std::ostream & genUsageCCode(std::ostream& out, const CMRProjectContext& context, CMRCompiler::LatexEntityOld& entity) const { out << longName; return out;};
 		virtual void madeCaptureIndice(const std::string name,enum CMRCaptureType capture);
 	protected:
 		void applyLatexName(const std::string & latexName);
@@ -55,7 +55,7 @@ class CMRProjectEntity
 		CMREntityIndiceVector indices;
 		CMREntityIndiceCaptureVector indicesCapture;
 		int requiredIndices;
-		CMRLatexEntity latexEntity;
+		CMRCompiler::LatexEntityOld latexEntity;
 		bool captureExponent;
 };
 

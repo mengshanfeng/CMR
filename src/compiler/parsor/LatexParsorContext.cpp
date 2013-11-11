@@ -10,16 +10,20 @@
 /********************  HEADERS  *********************/
 #include <cassert>
 #include <cstdlib>
-#include <iostream>
+#include <ostream>
 #include <sstream>
-#include "CMRParsorBasics.h"
-#include "CMRLatexParsorContext.h"
+#include "ParsorBasics.h"
+#include "LatexParsorContext.h"
 
 /**********************  USING  *********************/
 using namespace std;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
-CMRLatexParsorContext::CMRLatexParsorContext ( const string& value )
+LatexParsorContext::LatexParsorContext ( const string& value )
 {
 	//init
 	this->value = value;
@@ -29,7 +33,7 @@ CMRLatexParsorContext::CMRLatexParsorContext ( const string& value )
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexParsorContext::CMRLatexParsorContext ( const CMRLatexParsorContext* parent, int start, int end )
+LatexParsorContext::LatexParsorContext ( const LatexParsorContext* parent, int start, int end )
 {
 	//errors
 	assert(parent != NULL);
@@ -45,7 +49,7 @@ CMRLatexParsorContext::CMRLatexParsorContext ( const CMRLatexParsorContext* pare
 }
 
 /*******************  FUNCTION  *********************/
-char CMRLatexParsorContext::getCurrent ( void ) const
+char LatexParsorContext::getCurrent ( void ) const
 {
 	//assert(this->position < value.size());
 	if (this->position < value.size())
@@ -55,19 +59,19 @@ char CMRLatexParsorContext::getCurrent ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-int CMRLatexParsorContext::getPosition ( void ) const
+int LatexParsorContext::getPosition ( void ) const
 {
 	return this->position;
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRLatexParsorContext::isEnd ( void ) const
+bool LatexParsorContext::isEnd ( void ) const
 {
 	return this->position >= value.size();
 }
 
 /*******************  FUNCTION  *********************/
-int CMRLatexParsorContext::move ( int delta )
+int LatexParsorContext::move ( int delta )
 {
 	this->position += delta;
 	assert(this->position >= 0);
@@ -75,21 +79,21 @@ int CMRLatexParsorContext::move ( int delta )
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexParsorContext& CMRLatexParsorContext::operator++ ( void )
+LatexParsorContext& LatexParsorContext::operator++ ( void )
 {
 	this->move(1);
 	return *this;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexParsorContext::skipWhiteSpace ( void )
+void LatexParsorContext::skipWhiteSpace ( void )
 {
 	while (cmrIsWhiteSpace(this->value[this->position]))
 		this->position++;
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRLatexParsorContext::startBy ( const string& value ) const
+bool LatexParsorContext::startBy ( const string& value ) const
 {
 	if (value.size() + this->position > this->value.size())
 		return false;
@@ -98,7 +102,7 @@ bool CMRLatexParsorContext::startBy ( const string& value ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRLatexParsorContext::startBy ( char value ) const
+bool LatexParsorContext::startBy ( char value ) const
 {
 	if (this->position < this->value.size())
 		return this->value[this->position] == value;
@@ -107,7 +111,7 @@ bool CMRLatexParsorContext::startBy ( char value ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexParsorContext CMRLatexParsorContext::extractSubZone ( char delimOpen, char delimClose )
+LatexParsorContext LatexParsorContext::extractSubZone ( char delimOpen, char delimClose )
 {
 	//vars
 	int start = position + 1;
@@ -137,14 +141,14 @@ CMRLatexParsorContext CMRLatexParsorContext::extractSubZone ( char delimOpen, ch
 	
 	//return
 	this->position = cur+1;
-	return CMRLatexParsorContext(this,start,cur);
+	return LatexParsorContext(this,start,cur);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexParsorContext::fatal ( const string& message ) const throw(CMRLatexException)
+void LatexParsorContext::fatal ( const string& message ) const throw(LatexException)
 {
 	//vars
-	const CMRLatexParsorContext * cur = this;
+	const LatexParsorContext * cur = this;
 	int curPos = position;
 	stringstream err;
 	
@@ -166,11 +170,11 @@ void CMRLatexParsorContext::fatal ( const string& message ) const throw(CMRLatex
 	}
 	
 	//finish by exit
-	throw CMRLatexException(err.str());
+	throw LatexException(err.str());
 }
 
 /*******************  FUNCTION  *********************/
-char CMRLatexParsorContext::getCurAndMove ( int delta )
+char LatexParsorContext::getCurAndMove ( int delta )
 {
 	char tmp = '\0';
 	
@@ -183,7 +187,9 @@ char CMRLatexParsorContext::getCurAndMove ( int delta )
 }
 
 /*******************  FUNCTION  *********************/
-const string& CMRLatexParsorContext::getValue ( void ) const
+const string& LatexParsorContext::getValue ( void ) const
 {
 	return this->value;
 }
+
+};

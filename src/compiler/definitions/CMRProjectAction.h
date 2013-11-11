@@ -28,7 +28,7 @@ class CMRProjectActionParameter : public CMRProjectEntity
 	public:
 		CMRProjectActionParameter ( const std::string& latexName, const std::string& longName, const std::string & type );
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
 		const std::string & getType(void) const;
 	private:
 		std::string type;
@@ -58,7 +58,7 @@ class CMRProjectAction
 		CMRProjectAction ( const std::string & name, const std::string & descr,CMRProjectContext * parentContext = NULL);
 		virtual void printDebug(std::ostream & out) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRCompiler::LangDef & lang, const CMRProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
 		void runTransformation(CMRTransformation & transf);
 		CMRProjectCodeEquation & addEquation(const std::string& eq);
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=");

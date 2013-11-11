@@ -12,7 +12,7 @@
 #include <iostream>
 #include <sstream>
 #include "CMRTransformationExtractLoops.h"
-#include "../parsor/CMRLatexEntity2.h"
+#include "../parsor/LatexEntity.h"
 #include "../definitions/CMRProjectCode.h"
 #include "common/MsgFormat.h"
 
@@ -36,7 +36,7 @@ static std::string getTempName(int id)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationExtractLoops::transform ( CMRProjectCodeEquation& equation, CMRLatexEntity2& entity )
+void CMRTransformationExtractLoops::transform ( CMRProjectCodeEquation& equation, LatexEntity& entity )
 {
 	//vars
 	std::string op;

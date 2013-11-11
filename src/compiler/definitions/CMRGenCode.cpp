@@ -12,16 +12,17 @@
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
-#include "../parsor/CMRParsorBasics.h"
-#include "../parsor/CMRLatexEntity2.h"
-#include "../parsor/CMRLatexFormula.h"
+#include "../parsor/ParsorBasics.h"
+#include "../parsor/LatexEntity.h"
+#include "../parsor/LatexFormula.h"
 #include "CMRGenCode.h"
 #include "CMRProjectContext.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
-bool latexEntityIsInteger(const CMRLatexEntity2 & entity)
+bool latexEntityIsInteger(const LatexEntity & entity)
 {
 	//check if name is empty
 	if (entity.getName().empty() == true)
@@ -42,7 +43,7 @@ bool latexEntityIsInteger(const CMRLatexEntity2 & entity)
 }
 
 /*******************  FUNCTION  *********************/
-bool latexEntityIsNum(const CMRLatexEntity2 & entity)
+bool latexEntityIsNum(const LatexEntity & entity)
 {
 	//check if name is empty
 	if (entity.getName().empty() == true)
@@ -63,16 +64,16 @@ bool latexEntityIsNum(const CMRLatexEntity2 & entity)
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, const CMRLatexFormulas2& formula )
+std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, const LatexFormulas& formula )
 {
-	const CMRLatexEntityVector2 & elems = formula;
-	for (CMRLatexEntityVector2::const_iterator it = elems.begin() ;  it != elems.end() ; ++it)
+	const LatexEntityVector & elems = formula;
+	for (LatexEntityVector::const_iterator it = elems.begin() ;  it != elems.end() ; ++it)
 		cmrGenEqCCode(out,context,**it);
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity)
+std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, const LatexEntity& entity)
 {
 	if (latexEntityIsNum(entity))
 	{
@@ -97,7 +98,7 @@ std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, con
 			out << endl;
 			out << "Context is : " << endl;
 			context.printDebug(out);
-			throw CMRLatexException(out.str());
+			throw LatexException(out.str());
 		}
 		def->genUsageCCode(out,context,entity);
 		out << " ";

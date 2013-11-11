@@ -9,8 +9,10 @@
 
 /********************  HEADERS  *********************/
 #include "CMRTransformationImplicitMul.h"
-#include "../parsor/CMRLatexFormula.h"
-#include "../parsor/CMRParsorBasics.h"
+#include "../parsor/LatexFormula.h"
+#include "../parsor/ParsorBasics.h"
+
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRTransformationImplicitMul::CMRTransformationImplicitMul ( void ) 
@@ -20,22 +22,22 @@ CMRTransformationImplicitMul::CMRTransformationImplicitMul ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationImplicitMul::transform ( CMRProjectCodeEquation& equation, CMRLatexFormulas2& formula )
+void CMRTransformationImplicitMul::transform ( CMRProjectCodeEquation& equation, LatexFormulas& formula )
 {
 	int cnt = 0;
-	CMRLatexFormulas2 f;
+	LatexFormulas f;
 	
 	//check first element for minus at first pos (-a....)
 	if (formula[0]->getString() == "-")
 		cnt++;
 	
 	//loop on all elements
-	for (CMRLatexFormulas2::iterator it = formula.begin() ;  it != formula.end() ; ++it)
+	for (LatexFormulas::iterator it = formula.begin() ;  it != formula.end() ; ++it)
 	{
 		std::string tmp = (*it)->getString();
 		if (cnt % 2 == 1 && (tmp.size() > 1 || cmrIsOperator(tmp[0]) == false))
 		{
-			f.push_back(new CMRLatexEntity2("*"));
+			f.push_back(new LatexEntity("*"));
 			cnt++;
 		}
 		f.push_back(*it);
@@ -44,7 +46,7 @@ void CMRTransformationImplicitMul::transform ( CMRProjectCodeEquation& equation,
 	}
 	
 	formula.clear();
-	for (CMRLatexFormulas2::iterator it = f.begin() ;  it != f.end() ; ++it)
+	for (LatexFormulas::iterator it = f.begin() ;  it != f.end() ; ++it)
 	{
 		formula.push_back(*it);
 		*it = NULL;

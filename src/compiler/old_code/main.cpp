@@ -7,12 +7,12 @@
 #include <cstring>
 #include <map>
 #include <sstream>
-#include "parsor/CMRLatexEntity.h"
-#include "parsor/CMRParsorBasics.h"
-#include "parsor/CMRTexParsor.h"
-#include "parsor/CMREqDepMatrix.h"
-#include "parsor/CMREntityMatching.h"
-#include "parsor/CMRLatexFormula.h"
+#include "parsor/LatexEntityOld.h"
+#include "parsor/ParsorBasics.h"
+#include "parsor/TexParsor.h"
+#include "parsor/EqDepMatrix.h"
+#include "parsor/EntityMatching.h"
+#include "parsor/LatexFormula.h"
 #include "CMRProjectEntity.h"
 #include "CMRProjectConstant.h"
 #include "CMRProjectEquation.h"
@@ -26,9 +26,10 @@
 
 /********************  NAMESPACE  *******************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
-CMRProjectEquation * convertLoopToEq(CMRLatexEntity * entity)
+CMRProjectEquation * convertLoopToEq(LatexEntityOld * entity)
 {
 	//nothing to do
 	if (entity == NULL)
@@ -43,7 +44,7 @@ CMRProjectEquation * convertLoopToEq(CMRLatexEntity * entity)
 /*******************  FUNCTION  *********************/
 int main(int argc,char ** argv)
 {
-	CMRLatexFormulas2 tmp("e^3_{i,j} / 2A_{eq,1} A_{eq,2} + ( 6 + 7 )^2 \\frac{1}{2+4} + 4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}} + b");
+	LatexFormulas tmp("e^3_{i,j} / 2A_{eq,1} A_{eq,2} + ( 6 + 7 )^2 \\frac{1}{2+4} + 4+\\sum_k{D_{i,j,k}*A_{eq,k}}+\\sum_k{D_{i+1,j-1,k}*A_{eq,k}}+\\sum_k{\\sum_l{D_{i,j,k}*l}} + b");
 	cout << tmp << endl;
 	tmp.dumpAsTree(cout);
 	//string value = "v'_{l} = \\frac{\\sum_{k}{v_{i,j,k} * D_{l,k}}}{d}";
@@ -54,7 +55,7 @@ int main(int argc,char ** argv)
 	{
 		string dep= argv[1];
 		string value = argv[2];
-		CMRLatexFormulas f;
+		LatexFormulasOld f;
 		/*CMRLatexEntity * entity = cmrParseLatexEntity(value,start);
 		if (entity != NULL)
 			cmrPrintLatexEntity(*entity,0,0);*/
@@ -63,7 +64,7 @@ int main(int argc,char ** argv)
 		
 		printf("================================================\n");
 
-		CMRLatexEntity entity;
+		LatexEntityOld entity;
 		entity.name = "f";
 		entity.subscriptTotalValue = "eq";
 		entity.print(0,0);
@@ -71,7 +72,7 @@ int main(int argc,char ** argv)
 		
 		printf("================================================\n");
 		
-		CMREqDepMatrix depMatrix;
+		EqDepMatrix depMatrix;
 		//CMREntityCellMatching match = cmrEntityCellMatch(*f[0],"D");
 		//match.printDebug();
 		//depMatrix.markAccess(match.dx,match.dy,match.write);

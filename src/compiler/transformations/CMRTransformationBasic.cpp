@@ -12,6 +12,8 @@
 #include "CMRTransformationBasic.h"
 #include "../definitions/CMRProjectCode.h"
 
+using namespace CMRCompiler;
+
 /*******************  FUNCTION  *********************/
 CMRTransformationBasic::CMRTransformationBasic(const std::string& name)
 	: CMRTransformation(name)
@@ -36,7 +38,7 @@ void CMRTransformationBasic::run(CMRProjectCodeEntry& entry)
 		//DO NOTHING
 	} else {
 		std::string tmp = std::string("Unknown code entry type : ") + typeid(*cur).name();
-		throw CMRLatexException(tmp);
+		throw LatexException(tmp);
 	}
 }
 
@@ -64,28 +66,28 @@ void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation, CMRLatexFormulas2& formula)
+void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation, LatexFormulas& formula)
 {
-	for (CMRLatexEntityVector2::iterator it = formula.begin() ; it != formula.end() ; ++it)
+	for (LatexEntityVector::iterator it = formula.begin() ; it != formula.end() ; ++it)
 		if (formula.hasInfo("cmrNoTranform") == false)
 			this->transform(equation,**it);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation, CMRLatexEntity2& entity)
+void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation, LatexEntity& entity)
 {
-	CMRLatexFormulasVector2 & indices = entity.getIndices();
-	for (CMRLatexFormulasVector2::iterator it = indices.begin() ; it != indices.end() ; ++it)
+	LatexFormulasVector & indices = entity.getIndices();
+	for (LatexFormulasVector::iterator it = indices.begin() ; it != indices.end() ; ++it)
 		if ((*it)->hasInfo("cmrNoTranform") == false)
 			this->transform(equation,**it);
 	
-	CMRLatexFormulasVector2 & exponents = entity.getExponents();
-	for (CMRLatexFormulasVector2::iterator it = exponents.begin() ; it != exponents.end() ; ++it)
+	LatexFormulasVector & exponents = entity.getExponents();
+	for (LatexFormulasVector::iterator it = exponents.begin() ; it != exponents.end() ; ++it)
 		if ((*it)->hasInfo("cmrNoTranform") == false)
 			this->transform(equation,**it);
 	
-	CMRLatexFormulasVector2 & params = entity.getParameters();
-	for (CMRLatexFormulasVector2::iterator it = params.begin() ; it != params.end() ; ++it)
+	LatexFormulasVector & params = entity.getParameters();
+	for (LatexFormulasVector::iterator it = params.begin() ; it != params.end() ; ++it)
 		if ((*it)->hasInfo("cmrNoTranform") == false)
 			this->transform(equation,**it);
 }

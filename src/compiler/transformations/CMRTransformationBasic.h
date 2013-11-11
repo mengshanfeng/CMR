@@ -19,8 +19,11 @@ class CMRProjectCodeEntry;
 class CMRProjectCodeNode;
 class CMRProjectCodeIteratorLoop;
 class CMRProjectCodeEquation;
-class CMRLatexFormulas2;
-class CMRLatexEntity2;
+namespace CMRCompiler 
+{
+	class LatexFormulas;
+	class LatexEntity;
+};
 
 /*********************  CLASS  **********************/
 class CMRTransformationBasic : public CMRTransformation
@@ -32,8 +35,8 @@ class CMRTransformationBasic : public CMRTransformation
 		virtual void transform(CMRProjectCodeNode & node);
 		virtual void transform(CMRProjectCodeIteratorLoop & loop);
 		virtual void transform(CMRProjectCodeEquation & equation);
-		virtual void transform(CMRProjectCodeEquation & equation,CMRLatexFormulas2 & formula);
-		virtual void transform(CMRProjectCodeEquation & equation,CMRLatexEntity2 & entity);
+		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexFormulas & formula);
+		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
 };
 
 #endif //CMR_TRANFORMATION_BASIC_H

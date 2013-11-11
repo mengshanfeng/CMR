@@ -15,7 +15,7 @@
 #include <list>
 #include "CMRProjectCodeTree.h"
 #include "CMRProjectIterator.h"
-#include "../parsor/CMRLatexFormula.h"
+#include "../parsor/LatexFormula.h"
 #include "../common/CodeTemplate.h"
 #include "../common/CodeTemplateDic.h"
 
@@ -57,10 +57,10 @@ class CMRProjectLocalVariable : public CMRProjectEntity
 	public:
 		CMRProjectLocalVariable( const std::string& latexName, const std::string& longName, const std::string& type, const std::string& defaultValue = "0");
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
 	private:
 		std::string type;
-		CMRLatexFormulas2 defaultValue;
+		CMRCompiler::LatexFormulas defaultValue;
 };
 
 /*********************  TYPES  **********************/
@@ -122,14 +122,14 @@ class CMRProjectCodeEquation : public CMRProjectCodeEntry
 	public:
 		CMRProjectCodeEquation( const std::string& latexName, const std::string& compute ,const std::string & op = "=");
 		virtual CMRProjectCodeType getType ( void ) const;
-		CMRLatexFormulas2 & getFormulas(void);
-		CMRLatexEntity2 & getOutput(void);
+		CMRCompiler::LatexFormulas & getFormulas(void);
+		CMRCompiler::LatexEntity & getOutput(void);
 		const std::string & getOperator(void) const;
 		void setOperator(const std::string & op);
 		virtual void genCCode(std::ostream & out,int padding = 0) const;
 	private:
-		CMRLatexEntity2 output;
-		CMRLatexFormulas2 formula;
+		CMRCompiler::LatexEntity output;
+		CMRCompiler::LatexFormulas formula;
 		std::string op;
 };
 
@@ -166,10 +166,10 @@ class CMRProjectCConstruct
 	private:
 		void loadCode(const std::string & code);
 		void extractReplacementLocus( ExtractionLocusList& locusList ) const;
-		const CMRLatexFormulas2 * getLocusValue(const ExtractionLocus & locus) const;
+		const CMRCompiler::LatexFormulas * getLocusValue(const ExtractionLocus & locus) const;
 	private:
-		CMRLatexFormulasVector2 args;
-		CMRLatexFormulasVector2 autoArgs;
+		CMRCompiler::LatexFormulasVector args;
+		CMRCompiler::LatexFormulasVector autoArgs;
 		std::string code;
 };
 

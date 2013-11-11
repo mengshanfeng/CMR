@@ -20,12 +20,12 @@ class CMRProjectEquation : public CMRProjectEntity
 	public:
 		CMRProjectEquation ( const std::string& latexName, const std::string& longName , const std::string & compute);
 		void printDebug(void) const;
-		CMRLatexEntity * extractNextInnerLoop(void);
+		CMRCompiler::LatexEntityOld * extractNextInnerLoop(void);
 		std::string compute;
-		CMRLatexFormulas formula;
+		CMRCompiler::LatexFormulasOld formula;
 };
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity* extractFirstInnerLoop(CMRLatexFormulas & formula);
+CMRCompiler::LatexEntityOld* extractFirstInnerLoop(CMRCompiler::LatexFormulasOld & formula);
 
 #endif 

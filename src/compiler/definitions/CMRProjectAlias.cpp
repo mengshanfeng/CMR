@@ -11,6 +11,8 @@
 #include "../common/Debug.h"
 #include "CMRProjectAlias.h"
 
+using namespace CMRCompiler;
+
 /*******************  FUNCTION  *********************/
 CMRProjectAlias::CMRProjectAlias ( const std::string& latexName, const std::string& result, bool captureAll ) 
 	: CMRModelBasedReplacement ( latexName , result , captureAll )
@@ -24,7 +26,7 @@ void CMRProjectAlias::genDefinitionCCode ( std::ostream& out, const CMRProjectCo
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAlias::genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRLatexEntity2& entity, bool write ) const
+void CMRProjectAlias::genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	cmrFatal("CMRProjectAlias object are not aimed to be converted to C++ code, please run the alias transformation pass.");
 }

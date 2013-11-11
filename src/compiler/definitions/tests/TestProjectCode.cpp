@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <CMRProjectCode.h>
-#include <../parsor/CMRLatexFormula.h>
+#include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 #include <CMRProjectIterator.h>
@@ -17,6 +17,7 @@
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectCodeNode,testConstructor)
@@ -70,7 +71,7 @@ TEST(TestProjectCodeNode,testIteratorLoop_error)
 	CMRProjectCodeIteratorLoop & loop = root.addIteratorLoop("k");
 	
 	EXPECT_EQ(&root,loop.getParent());
-	EXPECT_THROW(loop.getIterator(),CMRLatexException);
+	EXPECT_THROW(loop.getIterator(),LatexException);
 }
 
 TEST(TestProjectCodeNode,testAddLocalVariable)

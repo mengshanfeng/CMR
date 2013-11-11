@@ -8,27 +8,29 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <cassert>
 #include <cstdio>
-#include <cstdlib>
-#include <sstream>
-#include <iostream>
-#include "CMRLatexEntity.h"
-#include "CMRTexParsor.h"
-#include "CMRParsorBasics.h"
-#include "CMRLatexParsorContext.h"
+// #include <cstdlib>
+#include "LatexEntityOld.h"
+// #include "CMRTexParsor.h"
+// #include "CMRParsorBasics.h"
+// #include "CMRLatexParsorContext.h"
 
+/**********************  USING  *********************/
 using namespace std;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
-CMRLatexEntity::CMRLatexEntity ( void )
+LatexEntityOld::LatexEntityOld ( void )
 {
 	this->from = 0;
 	this->to = 0;
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity::~CMRLatexEntity ( void )
+LatexEntityOld::~LatexEntityOld ( void )
 {
 // 	for(CMRLatexEntityVector::iterator it = subscript.childs.begin();it!=subscript.childs.end();++it)
 // 		delete *it;
@@ -39,9 +41,9 @@ CMRLatexEntity::~CMRLatexEntity ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void cmrPrintFormula(const CMRLatexFormulasList & formulas,int depth)
+void cmrPrintFormula(const LatexFormulasListOld & formulas,int depth)
 {
-	for(CMRLatexFormulasList::const_iterator it = formulas.begin();it!=formulas.end();++it)
+	for(LatexFormulasListOld::const_iterator it = formulas.begin();it!=formulas.end();++it)
 	{
 		if (it != formulas.begin())
 			printf(",");
@@ -50,15 +52,15 @@ void cmrPrintFormula(const CMRLatexFormulasList & formulas,int depth)
 }
 
 /*******************  FUNCTION  *********************/
-void cmrPrintFormula(const CMRLatexFormulas & formula,int depth)
+void cmrPrintFormula(const LatexFormulasOld & formula,int depth)
 {
 	int pos = 0;
-	for(CMRLatexEntityVector::const_iterator it = formula.childs.begin();it!=formula.childs.end();++it)
+	for(LatexEntityVectorOld::const_iterator it = formula.childs.begin();it!=formula.childs.end();++it)
 		(*it)->print(depth,pos++);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity::print ( int depth, int pos )
+void LatexEntityOld::print ( int depth, int pos )
 {
 	printf(" - Entity [depth = %d, pos = %d]\n",depth,pos);
 	printf("       * name        : %s\n",name.c_str());
@@ -70,24 +72,26 @@ void CMRLatexEntity::print ( int depth, int pos )
 	printf("       * parent      : %s\n",parent.c_str());
 	cmrPrintFormula(subscript,depth+1);
 	cmrPrintFormula(superscript,depth+1);
-	for(CMRLatexFormulasList::const_iterator it = params.begin();it!=params.end();++it)
+	for(LatexFormulasListOld::const_iterator it = params.begin();it!=params.end();++it)
 		cmrPrintFormula(**it,depth+1);
 }
 
 /*******************  FUNCTION  *********************/
-std::string CMRLatexEntity::getString ( void ) const
+std::string LatexEntityOld::getString ( void ) const
 {
 	return parent.substr(from,to-from);
 }
 
 /*******************  FUNCTION  *********************/
-int CMRLatexEntity::countIndices ( void ) const
+int LatexEntityOld::countIndices ( void ) const
 {
 	return subscript.size();
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulasList CMRLatexEntity::getIndices ( void )
+LatexFormulasListOld LatexEntityOld::getIndices ( void )
 {
 	return subscript;
 }
+
+};

@@ -10,44 +10,48 @@
 /********************  HEADERS  *********************/
 #include <cassert>
 #include <sstream>
-#include "CMRLatexEntity2.h"
-#include "CMRLatexFormula.h"
-#include "CMRParsorBasics.h"
-#include "CMRLatexParsorContext.h"
+// #include "LatexEntity.h"
+#include "ParsorBasics.h"
+#include "LatexParsorContext.h"
+#include "LatexFormula.h"
 
 /**********************  USING  *********************/
 using namespace std;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2::CMRLatexFormulas2 ( void )
+LatexFormulas::LatexFormulas ( void )
 {
 
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2::CMRLatexFormulas2 ( const string& value )
+LatexFormulas::LatexFormulas ( const string& value )
 {
 	this->parse(value);
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2::CMRLatexFormulas2(const CMRLatexFormulas2& orig)
+LatexFormulas::LatexFormulas(const LatexFormulas& orig)
 {
 	this->copy(orig);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexFormulas2::parse ( const string& value )
+void LatexFormulas::parse ( const string& value )
 {
 	//vars
-	CMRLatexParsorContext context(value);
+	LatexParsorContext context(value);
 	
 	//do it
 	parse(context);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexFormulas2::parse ( CMRLatexParsorContext& context )
+void LatexFormulas::parse ( LatexParsorContext& context )
 {
 	//reset content
 	clear();
@@ -55,14 +59,14 @@ void CMRLatexFormulas2::parse ( CMRLatexParsorContext& context )
 	//loop on all
 	while (!context.isEnd())
 	{
-		CMRLatexEntity2 * e = new CMRLatexEntity2;
+		LatexEntity * e = new LatexEntity;
 		e->parse(context);
 		this->push_back(e);
 	}
 }
 
 /*******************  FUNCTION  *********************/
-string CMRLatexFormulas2::getString ( void ) const
+string LatexFormulas::getString ( void ) const
 {
 	stringstream tmp;
 	tmp << *this;
@@ -70,7 +74,7 @@ string CMRLatexFormulas2::getString ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-ostream& operator<< ( ostream& out, const CMRLatexFormulas2& value )
+ostream& operator<< ( ostream& out, const LatexFormulas& value )
 {
 	if (value.empty())
 	{
@@ -78,7 +82,7 @@ ostream& operator<< ( ostream& out, const CMRLatexFormulas2& value )
 		out << "!!! EMPTY LATEX FORMULA !!!" << endl;
 		//warning("Got undefined latex entity");
 	} else {
-		for (CMRLatexFormulas2::const_iterator it = value.begin() ; it != value.end() ; ++it)
+		for (LatexFormulas::const_iterator it = value.begin() ; it != value.end() ; ++it)
 		{
 			assert(*it != NULL);
 			out << **it;
@@ -89,10 +93,10 @@ ostream& operator<< ( ostream& out, const CMRLatexFormulas2& value )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexFormulas2::split ( CMRLatexFormulasVector2& formulas, const string& sep )
+void LatexFormulas::split ( LatexFormulasVector& formulas, const string& sep )
 {
 	int pos = 0;
-	CMRLatexFormulas2 * f = new CMRLatexFormulas2;
+	LatexFormulas * f = new LatexFormulas;
 	
 	//move until first one
 // 	while (pos < size())
@@ -109,7 +113,7 @@ void CMRLatexFormulas2::split ( CMRLatexFormulasVector2& formulas, const string&
 		if ((*this)[i]->getString() == sep)
 		{
 			formulas.push_back(f);
-			f = new CMRLatexFormulas2;
+			f = new LatexFormulas;
 			delete (*this)[i];
 		} else {
 			f->push_back((*this)[i]);
@@ -119,42 +123,42 @@ void CMRLatexFormulas2::split ( CMRLatexFormulasVector2& formulas, const string&
 	//finish
 	formulas.push_back(f);
 	
-	CMRLatexEntityVector2::clear();
+	LatexEntityVector::clear();
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexFormulas2::dumpAsXml ( ostream& out, int depth ) const
+void LatexFormulas::dumpAsXml ( ostream& out, int depth ) const
 {
 	out << cmrIndent(depth) << "<formula>" << endl;
-	for (CMRLatexFormulas2::const_iterator it = begin() ; it != end() ; ++it)
+	for (LatexFormulas::const_iterator it = begin() ; it != end() ; ++it)
 		(*it)->dumpAsXml(out,depth+1);
 	out << cmrIndent(depth) << "</formula>" << endl;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexFormulas2::dumpAsTree ( ostream& out, int depth ) const
+void LatexFormulas::dumpAsTree ( ostream& out, int depth ) const
 {
 	out << cmrIndent(depth) << "formula:" << endl;
-	for (CMRLatexFormulas2::const_iterator it = begin() ; it != end() ; ++it)
+	for (LatexFormulas::const_iterator it = begin() ; it != end() ; ++it)
 		(*it)->dumpAsTree(out,depth+1);
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2::~CMRLatexFormulas2 ( void )
+LatexFormulas::~LatexFormulas ( void )
 {
 	this->clear();
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexFormulas2::clear ( void )
+void LatexFormulas::clear ( void )
 {
-	for (CMRLatexFormulas2::iterator it = begin(); it != end() ; ++it)
+	for (LatexFormulas::iterator it = begin(); it != end() ; ++it)
 		delete *it;
-	CMRLatexEntityVector2::clear();
+	LatexEntityVector::clear();
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRLatexFormulas2::isOnlyOneName ( void ) const
+bool LatexFormulas::isOnlyOneName ( void ) const
 {
 	if (size() == 1)
 		return (*this)[0]->isOnlyOneName();
@@ -163,7 +167,7 @@ bool CMRLatexFormulas2::isOnlyOneName ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRLatexFormulas2::isSimpleEntity ( void ) const
+bool LatexFormulas::isSimpleEntity ( void ) const
 {
 	if (size() != 1)
 		return false;
@@ -174,23 +178,23 @@ bool CMRLatexFormulas2::isSimpleEntity ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexFormulas2::setExtraInfo(const string& key, void* value, bool allowOverride)
+void LatexFormulas::setExtraInfo(const string& key, void* value, bool allowOverride)
 {
 	//errors
 	if (allowOverride == false && hasInfo(key))
-		throw CMRLatexException("Invalid override of information key on LatexEntity.");
+		throw LatexException("Invalid override of information key on LatexEntity.");
 	
 	extraInfos[key] = value;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexFormulas2::deleteInfo(const string& key, bool throwOnError)
+void LatexFormulas::deleteInfo(const string& key, bool throwOnError)
 {
 	bool status = hasInfo(key);
 
 	//errors
 	if (throwOnError && status == false)
-		throw CMRLatexException("Invalid delete of information key on LatexEntity.");
+		throw LatexException("Invalid delete of information key on LatexEntity.");
 	else if (status == false)
 		return;
 	
@@ -198,13 +202,13 @@ void CMRLatexFormulas2::deleteInfo(const string& key, bool throwOnError)
 }
 
 /*******************  FUNCTION  *********************/
-void* CMRLatexFormulas2::getExtraInfo(const string& key, bool throwOnError)
+void* LatexFormulas::getExtraInfo(const string& key, bool throwOnError)
 {
 	bool status = hasInfo(key);
 
 	//errors
 	if (throwOnError && status == false)
-		throw CMRLatexException("Invalid read of information key on LatexEntity.");
+		throw LatexException("Invalid read of information key on LatexEntity.");
 	else if (status == false)
 		return NULL;
 	
@@ -212,18 +216,18 @@ void* CMRLatexFormulas2::getExtraInfo(const string& key, bool throwOnError)
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRLatexFormulas2::hasInfo(const string& key) const
+bool LatexFormulas::hasInfo(const string& key) const
 {
 	return extraInfos.find(key) != extraInfos.end();
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexFormulas2::copy(const CMRLatexFormulas2& orig)
+void LatexFormulas::copy(const LatexFormulas& orig)
 {
 	//replace childs
 	this->clear();
 	for (int i = 0 ; i < orig.size() ; i++)
-		this->push_back(new CMRLatexEntity2(*orig[i]));
+		this->push_back(new LatexEntity(*orig[i]));
 	
 	//setup exta info
 	this->extraInfos.clear();
@@ -231,8 +235,10 @@ void CMRLatexFormulas2::copy(const CMRLatexFormulas2& orig)
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2& CMRLatexFormulas2::operator=(const CMRLatexFormulas2& orig)
+LatexFormulas& LatexFormulas::operator=(const LatexFormulas& orig)
 {
 	this->copy(orig);
 	return *this;
 }
+
+};

@@ -19,7 +19,7 @@ class CMRTransformationReplaceAlias : public CMRTransformationBasic
 	public:
 		CMRTransformationReplaceAlias(void);
 	protected:
-		virtual void transform(CMRProjectCodeEquation & equation,CMRLatexEntity2 & entity);
+		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
 };
 
 #endif //CMR_TRANSFORMATION_REPLACE_ALIAS_H

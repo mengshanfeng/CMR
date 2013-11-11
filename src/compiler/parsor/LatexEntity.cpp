@@ -11,52 +11,56 @@
 #include <cassert>
 #include <sstream>
 #include <cstdlib>
-#include "CMRTexParsor.h"
-#include "CMRLatexEntity2.h"
-#include "CMRParsorBasics.h"
-#include "CMRLatexFormula.h"
-#include "CMRLatexParsorContext.h"
+#include "TexParsor.h"
+#include "LatexEntity.h"
+#include "ParsorBasics.h"
+#include "LatexFormula.h"
+#include "LatexParsorContext.h"
 
 /**********************  USING  *********************/
 using namespace std;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
-CMRLatexEntity2::CMRLatexEntity2 ( void )
+LatexEntity::LatexEntity ( void )
 {
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity2::CMRLatexEntity2 ( const std::string& value )
+LatexEntity::LatexEntity ( const std::string& value )
 {
 	this->parse(value);
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity2::CMRLatexEntity2(const CMRLatexEntity2& orig)
+LatexEntity::LatexEntity(const LatexEntity& orig)
 {
 	this->copy(orig);
 }
 
 /*******************  FUNCTION  *********************/
-int CMRLatexEntity2::countExponents ( void ) const
+int LatexEntity::countExponents ( void ) const
 {
 	return exponents.size();
 }
 
 /*******************  FUNCTION  *********************/
-int CMRLatexEntity2::countIndices ( void ) const
+int LatexEntity::countIndices ( void ) const
 {
 	return indices.size();
 }
 
 /*******************  FUNCTION  *********************/
-int CMRLatexEntity2::countParameters ( void ) const
+int LatexEntity::countParameters ( void ) const
 {
 	return parameters.size();
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2* CMRLatexEntity2::getExponent ( int id )
+LatexFormulas* LatexEntity::getExponent ( int id )
 {
 	assert(id >= 0);
 	if (id < 0 || id >= exponents.size())
@@ -66,7 +70,7 @@ CMRLatexFormulas2* CMRLatexEntity2::getExponent ( int id )
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2* CMRLatexEntity2::getIndice ( int id )
+LatexFormulas* LatexEntity::getIndice ( int id )
 {
 	assert(id >= 0);
 	if (id < 0 || id >= indices.size())
@@ -76,7 +80,7 @@ CMRLatexFormulas2* CMRLatexEntity2::getIndice ( int id )
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2* CMRLatexEntity2::getParameter ( int id )
+LatexFormulas* LatexEntity::getParameter ( int id )
 {
 	assert(id >= 0);
 	if (id < 0 || id >= parameters.size())
@@ -86,7 +90,7 @@ CMRLatexFormulas2* CMRLatexEntity2::getParameter ( int id )
 }
 
 /*******************  FUNCTION  *********************/
-const CMRLatexFormulas2* CMRLatexEntity2::getExponent ( int id ) const
+const LatexFormulas* LatexEntity::getExponent ( int id ) const
 {
 	assert(id >= 0);
 	if (id < 0 || id >= exponents.size())
@@ -96,7 +100,7 @@ const CMRLatexFormulas2* CMRLatexEntity2::getExponent ( int id ) const
 }
 
 /*******************  FUNCTION  *********************/
-const CMRLatexFormulas2* CMRLatexEntity2::getIndice ( int id ) const
+const LatexFormulas* LatexEntity::getIndice ( int id ) const
 {
 	assert(id >= 0);
 	if (id < 0 || id >= indices.size())
@@ -106,7 +110,7 @@ const CMRLatexFormulas2* CMRLatexEntity2::getIndice ( int id ) const
 }
 
 /*******************  FUNCTION  *********************/
-const CMRLatexFormulas2* CMRLatexEntity2::getParameter ( int id ) const
+const LatexFormulas* LatexEntity::getParameter ( int id ) const
 {
 	assert(id >= 0);
 	if (id < 0 || id >= parameters.size())
@@ -116,13 +120,13 @@ const CMRLatexFormulas2* CMRLatexEntity2::getParameter ( int id ) const
 }
 
 /*******************  FUNCTION  *********************/
-const std::string& CMRLatexEntity2::getName ( void ) const
+const std::string& LatexEntity::getName ( void ) const
 {
 	return name;
 }
 
 /*******************  FUNCTION  *********************/
-std::string CMRLatexEntity2::getString ( void ) const
+std::string LatexEntity::getString ( void ) const
 {
 	stringstream tmp;
 	tmp << *this;
@@ -130,7 +134,7 @@ std::string CMRLatexEntity2::getString ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRLatexEntity2::needProtection ( const CMRLatexFormulasVector2& value )
+bool LatexEntity::needProtection ( const LatexFormulasVector& value )
 {
 	//error
 	assert(value.empty() == false);
@@ -145,7 +149,7 @@ bool CMRLatexEntity2::needProtection ( const CMRLatexFormulasVector2& value )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::writeFormulaList ( ostream& out, const CMRLatexFormulasVector2& value, const string& sep, const string& open, const string& close, bool forceOpenClose )
+void LatexEntity::writeFormulaList ( ostream& out, const LatexFormulasVector& value, const string& sep, const string& open, const string& close, bool forceOpenClose )
 {
 	//trivial
 	if (value.empty())
@@ -156,7 +160,7 @@ void CMRLatexEntity2::writeFormulaList ( ostream& out, const CMRLatexFormulasVec
 		out << open;
 	
 	//print elements
-	for (CMRLatexFormulasVector2::const_iterator it = value.begin() ; it != value.end() ; ++it)
+	for (LatexFormulasVector::const_iterator it = value.begin() ; it != value.end() ; ++it)
 	{
 		if (it != value.begin())
 			out << sep;
@@ -169,7 +173,7 @@ void CMRLatexEntity2::writeFormulaList ( ostream& out, const CMRLatexFormulasVec
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream& operator<< ( std::ostream& out, const CMRLatexEntity2& value )
+std::ostream& operator<< ( std::ostream& out, const LatexEntity& value )
 {
 	if (value.name.empty())
 	{
@@ -177,7 +181,7 @@ std::ostream& operator<< ( std::ostream& out, const CMRLatexEntity2& value )
 		out << "!!! UNDEFINED LATEX ENTITY !!!" << endl;
 		//warning("Got undefined latex entity");
 	} else if(value.name == "()") {
-		CMRLatexEntity2::writeFormulaList(out,value.parameters,",","(",")",true);
+		LatexEntity::writeFormulaList(out,value.parameters,",","(",")",true);
 	} else {
 		//print the name
 		out << value.name;
@@ -187,37 +191,37 @@ std::ostream& operator<< ( std::ostream& out, const CMRLatexEntity2& value )
 	if (value.indices.empty() == false)
 	{
 		out << "_";
-		CMRLatexEntity2::writeFormulaList(out,value.indices);
+		LatexEntity::writeFormulaList(out,value.indices);
 	}
 	if (value.exponents.empty() == false)
 	{
 		out << "^";
-		CMRLatexEntity2::writeFormulaList(out,value.exponents);
+		LatexEntity::writeFormulaList(out,value.exponents);
 	}
 	
 	//parameters
 	if (value.name != "()" && value.name.empty() ==false)
-		CMRLatexEntity2::writeFormulaList(out,value.parameters,"}{","{","}",true);
+		LatexEntity::writeFormulaList(out,value.parameters,"}{","{","}",true);
 
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity2& CMRLatexEntity2::operator= ( const string& value )
+LatexEntity& LatexEntity::operator= ( const string& value )
 {
 	this->parse(value);
 	return *this;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::parse ( const string& value ) throw(CMRLatexException)
+void LatexEntity::parse ( const string& value ) throw(LatexException)
 {
 	//trivial
 	if (value.empty())
 		return;
 
 	//parse
-	CMRLatexParsorContext context(value);
+	LatexParsorContext context(value);
 	this->parse(context);
 	
 	//check errors
@@ -226,7 +230,7 @@ void CMRLatexEntity2::parse ( const string& value ) throw(CMRLatexException)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::parse ( CMRLatexParsorContext& context )
+void LatexEntity::parse ( LatexParsorContext& context )
 {
 	//clear current
 	this->clear();
@@ -245,7 +249,7 @@ void CMRLatexEntity2::parse ( CMRLatexParsorContext& context )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::parseSubGroup ( CMRLatexParsorContext& context )
+void LatexEntity::parseSubGroup ( LatexParsorContext& context )
 {
 	//errors
 	assert(context.startBy('('));
@@ -254,8 +258,8 @@ void CMRLatexEntity2::parseSubGroup ( CMRLatexParsorContext& context )
 	this->name = "()";
 	
 	//start to update current
-	CMRLatexParsorContext subcontext = context.extractSubZone('(',')');
-	CMRLatexFormulas2 * f = new CMRLatexFormulas2;
+	LatexParsorContext subcontext = context.extractSubZone('(',')');
+	LatexFormulas * f = new LatexFormulas;
 	f->parse(subcontext);
 	this->parameters.push_back(f);
 	
@@ -269,7 +273,7 @@ void CMRLatexEntity2::parseSubGroup ( CMRLatexParsorContext& context )
 }
 
 /*******************  FUNCTION  *********************/
-std::string CMRLatexEntity2::extractName ( CMRLatexParsorContext& context )
+std::string LatexEntity::extractName ( LatexParsorContext& context )
 {
 	//vars
 	string res;
@@ -303,10 +307,10 @@ std::string CMRLatexEntity2::extractName ( CMRLatexParsorContext& context )
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulas2* CMRLatexEntity2::extractSubFormula ( CMRLatexParsorContext& context )
+LatexFormulas* LatexEntity::extractSubFormula ( LatexParsorContext& context )
 {
 	//vars
-	CMRLatexFormulas2* f = new CMRLatexFormulas2;
+	LatexFormulas* f = new LatexFormulas;
 
 	//move
 	context.skipWhiteSpace();
@@ -314,10 +318,10 @@ CMRLatexFormulas2* CMRLatexEntity2::extractSubFormula ( CMRLatexParsorContext& c
 	//extract
 	if (context.startBy('{'))
 	{
-		CMRLatexParsorContext subcontext = context.extractSubZone('{','}');
+		LatexParsorContext subcontext = context.extractSubZone('{','}');
 		f->parse(subcontext);
 	} else {
-		CMRLatexEntity2 * tmp = new CMRLatexEntity2();
+		LatexEntity * tmp = new LatexEntity();
 		tmp->parse(context);
 		f->push_back(tmp);
 	}
@@ -329,7 +333,7 @@ CMRLatexFormulas2* CMRLatexEntity2::extractSubFormula ( CMRLatexParsorContext& c
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::extractSubAndSuperScript ( CMRLatexParsorContext& context )
+void LatexEntity::extractSubAndSuperScript ( LatexParsorContext& context )
 {
 	char mode = context.getCurAndMove();
 	
@@ -337,7 +341,7 @@ void CMRLatexEntity2::extractSubAndSuperScript ( CMRLatexParsorContext& context 
 	assert(mode == '_' || mode == '^');
 	
 	//extract formula
-	CMRLatexFormulas2 * f = extractSubFormula(context);
+	LatexFormulas * f = extractSubFormula(context);
 	
 	//split on ',' and merge in local sub lists
 	if (mode == '_')
@@ -352,7 +356,7 @@ void CMRLatexEntity2::extractSubAndSuperScript ( CMRLatexParsorContext& context 
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::extractParameters ( CMRLatexParsorContext& context )
+void LatexEntity::extractParameters ( LatexParsorContext& context )
 {
 	//skip white spaces
 	context.skipWhiteSpace();
@@ -362,7 +366,7 @@ void CMRLatexEntity2::extractParameters ( CMRLatexParsorContext& context )
 		context.fatal("Missing function parameter.");
 	
 	//extract formula
-	CMRLatexFormulas2 * f = extractSubFormula(context);
+	LatexFormulas * f = extractSubFormula(context);
 	
 	//apply
 	parameters.push_back(f);
@@ -372,7 +376,7 @@ void CMRLatexEntity2::extractParameters ( CMRLatexParsorContext& context )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::parseStandard ( CMRLatexParsorContext& context )
+void LatexEntity::parseStandard ( LatexParsorContext& context )
 {
 	this->name = this->extractName(context);
 	
@@ -389,14 +393,14 @@ void CMRLatexEntity2::parseStandard ( CMRLatexParsorContext& context )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::clear ( void )
+void LatexEntity::clear ( void )
 {
 	//cleanup memory
-	for(CMRLatexFormulasVector2::iterator it = indices.begin();it!=indices.end();++it)
+	for(LatexFormulasVector::iterator it = indices.begin();it!=indices.end();++it)
 		delete *it;
-	for(CMRLatexFormulasVector2::iterator it = exponents.begin();it!=exponents.end();++it)
+	for(LatexFormulasVector::iterator it = exponents.begin();it!=exponents.end();++it)
 		delete *it;
-	for(CMRLatexFormulasVector2::iterator it = parameters.begin();it!=parameters.end();++it)
+	for(LatexFormulasVector::iterator it = parameters.begin();it!=parameters.end();++it)
 		delete *it;
 	
 	//local values
@@ -408,19 +412,19 @@ void CMRLatexEntity2::clear ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::dumpAsXml ( ostream& out, int depth, const string& name, const CMRLatexFormulasVector2& list )
+void LatexEntity::dumpAsXml ( ostream& out, int depth, const string& name, const LatexFormulasVector& list )
 {
 	if (list.empty() == false)
 	{
 		out << cmrIndent(depth) << "<" << name << ">" << endl;
-		for (CMRLatexFormulasVector2::const_iterator it = list.begin() ; it != list.end() ; ++it)
+		for (LatexFormulasVector::const_iterator it = list.begin() ; it != list.end() ; ++it)
 			(*it)->dumpAsXml(out,depth+1);
 		out << cmrIndent(depth) << "</" << name << ">" << endl;
 	}
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::dumpAsXml ( ostream& out, int depth ) const
+void LatexEntity::dumpAsXml ( ostream& out, int depth ) const
 {
 	out << cmrIndent(depth) << "<entity>" << endl;
 	out << cmrIndent(depth+1) << "<name>"<< name << "</name>" << endl;
@@ -431,7 +435,7 @@ void CMRLatexEntity2::dumpAsXml ( ostream& out, int depth ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth, const string& name, const CMRLatexFormulasVector2& list )
+void LatexEntity::dumpAsTree ( ostream& out, int depth, const string& name, const LatexFormulasVector& list )
 {
 	if (list.empty() == false)
 	{
@@ -440,14 +444,14 @@ void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth, const string& name, 
 			out << cmrIndent(depth) << name << ": " << *list[0] << endl;
 		} else {
 			out << cmrIndent(depth) << name << ":" << endl;
-			for (CMRLatexFormulasVector2::const_iterator it = list.begin() ; it != list.end() ; ++it)
+			for (LatexFormulasVector::const_iterator it = list.begin() ; it != list.end() ; ++it)
 				(*it)->dumpAsTree(out,depth+1);
 		}
 	}
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth ) const
+void LatexEntity::dumpAsTree ( ostream& out, int depth ) const
 {
 	out << cmrIndent(depth) << "entity: " << name << endl;
 	dumpAsTree(out,depth+1,"indices",indices);
@@ -456,53 +460,53 @@ void CMRLatexEntity2::dumpAsTree ( ostream& out, int depth ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity2::~CMRLatexEntity2 ( void )
+LatexEntity::~LatexEntity ( void )
 {
 	clear();
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRLatexEntity2::isOnlyOneName ( void ) const
+bool LatexEntity::isOnlyOneName ( void ) const
 {
 	return (name.empty() == false && indices.empty() && parameters.empty() && exponents.empty());
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulasVector2& CMRLatexEntity2::getExponents ( void )
+LatexFormulasVector& LatexEntity::getExponents ( void )
 {
 	return exponents;
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulasVector2& CMRLatexEntity2::getIndices ( void )
+LatexFormulasVector& LatexEntity::getIndices ( void )
 {
 	return indices;
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexFormulasVector2& CMRLatexEntity2::getParameters ( void )
+LatexFormulasVector& LatexEntity::getParameters ( void )
 {
 	return parameters;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::setExtraInfo(const string& key, void* value, bool allowOverride)
+void LatexEntity::setExtraInfo(const string& key, void* value, bool allowOverride)
 {
 	//errors
 	if (allowOverride == false && hasInfo(key))
-		throw CMRLatexException("Invalid override of information key on LatexEntity.");
+		throw LatexException("Invalid override of information key on LatexEntity.");
 	
 	extraInfos[key] = value;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::deleteInfo(const string& key, bool throwOnError)
+void LatexEntity::deleteInfo(const string& key, bool throwOnError)
 {
 	bool status = hasInfo(key);
 
 	//errors
 	if (throwOnError && status == false)
-		throw CMRLatexException("Invalid delete of information key on LatexEntity.");
+		throw LatexException("Invalid delete of information key on LatexEntity.");
 	else if (status == false)
 		return;
 	
@@ -510,13 +514,13 @@ void CMRLatexEntity2::deleteInfo(const string& key, bool throwOnError)
 }
 
 /*******************  FUNCTION  *********************/
-void* CMRLatexEntity2::getExtraInfo(const string& key, bool throwOnError)
+void* LatexEntity::getExtraInfo(const string& key, bool throwOnError)
 {
 	bool status = hasInfo(key);
 
 	//errors
 	if (throwOnError && status == false)
-		throw CMRLatexException("Invalid read of information key on LatexEntity.");
+		throw LatexException("Invalid read of information key on LatexEntity.");
 	else if (status == false)
 		return NULL;
 	
@@ -524,20 +528,20 @@ void* CMRLatexEntity2::getExtraInfo(const string& key, bool throwOnError)
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRLatexEntity2::hasInfo(const string& key) const
+bool LatexEntity::hasInfo(const string& key) const
 {
 	return extraInfos.find(key) != extraInfos.end();
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity2& CMRLatexEntity2::operator=(const CMRLatexEntity2& value)
+LatexEntity& LatexEntity::operator=(const LatexEntity& value)
 {
 	this->copy(value);
 	return *this;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::copy(const CMRLatexEntity2& value)
+void LatexEntity::copy(const LatexEntity& value)
 {
 	//clea childs
 	this->clear();
@@ -556,12 +560,14 @@ void CMRLatexEntity2::copy(const CMRLatexEntity2& value)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRLatexEntity2::copy(CMRLatexFormulasVector2& vectorOut, const CMRLatexFormulasVector2& vectorOrig)
+void LatexEntity::copy(LatexFormulasVector& vectorOut, const LatexFormulasVector& vectorOrig)
 {
 	//clear vector
 	vectorOut.clear();
 	
 	//copy all chilsd
 	for (int i = 0 ; i < vectorOrig.size() ; i++)
-		vectorOut.push_back(new CMRLatexFormulas2(*vectorOrig[i]));
+		vectorOut.push_back(new LatexFormulas(*vectorOrig[i]));
 }
+
+};

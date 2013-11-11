@@ -11,13 +11,16 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
-#include "CMRParsorBasics.h"
-#include "CMRTexParsor.h"
-#include "CMRLatexEntity.h"
-#include "CMRLatexParsorContext.h"
+#include "ParsorBasics.h"
+#include "LatexParsorContext.h"
+#include "TexParsor.h"
 
 /**********************  USING  *********************/
 using namespace std;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 void cmrParsorError(const string & value,int pos,const string & message)
@@ -107,7 +110,7 @@ string cmrExtractSubZone(const string & value, int & start,char open,char close)
 }
 
 /*******************  FUNCTION  *********************/
-void cmrExtractSubAndSuperScript(const string & value,int & start,CMRLatexEntity * entity)
+void cmrExtractSubAndSuperScript(const string & value,int & start,LatexEntityOld * entity)
 {
 	//vars
 	string res;
@@ -124,14 +127,14 @@ void cmrExtractSubAndSuperScript(const string & value,int & start,CMRLatexEntity
 		start++;
 		res = cmrExtractSubZone(value,start);
 		entity->subscriptTotalValue = res;
-		CMRLatexFormulas * f = new CMRLatexFormulas;
+		LatexFormulasOld * f = new LatexFormulasOld;
 		cmrParseLatexFormula(*f,res);
 		entity->subscript.push_back(f);
 	} else if (mode == '^') {
 		start++;
 		res = cmrExtractSubZone(value,start);
 		entity->superscriptTotalValue = res;
-		CMRLatexFormulas * f = new CMRLatexFormulas;
+		LatexFormulasOld * f = new LatexFormulasOld;
 		cmrParseLatexFormula(*f,res);
 		entity->superscript.push_back(f);
 	} else {
@@ -162,7 +165,7 @@ int cmrRequireParameters(const string & name,const string & value,int pos)
 }
 
 /*******************  FUNCTION  *********************/
-int cmrRequireParameters(const string & name,CMRLatexParsorContext & context)
+int cmrRequireParameters(const string & name,LatexParsorContext & context)
 {
 	if (name[0] != '\\')
 	{
@@ -184,19 +187,19 @@ int cmrRequireParameters(const string & name,CMRLatexParsorContext & context)
 }
 
 /*******************  FUNCTION  *********************/
-void cmrReplaceByCommaGroup(CMRLatexFormulasList & formula)
+void cmrReplaceByCommaGroup(LatexFormulasListOld & formula)
 {
 	//vars
 	bool hasComma = false;
-	CMRLatexEntity * entity = NULL;
-	CMRLatexFormulas * current;
+	LatexEntityOld * entity = NULL;
+	LatexFormulasOld * current;
 	
 	if (formula.empty())
 		return;
 	
 	current = formula[0];
 
-	for (CMRLatexEntityVector::const_iterator it = current->childs.begin() ; it != current->childs.end() ; ++it)
+	for (LatexEntityVectorOld::const_iterator it = current->childs.begin() ; it != current->childs.end() ; ++it)
 		if ((*it)->name == ",")
 			hasComma = true;
 		
@@ -205,21 +208,21 @@ void cmrReplaceByCommaGroup(CMRLatexFormulasList & formula)
 		return;
 	
 	//create entity
-	entity = new CMRLatexEntity;
+	entity = new LatexEntityOld;
 	entity->name = "\\COMMA_GROUP";
 	entity->totalValue = (*current->childs.begin())->parent;
 	
 	//create formulas
-	CMRLatexFormulas * f = new CMRLatexFormulas;
+	LatexFormulasOld * f = new LatexFormulasOld;
 
 	//fill
 	formula.clear();
-	for (CMRLatexEntityVector::const_iterator it = current->childs.begin() ; it != current->childs.end() ; ++it)
+	for (LatexEntityVectorOld::const_iterator it = current->childs.begin() ; it != current->childs.end() ; ++it)
 	{
 		if ((*it)->name == ",")
 		{
 			formula.push_back(f);
-			f = new CMRLatexFormulas;
+			f = new LatexFormulasOld;
 		} else {
 			f->childs.push_back(*it);
 			f->string += (*it)->getString();
@@ -230,11 +233,11 @@ void cmrReplaceByCommaGroup(CMRLatexFormulasList & formula)
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity * cmrParseLatexEntitySimple(const string & value,int & start)
+LatexEntityOld * cmrParseLatexEntitySimple(const string & value,int & start)
 {
 	//vars
 	int cur = start;
-	CMRLatexEntity * res = NULL;
+	LatexEntityOld * res = NULL;
 	int params = 0;
 
 	//errors
@@ -245,7 +248,7 @@ CMRLatexEntity * cmrParseLatexEntitySimple(const string & value,int & start)
 		return NULL;
 	
 	//setup entity
-	res = new CMRLatexEntity;
+	res = new LatexEntityOld;
 	//extract name
 	res->parent = value;
 	res->from = start;
@@ -262,7 +265,7 @@ CMRLatexEntity * cmrParseLatexEntitySimple(const string & value,int & start)
 	for (int i = 0 ; i < params ; i++)
 	{
 		string tmp = cmrExtractSubZone(value,cur);
-		CMRLatexFormulas * f = new CMRLatexFormulas;
+		LatexFormulasOld * f = new LatexFormulasOld;
 		cmrParseLatexFormula(*f,tmp);
 		res->params.push_back(f);
 		res->argsTotalValue += '{';
@@ -280,10 +283,10 @@ CMRLatexEntity * cmrParseLatexEntitySimple(const string & value,int & start)
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity * cmrExtractSubGroup(const string & value,int & start)
+LatexEntityOld * cmrExtractSubGroup(const string & value,int & start)
 {
 	//vars
-	CMRLatexEntity * res = NULL;
+	LatexEntityOld * res = NULL;
 
 	//errors
 	assert(value[start] == '(');
@@ -293,13 +296,13 @@ CMRLatexEntity * cmrExtractSubGroup(const string & value,int & start)
 		return NULL;
 	
 	//setup entity
-	res = new CMRLatexEntity;
+	res = new LatexEntityOld;
 	res->name = '(';
 	res->from = start;
 	res->parent = value;
 	res->argsTotalValue = cmrExtractSubZone(value,start,'(',')');
 	res->to = start;
-	CMRLatexFormulas * f = new CMRLatexFormulas;
+	LatexFormulasOld * f = new LatexFormulasOld;
 	cmrParseLatexFormula(*f,res->argsTotalValue);
 	res->params.push_back(f);
 	
@@ -316,7 +319,7 @@ CMRLatexEntity * cmrExtractSubGroup(const string & value,int & start)
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity * cmrParseLatexEntity(const string & value,int & start)
+LatexEntityOld * cmrParseLatexEntity(const string & value,int & start)
 {
 	if (value[start] == '(')
 		return cmrExtractSubGroup(value,start);
@@ -332,9 +335,9 @@ void cmrSkipWhiteSpace(const string & value,int & cur)
 }
 
 /*******************  FUNCTION  *********************/
-void cmrParseLatexFormula(CMRLatexFormulas & formula,const string & value)
+void cmrParseLatexFormula(LatexFormulasOld & formula,const string & value)
 {
-	CMRLatexEntity * entity;
+	LatexEntityOld * entity;
 	int cur = 0;
 	formula.string = value;
 	cmrSkipWhiteSpace(value,cur);
@@ -344,3 +347,5 @@ void cmrParseLatexFormula(CMRLatexFormulas & formula,const string & value)
 		cmrSkipWhiteSpace(value,cur);
 	}
 }
+
+};

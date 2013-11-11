@@ -11,14 +11,18 @@
 #include <cstdio>
 #include <cassert>
 #include <cstdlib>
-#include "CMREntityMatching.h"
-#include "CMRParsorBasics.h"
+#include "EntityMatching.h"
+#include "ParsorBasics.h"
 
 /**********************  USING  *********************/
 using namespace std;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
-CMREntityCellMatching::CMREntityCellMatching ( bool matching )
+EntityCellMatching::EntityCellMatching ( bool matching )
 {
 	this->match = matching;
 	this->depInfo = false;
@@ -29,7 +33,7 @@ CMREntityCellMatching::CMREntityCellMatching ( bool matching )
 }
 
 /*******************  FUNCTION  *********************/
-void CMREntityCellMatching::printDebug ( void ) const
+void EntityCellMatching::printDebug ( void ) const
 {
 	printf(" - CellMatching : %d\n",match);
 	if (depInfo)
@@ -41,7 +45,7 @@ void CMREntityCellMatching::printDebug ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool cmrEntityExactMatch(const CMRLatexEntity & e1,const CMRLatexEntity & e2,bool subsup)
+bool cmrEntityExactMatch(const LatexEntityOld & e1,const LatexEntityOld & e2,bool subsup)
 {
 	if (subsup)
 		return (e1.name == e2.name && e1.subscriptTotalValue == e2.subscriptTotalValue && e1.superscriptTotalValue == e2.superscriptTotalValue);
@@ -50,7 +54,7 @@ bool cmrEntityExactMatch(const CMRLatexEntity & e1,const CMRLatexEntity & e2,boo
 }
 
 /*******************  FUNCTION  *********************/
-const CMRLatexFormulas * cmrEntityExtractSubscriptParam(const CMRLatexEntity & entity,int id)
+const LatexFormulasOld * cmrEntityExtractSubscriptParam(const LatexEntityOld & entity,int id)
 {
 	if (entity.subscript.empty() || entity.subscript.size() <= id)
 		return NULL;
@@ -77,11 +81,11 @@ int cmrApplyOp(int orig,char op,int value)
 }
 
 /*******************  FUNCTION  *********************/
-int cmrFormulaExtractDelta(const CMRLatexFormulas * formula,const string & varname)
+int cmrFormulaExtractDelta(const LatexFormulasOld * formula,const string & varname)
 {
 	int res = 0;
 	char op = '+';
-	for (CMRLatexEntityVector::const_iterator it = formula->childs.begin() ; it != formula->childs.end() ; ++it)
+	for (LatexEntityVectorOld::const_iterator it = formula->childs.begin() ; it != formula->childs.end() ; ++it)
 	{
 		const string & name = (*it)->name;
 		if (name == varname)
@@ -101,11 +105,11 @@ int cmrFormulaExtractDelta(const CMRLatexFormulas * formula,const string & varna
 }
 
 /*******************  FUNCTION  *********************/
-CMREntityCellMatching cmrEntityCellMatch(const CMRLatexEntity & entity,const string & name)
+EntityCellMatching cmrEntityCellMatch(const LatexEntityOld & entity,const string & name)
 {
-	CMREntityCellMatching res;
-	const CMRLatexFormulas * fdx;
-	const CMRLatexFormulas * fdy;
+	EntityCellMatching res;
+	const LatexFormulasOld * fdx;
+	const LatexFormulasOld * fdy;
 	
 	if (entity.name == name)
 	{
@@ -132,16 +136,16 @@ CMREntityCellMatching cmrEntityCellMatch(const CMRLatexEntity & entity,const str
 }
 
 /*******************  FUNCTION  *********************/
-void cmrExtractDeps(CMREqDepMatrix & matrix,const CMRLatexFormulasList & f,const string & varname)
+void cmrExtractDeps(EqDepMatrix & matrix,const LatexFormulasListOld & f,const string & varname)
 {
-	for (CMRLatexFormulasList::const_iterator it = f.begin() ; it != f.end() ; ++it)
+	for (LatexFormulasListOld::const_iterator it = f.begin() ; it != f.end() ; ++it)
 		cmrExtractDeps(matrix,**it,varname);
 }
 
 /*******************  FUNCTION  *********************/
-void cmrExtractDeps(CMREqDepMatrix & matrix,const CMRLatexEntity & f,const string & varname)
+void cmrExtractDeps(EqDepMatrix & matrix,const LatexEntityOld & f,const string & varname)
 {
-	CMREntityCellMatching match = cmrEntityCellMatch(f,varname);
+	EntityCellMatching match = cmrEntityCellMatch(f,varname);
 	if (match.match)
 	{
 		printf("=> Check %s : %s\n",f.name.c_str(),f.totalValue.c_str());
@@ -151,13 +155,15 @@ void cmrExtractDeps(CMREqDepMatrix & matrix,const CMRLatexEntity & f,const strin
 	//loop on sublists
 	cmrExtractDeps(matrix,f.subscript,varname);
 	cmrExtractDeps(matrix,f.superscript,varname);
-	for (CMRLatexFormulasList::const_iterator it = f.params.begin() ; it != f.params.end() ; ++it)
+	for (LatexFormulasListOld::const_iterator it = f.params.begin() ; it != f.params.end() ; ++it)
 		cmrExtractDeps(matrix,**it,varname);
 }
 
 /*******************  FUNCTION  *********************/
-void cmrExtractDeps(CMREqDepMatrix & matrix,const CMRLatexFormulas & f,const string & varname)
+void cmrExtractDeps(EqDepMatrix & matrix,const LatexFormulasOld & f,const string & varname)
 {
-	for (CMRLatexEntityVector::const_iterator it = f.childs.begin() ; it != f.childs.end() ; ++it)
+	for (LatexEntityVectorOld::const_iterator it = f.childs.begin() ; it != f.childs.end() ; ++it)
 		cmrExtractDeps(matrix,**it,varname);
 }
+
+};

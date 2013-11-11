@@ -10,8 +10,10 @@
 /********************  HEADERS  *********************/
 #include "CMRTransformationExpandExpo.h"
 #include "CMRTransformationReplace.h"
-#include "../parsor/CMRLatexEntity2.h"
+#include "../parsor/LatexEntity.h"
 #include "../definitions/CMRProjectCode.h"
+
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRTransformationExpandExpo::CMRTransformationExpandExpo ( void ) 
@@ -21,10 +23,10 @@ CMRTransformationExpandExpo::CMRTransformationExpandExpo ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, CMRLatexEntity2& entity )
+void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, LatexEntity& entity )
 {
 	//vars
-	const CMRLatexFormulas2 * exponent = NULL;
+	const LatexFormulas * exponent = NULL;
 	
 	//trivial if no exponents or more than 1
 	if (entity.countExponents() != 1)
@@ -42,8 +44,8 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 	//convert to string for easer conpare
 	std::string tmp = exponent->getString();
 	//gen an entity without the exponent
-	CMRLatexFormulas2 innerPartF;
-	CMRLatexEntity2 * innerPart = new CMRLatexEntity2(entity);
+	LatexFormulas innerPartF;
+	LatexEntity * innerPart = new LatexEntity(entity);
 	innerPartF.push_back(innerPart);
 	innerPart->exponents.erase(innerPart->exponents.begin() + (innerPart->exponents.size()-1));
 	CMRProjectCaptureMap values;
@@ -54,7 +56,7 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 	if (tmp == "2")
 	{
 		//build the new format
-		CMRLatexFormulas2 * f = new CMRLatexFormulas2("x*x");
+		LatexFormulas * f = new LatexFormulas("x*x");
 		CMRTransformationReplace::replaceAll(values,*f);
 		
 		//change entity
@@ -63,7 +65,7 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 		entity.parameters.push_back(f);
 	} else if (tmp == "3") {
 		//build the new format
-		CMRLatexFormulas2 * f = new CMRLatexFormulas2("x*x*x");
+		LatexFormulas * f = new LatexFormulas("x*x*x");
 		CMRTransformationReplace::replaceAll(values,*f);
 		
 		//change entity
@@ -72,7 +74,7 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 		entity.parameters.push_back(f);
 	} else if (tmp == "1/2") {
 		//build the new format
-		CMRLatexFormulas2 * f = new CMRLatexFormulas2("x");
+		LatexFormulas * f = new LatexFormulas("x");
 		CMRTransformationReplace::replaceAll(values,*f);
 			
 		//change entity
@@ -81,7 +83,7 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 		entity.parameters.push_back(f);
 	} else {
 		//build the new format
-		CMRLatexFormulas2 * f = new CMRLatexFormulas2("x,e");
+		LatexFormulas * f = new LatexFormulas("x,e");
 		CMRTransformationReplace::replaceAll(values,*f);
 		
 		//change entity

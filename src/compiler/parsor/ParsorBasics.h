@@ -7,15 +7,19 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_PARSOR_BASICS_H
-#define CMR_PARSOR_BASICS_H
+#ifndef CMR_COMPILER_PARSOR_BASICS_H
+#define CMR_COMPILER_PARSOR_BASICS_H
 
 /********************  HEADERS  *********************/
 #include <string>
 #include <vector>
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
-typedef std::vector<std::string> CMRStringVector;
+typedef std::vector<std::string> StringVector;
 
 /*******************  FUNCTION  *********************/
 bool cmrIsAlphaNum(char value);
@@ -24,9 +28,11 @@ bool cmrIsNumFloat(char value);
 bool cmrIsOperator(char value);
 bool cmrIsWhiteSpace(char value);
 bool cmrIsSimpleOperator(const std::string & value);
-CMRStringVector cmrStringSplit(const std::string & value,const std::string & separator);
+StringVector cmrStringSplit(const std::string & value,const std::string & separator);
 float cmrSafeStringToFloat(const std::string & value);
 std::string cmrIndent(int depth);
 bool cmrIsInteger(const std::string & value);
 
-#endif //CMR_PARSOR_BASICS_H
+};
+
+#endif //CMR_COMPILER_PARSOR_BASICS_H

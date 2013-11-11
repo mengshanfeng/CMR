@@ -29,7 +29,7 @@ class CMRProjectDefinition : public CMRProjectEntity
 		void printDebug(void) const;
 		void printCPPCode(CMRProjectContext & context) const;
 		void runTransformation(CMRProjectTransformation & transf);
-		virtual std::ostream& genUsageCCode ( std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const;
+		virtual std::ostream& genUsageCCode ( std::ostream& out, const CMRProjectContext& context, CMRCompiler::LatexEntityOld& entity ) const;
 	private:
 		CMRProjectAction ops;
 };

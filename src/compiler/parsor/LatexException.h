@@ -7,20 +7,24 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_LATEX_EXCEPTION_H
-#define CMR_LATEX_EXCEPTION_H
+#ifndef CMR_COMPILER_LATEX_EXCEPTION_H
+#define CMR_COMPILER_LATEX_EXCEPTION_H
 
 /********************  HEADERS  *********************/
 #include <exception>
 #include <string>
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  CLASS  **********************/
-class CMRLatexException : public std::exception
+class LatexException : public std::exception
 {
 	public:
-		CMRLatexException(void) throw();
-		CMRLatexException(std::string message) throw();
-		virtual ~CMRLatexException(void) throw();
+		LatexException(void) throw();
+		LatexException(std::string message) throw();
+		virtual ~LatexException(void) throw();
 		virtual const char* what() const  throw();
 		virtual std::string getMessage(void) const;
 		void fatal(void);
@@ -28,4 +32,6 @@ class CMRLatexException : public std::exception
 		std::string message;
 };
 
-#endif //CMR_LATEX_EXCEPTION_H
+};
+
+#endif //CMR_COMPILER_LATEX_EXCEPTION_H

@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <CMRProjectMeshVar.h>
-#include <../parsor/CMRLatexFormula.h>
+#include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 #include <CMRProjectContext.h>
@@ -17,6 +17,7 @@
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char TEST_CST_1[] = "			CMRCellAccessor<int[5],CMRMemoryModelRowMajor> testA;\n";
@@ -47,7 +48,7 @@ TEST(TestProjectMeshVar,testAddDim_2)
 {
 	CMRProjectMeshVar variable("A_{i,j}","testA","int");
 	EXPECT_EQ(2,variable.getCapturedIndices().size());
-	EXPECT_THROW(variable.addDim("k",5),CMRLatexException);
+	EXPECT_THROW(variable.addDim("k",5),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
@@ -56,7 +57,7 @@ TEST(TestProjectMeshVar,testGenUsageCCode_1)
 	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 
-	CMRLatexEntity2 entity("A_{2+1,2+1,55}");
+	LatexEntity entity("A_{2+1,2+1,55}");
 	CMRProjectContext context;
 	
 	stringstream outr;
@@ -74,7 +75,7 @@ TEST(TestProjectMeshVar,testGenUsageCCode_2)
 	CMRProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 
-	CMRLatexEntity2 entity("A_{m+1,m+1,55}");
+	LatexEntity entity("A_{m+1,m+1,55}");
 	MockProjectEntity entity2("m","testM");
 	CMRProjectContext context;
 	context.addEntry(&entity2);
@@ -97,7 +98,7 @@ TEST(TestProjectMeshVar,testGenDefinitionCCode)
 	CMRProjectContext context;
 	
 	stringstream out;
-	EXPECT_THROW(variable.genDefinitionCCode(out,context),CMRLatexException);
+	EXPECT_THROW(variable.genDefinitionCCode(out,context),LatexException);
 }
 
 /*******************  FUNCTION  *********************/

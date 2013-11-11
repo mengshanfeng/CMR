@@ -10,9 +10,10 @@
 /********************  HEADERS  *********************/
 #include <cstdio>
 #include "CMRProjectEquation.h"
-#include "parsor/CMRTexParsor.h"
+#include "parsor/TexParsor.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectEquation::CMRProjectEquation ( const string& latexName, const string& longName, const string& compute ) 
@@ -30,15 +31,15 @@ void CMRProjectEquation::printDebug ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity* CMRProjectEquation::extractNextInnerLoop ( void )
+LatexEntityOld* CMRProjectEquation::extractNextInnerLoop ( void )
 {
 	return extractFirstInnerLoop(formula);
 }
 
 /*******************  FUNCTION  *********************/
-CMRLatexEntity* extractFirstInnerLoop(CMRLatexFormulas & formula)
+LatexEntityOld* extractFirstInnerLoop(LatexFormulasOld & formula)
 {
-	for (CMRLatexEntityVector::iterator it = formula.childs.begin() ; it != formula.childs.end() ; ++it)
+	for (LatexEntityVectorOld::iterator it = formula.childs.begin() ; it != formula.childs.end() ; ++it)
 	{
 		if ((*it)->name == "\\sum")
 			return *it;

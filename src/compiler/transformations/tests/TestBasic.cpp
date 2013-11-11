@@ -15,6 +15,7 @@
 
 /**********************  USING  *********************/
 using namespace testing;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 
@@ -25,8 +26,8 @@ class MockTransfBasic : public CMRTransformationBasic
 		MockTransfBasic(void);
 		virtual void transform(CMRProjectCodeNode& node);
 		virtual void transform(CMRProjectCodeIteratorLoop& loop);
-		virtual void transform(CMRProjectCodeEquation& equation, CMRLatexFormulas2& formula);
-		virtual void transform(CMRProjectCodeEquation& equation, CMRLatexEntity2& entity);
+		virtual void transform(CMRProjectCodeEquation& equation, LatexFormulas& formula);
+		virtual void transform(CMRProjectCodeEquation& equation, LatexEntity& entity);
 		virtual void transform(CMRProjectCodeEquation& equation);
 		std::stringstream out;
 };
@@ -47,7 +48,7 @@ void MockTransfBasic::transform(CMRProjectCodeNode& node)
 }
 
 /*******************  FUNCTION  *********************/
-void MockTransfBasic::transform(CMRProjectCodeEquation& equation, CMRLatexFormulas2& formula)
+void MockTransfBasic::transform(CMRProjectCodeEquation& equation, LatexFormulas& formula)
 {
 	out << "FORMULA[ ";
 	CMRTransformationBasic::transform(equation,formula);
@@ -63,7 +64,7 @@ void MockTransfBasic::transform(CMRProjectCodeIteratorLoop& loop)
 }
 
 /*******************  FUNCTION  *********************/
-void MockTransfBasic::transform(CMRProjectCodeEquation& equation, CMRLatexEntity2& entity)
+void MockTransfBasic::transform(CMRProjectCodeEquation& equation, LatexEntity& entity)
 {
 	if (entity.hasInfo("cmrNoTranform"))
 		out << "ENTITY_NO_TRANSF [ ";

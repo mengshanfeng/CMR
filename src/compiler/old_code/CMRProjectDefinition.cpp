@@ -16,6 +16,7 @@
 #include "CMRGenCode.h"
 
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 CMRProjectDefinition::CMRProjectDefinition(const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext)
@@ -53,7 +54,7 @@ void CMRProjectDefinition::printCPPCode(CMRProjectContext & context) const
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const
+ostream& CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, LatexEntityOld& entity ) const
 {
 	//extract matching
 	CMRProjectCaptureMap capture;

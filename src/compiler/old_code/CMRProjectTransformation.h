@@ -14,8 +14,11 @@
 #include "CMRProjectAction.h"
 
 /*********************  TYPES  **********************/
-struct CMRLatexEntity;
-struct CMRLatexFormulas;
+namespace CMRCompiler
+{
+	struct LatexEntityOld;
+	struct LatexFormulasOld;
+};
 
 /*********************  CLASS  **********************/
 class CMRProjectTransformation
@@ -51,8 +54,8 @@ class CMRProjectTransfImplicitMul : public CMRProjectTransformation
 	public:
 		CMRProjectTransfImplicitMul (void);
 	protected:
-		void replaceImplMul(CMRLatexFormulasList & formula);
-		void replaceImplMul(CMRLatexFormulas & formula);
+		void replaceImplMul(CMRCompiler::LatexFormulasListOld & formula);
+		void replaceImplMul(CMRCompiler::LatexFormulasOld & formula);
 		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );
 };
 
@@ -60,9 +63,9 @@ class CMRProjectTransfImplicitMul : public CMRProjectTransformation
 class CMRProjectTransfExpandFrac : public CMRProjectTransformation
 {
 	protected:
-		void expandFrac(CMRLatexFormulasList & forumlas);
-		void expandFrac(CMRLatexEntity & entity);
-		void expandFrac(CMRLatexFormulas & forumlas);
+		void expandFrac(CMRCompiler::LatexFormulasListOld & forumlas);
+		void expandFrac(CMRCompiler::LatexEntityOld & entity);
+		void expandFrac(CMRCompiler::LatexFormulasOld & forumlas);
 		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );
 };
 
@@ -70,8 +73,8 @@ class CMRProjectTransfExpandFrac : public CMRProjectTransformation
 class CMRProjectTransfExpendExponent : public CMRProjectTransformation
 {
 	protected:
-		void expandExponent( CMRLatexFormulas& formulas, CMRProjectAction& action );
-		void expandExponent( CMRLatexEntity& entity, CMRProjectAction& action );
+		void expandExponent( CMRCompiler::LatexFormulasOld& formulas, CMRProjectAction& action );
+		void expandExponent( CMRCompiler::LatexEntityOld& entity, CMRProjectAction& action );
 		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );
 };
 

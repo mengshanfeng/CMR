@@ -8,9 +8,12 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <cstdio>
 #include <cstdlib>
-#include "CMRParsorBasics.h"
+#include "ParsorBasics.h"
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 bool cmrIsAlphaNum(char value)
@@ -67,7 +70,7 @@ bool cmrIsInteger(const std::string & value)
 std::vector< std::string> cmrStringSplit ( const std::string& value, const std::string& separator )
 {
 	//vars
-	CMRStringVector res;
+	StringVector res;
 	size_t index = 0;
 	size_t last_index = 0;
 	
@@ -96,3 +99,5 @@ std::string cmrIndent ( int depth )
 		res+="  ";
 	return res;
 }
+
+};
