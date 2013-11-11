@@ -28,14 +28,6 @@ CMRTransformationExtractLoops::CMRTransformationExtractLoops ( void )
 }
 
 /*******************  FUNCTION  *********************/
-static std::string getTempName(int id)
-{
-	stringstream tmp;
-	tmp << "\\CMRTMP^"<< id <<"{" << id << "}";
-	return tmp.str();
-}
-
-/*******************  FUNCTION  *********************/
 void CMRTransformationExtractLoops::transform ( CMRProjectCodeEquation& equation, LatexEntity& entity )
 {
 	//vars

@@ -65,7 +65,7 @@ TEST(TestExtractLoops,testRun_1)
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	CMRProjectCodeEquation & eq = root.addEquation("a","4 * \\sum_k{b}");
+	root.addEquation("a","4 * \\sum_k{b}");
 	
 	transf.run(root);
 	out.run(root);
@@ -86,7 +86,7 @@ TEST(TestExtractLoops,testRun_2)
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	CMRProjectCodeEquation & eq = root.addEquation("a","4 * \\sum_k{b+\\frac{c}{b*5}-(4+8)}");
+	root.addEquation("a","4 * \\sum_k{b+\\frac{c}{b*5}-(4+8)}");
 	
 	transf.run(root);
 	out.run(root);
@@ -109,7 +109,7 @@ TEST(TestExtractLoops,testRun_3)
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	CMRProjectCodeEquation & eq = root.addEquation("a","4 * \\sum_k{b+\\sum_l{b*5}-(4+8)}");
+	root.addEquation("a","4 * \\sum_k{b+\\sum_l{b*5}-(4+8)}");
 	
 	transf.run(root);
 	out.run(root);

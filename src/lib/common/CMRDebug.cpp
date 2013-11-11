@@ -79,9 +79,9 @@ void cmrDebugMessage(CMRDebugMessageLevel level,const char * title,const char * 
 
 	//print
 	if (condition == NULL)
-		fprintf(stderr,"%s%-7s [rank=%d] (%s:%d) : %s%s\n",CMR_MESG_COLOR[level],title,cmrGetMPIRank(),basename(fname),line,buffer,CMR_MESG_COLOR[CMR_DEBUG_NORMAL]);
+		fprintf(stderr,"%s%-7s [rank=%d] (%s:%d) : %s%s\n",colors[level],title,cmrGetMPIRank(),basename(fname),line,buffer,colors[CMR_DEBUG_NORMAL]);
 	else
-		fprintf(stderr,"%s%-7s [rank=%d] (%s:%d) : %s\n        %s%s\n",CMR_MESG_COLOR[level],title,cmrGetMPIRank(),basename(fname),line,condition,buffer,CMR_MESG_COLOR[CMR_DEBUG_NORMAL]);
+		fprintf(stderr,"%s%-7s [rank=%d] (%s:%d) : %s\n        %s%s\n",colors[level],title,cmrGetMPIRank(),basename(fname),line,condition,buffer,colors[CMR_DEBUG_NORMAL]);
 
 	//free buffers
 	free(buffer);

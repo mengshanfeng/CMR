@@ -63,9 +63,7 @@ void CMRXmlDoc::loadFromFile ( const string& xmlFile )
 void CMRXmlDoc::validateWithDTD ( const string& dtdFile )
 {
 	/* vars */
-	int i;
 	bool status = true;
-	bool has_one = false;
 	xmlDtdPtr dtd;
 	xmlValidCtxtPtr vctxt;
 
@@ -110,9 +108,7 @@ void CMRXmlDoc::validateWithDTD ( const string& dtdFile )
 void CMRXmlDoc::validateWithSchema ( const string& xsltFile )
 {
 	/* vars */
-	int i;
 	bool status = true;
-	bool has_one = false;
 	xmlSchemaPtr schema;
 	xmlSchemaValidCtxtPtr vctxt;
 	xmlSchemaParserCtxtPtr pctxt;
