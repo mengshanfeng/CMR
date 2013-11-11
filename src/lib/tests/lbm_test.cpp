@@ -14,6 +14,8 @@
 #include <domain/CMRCellAccessor.h>
 #include <domain/CMRVarSystem.h>
 #include <mpi/CMRMPIDomainBuilder.h>
+#include <runner/CMRBasicSeqRunner.h>
+#include <runner/CMRBasicOutputer.h>
 #include <domain/CMRMemoryModels.h>
 #include <math.h>
 #include <cstdio>
@@ -32,7 +34,7 @@ using namespace std;
 #define WIDTH 800
 #define HEIGHT 100
 #define OBSTACLE_R ((HEIGHT)/8.0)
-#define ITERATIONS 8000
+#define ITERATIONS 300
 #define WRITE_STEP_INTERVAL 50
 #define RESULT_MAGICK 0x12345
 #define RESULT_FILENAME "out.raw"
@@ -609,7 +611,7 @@ void setup_init_state(VarSystem & sys,const CMRRect & globalRect,const CMRRect &
 }
 
 /*******************  FUNCTION  *********************/
-int main(int argc, char * argv[])
+int mainManual(int argc, char * argv[])
 {
 	//vars
 	FILE * fp = NULL;
@@ -677,6 +679,7 @@ int main(int argc, char * argv[])
 			//propagation( &mesh, &temp);
 			ActionPropagation::LoopType loop3;
 			loop3.run(&sys,blockRect);
+			sys.permutVar(CMR_ALL);
 		}
 
 		//save step
@@ -693,4 +696,46 @@ int main(int argc, char * argv[])
 	info_on_master("Finish");	
 	MPI_Finalize();
 	return EXIT_SUCCESS;
+}
+
+/*******************  FUNCTION  *********************/
+int mainRunner(int argc, char * argv[])
+{
+	CMRRect domainSize(0,0,WIDTH,HEIGHT);
+	CMRBasicSeqRunner<VarSystem> app(argc,argv,domainSize);
+	
+	//setup write system
+	app.setWriter(new CMRBasicOutputer("output-runner.raw",app.getSplitter()),WRITE_STEP_INTERVAL);
+	app.addPrepareWriteAction(new ActionUpdateFileout::LoopType(),app.getLocalRect());
+	
+	//setup init actions
+	app.addInitAction(new ActionInitStatePoiseuil::LoopType(),
+					  app.getLocalRect().expended(1));
+	app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_LEFT_IN)),
+					  app.getLocalRect().expended(1).getBorder(CMR_LEFT));
+	app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_RIGHT_OUT)),
+					  app.getLocalRect().expended(1).getBorder(CMR_RIGHT));
+	app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_BOUNCE_BACK)),
+					  app.getLocalRect().expended(1).getBorder(CMR_TOP));
+	app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_BOUNCE_BACK)),
+					  app.getLocalRect().expended(1).getBorder(CMR_BOTTOM));
+	app.addInitAction(new ActionSetupObstable::LoopType(new ActionSetupObstable(WIDTH/10.0 + 1.0,HEIGHT/2.0+3.0)),
+					  app.getGlobalRect());
+	
+	//setup compute actions
+	app.addLoopAction(new ActionSpecialCells::LoopType(),app.getLocalRect().expended(1));
+	app.addLoopAction(new ActionCollision::LoopType(),app.getLocalRect());
+	app.addLoopAction(new ActionPropagation::LoopType(),app.getLocalRect());
+	
+	//runner
+	app.run(ITERATIONS);
+	
+	return EXIT_SUCCESS;
+}
+
+/*******************  FUNCTION  *********************/
+int main(int argc, char * argv[])
+{
+// 	return mainRunner(argc,argv);
+	return mainManual(argc,argv);
 }

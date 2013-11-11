@@ -145,7 +145,7 @@ struct CMRCellPosition
 };
 
 /*******************  FUNCTION  *********************/
-CMRCellPosition::CMRCellPosition ( const CMRRect & globalMesh, const CMRRect & localMesh, const CMRVect2D & cellPos )
+inline CMRCellPosition::CMRCellPosition ( const CMRRect & globalMesh, const CMRRect & localMesh, const CMRVect2D & cellPos )
 {
 	this->globalMesh = globalMesh;
 	this->localMesh = localMesh;
@@ -153,7 +153,7 @@ CMRCellPosition::CMRCellPosition ( const CMRRect & globalMesh, const CMRRect & l
 }
 
 /*******************  FUNCTION  *********************/
-CMRCellPosition::CMRCellPosition ( const CMRRect & globalMesh, const CMRRect & localMesh, int x, int y )
+inline CMRCellPosition::CMRCellPosition ( const CMRRect & globalMesh, const CMRRect & localMesh, int x, int y )
 {
 	this->globalMesh = globalMesh;
 	this->localMesh = localMesh;
@@ -162,7 +162,7 @@ CMRCellPosition::CMRCellPosition ( const CMRRect & globalMesh, const CMRRect & l
 }
 
 /*******************  FUNCTION  *********************/
-CMRCellPosition::CMRCellPosition ( const CMRCellPosition& orig, int dx, int dy )
+inline CMRCellPosition::CMRCellPosition ( const CMRCellPosition& orig, int dx, int dy )
 {
 	*this = orig;
 	this->cellPos.x+=dx;
@@ -170,19 +170,19 @@ CMRCellPosition::CMRCellPosition ( const CMRCellPosition& orig, int dx, int dy )
 }
 
 /*******************  FUNCTION  *********************/
-int CMRCellPosition::getAbsX ( int dx ) const
+inline int CMRCellPosition::getAbsX ( int dx ) const
 {
 	return localMesh.x + cellPos.x + dx;
 }
 
 /*******************  FUNCTION  *********************/
-int CMRCellPosition::getAbsY ( int dy ) const
+inline int CMRCellPosition::getAbsY ( int dy ) const
 {
 	return localMesh.y + cellPos.y + dy;
 }
 
 /*******************  FUNCTION  *********************/
-bool CMRCellPosition::cellExist ( int dx, int dy, int ghostDepth ) const
+inline bool CMRCellPosition::cellExist ( int dx, int dy, int ghostDepth ) const
 {
 	int posX = cellPos.x + dx;
 	int posY = cellPos.y + dy;
