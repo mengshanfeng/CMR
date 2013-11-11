@@ -570,4 +570,4 @@ void LatexEntity::copy(LatexFormulasVector& vectorOut, const LatexFormulasVector
 		vectorOut.push_back(new LatexFormulas(*vectorOrig[i]));
 }
 
-};
+}

@@ -52,4 +52,4 @@ void Exception::fatal()
 	cmrFatal("%s",message.c_str());
 }
 
-};
+}

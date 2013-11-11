@@ -20,7 +20,7 @@ class CMRTransformation;
 
 namespace CMRCompiler{
 	class LangDef;
-};
+}
 
 /*********************  CLASS  **********************/
 class CMRProjectActionParameter : public CMRProjectEntity

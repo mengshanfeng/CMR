@@ -39,6 +39,6 @@ CodeTemplateValueDic& CodeTemplateValueDic::setCodeGen ( const std::string& name
 	values[name] = new CodeTemplateValueCodeGen<T>(value);
 }
 
-};
+}
 
 #endif //CMR_CODE_TEMPLATE_DIC_IMPL_H

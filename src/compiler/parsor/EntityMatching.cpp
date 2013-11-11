@@ -166,4 +166,4 @@ void cmrExtractDeps(EqDepMatrix & matrix,const LatexFormulasOld & f,const string
 		cmrExtractDeps(matrix,**it,varname);
 }
 
-};
+}

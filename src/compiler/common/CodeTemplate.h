@@ -47,6 +47,6 @@ class CodeTemplate
 		CodeTemplateEntries model;
 };
 
-};
+}
 
 #endif //CMR_COMPILER__CODE_TEMPLATE_H

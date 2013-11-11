@@ -18,7 +18,7 @@ namespace CMRCompiler
 {
 	class LatexFormulas;
 	class LatexEntity;
-};
+}
 class CMRProjectContext;
 
 /*******************  FUNCTION  *********************/

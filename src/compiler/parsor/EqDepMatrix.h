@@ -24,6 +24,6 @@ struct EqDepMatrix
 	int maxDepth;
 };
 
-};
+}
 
 #endif //CMR_EQ_DEP_MATRIX_H

@@ -52,4 +52,4 @@ void LangDef::applyOn ( std::ostream& out, const std::string& templateName, cons
 	getCodeTemplate(templateName).applyOn(out,dic,indentLevel);
 }
 
-};
+}

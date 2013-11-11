@@ -240,7 +240,6 @@ void CMRProjectCodeEquation::setOperator ( const string& op )
 void CMRProjectCodeEntry::genChildCCode ( ostream& out ,int padding ) const
 {
 	const CMRProjectCodeEntry * cur = this->getFirstChild();
-	const CMRProjectCodeEntry * end = this->getLastChild();
 	while (cur != NULL)
 	{
 		cur->genCCode(out,padding);

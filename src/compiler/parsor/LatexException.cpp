@@ -56,4 +56,4 @@ void LatexException::fatal()
 	abort();
 }
 
-};
+}

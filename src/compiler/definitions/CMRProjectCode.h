@@ -37,7 +37,7 @@ enum CMRProjectCodeType
 	//Var decl
 	CMR_PROJECT_CODE_VAR_DECL,
 	//C code simple
-	CMR_PROJECT_CODE_CSIMPLE,
+	CMR_PROJECT_CODE_CSIMPLE
 };
 
 /*********************  STRUCT  *********************/

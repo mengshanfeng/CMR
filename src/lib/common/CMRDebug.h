@@ -19,7 +19,7 @@ enum CMRDebugMessageLevel
 	CMR_DEBUG_INFO    = 1,
 	CMR_DEBUG_NORMAL  = 2,
 	CMR_DEBUG_WARNING = 3,
-	CMR_DEBUG_ERROR   = 4,
+	CMR_DEBUG_ERROR   = 4
 };
 
 /********************  MACRO  ***********************/

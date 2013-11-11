@@ -76,4 +76,4 @@ const string& MsgFormat::str ( void ) const
 	return value;
 }
 
-};
+}

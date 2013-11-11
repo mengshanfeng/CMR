@@ -33,6 +33,6 @@ float cmrSafeStringToFloat(const std::string & value);
 std::string cmrIndent(int depth);
 bool cmrIsInteger(const std::string & value);
 
-};
+}
 
 #endif //CMR_COMPILER_PARSOR_BASICS_H

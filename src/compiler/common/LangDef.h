@@ -38,6 +38,6 @@ class LangDef
 		CodeTemplateMap templates;
 };
 
-};
+}
 
 #endif //CMR_COMPILER_LANG_DEF_H

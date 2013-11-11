@@ -31,6 +31,6 @@ class Exception : public std::exception
 		std::string message;
 };
 
-};
+}
 
 #endif //CMR_COMPILER_EXCEPTION_H

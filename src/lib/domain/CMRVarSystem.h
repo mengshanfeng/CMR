@@ -21,7 +21,7 @@
 /********************  ENUM  ************************/
 enum CMRVarMode
 {
-	CMR_VARMODE_CELL,
+	CMR_VARMODE_CELL
 };
 
 /*********************  CLASS  **********************/

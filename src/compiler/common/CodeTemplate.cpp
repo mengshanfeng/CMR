@@ -197,4 +197,4 @@ void CodeTemplateValueString::genCode ( ostream& out, int indent ) const
 	}
 }
 
-};
+}

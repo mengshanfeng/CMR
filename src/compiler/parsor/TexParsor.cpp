@@ -348,4 +348,4 @@ void cmrParseLatexFormula(LatexFormulasOld & formula,const string & value)
 	}
 }
 
-};
+}

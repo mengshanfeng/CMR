@@ -28,4 +28,4 @@ class CMRProjectEquation : public CMRProjectEntity
 /*******************  FUNCTION  *********************/
 CMRCompiler::LatexEntityOld* extractFirstInnerLoop(CMRCompiler::LatexFormulasOld & formula);
 
-#endif 
+#endif

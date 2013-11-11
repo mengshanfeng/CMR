@@ -18,7 +18,7 @@ namespace CMRCompiler
 {
 	struct LatexEntityOld;
 	struct LatexFormulasOld;
-};
+}
 
 /*********************  CLASS  **********************/
 class CMRProjectTransformation

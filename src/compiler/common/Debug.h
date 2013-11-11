@@ -23,7 +23,7 @@ enum DebugMessageLevel
 	DEBUG_INFO    = 1,
 	DEBUG_NORMAL  = 2,
 	DEBUG_WARNING = 3,
-	DEBUG_ERROR   = 4,
+	DEBUG_ERROR   = 4
 };
 
 /********************  MACRO  ***********************/
@@ -51,6 +51,6 @@ enum DebugMessageLevel
 /*******************  FUNCTION  *********************/
 void cmrDebugMessage(DebugMessageLevel level,const char * title,const char * condition,const char * fname,int line,const char * format,...);
 
-};
+}
 
 #endif // CMR_COMPILER_DEBUG_H

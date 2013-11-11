@@ -41,6 +41,6 @@ EntityCellMatching cmrEntityCellMatch(const LatexEntityOld & entity,const std::s
 void cmrExtractDeps(EqDepMatrix & matrix,const LatexEntityOld & f,const std::string & varname);
 void cmrExtractDeps(EqDepMatrix & matrix,const LatexFormulasOld & f,const std::string & varname);
 
-};
+}
 
 #endif //CMR_ENTITY_MATCHING_H

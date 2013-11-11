@@ -16,7 +16,7 @@
 /*********************  TYPES  **********************/
 namespace CMRCompiler{
 
-};
+}
 struct CMRProjectContext;
 
 /*******************  FUNCTION  *********************/

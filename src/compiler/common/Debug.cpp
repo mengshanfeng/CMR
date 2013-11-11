@@ -101,4 +101,4 @@ void cmrDebugMessage(DebugMessageLevel level,const char * title,const char * con
 		abort();
 }
 
-};
+}

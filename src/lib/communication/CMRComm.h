@@ -17,7 +17,7 @@ enum CMRCommStatus
 {
 	CMR_COMM_STATUS_INIT    = 0,
 	CMR_COMM_STATUS_STARTED = 1,
-	CMR_COMM_STATUS_DONE    = 2,
+	CMR_COMM_STATUS_DONE    = 2
 };
 
 /*********************  CLASS  **********************/

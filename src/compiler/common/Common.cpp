@@ -25,4 +25,4 @@ ostream& doIndent ( ostream& out, int depth )
 	return out;
 }
 
-};
+}

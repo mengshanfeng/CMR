@@ -94,4 +94,4 @@ LatexFormulasListOld LatexEntityOld::getIndices ( void )
 	return subscript;
 }
 
-};
+}

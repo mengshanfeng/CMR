@@ -83,6 +83,6 @@ class LatexEntity
 		CMRLatexExtraInfo extraInfos;
 };
 
-};
+}
 
 #endif //CMR_COMPILER_LATEX_ENTITY_H

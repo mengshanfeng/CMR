@@ -241,4 +241,4 @@ LatexFormulas& LatexFormulas::operator=(const LatexFormulas& orig)
 	return *this;
 }
 
-};
+}

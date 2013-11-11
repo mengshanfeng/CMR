@@ -58,6 +58,6 @@ struct LatexEntityOld
 void cmrPrintFormula(const LatexFormulasListOld & formulas,int depth);
 void cmrPrintFormula(const LatexFormulasOld & formula,int depth);
 
-};
+}
 
 #endif //CMR_LATEX_ENTITY_OLD_H

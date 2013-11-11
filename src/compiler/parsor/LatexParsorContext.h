@@ -43,6 +43,6 @@ class LatexParsorContext
 		int relToParent;
 };
 
-};
+}
 
 #endif //CMR_COMPILER_LATEX_PARSOR_CONTEXT_H

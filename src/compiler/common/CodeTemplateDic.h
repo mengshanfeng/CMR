@@ -79,7 +79,7 @@ class CodeTemplateValueString : public CodeTemplateValue
 		std::string value;
 };
 
-};
+}
 
 /********************  HEADERS  *********************/
 #include "CodeTemplateDic_impl.h"

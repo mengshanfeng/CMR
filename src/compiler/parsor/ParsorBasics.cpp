@@ -100,4 +100,4 @@ std::string cmrIndent ( int depth )
 	return res;
 }
 
-};
+}

@@ -46,6 +46,6 @@ MsgFormat& MsgFormat::arg ( const T& arg)
 	return this->arg(tmp.str());
 }
 
-};
+}
 
 #endif //CMR_COMPILER_MSG_FORMAT_H

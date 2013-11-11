@@ -56,6 +56,6 @@ class LatexFormulas : public LatexEntityVector
 		CMRLatexExtraInfo extraInfos;
 };
 
-};
+}
 
 #endif //CMR_COMPILER_LATEX_FORMULA_H

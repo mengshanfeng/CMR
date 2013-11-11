@@ -20,6 +20,6 @@ namespace CMRCompiler
 /*******************  FUNCTION  *********************/
 std::ostream & doIndent(std::ostream & out,int depth);
 
-};
+}
 
 #endif //CMR_COMPILER_COMMON_H

@@ -36,6 +36,6 @@ void cmrSkipWhiteSpace(const std::string & value,int & cur);
 void cmrParseLatexFormula(LatexFormulasOld & formula,const std::string & value);
 int cmrRequireParameters(const std::string & name,LatexParsorContext & context);
 
-};
+}
 
 #endif //CMR_COMPILER_TEX_PARSOR_H

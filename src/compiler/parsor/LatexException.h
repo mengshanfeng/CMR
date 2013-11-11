@@ -32,6 +32,6 @@ class LatexException : public std::exception
 		std::string message;
 };
 
-};
+}
 
 #endif //CMR_COMPILER_LATEX_EXCEPTION_H

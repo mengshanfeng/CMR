@@ -192,4 +192,4 @@ const string& LatexParsorContext::getValue ( void ) const
 	return this->value;
 }
 
-};
+}

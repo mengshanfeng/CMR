@@ -23,7 +23,7 @@ namespace CMRCompiler
 {
 	class LatexFormulas;
 	class LatexEntity;
-};
+}
 
 /*********************  CLASS  **********************/
 class CMRTransformationBasic : public CMRTransformation
