@@ -34,6 +34,8 @@ using namespace std;
 #define OBSTACLE_R ((HEIGHT)/8.0)
 #define ITERATIONS 8000
 #define WRITE_STEP_INTERVAL 50
+#define RESULT_MAGICK 0x12345
+#define RESULT_FILENAME "out.raw"
 
 /** Représentation d'un vecteur pour la manipulation des vitesses macroscopiques. **/
 typedef double LBMVect[DIMENSIONS];
@@ -375,6 +377,8 @@ struct ActionPropagation
 			(*out.directions(x,y))[k] = (*in.directions(ii,jj))[k];
 		}
 	}
+	//select the type of loop
+	typedef CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> LoopType;
 };
 
 struct ActionSpecialCells
@@ -396,6 +400,8 @@ struct ActionSpecialCells
 				break;
 		}
 	}
+	//select the type of loop
+	typedef CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> LoopType;
 };
 
 /*******************  FUNCTION  *********************/
@@ -422,6 +428,8 @@ struct ActionCollision
 			(*out.directions(x,y))[k] = (*in.directions(x,y))[k] - RELAX_PARAMETER * ((*in.directions(x,y))[k] - feq);
 		}
 	};
+	//select the type of loop
+	typedef CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> LoopType;
 };
 
 /*******************  FUNCTION  *********************/
@@ -443,6 +451,8 @@ struct ActionInitStatePoiseuil
 		for ( k = 0 ; k < DIRECTIONS ; k++)
 			((*out.directions(x,y)))[k] = compute_equilibrium_profile(v,density,k);
 	}
+	//select the type of loop
+	typedef CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionInitStatePoiseuil> LoopType;
 };
 
 /*******************  FUNCTION  *********************/
@@ -459,6 +469,8 @@ struct ActionInitCellType
 	}
 
 	LBMCellType cellType;
+	//select the type of loop
+	typedef CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionInitCellType> LoopType;
 };
 
 /*******************  FUNCTION  *********************/
@@ -476,8 +488,12 @@ struct ActionUpdateFileout
 		cell.fileout(x,y)->density = density;
 		cell.fileout(x,y)->v       = sqrt(get_vect_norme_2(v,v));
 	}
+	
+	//select the type of loop
+	typedef CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionUpdateFileout> LoopType;
 };
 
+/*******************  FUNCTION  *********************/
 struct ActionSetupObstable
 {
 	ActionSetupObstable(float x,float y)
@@ -500,10 +516,9 @@ struct ActionSetupObstable
 
 	float OBSTACLE_X;
 	float OBSTACLE_Y;
+	
+	typedef CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionSetupObstable> LoopType;
 };
-
-#define RESULT_MAGICK 0x12345
-#define RESULT_FILENAME "out.raw"
 
 /*******************  FUNCTION  *********************/
 /**
@@ -550,8 +565,8 @@ FILE * open_output_file(const CMRAbstractSpaceSplitter & splitter)
 void write_to_file(FILE * fp,VarSystem & sys,const CMRRect & globalRect,const CMRRect & localRect)
 {
 	assert(fp != NULL);
-	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionUpdateFileout> initBounceBack(&sys);
-	initBounceBack.run(localRect);
+	ActionUpdateFileout::LoopType initBounceBack;
+	initBounceBack.run(&sys,localRect);
 	assert(sys.getDomain(2,CMR_CURRENT_STEP)->isContiguousGhost(localRect));
 	size_t size = sys.getDomain(2,CMR_CURRENT_STEP)->getGhostSize(localRect);
 	void * buffer = sys.getDomain(2,CMR_PREV_STEP)->getContiguousGhost(localRect);
@@ -564,33 +579,33 @@ void write_to_file(FILE * fp,VarSystem & sys,const CMRRect & globalRect,const CM
 void setup_init_state(VarSystem & sys,const CMRRect & globalRect,const CMRRect & localRect)
 {
 	//setup all as poiseuil profile and setup all as fluide cell
-	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionInitStatePoiseuil> initPoiseuil(&sys);
-	initPoiseuil.run(localRect.expended(1));
+	ActionInitStatePoiseuil::LoopType initPoiseuil;
+	initPoiseuil.run(&sys,localRect.expended(1));
 	
 	//setup left border (flow in)
-	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionInitCellType> initInCells(&sys,new ActionInitCellType(CELL_LEFT_IN));
-	initInCells.run(globalRect.expended(1).getBorder(CMR_LEFT));
+	ActionInitCellType::LoopType initInCells(new ActionInitCellType(CELL_LEFT_IN));
+	initInCells.run(&sys,globalRect.expended(1).getBorder(CMR_LEFT));
 	
 	//sys.getDomain(1,CMR_PREV_STEP)->printDebug();
 	
 	//setup right border (flow out)
-	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionInitCellType> initOutCells(&sys,new ActionInitCellType(CELL_RIGHT_OUT));
-	initOutCells.run(globalRect.expended(1).getBorder(CMR_RIGHT));
+	ActionInitCellType::LoopType initOutCells(new ActionInitCellType(CELL_RIGHT_OUT));
+	initOutCells.run(&sys,globalRect.expended(1).getBorder(CMR_RIGHT));
 	
 	//sys.getDomain(1,CMR_PREV_STEP)->printDebug();
 	
 	//setup top bounce back
-	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionInitCellType> initBounceBack(&sys,new ActionInitCellType(CELL_BOUNCE_BACK));
-	initBounceBack.run(globalRect.expended(1).getBorder(CMR_TOP));
+	ActionInitCellType::LoopType initBounceBack(new ActionInitCellType(CELL_BOUNCE_BACK));
+	initBounceBack.run(&sys,globalRect.expended(1).getBorder(CMR_TOP));
 	
 	//sys.getDomain(1,CMR_PREV_STEP)->printDebug();
 	
 	//setup bottom bounce back
-	initBounceBack.run(globalRect.expended(1).getBorder(CMR_BOTTOM));
+	initBounceBack.run(&sys,globalRect.expended(1).getBorder(CMR_BOTTOM));
 	
 	//sys.getDomain(1,CMR_PREV_STEP)->printDebug();
-	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionSetupObstable> initObstacle(&sys,new ActionSetupObstable(WIDTH/10.0 + 1.0,HEIGHT/2.0+3.0));
-	initObstacle.run(globalRect);
+	ActionSetupObstable::LoopType initObstacle(new ActionSetupObstable(WIDTH/10.0 + 1.0,HEIGHT/2.0+3.0));
+	initObstacle.run(&sys,globalRect);
 }
 
 /*******************  FUNCTION  *********************/
@@ -636,7 +651,7 @@ int main(int argc, char * argv[])
 	for ( int i = 1 ; i < ITERATIONS ; i++ )
 	{
 		//progression
-		if (i % 10 == 0)
+		if (i % 100 == 0)
 			info_on_master("Progress [%5d / %5d]",i,ITERATIONS);
 
 		for (int block = 0 ; block < 1 ; block++)
@@ -645,14 +660,14 @@ int main(int argc, char * argv[])
 		
 			//compute special actions (border, obstacle...)
 			//special_cells( &mesh, &mesh_type, &mesh_comm);
-			CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionSpecialCells> loop2(&sys);
-			loop2.run(blockRect.expended(1));
+			ActionSpecialCells::LoopType loop2;
+			loop2.run(&sys,blockRect.expended(1));
 			sys.permutVar(CMR_ALL);
 
 			//compute collision term
 			//collision( &temp, &mesh);
-			CMRMeshOperationSimpleLoop<VarSystem,ActionCollision> loop1(&sys);
-			loop1.run(blockRect);
+			ActionCollision::LoopType loop1;
+			loop1.run(&sys,blockRect);
 			sys.permutVar(CMR_ALL);
 
 			//propagate values from node to neighboors
@@ -660,8 +675,8 @@ int main(int argc, char * argv[])
 			
 			//prop
 			//propagation( &mesh, &temp);
-			CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionPropagation> loop3(&sys);
-			loop3.run(blockRect);
+			ActionPropagation::LoopType loop3;
+			loop3.run(&sys,blockRect);
 		}
 
 		//save step

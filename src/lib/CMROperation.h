@@ -28,7 +28,7 @@ class CMRMeshOperation
 	public:
 		CMRMeshOperation(void){}
 		virtual ~CMRMeshOperation(void){}
-		virtual void run(const CMRRect & zone) = 0;
+		virtual void run(CMRVarSystem * sys, const CMRRect & zone) = 0;
 };
 
 /*********************  CLASS  **********************/
@@ -36,26 +36,12 @@ template <class T,class U>
 class CMRMeshOperationSimpleLoop : public CMRMeshOperation
 {
 	public:
-		CMRMeshOperationSimpleLoop(CMRVarSystem * sys);
-		virtual void run (const CMRRect& zone );
-	private:
-		CMRVarSystem * sys;
+		virtual void run (CMRVarSystem * sys, const CMRRect& zone );
 };
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-CMRMeshOperationSimpleLoop<T,U>::CMRMeshOperationSimpleLoop (CMRVarSystem * sys)
-{
-	//errors
-	assert(sys != NULL);
-	
-	//setup
-	this->sys = sys;
-}
-
-/*******************  FUNCTION  *********************/
-template <class T,class U>
-void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect & zone )
+void CMRMeshOperationSimpleLoop<T,U>::run ( CMRVarSystem * sys, const CMRRect & zone )
 {
 	//errors
 	//assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
@@ -81,7 +67,6 @@ void CMRMeshOperationSimpleLoop<T,U>::run ( const CMRRect & zone )
 		return;
 	}
 	
-	
 	const typename T::CellAccessor cellIn(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
 	typename T::CellAccessor cellOut(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y,true);
 	
@@ -95,29 +80,24 @@ template <class T,class U>
 class CMRMeshOperationSimpleLoopInPlace : public CMRMeshOperation
 {
 	public:
-		CMRMeshOperationSimpleLoopInPlace(CMRVarSystem * sys,const U * action = NULL);
+		CMRMeshOperationSimpleLoopInPlace(const U * action = NULL);
 		~CMRMeshOperationSimpleLoopInPlace(void) {if (action != NULL) delete action;};
-		virtual void run (const CMRRect& zone);
+		virtual void run (CMRVarSystem * sys,const CMRRect& zone);
 	private:
-		CMRVarSystem * sys;
 		const U * action;
 };
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-CMRMeshOperationSimpleLoopInPlace<T,U>::CMRMeshOperationSimpleLoopInPlace (CMRVarSystem * sys,const U * action)
+CMRMeshOperationSimpleLoopInPlace<T,U>::CMRMeshOperationSimpleLoopInPlace (const U * action)
 {
-	//errors
-	assert(sys != NULL);
-	
 	//setup
-	this->sys = sys;
 	this->action = action;
 }
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-void CMRMeshOperationSimpleLoopInPlace<T,U>::run ( const CMRRect & zone )
+void CMRMeshOperationSimpleLoopInPlace<T,U>::run ( CMRVarSystem * sys, const CMRRect & zone )
 {
 	//errors
 	//assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
@@ -215,26 +195,12 @@ template <class T,class U>
 class CMRMeshOperationSimpleLoopWithPos : public CMRMeshOperation
 {
 	public:
-		CMRMeshOperationSimpleLoopWithPos(CMRVarSystem * sys);
-		virtual void run (const CMRRect& zone );
-	private:
-		CMRVarSystem * sys;
+		virtual void run (CMRVarSystem * sys,const CMRRect& zone );
 };
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-CMRMeshOperationSimpleLoopWithPos<T,U>::CMRMeshOperationSimpleLoopWithPos ( CMRVarSystem * sys )
-{
-	//errors
-	assert(sys != NULL);
-	
-	//setup
-	this->sys = sys;
-}
-
-/*******************  FUNCTION  *********************/
-template <class T,class U>
-void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( const CMRRect & zone )
+void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( CMRVarSystem * sys,const CMRRect & zone )
 {
 	//errors
 	//assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
@@ -274,29 +240,25 @@ template <class T,class U>
 class CMRMeshReduction : public CMRMeshOperation
 {
 	public:
-		CMRMeshReduction(CMRVarSystem * sys , U * reduction);
-		virtual void run (const CMRRect& zone );
-	private:
-		CMRVarSystem * sys;
+		CMRMeshReduction(U * reduction);
+		virtual void run (CMRVarSystem * sys ,const CMRRect& zone );
 		U * gblReduction;
 };
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-CMRMeshReduction<T,U>::CMRMeshReduction ( CMRVarSystem * sys , U * reduction)
+CMRMeshReduction<T,U>::CMRMeshReduction ( U * reduction)
 {
 	//errors
-	assert(sys != NULL);
 	assert(reduction != NULL);
 	
 	//setup
-	this->sys = sys;
 	this->gblReduction = reduction;
 }
 
 /*******************  FUNCTION  *********************/
 template <class T,class U>
-void CMRMeshReduction<T,U>::run ( const CMRRect & zone )
+void CMRMeshReduction<T,U>::run ( CMRVarSystem * sys , const CMRRect & zone )
 {
 	//errors
 	//assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");

@@ -157,10 +157,10 @@ int main(int argc, char * argv[])
 	CMRRect localRect = splitter.getLocalDomain(cmrGetMPIRank());
 	
 	//init the mesh
-	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionInit> loopInit(&sys);
+	CMRMeshOperationSimpleLoopWithPos<VarSystem,ActionInit> loopInit;
 	
 	//init all steps
-	loopInit.run(localRect.expended(1));
+	loopInit.run(&sys,localRect.expended(1));
 	
 	//print current state
 	//sys.getDomain(0,CMR_PREV_STEP)->printDebug();
@@ -170,14 +170,14 @@ int main(int argc, char * argv[])
 	sys.permutVar(CMR_ALL);
 	
 	//compute
-	CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop(&sys);
-	loop.run(localRect);
+	CMRMeshOperationSimpleLoop<VarSystem,ActionInc> loop;
+	loop.run(&sys,localRect);
 	
 	//reduction
 	info("Before reduction, dt = %f",sys.getGlobals().dt);
 	ActionDTReduce reduction;
-	CMRMeshReduction<VarSystem,ActionDTReduce> red(&sys,&reduction);
-	red.run(localRect);
+	CMRMeshReduction<VarSystem,ActionDTReduce> red(&reduction);
+	red.run(&sys,localRect);
 	reduction.applyFinalResult(sys.getGlobals());
 	info("After reduction, dt = %f",sys.getGlobals().dt);
 	CMRMPIReduction mpiReduce(new CMRGenericReductionDescriptor<ActionDTReduce>(&reduction));
@@ -186,14 +186,14 @@ int main(int argc, char * argv[])
 	info("After MPI reduction, dt = %f",sys.getGlobals().dt);
 	
 	////////////////////////////////
-	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionIncInPlace> loop2(&sys);
+	CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionIncInPlace> loop2;
 	ticks t0 = getticks();
-	loop2.run(localRect);
+	loop2.run(&sys,localRect);
 	ticks t1 = getticks();
 	info("Time of CMR loop : %f per cell",((float)(t1-t0))/(float)localRect.surface());
 	
 	t0 = getticks();
-	loop2.run(localRect);
+	loop2.run(&sys,localRect);
 	t1 = getticks();
 	info("Time of CMR loop (cached) : %f per cell",((float)(t1-t0))/(float)localRect.surface());
 	
