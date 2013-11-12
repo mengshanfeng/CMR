@@ -1,6 +1,11 @@
 /********************  HEADERS  *********************/
 #include <string>
 
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
 class CMRProject2;
 class CMRXmlNode;
@@ -30,3 +35,5 @@ class CMRProjectXMLLoader
 		template <class T> void loadCode(CMRProject2 & project, T & parent , CMRXmlNode & node);
 		template <class T> bool loadCodeNode(CMRProject2 & project, T & parent , CMRXmlNode & node);
 };
+
+}

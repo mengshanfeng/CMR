@@ -14,16 +14,17 @@
 #include <string>
 #include "CMRTransformation.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
 class CMRProjectCodeEntry;
 class CMRProjectCodeNode;
 class CMRProjectCodeIteratorLoop;
 class CMRProjectCodeEquation;
-namespace CMRCompiler 
-{
-	class LatexFormulas;
-	class LatexEntity;
-}
+class LatexFormulas;
+class LatexEntity;
 
 /*********************  CLASS  **********************/
 class CMRTransformationBasic : public CMRTransformation
@@ -38,5 +39,7 @@ class CMRTransformationBasic : public CMRTransformation
 		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexFormulas & formula);
 		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
 };
+
+}
 
 #endif //CMR_TRANFORMATION_BASIC_H

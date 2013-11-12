@@ -14,6 +14,8 @@
 #include <string>
 #include <CMRProjectEntity.h>
 
+using namespace CMRCompiler;
+
 /*********************  CLASS  **********************/
 class MockProjectEntity : public CMRProjectEntity
 {

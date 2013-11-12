@@ -20,6 +20,7 @@
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char TEST_STRING_1[] = "LOOP => k\n\

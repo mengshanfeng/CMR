@@ -13,6 +13,10 @@
 /********************  HEADERS  *********************/
 #include "CMRTransformationBasic.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  CLASS  **********************/
 class CMRTransformationImplicitMul : public CMRTransformationBasic
 {
@@ -21,5 +25,7 @@ class CMRTransformationImplicitMul : public CMRTransformationBasic
 	protected:
 		virtual void transform ( CMRProjectCodeEquation& equation, CMRCompiler::LatexFormulas& formula );
 };
+
+}
 
 #endif //CMR_TRANSFORMATION_IMPLICIT_MUL_H

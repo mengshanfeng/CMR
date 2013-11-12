@@ -15,6 +15,10 @@
 #include "CMRProjectCode.h"
 #include "CMRProjectIterator.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
 class CMRTransformation;
 
@@ -48,5 +52,7 @@ class CMRProjectDefinition : public CMRProjectEntity
 		CMRProjectContext parametersContext;
 		CMRProjectCodeRootNode ops;
 };
+
+}
 
 #endif //CMR_PROJECT_DEFINITION_H

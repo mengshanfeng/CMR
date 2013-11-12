@@ -15,7 +15,10 @@
 
 /**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRXmlDoc::CMRXmlDoc ( void )
@@ -306,4 +309,6 @@ string CMRXmlNode::getNonEmptyProperty ( const string& name ) const
 	if (res.empty())
 		MsgFormat("Caution, get empty property '%1' while readine XML.").arg(name).exception();
 	return res;
+}
+
 }

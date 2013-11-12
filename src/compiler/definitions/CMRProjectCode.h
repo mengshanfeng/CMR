@@ -19,6 +19,11 @@
 #include "../common/CodeTemplate.h"
 #include "../common/CodeTemplateDic.h"
 
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
 class CMRProjectIterator;
 class CMRProjectCodeNode;
@@ -184,5 +189,7 @@ class CMRProjectCSimpleConstruct : public CMRProjectCodeNode
 	private:
 		CMRProjectCConstruct construct;
 };
+
+}
 
 #endif //CMR_PROJECT_CODE_H

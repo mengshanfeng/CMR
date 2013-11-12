@@ -15,6 +15,11 @@
 #include <cassert>
 #include "CMRProjectContext.h"
 
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
 enum CMRProjectCodeTreeInsert
 {
@@ -61,6 +66,8 @@ class CMRProjectCodeTree
 		T * firstChild;
 		T * lastChild;
 };
+
+}
 
 /*******************  FUNCTION  *********************/
 #include "CMRProjectCodeTree_impl.h"

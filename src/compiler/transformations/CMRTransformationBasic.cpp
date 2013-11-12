@@ -12,7 +12,9 @@
 #include "CMRTransformationBasic.h"
 #include "../definitions/CMRProjectCode.h"
 
-using namespace CMRCompiler;
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRTransformationBasic::CMRTransformationBasic(const std::string& name)
@@ -90,4 +92,6 @@ void CMRTransformationBasic::transform(CMRProjectCodeEquation& equation, LatexEn
 	for (LatexFormulasVector::iterator it = params.begin() ; it != params.end() ; ++it)
 		if ((*it)->hasInfo("cmrNoTranform") == false)
 			this->transform(equation,**it);
+}
+
 }

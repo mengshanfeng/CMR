@@ -12,7 +12,9 @@
 #include "CMRTransformationReplace.h"
 #include "../parsor/LatexFormula.h"
 
-using namespace CMRCompiler;
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRTransformationReplace::CMRTransformationReplace(const CMRProjectCaptureMap* replaceMap)
@@ -85,4 +87,6 @@ void CMRTransformationReplace::replaceAll(const CMRProjectCaptureMap& replaceMap
 {
 	for (int i = 0 ; i < formula.size() ; i++)
 		replaceAll(replaceMap,*formula[i]);
+}
+
 }

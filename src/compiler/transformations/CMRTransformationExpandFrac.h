@@ -15,6 +15,10 @@
 #include "CMRModelBasedReplacement.h"
 #include "../definitions/CMRProjectEntity.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  CLASS  **********************/
 class CMRTransformationExpandFrac : public CMRTransformationBasic
 {
@@ -24,5 +28,7 @@ class CMRTransformationExpandFrac : public CMRTransformationBasic
 		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
 		CMRModelBasedReplacement rules;
 };
+
+}
 
 #endif //CMR_TRANSFORMATION_EXPAND_FRAC_H

@@ -16,7 +16,10 @@
 #include "CMRProjectContext.h"
 
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRProjectIterator::CMRProjectIterator ( const string& latexName, const string& longName, int start, int end ) 
@@ -48,4 +51,6 @@ void CMRProjectIterator::genUsageCCode ( ostream& out, const CMRProjectContext& 
 // 	context.printDebug(err);
 // 	throw CMRLatexException(err.str());
 	out << getLongName();
+}
+
 }

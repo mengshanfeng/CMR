@@ -14,6 +14,10 @@
 #include "CMRTransformationBasic.h"
 #include "../definitions/CMRProjectEntity.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  CLASS  **********************/
 class CMRTransformationReplace : public CMRTransformationBasic
 {
@@ -27,5 +31,7 @@ class CMRTransformationReplace : public CMRTransformationBasic
 	private:
 		const CMRProjectCaptureMap * replaceMap;
 };
+
+}
 
 #endif //CMR_TRANSFORMATION_REPLACE_H

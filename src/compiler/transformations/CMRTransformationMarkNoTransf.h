@@ -14,6 +14,10 @@
 #include "CMRTransformationBasic.h"
 #include "../definitions/CMRProjectEntity.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  CLASS  **********************/
 class CMRTransformationMarkNoTransf : public CMRTransformationBasic
 {
@@ -23,5 +27,7 @@ class CMRTransformationMarkNoTransf : public CMRTransformationBasic
 		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
 		void markChildElements( CMRCompiler::LatexFormulasVector& childs, const CMRProjectCaptureDefMap& defMap );
 };
+
+}
 
 #endif //CMR_TRANSFORMATION_MARK_NO_TRANSF_H

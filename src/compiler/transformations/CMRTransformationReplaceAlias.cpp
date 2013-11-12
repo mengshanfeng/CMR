@@ -13,7 +13,9 @@
 #include "../definitions/CMRProjectAlias.h"
 #include "CMRTransformationReplaceAlias.h"
 
-using namespace CMRCompiler;
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRTransformationReplaceAlias::CMRTransformationReplaceAlias ( void ) 
@@ -37,4 +39,6 @@ void CMRTransformationReplaceAlias::transform ( CMRProjectCodeEquation& equation
 	
 	//apply transform on child
 	CMRTransformationBasic::transform ( equation, entity );
+}
+
 }

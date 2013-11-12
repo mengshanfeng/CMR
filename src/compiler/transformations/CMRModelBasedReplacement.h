@@ -14,6 +14,10 @@
 #include <string>
 #include "../definitions/CMRProjectEntity.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  CLASS  **********************/
 class CMRModelBasedReplacement : public CMRProjectEntity
 {
@@ -26,5 +30,7 @@ class CMRModelBasedReplacement : public CMRProjectEntity
 	private:
 		std::string result;
 };
+
+}
 
 #endif //CMR_MODEL_BASED_REPLACEMENT_H

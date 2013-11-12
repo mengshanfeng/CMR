@@ -18,7 +18,10 @@
 
 /**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRProjectLocalVariable::CMRProjectLocalVariable ( const std::string& latexName, const std::string& longName , const std::string & type,const std::string & defaultValue) 
@@ -326,7 +329,7 @@ void CMRProjectCodeVarDecl::genCCode ( ostream& out ,int padding ) const
 /*******************  FUNCTION  *********************/
 std::ostream & CMRProjectCodeEntry::doIndent ( ostream& out, int baseOffset ) const
 {
-	return ::doIndent(out,baseOffset + getDepth());
+	return CMRCompiler::doIndent(out,baseOffset + getDepth());
 }
 
 /*******************  FUNCTION  *********************/
@@ -476,4 +479,6 @@ CMRProjectCodeType CMRProjectCSimpleConstruct::getType ( void ) const
 void CMRProjectCSimpleConstruct::genCCode ( ostream& out, int padding ) const
 {
 	construct.genCCode(out,context,padding);
+}
+
 }

@@ -18,6 +18,7 @@
 
 /**********************  USING  *********************/
 using namespace testing;
+using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 

@@ -21,7 +21,10 @@
 
 /********************  NAMESPACE  *******************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRProjectConstant::CMRProjectConstant ( const string& latexName, const string& longName) 
@@ -311,4 +314,6 @@ void CMRProjectConstant::transform ( LatexEntity& entity, CMRModelBasedReplaceme
 	for (LatexFormulasVector::iterator it = params.begin() ; it != params.end() ; ++it)
 		if ((*it)->hasInfo("cmrNoTranform") == false)
 			this->transform(**it,action);
+}
+
 }

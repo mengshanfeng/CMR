@@ -15,7 +15,10 @@
 #include "CMRProjectContext.h"
 
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 #warning remove this
 static int tmpCnt = 0;
@@ -194,4 +197,6 @@ void CMRProjectContext::setParent ( const CMRProjectContext* parent )
 	}
 	
 	this->parent = parent;
+}
+
 }

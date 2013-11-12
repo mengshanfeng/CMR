@@ -13,7 +13,9 @@
 #include "../definitions/CMRProjectEntity.h"
 #include "../definitions/CMRProjectCode.h"
 
-using namespace CMRCompiler;
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRTransformationMarkNoTransf::CMRTransformationMarkNoTransf(void )
@@ -49,4 +51,6 @@ void CMRTransformationMarkNoTransf::markChildElements(LatexFormulasVector& child
 			childs[i]->setExtraInfo("cmrNoTranform",NULL);
 
 	/** @TODO also transform bu setting all the string a name of a uniq element, it may speedup next recongnitions **/
+}
+
 }

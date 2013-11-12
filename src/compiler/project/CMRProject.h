@@ -23,6 +23,10 @@
 #include "../transformations/CMRTransformation.h"
 #include "../common/LangDef.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
 typedef std::vector <CMRProjectConstant*> CMRProjectConstantVector;
 typedef std::vector <CMRCompiler::ProjectMeshVar*> CMRProjectVariableVector;
@@ -66,5 +70,7 @@ class CMRProject2
 		CMRProjectContext rootContext;
 		CMRCompiler::LangDef lang;
 };
+
+}
 
 #endif //CMR_PROJECT_H

@@ -16,6 +16,10 @@
 #include <vector>
 #include "../parsor/LatexEntity.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /********************  ENUM  ************************/
 enum CMRCaptureType
 {
@@ -94,5 +98,7 @@ class CMRProjectEntity
 		CMRProjectCaptureDefMap parameters;
 		bool capName;
 };
+
+}
 
 #endif //CMR_PROJECT_ENTIT_H

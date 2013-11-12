@@ -14,6 +14,11 @@
 #include <string>
 #include <libxml/xmlschemas.h>
 
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  CLASS  **********************/
 class CMRXmlNode
 {
@@ -50,5 +55,7 @@ class CMRXmlDoc
 		xmlDocPtr doc;
 		xmlNodePtr rootNode;
 };
+
+}
 
 #endif //CMR_XML_DOC_H

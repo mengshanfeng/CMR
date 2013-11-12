@@ -13,6 +13,10 @@
 /********************  HEADERS  *********************/
 #include "CMRTransformationBasic.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  CLASS  **********************/
 class CMRTransformationReplaceAlias : public CMRTransformationBasic
 {
@@ -21,5 +25,7 @@ class CMRTransformationReplaceAlias : public CMRTransformationBasic
 	protected:
 		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
 };
+
+}
 
 #endif //CMR_TRANSFORMATION_REPLACE_ALIAS_H

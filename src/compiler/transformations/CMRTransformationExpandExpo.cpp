@@ -13,7 +13,9 @@
 #include "../parsor/LatexEntity.h"
 #include "../definitions/CMRProjectCode.h"
 
-using namespace CMRCompiler;
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRTransformationExpandExpo::CMRTransformationExpandExpo ( void ) 
@@ -94,4 +96,6 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 
 	//loop on childs
 	CMRTransformationBasic::transform ( equation, entity );
+}
+
 }

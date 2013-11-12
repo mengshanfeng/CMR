@@ -13,6 +13,11 @@
 /********************  HEADERS  *********************/
 #include "CMRProjectCodeTree.h"
 
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
 template <class T>
 CMRProjectCodeTree<T>::CMRProjectCodeTree ( void )
@@ -197,6 +202,8 @@ T * CMRProjectCodeTree<T>::insert ( T* entry, CMRProjectCodeTreeInsert location 
 	
 	//finish
 	return entry;
+}
+
 }
 
 #endif //CMR_PROJECT_CODE_TREE_IMPL_H

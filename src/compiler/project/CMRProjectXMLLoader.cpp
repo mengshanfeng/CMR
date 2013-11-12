@@ -8,7 +8,10 @@
 
 /**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*********************  CONSTS  *********************/
 const char * CMR_NODE_ROOT = "cmr";
@@ -494,4 +497,6 @@ void CMRProjectXMLLoader::loadMainCallAction ( CMRProject2& project, CMRXmlNode&
 		}
 		cur = cur.getNext();
 	}
+}
+
 }

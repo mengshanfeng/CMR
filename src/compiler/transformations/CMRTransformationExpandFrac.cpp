@@ -13,7 +13,9 @@
 #include "CMRTransformationReplace.h"
 #include "../parsor/LatexFormula.h"
 
-using namespace CMRCompiler;
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRTransformationExpandFrac::CMRTransformationExpandFrac(void )
@@ -29,4 +31,6 @@ void CMRTransformationExpandFrac::transform(CMRProjectCodeEquation& equation, La
 	rules.apply(entity);
 	
 	CMRTransformationBasic::transform(equation, entity);
+}
+
 }

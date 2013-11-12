@@ -13,6 +13,10 @@
 /********************  HEADERS  *********************/
 #include <string>
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
 class CMRProjectCodeEntry;
 
@@ -27,5 +31,7 @@ class CMRTransformation
 	private:
 		std::string name;
 };
+
+}
 
 #endif //CMR_TRANSFORMATION_H

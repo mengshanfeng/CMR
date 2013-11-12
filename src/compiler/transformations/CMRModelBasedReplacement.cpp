@@ -14,7 +14,9 @@
 #include "../parsor/LatexFormula.h"
 #include "../common/Debug.h"
 
-using namespace CMRCompiler;
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRModelBasedReplacement::CMRModelBasedReplacement(const std::string& model, const std::string result, bool captureAll)
@@ -72,4 +74,6 @@ void CMRModelBasedReplacement::genDefinitionCCode ( std::ostream& out, const CMR
 void CMRModelBasedReplacement::genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	cmrFatal("Caution, CMRModelBasedReplacement objects cannot be translated to C++ code.");
+}
+
 }

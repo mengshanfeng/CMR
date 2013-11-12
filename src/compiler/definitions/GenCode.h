@@ -13,13 +13,12 @@
 /********************  HEADERS  *********************/
 #include <ostream>
 
-class CMRProjectContext;
-
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
 {
 
 /*********************  TYPES  **********************/
+class CMRProjectContext;
 class LatexFormulas;
 class LatexEntity;
 

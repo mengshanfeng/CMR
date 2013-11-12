@@ -12,7 +12,9 @@
 #include "../parsor/LatexFormula.h"
 #include "../parsor/ParsorBasics.h"
 
-using namespace CMRCompiler;
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRTransformationImplicitMul::CMRTransformationImplicitMul ( void ) 
@@ -53,4 +55,6 @@ void CMRTransformationImplicitMul::transform ( CMRProjectCodeEquation& equation,
 	}
 
 	CMRTransformationBasic::transform ( equation, formula );
+}
+
 }

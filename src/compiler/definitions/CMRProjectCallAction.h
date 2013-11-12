@@ -15,6 +15,11 @@
 #include <ostream>
 #include <common/LangDef.h>
 
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
 typedef std::vector<std::string> CMRCallZoneVector;
 typedef std::map<std::string,std::string> CMRCallParameters;
@@ -32,5 +37,7 @@ class CMRProjectCallAction
 		CMRCallZoneVector zones;
 		CMRCallParameters parameters;
 };
+
+}
 
 #endif //CMR_COMPILER_PROJECT_CALL_ACTION_H

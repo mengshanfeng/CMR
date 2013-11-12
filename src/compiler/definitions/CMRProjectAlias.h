@@ -14,6 +14,10 @@
 #include "CMRProjectEntity.h"
 #include "../transformations/CMRModelBasedReplacement.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  CLASS  **********************/
 class CMRProjectAlias : public CMRModelBasedReplacement
 {
@@ -22,5 +26,7 @@ class CMRProjectAlias : public CMRModelBasedReplacement
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
 		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
 };
+
+}
 
 #endif //CMR_PROJECT_ALIAS_H

@@ -14,7 +14,10 @@
 
 /**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRProjectDefinition::CMRProjectDefinition ( const string& latexName, const string& longName, CMRProjectContext* parentContext ) 
@@ -165,4 +168,6 @@ CMRProjectContext& CMRProjectDefinition::getContext ( void )
 CMRProjectCodeEntry* CMRProjectDefinition::insert ( CMRProjectCodeEntry* entry, CMRProjectCodeTreeInsert location )
 {
 	return ops.insert(entry,location);
+}
+
 }

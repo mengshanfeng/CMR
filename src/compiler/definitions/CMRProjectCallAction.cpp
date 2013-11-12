@@ -12,6 +12,11 @@
 /**********************  USING  *********************/
 using namespace std;
 
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
 CMRProjectCallAction::CMRProjectCallAction ( const std::string& actionName )
 {
@@ -44,4 +49,6 @@ void CMRProjectCallAction::genCode ( std::ostream& out, CMRCompiler::LangDef& la
 	
 	for (CMRCallZoneVector::const_iterator it = zones.begin() ; it != zones.end() ; ++it)
 		out << "step" << id << ".run(" << *it << ");" << endl;
+}
+
 }

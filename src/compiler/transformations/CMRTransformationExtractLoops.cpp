@@ -18,7 +18,10 @@
 
 /**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRTransformationExtractLoops::CMRTransformationExtractLoops ( void ) 
@@ -62,4 +65,6 @@ void CMRTransformationExtractLoops::transform ( CMRProjectCodeEquation& equation
 	}
 
 	CMRTransformationBasic::transform ( equation, entity );
+}
+
 }

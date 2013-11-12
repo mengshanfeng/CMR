@@ -5,6 +5,11 @@
 /********************  HEADERS  *********************/
 #include "CMRProjectEntity.h"
 
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*********************  TYPES  **********************/
 class CMRTransformation;
 class CMRModelBasedReplacement;
@@ -34,5 +39,7 @@ class CMRProjectConstant : public CMRProjectEntity
 		CMRConstantDimensionsVector dims;
 		CMRConstantFormulaVector formulas;
 };
+
+}
 
 #endif //CMR_PROJECT_CONSTANT_H

@@ -3,7 +3,10 @@
 
 /**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRProject2::CMRProject2(void)
@@ -280,4 +283,6 @@ void CMRProject2::genCCodeOfMain ( ostream& out, LangDef& lang )
 	out << "\t\tmain_loop(sys,globalRect,localDomain);" << endl;
 	out << "\t}" << endl;
 	out << "}" << endl;
+}
+
 }

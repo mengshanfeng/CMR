@@ -18,7 +18,10 @@
 
 /**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 CMRProjectEntity::CMRProjectEntity ( const string& latexName, const string& longName )
@@ -468,4 +471,6 @@ void CMRProjectEntity::captureName ( void )
 bool CMRProjectEntity::isWildcardName ( void )
 {
 	return this->capName;
+}
+
 }

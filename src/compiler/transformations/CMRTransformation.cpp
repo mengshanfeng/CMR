@@ -11,6 +11,10 @@
 #include "CMRTransformation.h"
 #include "../definitions/CMRProjectCode.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
+
 /*******************  FUNCTION  *********************/
 CMRTransformation::CMRTransformation(const std::string& name)
 {
@@ -26,4 +30,6 @@ CMRTransformation::~CMRTransformation(void)
 const std::string& CMRTransformation::getName(void ) const
 {
 	return name;
+}
+
 }
