@@ -8,4 +8,5 @@
 
 ######################################################
 add_subdirectory(lib)
+add_subdirectory(reader)
 add_subdirectory(compiler)

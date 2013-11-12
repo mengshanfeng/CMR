@@ -17,7 +17,7 @@ using namespace CMRCompiler;
 /*******************  FUNCTION  *********************/
 void test1(void)
 {	
-	cout << "===================================================" << endl;
+	cerr << "===================================================" << endl;
 	CMRProject2 project;
 	CMRProjectConstant & direction_matrix = project.addConstant("M","direction_matrix");
 	direction_matrix.loadValues("0.0 & 0.0 \\\\ 1.0 & 0.0 \\\\ 0.0 & 1.0 \\\\ -1.0 & 0.0 \\\\ 0.0 & -1.0 \\\\ 1.0 & 1.0 \\\\ -1.0 & 1.0 \\\\ -1.0 & -1.0 \\\\ 1.0 & -1.0",2);
@@ -136,9 +136,9 @@ void test2(std::string fname)
 	project.runTransformation(expandExpo);
 	project.printDebug();
 	
-	cout << "================================================" << endl;
+	cerr << "================================================" << endl;
 	project.genCCode(cout);
-	cout << "================================================" << endl;
+	cerr << "================================================" << endl;
 }
 
 /*******************  FUNCTION  *********************/

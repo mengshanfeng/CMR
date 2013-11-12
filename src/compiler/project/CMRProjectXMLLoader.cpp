@@ -64,9 +64,67 @@ void CMRProjectXMLLoader::load ( CMRProject2& project, CMRXmlNode& rootNode )
 	//errors
 	assert(rootNode.isValid() && rootNode.isNamed(CMR_NODE_ROOT));
 	
+	CMRXmlNode projectNode = rootNode.getUniqChild("project");
+	if (projectNode.isValid())
+		loadProjectInfo(project,projectNode);
+	
 	CMRXmlNode elementsNode = rootNode.getUniqChild(CMR_NODE_ELEMNTS);
 	if (elementsNode.isValid())
 		loadElements(project,elementsNode);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectXMLLoader::loadProjectInfo ( CMRProject2& project, CMRXmlNode& node )
+{
+	//errors
+	assert(node.isValid());
+	assert(node.isNamed("project"));
+
+	CMRXmlNode headers = node.getUniqChild("headers");
+	if (headers.isValid())
+		loadExtraHeaders(project,headers);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectXMLLoader::loadExtraHeaders ( CMRProject2& project, CMRXmlNode& node )
+{
+	//errors
+	assert(node.isValid());
+	assert(node.isNamed("headers"));
+	
+	//loop on all
+	CMRXmlNode cur = node.getFirstChild();
+	while (cur.isValid())
+	{
+		if (cur.isNamed("include"))
+			project.addUserHeader(cur.getContent());
+		else
+			throw LatexException("Invalid tag name while loading project user headers in XML file.");
+		cur = cur.getNext();
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectXMLLoader::loadOutput ( CMRProject2& project, CMRXmlNode& node )
+{
+	//errors
+	assert(node.isValid());
+	assert(node.isNamed("output"));
+	
+	//loop on all
+	CMRXmlNode cur = node.getFirstChild();
+	while (cur.isValid())
+	{
+		if (cur.isNamed("entry"))
+		{
+			string name = cur.getNonEmptyProperty("name");
+			string type = cur.getNonEmptyProperty("type");
+			project.addOutputEntry(name,type,cur.getContent());
+		} else {
+			throw LatexException("Invalid tag name while loading project user headers in XML file.");
+		}
+		cur = cur.getNext();
+	}
 }
 
 /*******************  FUNCTION  *********************/
@@ -110,6 +168,11 @@ void CMRProjectXMLLoader::loadElements ( CMRProject2& project, CMRXmlNode& node 
 	CMRXmlNode mainNode = node.getUniqChild("mainloop");
 	if (mainNode.isValid())
 		loadMainCallActions(project,mainNode);
+	
+	//load iterators
+	CMRXmlNode outputNode = node.getUniqChild("output");
+	if (outputNode.isValid())
+		loadOutput(project,outputNode);
 }
 
 /*******************  FUNCTION  *********************/

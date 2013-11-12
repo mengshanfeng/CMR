@@ -141,7 +141,8 @@ void CMRBasicSeqRunner<TVarSystem>::run ( int iterations )
 		for (CMRMeshOperationNodeVector::iterator it = loopActions.begin() ; it != loopActions.end() ; ++it)
 		{
 			it->op->run(system,it->rect);
-			system->permutVar(CMR_ALL);
+			if (it+1 != loopActions.end())
+				system->permutVar(CMR_ALL);
 		}
 		
 		//save step

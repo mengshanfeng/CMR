@@ -49,6 +49,8 @@ void CMRBasicOutputer::writeFileHeader ( const CMRAbstractSpaceSplitter & splitt
 	header.magick      = RESULT_MAGICK;
 	header.mesh_height = splitter.getDomain().height;
 	header.mesh_width  = splitter.getDomain().width;
+	header.mesh_max_height = splitter.getDomain().height;
+	header.mesh_max_width  = splitter.getDomain().width;
 	header.lines       = splitter.getSplittingSize().y;
 
 	//write file

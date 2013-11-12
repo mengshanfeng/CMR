@@ -20,6 +20,7 @@
 #include "../definitions/ProjectIterator.h"
 #include "../definitions/ProjectDefinition.h"
 #include <definitions/CMRProjectCallAction.h>
+#include <definitions/ProjectOutput.h>
 #include "../transformations/CMRTransformation.h"
 #include "../common/LangDef.h"
 
@@ -48,6 +49,8 @@ class CMRProject2
 		ProjectIterator & addIterator(const std::string& latexName, const std::string& longName ,int start, int end);
 		CMRProjectCallAction & addInitCallAction(const std::string & actionName);
 		CMRProjectCallAction & addMainLoopCallAction(const std::string & actionName);
+		void addOutputEntry(const std::string &name, const std::string & type, const std::string & value);
+		void addUserHeader(const std::string & value);
 		void runTransformation(CMRTransformation & transf);
 		void genCCode(std::ostream & out);
 		void printDebug(void);
@@ -56,8 +59,6 @@ class CMRProject2
 		void genCCodeOfVariables(std::ostream & out);
 		void genCCodeOfDefinitions(std::ostream& out);
 		void genCCodeOfActions( std::ostream& out, CMRCompiler::LangDef& lang );
-		void genCCodeOfInit( std::ostream & out, CMRCompiler::LangDef& lang );
-		void genCCodeOfMainLoop( std::ostream & out, CMRCompiler::LangDef& lang );
 		void genCCodeOfMain( std::ostream & out, CMRCompiler::LangDef& lang );
 	private:
 		CMRProjectConstantVector constants;
@@ -67,7 +68,9 @@ class CMRProject2
 		CMRProjectIteratorVector iterators;
 		CMRProjectCallActionVector initActions;
 		CMRProjectCallActionVector loopActions;
+		ProjectOutput output;
 		CMRProjectContext rootContext;
+		StringVector userHeaders;
 		CMRCompiler::LangDef lang;
 };
 

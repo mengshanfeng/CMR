@@ -1,25 +1,5 @@
-#include <iostream>
-#include <cstdlib>
-#include <mpi.h>
-#include <cassert>
-#include <common/CMRDebug.h>
-#include <mpi/CMRMPIComm.h>
-#include <MockAbstractDomain.h>
-#include <mpi/CMRMPICommFactory.h>
-#include <communication/CMRCommSchem.h>
-#include <domain/CMRDomainStorage.h>
-#include <common/CMRSpaceSplitter.h>
-#include <CMROperation.h>
-#include <domain/CMRMemoryModels.h>
-#include <domain/CMRCellAccessor.h>
-#include <domain/CMRVarSystem.h>
-#include <mpi/CMRMPIDomainBuilder.h>
 #include <runner/CMRBasicSeqRunner.h>
 #include <runner/CMRBasicOutputer.h>
-#include <domain/CMRMemoryModels.h>
-#include <math.h>
-#include <cstdio>
-#include <stdint.h>
 
 using namespace std;
 
@@ -34,7 +14,7 @@ using namespace std;
 #define WIDTH 800
 #define HEIGHT 100
 #define OBSTACLE_R ((HEIGHT)/8.0)
-#define ITERATIONS 300
+#define ITERATIONS 8000
 #define WRITE_STEP_INTERVAL 50
 #define RESULT_MAGICK 0x12345
 #define RESULT_FILENAME "out.raw"
@@ -69,6 +49,10 @@ struct LBMFileHeader
 	uint32_t mesh_width;
 	/** Taille totale du maillage simulé (hors mailles fantômes). **/
 	uint32_t mesh_height;
+	/** Taille totale du maillage simulé (hors mailles fantômes). **/
+	uint32_t mesh_max_width;
+	/** Taille totale du maillage simulé (hors mailles fantômes). **/
+	uint32_t mesh_max_height;
 	/** Number of vertical lines. **/
 	uint32_t lines;
 };
@@ -535,6 +519,8 @@ void write_file_header(FILE * fp,const CMRAbstractSpaceSplitter & splitter)
 	header.magick      = RESULT_MAGICK;
 	header.mesh_height = splitter.getDomain().height;
 	header.mesh_width  = splitter.getDomain().width;
+	header.mesh_max_height = splitter.getDomain().height;
+	header.mesh_max_width  = splitter.getDomain().width;
 	header.lines       = splitter.getSplittingSize().y;
 
 	//write file
@@ -679,7 +665,7 @@ int mainManual(int argc, char * argv[])
 			//propagation( &mesh, &temp);
 			ActionPropagation::LoopType loop3;
 			loop3.run(&sys,blockRect);
-			sys.permutVar(CMR_ALL);
+// 			sys.permutVar(CMR_ALL);
 		}
 
 		//save step
@@ -736,6 +722,6 @@ int mainRunner(int argc, char * argv[])
 /*******************  FUNCTION  *********************/
 int main(int argc, char * argv[])
 {
-// 	return mainRunner(argc,argv);
-	return mainManual(argc,argv);
+	return mainRunner(argc,argv);
+// 	return mainManual(argc,argv);
 }

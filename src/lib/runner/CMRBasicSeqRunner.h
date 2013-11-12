@@ -14,6 +14,27 @@
 #include "common/CMRGeometry.h"
 #include <common/CMRSpaceSplitter.h>
 
+//TODO cleanup
+#include <iostream>
+#include <cstdlib>
+#include <mpi.h>
+#include <cassert>
+#include <common/CMRDebug.h>
+#include <mpi/CMRMPIComm.h>
+#include <mpi/CMRMPICommFactory.h>
+#include <communication/CMRCommSchem.h>
+#include <domain/CMRDomainStorage.h>
+#include <common/CMRSpaceSplitter.h>
+#include <CMROperation.h>
+#include <domain/CMRMemoryModels.h>
+#include <domain/CMRCellAccessor.h>
+#include <domain/CMRVarSystem.h>
+#include <mpi/CMRMPIDomainBuilder.h>
+#include <domain/CMRMemoryModels.h>
+#include <math.h>
+#include <cstdio>
+#include <stdint.h>
+
 /*********************  TYPES  **********************/
 class CMRMeshOperation;
 class CMRVarSystem;

@@ -17,6 +17,8 @@ class CMRProjectXMLLoader
 		void load(CMRProject2 & project, std::string & filename);
 	protected:
 		void load(CMRProject2 & project, CMRXmlNode & rootNode);
+		void loadProjectInfo(CMRProject2 & project, CMRXmlNode & node);
+		void loadExtraHeaders(CMRProject2 & project, CMRXmlNode & node);
 		void loadElements(CMRProject2 & project, CMRXmlNode & node);
 		void loadConsts(CMRProject2 & project, CMRXmlNode & node);
 		void loadConst(CMRProject2 & project, CMRXmlNode & node);
@@ -32,6 +34,7 @@ class CMRProjectXMLLoader
 		void loadInitCallAction(CMRProject2 & project, CMRXmlNode & node);
 		void loadMainCallActions(CMRProject2 & project, CMRXmlNode & node);
 		void loadMainCallAction(CMRProject2 & project, CMRXmlNode & node);
+		void loadOutput(CMRProject2 & project, CMRXmlNode & node);
 		template <class T> void loadCode(CMRProject2 & project, T & parent , CMRXmlNode & node);
 		template <class T> bool loadCodeNode(CMRProject2 & project, T & parent , CMRXmlNode & node);
 };

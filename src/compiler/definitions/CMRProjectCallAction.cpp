@@ -7,6 +7,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
+#include "common/Common.h"
 #include "CMRProjectCallAction.h"
 
 /**********************  USING  *********************/
@@ -38,17 +39,28 @@ CMRProjectCallAction& CMRProjectCallAction::addZone ( const std::string& zone )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectCallAction::genCode ( std::ostream& out, CMRCompiler::LangDef& lang, int id ) const
+void CMRProjectCallAction::genCode ( ostream& out, CMRCompiler::LangDef& lang, int id, int indent ) const
 {
-	out << "Action" << actionName << " * action" << id << " = new Action" << actionName << ";" << endl;
+	//ideally we may generate :
+	//app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_LEFT_IN)),
+	//				  app.getLocalRect().expended(1).getBorder(CMR_LEFT));
 	
-	for (CMRCallParameters::const_iterator it = parameters.begin() ; it != parameters.end() ; ++it)
-		out << "action" << id << "->" << it->first << " = " << it->second << endl;
-	
-	out << "CMRMeshOperationSimpleLoopInPlace<VarSystem,Action" << actionName << "> step" << id << "(&sys,action" << id << ");" << endl;
+	if (parameters.empty() == false)
+	{
+		doIndent(out,indent) << "Action" << actionName << " * action" << id << " = new Action" << actionName << "();" << endl;
+		
+		for (CMRCallParameters::const_iterator it = parameters.begin() ; it != parameters.end() ; ++it)
+			doIndent(out,indent) << "action" << id << "->" << it->first << " = " << it->second << endl;
+	}
 	
 	for (CMRCallZoneVector::const_iterator it = zones.begin() ; it != zones.end() ; ++it)
-		out << "step" << id << ".run(" << *it << ");" << endl;
+	{
+		if (parameters.empty())
+			doIndent(out,indent) << "app.addInitAction(new Action" << actionName << "::LoopType(new Action" << actionName << "())),";
+		else
+			doIndent(out,indent) << "app.addInitAction(new Action" << actionName << "::LoopType(action" << id << ")),";
+		doIndent(out,indent) << *it << ");" << endl;
+	}
 }
 
 }

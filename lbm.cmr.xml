@@ -46,7 +46,7 @@
 				</extradims>
 			</var>
 			<var mathname='T_{i,j}' longname='cell_type' type='LBMCellType'   doc='Type de cellule.'/>
-			<var mathname='F_{i,j}' longname='fileout'   type='LBMFileHeader' doc='Structure de stokage pour la sortie.'/>
+			<var mathname='F_{i,j}' longname='fileout'   type='LBMFileEntry' doc='Structure de stokage pour la sortie.'/>
 		</mesh>
 		<!-- ****************** ITERATORS **************** -->
 		<iterators>
@@ -75,7 +75,7 @@
  				<mathstep>f_{eq,i,j,k} = 1 + 3p + \frac{9}{2}p^2 - \frac{3}{2}v^2</mathstep> 
 			</def>
 			<def mathname='v_{pois,i}' longname='poiseuil' doc='Fonction de poiseuil pour une hauteur de fluide donnée.'>
-				<declvar mathname='y' longname='y' type='int' default='0'/>
+				<declvar mathname='y' longname='Y' type='int' default='0'/>
 				<declvar mathname='L' longname='L' type='int' default='0'/>
 				<declvar mathname='H' longname='H' type='int' default='0'/>
 				<mathstep>y = i - 1</mathstep>
@@ -160,8 +160,8 @@
 			<cellaction name='SetupObstable' doc="Configure les cellules de l'obstable.">
 				<defparameter mathname="O_x" longname="obstacle_x" type='double'/>
 				<defparameter mathname="O_y" longname="obstacle_y" type='double'/>
-				<ccode>if ( ( $(x-O_x)^2$ + $(x-O_y)^2$ ) &lt;= $(O_R)^2$ ) {</ccode>
-				<ccode>T_{i,j} = CELL_BOUNCE_BACK</ccode>
+				<ccode>if ( ( $(x-O_x)*(x-O_x)$ + $(x-O_y)*(x-O_y)$ ) &lt;= $(O_R)*(O_R)$ ) {</ccode>
+				<ccode>	T_{i,j} = CELL_BOUNCE_BACK</ccode>
 				<ccode>}</ccode>
 			</cellaction>
 		</cellactions>
@@ -208,6 +208,10 @@
 				<zone>local</zone>
 			</callaction>
 		</mainloop>
+		<output>
+			<entry name="v"      type="float">v_{i,j,0}*v_{i,j,0}+v_{i,j,0}*v_{i,j,0}</entry>
+			<entry name="density" type="float">d_{i,j}</entry>
+		</output>
 	</elements>
 </cmr>
 

@@ -31,7 +31,7 @@ class CMRProjectCallAction
 		CMRProjectCallAction(const std::string & actionName);
 		CMRProjectCallAction & addZone(const std::string & zone);
 		CMRProjectCallAction & addParameter(const std::string & name,const std::string & value);
-		void genCode( std::ostream& out, CMRCompiler::LangDef& lang, int id ) const;
+		void genCode( std::ostream& out, CMRCompiler::LangDef& lang, int id, int indent ) const;
 	private:
 		std::string actionName;
 		CMRCallZoneVector zones;

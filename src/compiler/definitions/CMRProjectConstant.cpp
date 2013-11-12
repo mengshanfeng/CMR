@@ -185,9 +185,9 @@ void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectCont
 	if (dims.size() > 0)
 	{
 		out << "//Definition of constant " << getShortName() << endl;
-		out << "static const float TMP_VALUE_" << getLongName();
+		out << "static const float " << getLongName();
 		for (size_t i = 0 ; i < dims.size() ; i++)
-			out << "[" << dims[i] << "]";
+			out << "[" << dims[dims.size() - i - 1] << "]";
 		out << "=";
 		out << "{";
 		for (size_t i = 0 ; i < formulas.size() ; i++)
@@ -204,10 +204,10 @@ void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectCont
 		out << "};";
 		out << endl;
 		
-		if (dims.size() == 1)
-			out << "const CMRMathVector " << getLongName() << "(TMP_VALUE_" << getLongName() << ","<< dims[0] <<");" << endl;
-		else if (dims.size() == 2)
-			out << "const CMRMathMatrix " << getLongName() << "(TMP_VALUE_" << getLongName() << ","<< dims[0] << ","<< dims[1] << ");" << endl;
+// 		if (dims.size() == 1)
+// 			out << "const CMRMathVector " << getLongName() << "(TMP_VALUE_" << getLongName() << ","<< dims[0] <<");" << endl;
+// 		else if (dims.size() == 2)
+// 			out << "const CMRMathMatrix " << getLongName() << "(TMP_VALUE_" << getLongName() << ","<< dims[0] << ","<< dims[1] << ");" << endl;
 	} else {
 		out << "const float " << getLongName() << " = ";
 		cmrGenEqCCode(out,context,formulas[0]);

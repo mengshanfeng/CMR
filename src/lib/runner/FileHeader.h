@@ -15,6 +15,10 @@ struct LBMFileHeader
 	uint32_t mesh_width;
 	/** Taille totale du maillage simulé (hors mailles fantômes). **/
 	uint32_t mesh_height;
+	/** Taille totale du maillage simulé (hors mailles fantômes). **/
+	uint32_t mesh_max_width;
+	/** Taille totale du maillage simulé (hors mailles fantômes). **/
+	uint32_t mesh_max_height;
 	/** Number of vertical lines. **/
 	uint32_t lines;
 };

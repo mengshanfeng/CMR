@@ -94,14 +94,14 @@ const ProjectEntity* CMRProjectContext::findInParent(const LatexEntity& entity, 
 /*******************  FUNCTION  *********************/
 const ProjectEntity* CMRProjectContext::find( const LatexEntity & entity , bool onlyWildCardNames) const
 {
-	#warning "Do some stuff on priority rules when found multiple matches (similar to what CSS dores)"
-	//check wildcard name in parent
-	if (parent != NULL)
-	{
-		const ProjectEntity* res = parent->find(entity,true);
-		if (res != NULL)
-			return res;
-	}
+// 	#warning "Do some stuff on priority rules when found multiple matches (similar to what CSS dores)"
+// 	//check wildcard name in parent
+// 	if (parent != NULL)
+// 	{
+// 		const ProjectEntity* res = parent->find(entity,true);
+// 		if (res != NULL)
+// 			return res;
+// 	}
 
 	//searh in list
 	for (CMRProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)

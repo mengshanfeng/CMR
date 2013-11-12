@@ -68,7 +68,7 @@ ostream& ProjectMeshVar::genCPPAccessorAddVar(ostream& out)
 /*******************  FUNCTION  *********************/
 ostream& ProjectMeshVar::genCPPAccessorConstrSys(ostream& out,int id)
 {
-	out << getLongName() << "*(sys.getDomain(" << id << ",tstep)),x,y,absolute)" << endl;
+	out << getLongName() << "(*(sys.getDomain(" << id << ",tstep)),x,y,absolute)" << endl;
 	return out;
 }
 
@@ -102,9 +102,9 @@ void ProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& conte
 
 	//select out mode
 	if (write)
-		out << "out.";
+		out << "*out.";
 	else
-		out << "in.";
+		out << "*in.";
 
 	//tmp.name = shortName;
 	this->capture(entity,capture);
