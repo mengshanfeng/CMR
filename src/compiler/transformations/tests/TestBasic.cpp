@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 #include "../CMRTransformationBasic.h"
 #include <../definitions/CMRProjectCode.h>
-#include <../definitions/CMRProjectIterator.h>
+#include <../definitions/ProjectIterator.h>
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
@@ -94,7 +94,7 @@ TEST(TestProjectTransfBasic,testTransformLoop)
 	MockTransfBasic transf;
 	
 	CMRProjectContext context;
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
 	root.addIteratorLoop("k");
@@ -109,7 +109,7 @@ TEST(TestProjectTransfBasic,testTransformEquation_1)
 	MockTransfBasic transf;
 	
 	CMRProjectContext context;
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("j","testJ","int","0");
@@ -125,7 +125,7 @@ TEST(TestProjectTransfBasic,testTransformEquation_2)
 	MockTransfBasic transf;
 	
 	CMRProjectContext context;
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("j","testJ","int","0");
@@ -141,7 +141,7 @@ TEST(TestProjectTransfBasic,testTransformEquation_3)
 	MockTransfBasic transf;
 	
 	CMRProjectContext context;
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("j","testJ","int","0");
@@ -157,7 +157,7 @@ TEST(TestProjectTransfBasic,testTransformEquation_4)
 	MockTransfBasic transf;
 	
 	CMRProjectContext context;
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("j","testJ","int","0");

@@ -14,7 +14,7 @@
 #include <ostream>
 #include <list>
 #include "CMRProjectCodeTree.h"
-#include "CMRProjectIterator.h"
+#include "ProjectIterator.h"
 #include "../parsor/LatexFormula.h"
 #include "../common/CodeTemplate.h"
 #include "../common/CodeTemplateDic.h"
@@ -25,7 +25,7 @@ namespace CMRCompiler
 {
 
 /*********************  TYPES  **********************/
-class CMRProjectIterator;
+class ProjectIterator;
 class CMRProjectCodeNode;
 class CMRProjectCodeEquation;
 class CMRProjectCodeIteratorLoop;
@@ -57,7 +57,7 @@ struct ExtractionLocus
 typedef std::list<ExtractionLocus> ExtractionLocusList;
 
 /*********************  CLASS  **********************/
-class CMRProjectLocalVariable : public CMRProjectEntity
+class CMRProjectLocalVariable : public ProjectEntity
 {
 	public:
 		CMRProjectLocalVariable( const std::string& latexName, const std::string& longName, const std::string& type, const std::string& defaultValue = "0");
@@ -82,11 +82,11 @@ class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
 		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue, CMRProjectCodeTreeInsert	
 		location = CMR_INSERT_FIRST_CHILD);
-		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start,int end);
+		ProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start,int end);
 		virtual void genCCode(std::ostream & out,int padding = 0) const = 0;
 		virtual void genChildCCode(std::ostream & out,int padding = 0) const;
 		std::ostream & doIndent(std::ostream & out,int baseOffset = 0) const;
-		void changeCaptureType(const std::string & name, enum CMRCaptureType captureType) { assert(false);};
+		void changeCaptureType(const std::string & name, CaptureType captureType) { assert(false);};
 	protected:
 		virtual void onParentChange ( CMRProjectCodeEntry * newParent );
 	protected:
@@ -144,7 +144,7 @@ class CMRProjectCodeIteratorLoop : public CMRProjectCodeNode
 	public:
 		CMRProjectCodeIteratorLoop( const std::string& iterator );
 		virtual CMRProjectCodeType getType ( void ) const;
-		const CMRProjectIterator & getIterator(void) const;
+		const ProjectIterator & getIterator(void) const;
 		virtual void genCCode ( std::ostream& out,int padding = 0 ) const;
 	private:
 		std::string iterator;

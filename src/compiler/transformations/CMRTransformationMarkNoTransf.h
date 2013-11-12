@@ -12,7 +12,7 @@
 
 /********************  HEADERS  *********************/
 #include "CMRTransformationBasic.h"
-#include "../definitions/CMRProjectEntity.h"
+#include "../definitions/ProjectEntity.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -25,7 +25,7 @@ class CMRTransformationMarkNoTransf : public CMRTransformationBasic
 		CMRTransformationMarkNoTransf(void);
 	protected:
 		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
-		void markChildElements( CMRCompiler::LatexFormulasVector& childs, const CMRProjectCaptureDefMap& defMap );
+		void markChildElements( CMRCompiler::LatexFormulasVector& childs, const ProjectCaptureDefMap& defMap );
 };
 
 }

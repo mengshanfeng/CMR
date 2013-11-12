@@ -7,7 +7,7 @@
 ######################################################
 
 ######################################################
-add_library(cmr_tex_definitions STATIC CMRProjectEntity.cpp CMRProjectContext.cpp GenCode.cpp ProjectMeshVar.cpp CMRProjectIterator.cpp CMRProjectConstant.cpp CMRProjectCode.cpp CMRProjectDefinition.cpp ProjectAction.cpp CMRProjectAlias.cpp CMRProjectCallAction.cpp)
+add_library(cmr_tex_definitions STATIC ProjectEntity.cpp CMRProjectContext.cpp GenCode.cpp ProjectMeshVar.cpp ProjectIterator.cpp CMRProjectConstant.cpp CMRProjectCode.cpp ProjectDefinition.cpp ProjectAction.cpp CMRProjectAlias.cpp CMRProjectCallAction.cpp)
 target_link_libraries(cmr_tex_definitions cmr_tex_parsor cmr_tex_common)
 
 ######################################################

@@ -10,7 +10,7 @@
 /********************  HEADERS  *********************/
 #include <string>
 #include "CMRTransformationMarkNoTransf.h"
-#include "../definitions/CMRProjectEntity.h"
+#include "../definitions/ProjectEntity.h"
 #include "../definitions/CMRProjectCode.h"
 
 /********************  NAMESPACE  *******************/
@@ -27,7 +27,7 @@ CMRTransformationMarkNoTransf::CMRTransformationMarkNoTransf(void )
 void CMRTransformationMarkNoTransf::transform(CMRProjectCodeEquation& equation, LatexEntity& entity)
 {
 	//find entity
-	const CMRProjectEntity * definition = equation.getContext().find(entity);
+	const ProjectEntity * definition = equation.getContext().find(entity);
 	
 	//do it for all childs if def is OK
 	if(definition != NULL)
@@ -41,13 +41,13 @@ void CMRTransformationMarkNoTransf::transform(CMRProjectCodeEquation& equation, 
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationMarkNoTransf::markChildElements(LatexFormulasVector& childs, const CMRProjectCaptureDefMap& defMap)
+void CMRTransformationMarkNoTransf::markChildElements(LatexFormulasVector& childs, const ProjectCaptureDefMap& defMap)
 {
 	//errors
 	assert(childs.size() >= defMap.size());
 	
 	for (int i = 0 ; i < defMap.size() ; i++)
-		if (defMap[i].captureType == CMR_CAPTURE_NONE)
+		if (defMap[i].captureType == CAPTURE_NONE)
 			childs[i]->setExtraInfo("cmrNoTranform",NULL);
 
 	/** @TODO also transform bu setting all the string a name of a uniq element, it may speedup next recongnitions **/

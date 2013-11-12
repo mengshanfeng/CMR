@@ -25,7 +25,7 @@ namespace CMRCompiler
 class LangDef;
 
 /*********************  CLASS  **********************/
-class ProjectActionParameter : public CMRProjectEntity
+class ProjectActionParameter : public ProjectEntity
 {
 	public:
 		ProjectActionParameter ( const std::string& latexName, const std::string& longName, const std::string & type );
@@ -66,8 +66,8 @@ class ProjectAction
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=");
 		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator);
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue);
-		CMRProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
-		void changeCaptureType(const std::string & name, enum CMRCaptureType captureType) { assert(false);};
+		ProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
+		void changeCaptureType(const std::string & name, CaptureType captureType) { assert(false);};
 		CMRProjectContext & getContext(void);
 		CMRProjectCodeEntry * insert(CMRProjectCodeEntry * entry,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		ProjectActionParameter & addParameter(const std::string & latexName, const std::string & longName,const std::string &type);

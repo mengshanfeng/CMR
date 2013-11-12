@@ -20,7 +20,7 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 CMRModelBasedReplacement::CMRModelBasedReplacement(const std::string& model, const std::string result, bool captureAll)
-	:CMRProjectEntity(model,"model")
+	:ProjectEntity(model,"model")
 {
 	//errors
 	assert(model.empty() == false);
@@ -31,7 +31,7 @@ CMRModelBasedReplacement::CMRModelBasedReplacement(const std::string& model, con
 	
 	//mark all as capture
 	if (captureAll)
-		this->markAllCaptureAs(CMR_CAPTURE_REQUIRED);
+		this->markAllCaptureAs(CAPTURE_REQUIRED);
 }
 
 /*******************  FUNCTION  *********************/
@@ -42,7 +42,7 @@ bool CMRModelBasedReplacement::apply( LatexEntity& entity ) const
 		return false;
 	
 	//capture fields
-	CMRProjectCaptureMap capture;
+	ProjectCaptureMap capture;
 	this->capture(entity,capture);
 	
 	//create the new instance

@@ -48,11 +48,11 @@ void test1(void)
 	///////
 	project.addDefinition("d","density","\\sum_k{f_{i,j,k}}");
 		
-	CMRProjectDefinition & vs = project.addDefinition("v_{i,j}","velocity","\\sum_k{f_{i,j,k} * M_{k,s}} / d");
-	vs.addIndice("s",CMR_CAPTURE_REQUIRED);
+	ProjectDefinition & vs = project.addDefinition("v_{i,j}","velocity","\\sum_k{f_{i,j,k} * M_{k,s}} / d");
+	vs.addIndice("s",CAPTURE_REQUIRED);
 		
-	CMRProjectDefinition & feq = project.addDefinition("f_{eq,i,j,k}","eq_profile");
-	feq.changeCaptureType("k",CMR_CAPTURE_REQUIRED);
+	ProjectDefinition & feq = project.addDefinition("f_{eq,i,j,k}","eq_profile");
+	feq.changeCaptureType("k",CAPTURE_REQUIRED);
 	feq.addLocalVariable("v^2","v2","double","0");
 	feq.addLocalVariable("p","p","double","0");
 	//feq.addLocalVariable("f_{eq,i,j,k}","eq_profile","double","0");

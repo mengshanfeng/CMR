@@ -8,9 +8,9 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "CMRProjectDefinition.h"
+#include "transformations/CMRTransformation.h"
 #include "common/Common.h"
-#include "../transformations/CMRTransformation.h"
+#include "ProjectDefinition.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -20,22 +20,22 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-CMRProjectDefinition::CMRProjectDefinition ( const string& latexName, const string& longName, CMRProjectContext* parentContext ) 
-	: CMRProjectEntity ( latexName, longName )
+ProjectDefinition::ProjectDefinition ( const string& latexName, const string& longName, CMRProjectContext* parentContext ) 
+	: ProjectEntity ( latexName, longName )
 	,parametersContext(parentContext), ops(&parametersContext)
 {
 	this->ops.addLocalVariable(latexName,"result","double","0");
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::printDebug ( std::ostream& out ) const
+void ProjectDefinition::printDebug ( std::ostream& out ) const
 {
-	CMRProjectEntity::printDebug ( out );
+	ProjectEntity::printDebug ( out );
 	out << "    - code : TODO" << endl;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::genDefinitionCCode ( ostream& out , const CMRProjectContext& context, int padding) const
+void ProjectDefinition::genDefinitionCCode ( ostream& out , const CMRProjectContext& context, int padding) const
 {
 	doIndent(out,padding) << "//Definition : " << this->getLatexName() << " : " << getLongName() << endl;
 	doIndent(out,padding) << "double compute_" << this->getLongName() << "(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y";
@@ -53,14 +53,14 @@ void CMRProjectDefinition::genDefinitionCCode ( ostream& out , const CMRProjectC
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::genParameterListForDef ( ostream& out, const CMRProjectCaptureDefMap& map) const
+void ProjectDefinition::genParameterListForDef ( ostream& out, const ProjectCaptureDefMap& map) const
 {
-	for (CMRProjectCaptureDefMap::const_iterator it = map.begin() ; it != map.end() ; ++it)
+	for (ProjectCaptureDefMap::const_iterator it = map.begin() ; it != map.end() ; ++it)
 	{
-		assert(it->captureType != CMR_CAPTURE_OPTIONS);
-		if (it->captureType == CMR_CAPTURE_REQUIRED)
+		assert(it->captureType != CAPTURE_OPTIONS);
+		if (it->captureType == CAPTURE_REQUIRED)
 		{
-			const CMRProjectEntity * entity = parametersContext.find(it->name);
+			const ProjectEntity * entity = parametersContext.find(it->name);
 			assert(entity != NULL);
 			out << ", int " << entity->getLongName();
 		}
@@ -68,21 +68,21 @@ void CMRProjectDefinition::genParameterListForDef ( ostream& out, const CMRProje
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::genParameterListForUsage ( ostream& out, const CMRProjectCaptureDefMap& map,CMRProjectCaptureMap & capture ) const
+void ProjectDefinition::genParameterListForUsage ( ostream& out, const ProjectCaptureDefMap& map,ProjectCaptureMap & capture ) const
 {
-	for (CMRProjectCaptureDefMap::const_iterator it = map.begin() ; it != map.end() ; ++it)
+	for (ProjectCaptureDefMap::const_iterator it = map.begin() ; it != map.end() ; ++it)
 	{
-		assert(it->captureType != CMR_CAPTURE_OPTIONS);
-		if (it->captureType == CMR_CAPTURE_REQUIRED)
+		assert(it->captureType != CAPTURE_OPTIONS);
+		if (it->captureType == CAPTURE_REQUIRED)
 			out << ", (" << *capture[it->name] << ")";
 	}
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	//extract matching
-	CMRProjectCaptureMap capture;
+	ProjectCaptureMap capture;
 	
 	//extract matching
 	this->capture(entity,capture);
@@ -95,13 +95,13 @@ void CMRProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::runTransformation(CMRTransformation & transf)
+void ProjectDefinition::runTransformation(CMRTransformation & transf)
 {
 	transf.run(ops);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEquation& CMRProjectDefinition::addEquation ( const string& eq )
+CMRProjectCodeEquation& ProjectDefinition::addEquation ( const string& eq )
 {
 	//search position of =
 	int equalPos = -1;
@@ -124,33 +124,33 @@ CMRProjectCodeEquation& CMRProjectDefinition::addEquation ( const string& eq )
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEquation& CMRProjectDefinition::addEquation ( const string& latexName, const string& compute, const string& op )
+CMRProjectCodeEquation& ProjectDefinition::addEquation ( const string& latexName, const string& compute, const string& op )
 {
 	return ops.addEquation(latexName,compute,op);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeIteratorLoop& CMRProjectDefinition::addIteratorLoop ( const string& iterator )
+CMRProjectCodeIteratorLoop& ProjectDefinition::addIteratorLoop ( const string& iterator )
 {
 	return ops.addIteratorLoop(iterator);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectLocalVariable& CMRProjectDefinition::addLocalVariable ( const string& latexName, const string& longName, const string& type, const string& defaultValue )
+CMRProjectLocalVariable& ProjectDefinition::addLocalVariable ( const string& latexName, const string& longName, const string& type, const string& defaultValue )
 {
 	return ops.addLocalVariable(latexName,longName,type,defaultValue);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectIterator& CMRProjectDefinition::addIterator ( const string& latexName, const string& longName, int start, int end )
+ProjectIterator& ProjectDefinition::addIterator ( const string& latexName, const string& longName, int start, int end )
 {
 	return ops.addIterator(latexName,longName,start,end);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectDefinition::onUpdateCaptureType ( const string& name, CMRCaptureType captureType )
+void ProjectDefinition::onUpdateCaptureType ( const string& name, CaptureType captureType )
 {
-	if (captureType == CMR_CAPTURE_REQUIRED)
+	if (captureType == CAPTURE_REQUIRED)
 	{
 		//TODO : create a parameter entity
 		string longName = parametersContext.genTempName("param").longName;
@@ -159,13 +159,13 @@ void CMRProjectDefinition::onUpdateCaptureType ( const string& name, CMRCaptureT
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectContext& CMRProjectDefinition::getContext ( void )
+CMRProjectContext& ProjectDefinition::getContext ( void )
 {
 	return ops.getContext();
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEntry* CMRProjectDefinition::insert ( CMRProjectCodeEntry* entry, CMRProjectCodeTreeInsert location )
+CMRProjectCodeEntry* ProjectDefinition::insert ( CMRProjectCodeEntry* entry, CMRProjectCodeTreeInsert location )
 {
 	return ops.insert(entry,location);
 }

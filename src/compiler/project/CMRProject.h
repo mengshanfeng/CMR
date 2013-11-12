@@ -12,13 +12,13 @@
 
 /********************  HEADERS  *********************/
 #include <vector>
-#include "../definitions/CMRProjectEntity.h"
+#include "../definitions/ProjectEntity.h"
 #include "../definitions/CMRProjectContext.h"
 #include "../definitions/CMRProjectConstant.h"
 #include "../definitions/ProjectMeshVar.h"
 #include "../definitions/ProjectAction.h"
-#include "../definitions/CMRProjectIterator.h"
-#include "../definitions/CMRProjectDefinition.h"
+#include "../definitions/ProjectIterator.h"
+#include "../definitions/ProjectDefinition.h"
 #include <definitions/CMRProjectCallAction.h>
 #include "../transformations/CMRTransformation.h"
 #include "../common/LangDef.h"
@@ -30,9 +30,9 @@ namespace CMRCompiler
 /*********************  TYPES  **********************/
 typedef std::vector <CMRProjectConstant*> CMRProjectConstantVector;
 typedef std::vector <CMRCompiler::ProjectMeshVar*> CMRProjectVariableVector;
-typedef std::vector <CMRProjectIterator*> CMRProjectIteratorVector;
+typedef std::vector <ProjectIterator*> CMRProjectIteratorVector;
 typedef std::vector <CMRCompiler::ProjectAction*> CMRProjectActionVector;
-typedef std::vector <CMRProjectDefinition*> CMRProjectDefinitionVector;
+typedef std::vector <ProjectDefinition*> CMRProjectDefinitionVector;
 typedef std::vector <CMRProjectCallAction*> CMRProjectCallActionVector;
 
 /*********************  CLASS  **********************/
@@ -43,9 +43,9 @@ class CMRProject2
 		CMRProjectConstant & addConstant(const std::string& latexName, const std::string& longName);
 		CMRCompiler::ProjectMeshVar & addvariable(const std::string& latexName, const std::string& longName, const std::string& type);
 		CMRCompiler::ProjectAction & addAction(std::string name,std::string descr = "");
-		CMRProjectDefinition & addDefinition(const std::string& latexName, const std::string& longName);
-		CMRProjectDefinition& addDefinition( const std::string& latexName, const std::string& longName, const std::string& compute );
-		CMRProjectIterator & addIterator(const std::string& latexName, const std::string& longName ,int start, int end);
+		ProjectDefinition & addDefinition(const std::string& latexName, const std::string& longName);
+		ProjectDefinition& addDefinition( const std::string& latexName, const std::string& longName, const std::string& compute );
+		ProjectIterator & addIterator(const std::string& latexName, const std::string& longName ,int start, int end);
 		CMRProjectCallAction & addInitCallAction(const std::string & actionName);
 		CMRProjectCallAction & addMainLoopCallAction(const std::string & actionName);
 		void runTransformation(CMRTransformation & transf);

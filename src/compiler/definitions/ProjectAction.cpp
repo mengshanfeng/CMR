@@ -35,7 +35,7 @@ CMRProjectCodeEquation& ProjectAction::addEquation ( const string& latexName, co
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectIterator& ProjectAction::addIterator ( const string& latexName, const string& longName, int start, int end )
+ProjectIterator& ProjectAction::addIterator ( const string& latexName, const string& longName, int start, int end )
 {
 	return ops.addIterator(latexName,longName,start,end);
 }
@@ -129,7 +129,7 @@ ProjectActionParameter& ProjectAction::addParameter ( const string& latexName, c
 
 /*******************  FUNCTION  *********************/
 ProjectActionParameter::ProjectActionParameter ( const string& latexName, const string& longName, const string& type ) 
-	: CMRProjectEntity ( latexName, longName )
+	: ProjectEntity ( latexName, longName )
 {
 	this->type = type;
 }

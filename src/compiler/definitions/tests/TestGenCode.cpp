@@ -25,7 +25,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_1)
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i,j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
-	entity3.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
+	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
 	CMRProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
@@ -44,7 +44,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_2)
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i,j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
-	entity3.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
+	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
 	CMRProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
@@ -63,7 +63,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_3)
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i, j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
-	entity3.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
+	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
 	CMRProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
@@ -82,7 +82,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_4)
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i, j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
-	entity3.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
+	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
 	CMRProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
@@ -101,7 +101,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_5)
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i, j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
-	entity3.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
+	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
 	CMRProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
@@ -119,7 +119,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_6)
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i, j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
-	entity3.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
+	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
 	CMRProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
@@ -137,7 +137,7 @@ TEST(TestGenCode,testCmrGenEqCCode_formula)
 	MockProjectEntity entity1("A_i","testAi");
 	MockProjectEntity entity2("A_{i,j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
-	entity3.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
+	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
 	CMRProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);

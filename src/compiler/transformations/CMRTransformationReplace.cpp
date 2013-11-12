@@ -17,7 +17,7 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-CMRTransformationReplace::CMRTransformationReplace(const CMRProjectCaptureMap* replaceMap)
+CMRTransformationReplace::CMRTransformationReplace(const ProjectCaptureMap* replaceMap)
 	: CMRTransformationBasic("CMRTransformationReplace")
 {
 	//errors
@@ -36,13 +36,13 @@ void CMRTransformationReplace::transform(CMRProjectCodeEquation& equation, Latex
 }
 
 /*******************  FUNCTION  *********************/
-const LatexFormulas* CMRTransformationReplace::searchReplaceValue(const CMRProjectCaptureMap & replaceMap,const LatexEntity& entity)
+const LatexFormulas* CMRTransformationReplace::searchReplaceValue(const ProjectCaptureMap & replaceMap,const LatexEntity& entity)
 {
 	//Vars
 	const std::string entityString = entity.getString();
 
 	//search
-	for (CMRProjectCaptureMap::const_iterator it = replaceMap.begin() ; it != replaceMap.end() ; ++it)
+	for (ProjectCaptureMap::const_iterator it = replaceMap.begin() ; it != replaceMap.end() ; ++it)
 		if (it->first == entityString)
 			return it->second;
 	
@@ -50,14 +50,14 @@ const LatexFormulas* CMRTransformationReplace::searchReplaceValue(const CMRProje
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationReplace::replaceAll ( const CMRProjectCaptureMap& replaceMap, LatexFormulasVector& formulas )
+void CMRTransformationReplace::replaceAll ( const ProjectCaptureMap& replaceMap, LatexFormulasVector& formulas )
 {
 	for (LatexFormulasVector::iterator it = formulas.begin() ; it != formulas.end() ; ++it)
 		replaceAll(replaceMap,**it);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationReplace::replaceAll(const CMRProjectCaptureMap & replaceMap, LatexEntity& entity)
+void CMRTransformationReplace::replaceAll(const ProjectCaptureMap & replaceMap, LatexEntity& entity)
 {
 	//Vars
 	const LatexFormulas * value = searchReplaceValue(replaceMap,entity);
@@ -83,7 +83,7 @@ void CMRTransformationReplace::replaceAll(const CMRProjectCaptureMap & replaceMa
 }
 
 /*******************  FUNCTION  *********************/
-void CMRTransformationReplace::replaceAll(const CMRProjectCaptureMap& replaceMap, LatexFormulas& formula)
+void CMRTransformationReplace::replaceAll(const ProjectCaptureMap& replaceMap, LatexFormulas& formula)
 {
 	for (int i = 0 ; i < formula.size() ; i++)
 		replaceAll(replaceMap,*formula[i]);

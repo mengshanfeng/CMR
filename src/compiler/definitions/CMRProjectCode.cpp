@@ -14,7 +14,7 @@
 #include "CMRProjectCode.h"
 #include "GenCode.h"
 #include "common/Common.h"
-#include "CMRProjectIterator.h"
+#include "ProjectIterator.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -25,7 +25,7 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 CMRProjectLocalVariable::CMRProjectLocalVariable ( const std::string& latexName, const std::string& longName , const std::string & type,const std::string & defaultValue) 
-	: CMRProjectEntity ( latexName, longName )
+	: ProjectEntity ( latexName, longName )
 	, defaultValue(defaultValue)
 {
 	this->type = type;
@@ -128,7 +128,7 @@ CMRProjectCodeIteratorLoop::CMRProjectCodeIteratorLoop ( const std::string & ite
 void CMRProjectCodeIteratorLoop::genCCode ( ostream& out, int padding ) const
 {
 	//search iterator info
-	const CMRProjectEntity * iteratorEntity = context.find(iterator);
+	const ProjectEntity * iteratorEntity = context.find(iterator);
 	assert(iteratorEntity != NULL);
 	
 	//gen loop
@@ -140,14 +140,14 @@ void CMRProjectCodeIteratorLoop::genCCode ( ostream& out, int padding ) const
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectIterator& CMRProjectCodeIteratorLoop::getIterator(void ) const
+const ProjectIterator& CMRProjectCodeIteratorLoop::getIterator(void ) const
 {
 	//build iterator loop
-	const CMRProjectEntity * entity = context.findInParent(iterator);
+	const ProjectEntity * entity = context.findInParent(iterator);
 	if (entity == NULL)
 		throw LatexException("Invalid iterator name : "+iterator);
 
-	const CMRProjectIterator * it = dynamic_cast<const CMRProjectIterator*>(entity);
+	const ProjectIterator * it = dynamic_cast<const ProjectIterator*>(entity);
 	if (it == NULL)
 		throw LatexException("Invalid iterator type : "+iterator);
 	
@@ -155,9 +155,9 @@ const CMRProjectIterator& CMRProjectCodeIteratorLoop::getIterator(void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectIterator& CMRProjectCodeEntry::addIterator ( const string& latexName, const string& longName, int start, int end )
+ProjectIterator& CMRProjectCodeEntry::addIterator ( const string& latexName, const string& longName, int start, int end )
 {
-	CMRProjectIterator * it = new CMRProjectIterator(latexName,longName,start,end);
+	ProjectIterator * it = new ProjectIterator(latexName,longName,start,end);
 	context.addEntry(it);
 	return *it;
 }
@@ -261,7 +261,7 @@ void CMRProjectCodeNode::genCCode ( ostream& out, int padding ) const
 /*******************  FUNCTION  *********************/
 void CMRProjectCodeEquation::genCCode ( ostream& out, int padding ) const
 {
-	const CMRProjectEntity * outputEntity = context.find(output);
+	const ProjectEntity * outputEntity = context.find(output);
 	assert(outputEntity != NULL);
 	
 	doIndent(out,padding);

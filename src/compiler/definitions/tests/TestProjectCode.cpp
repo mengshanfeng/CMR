@@ -12,7 +12,7 @@
 #include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
-#include <CMRProjectIterator.h>
+#include "ProjectIterator.h"
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -53,7 +53,7 @@ TEST(TestProjectCodeNode,testIteratorLoop_ok)
 	CMRProjectContext context;	
 	CMRProjectCodeNode root(&context);
 	
-	CMRProjectIterator it("k","itK",0,9);
+	ProjectIterator it("k","itK",0,9);
 	context.addEntry(&it);
 	
 	CMRProjectCodeIteratorLoop & loop = root.addIteratorLoop("k");

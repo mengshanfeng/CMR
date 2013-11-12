@@ -8,7 +8,7 @@
 
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
-#include <CMRProjectIterator.h>
+#include "ProjectIterator.h"
 #include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
@@ -32,13 +32,13 @@ static const char TEST_CST_1[] = "Entity :\n\
 /*******************  FUNCTION  *********************/
 TEST(TestProjectIterator,testConstructor)
 {
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectIterator,testPrintDebug)
 {
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	
 	stringstream out;
 	it.printDebug(out);
@@ -49,7 +49,7 @@ TEST(TestProjectIterator,testPrintDebug)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectIterator,testGenDefinitionCCode)
 {
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	CMRProjectContext context;
 	
 	stringstream out;
@@ -61,7 +61,7 @@ TEST(TestProjectIterator,testGenDefinitionCCode)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectIterator,testGenUsageCCode)
 {
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	CMRProjectContext context;
 	LatexEntity entity("k");
 	

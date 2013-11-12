@@ -34,10 +34,10 @@ CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectEntity & CMRProjectContext::addEntry(CMRProjectEntity* entry)
+ProjectEntity & CMRProjectContext::addEntry(ProjectEntity* entry)
 {
 	//vars
-	CMRProjectEntity * conflict;
+	ProjectEntity * conflict;
 	
 	//errors
 	assert(entry != NULL);
@@ -60,7 +60,7 @@ CMRProjectEntity & CMRProjectContext::addEntry(CMRProjectEntity* entry)
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectEntity * CMRProjectContext::checkUnique(const CMRProjectEntity & entry)
+ProjectEntity * CMRProjectContext::checkUnique(const ProjectEntity & entry)
 {
 	//search in list
 	for (CMRProjectEntityList::iterator it = entities.begin() ; it != entities.end() ; ++it)
@@ -83,7 +83,7 @@ CMRProjectEntity * CMRProjectContext::checkUnique(const CMRProjectEntity & entry
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectEntity* CMRProjectContext::findInParent(const LatexEntity& entity, bool onlyWildCardNames) const
+const ProjectEntity* CMRProjectContext::findInParent(const LatexEntity& entity, bool onlyWildCardNames) const
 {
 	if (parent == NULL)
 		return NULL;
@@ -92,13 +92,13 @@ const CMRProjectEntity* CMRProjectContext::findInParent(const LatexEntity& entit
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectEntity* CMRProjectContext::find( const LatexEntity & entity , bool onlyWildCardNames) const
+const ProjectEntity* CMRProjectContext::find( const LatexEntity & entity , bool onlyWildCardNames) const
 {
 	#warning "Do some stuff on priority rules when found multiple matches (similar to what CSS dores)"
 	//check wildcard name in parent
 	if (parent != NULL)
 	{
-		const CMRProjectEntity* res = parent->find(entity,true);
+		const ProjectEntity* res = parent->find(entity,true);
 		if (res != NULL)
 			return res;
 	}

@@ -12,7 +12,7 @@
 #include <CMRTransformationReplace.h>
 #include <CMRTransformationImplicitMul.h>
 #include <../definitions/CMRProjectCode.h>
-#include <../definitions/CMRProjectIterator.h>
+#include <../definitions/ProjectIterator.h>
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/

@@ -12,8 +12,8 @@
 #include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
-#include <CMRProjectIterator.h>
-#include <CMRProjectDefinition.h>
+#include "ProjectIterator.h"
+#include "ProjectDefinition.h"
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -64,13 +64,13 @@ double compute_energy(const VarSystem::CellAccessor & in,VarSystem::CellAccessor
 /*******************  FUNCTION  *********************/
 TEST(TestProjectDefinition,testConstructor)
 {
-	CMRProjectDefinition def("E","energy");
+	ProjectDefinition def("E","energy");
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectDefinition,testAddBasicActions)
 {
-	CMRProjectDefinition def("E","energy");
+	ProjectDefinition def("E","energy");
 	def.addEquation("E","4*5");
 	def.addIteratorLoop("k");
 	def.addLocalVariable("t","tmp","int","0");
@@ -80,7 +80,7 @@ TEST(TestProjectDefinition,testAddBasicActions)
 TEST(TestProjectDefinition,testPrintDebug)
 {
 	FAIL();
-	CMRProjectDefinition def("E","energy");
+	ProjectDefinition def("E","energy");
 	def.addLocalVariable("t","tmp","int","0");
 	def.addEquation("E","4*5");
 	def.addIteratorLoop("k").addEquation("t","3*k","+=");
@@ -95,7 +95,7 @@ TEST(TestProjectDefinition,testPrintDebug)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectDefinition,testGenDefinitionCCode)
 {
-	CMRProjectDefinition def("E","energy");
+	ProjectDefinition def("E","energy");
 	def.addIterator("k","k",1,10);
 	def.addLocalVariable("t","tmp","int","0");
 	def.addEquation("E","4*5");
@@ -112,7 +112,7 @@ TEST(TestProjectDefinition,testGenDefinitionCCode)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectDefinition,testGenDefinitionCCodeIndent)
 {
-	CMRProjectDefinition def("E","energy");
+	ProjectDefinition def("E","energy");
 	def.addIterator("k","k",1,10);
 	def.addLocalVariable("t","tmp","int","0");
 	def.addEquation("E","4*5");
@@ -129,8 +129,8 @@ TEST(TestProjectDefinition,testGenDefinitionCCodeIndent)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectDefinition,testGenDefinitionCCodeParams)
 {
-	CMRProjectDefinition def("E_{i,j,h}","energy");
-	def.changeCaptureType("h",CMR_CAPTURE_REQUIRED);
+	ProjectDefinition def("E_{i,j,h}","energy");
+	def.changeCaptureType("h",CAPTURE_REQUIRED);
 	def.addIterator("k","k",1,10);
 	def.addLocalVariable("t","tmp","int","0");
 	def.addEquation("E_{i,j,h}","4*5+h");
@@ -148,7 +148,7 @@ TEST(TestProjectDefinition,testGenDefinitionCCodeParams)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectDefinition,testGenUsageCCodeRead)
 {
-	CMRProjectDefinition def("E","energy");
+	ProjectDefinition def("E","energy");
 	def.addIterator("k","k",1,10);
 	def.addLocalVariable("t","tmp","int","0");
 	def.addEquation("E","4*5");
@@ -166,8 +166,8 @@ TEST(TestProjectDefinition,testGenUsageCCodeRead)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectDefinition,testGenUsageCCodeParamsRead)
 {
-	CMRProjectDefinition def("E_{i,j,h}","energy");
-	def.changeCaptureType("h",CMR_CAPTURE_REQUIRED);
+	ProjectDefinition def("E_{i,j,h}","energy");
+	def.changeCaptureType("h",CAPTURE_REQUIRED);
 	def.addIterator("k","k",1,10);
 	def.addLocalVariable("t","tmp","int","0");
 	def.addEquation("E_{i,j,h}","4*5+h");

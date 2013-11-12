@@ -12,7 +12,7 @@
 
 /********************  HEADERS  *********************/
 #include "CMRTransformationBasic.h"
-#include "../definitions/CMRProjectEntity.h"
+#include "../definitions/ProjectEntity.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -22,14 +22,14 @@ namespace CMRCompiler
 class CMRTransformationReplace : public CMRTransformationBasic
 {
 	public:
-		CMRTransformationReplace(const CMRProjectCaptureMap * replaceMap);
+		CMRTransformationReplace(const ProjectCaptureMap * replaceMap);
 		virtual void transform(CMRProjectCodeEquation & equation,CMRCompiler::LatexEntity & entity);
-		static void replaceAll(const CMRProjectCaptureMap& replaceMap, CMRCompiler::LatexEntity& entity);
-		static void replaceAll(const CMRProjectCaptureMap& replaceMap, CMRCompiler::LatexFormulas& formula);
-		static void replaceAll( const CMRProjectCaptureMap& replaceMap, CMRCompiler::LatexFormulasVector& formulas );
-		static const CMRCompiler::LatexFormulas* searchReplaceValue(const CMRProjectCaptureMap& replaceMap, const CMRCompiler::LatexEntity& entity);
+		static void replaceAll(const ProjectCaptureMap& replaceMap, CMRCompiler::LatexEntity& entity);
+		static void replaceAll(const ProjectCaptureMap& replaceMap, CMRCompiler::LatexFormulas& formula);
+		static void replaceAll( const ProjectCaptureMap& replaceMap, CMRCompiler::LatexFormulasVector& formulas );
+		static const CMRCompiler::LatexFormulas* searchReplaceValue(const ProjectCaptureMap& replaceMap, const CMRCompiler::LatexEntity& entity);
 	private:
-		const CMRProjectCaptureMap * replaceMap;
+		const ProjectCaptureMap * replaceMap;
 };
 
 }

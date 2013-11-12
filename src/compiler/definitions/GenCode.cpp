@@ -93,7 +93,7 @@ std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, con
 		out << "Action" << *entity.getParameter(0) << "::cellAction(in,out,pos,x,y)";
 	} else {
 		//search matching in context
-		const CMRProjectEntity * def = context.find(entity);
+		const ProjectEntity * def = context.find(entity);
 		if (def == NULL)
 		{
 			stringstream out;

@@ -11,7 +11,7 @@
 #include "../CMRTransformationMarkNoTransf.h"
 #include <CMRTransformationReplace.h>
 #include <../definitions/CMRProjectCode.h>
-#include <../definitions/CMRProjectIterator.h>
+#include <../definitions/ProjectIterator.h>
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
@@ -23,14 +23,14 @@ using namespace CMRCompiler;
 /*******************  FUNCTION  *********************/
 TEST(TestReplace,testConstructor)
 {
-	CMRProjectCaptureMap map;
+	ProjectCaptureMap map;
 	CMRTransformationReplace transf(&map);
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestReplace,testRun_single)
 {
-	CMRProjectCaptureMap map;
+	ProjectCaptureMap map;
 	LatexFormulas f("c");
 	map["b"] = &f;
 	CMRTransformationReplace transf(&map);
@@ -50,7 +50,7 @@ TEST(TestReplace,testRun_single)
 /*******************  FUNCTION  *********************/
 TEST(TestReplace,testRun_complex)
 {
-	CMRProjectCaptureMap map;
+	ProjectCaptureMap map;
 	LatexFormulas f("c*c");
 	map["b"] = &f;
 	CMRTransformationReplace transf(&map);
@@ -70,7 +70,7 @@ TEST(TestReplace,testRun_complex)
 /*******************  FUNCTION  *********************/
 TEST(TestReplace,testRun_recurse)
 {
-	CMRProjectCaptureMap map;
+	ProjectCaptureMap map;
 	LatexFormulas f1("c*c");
 	LatexFormulas f2("d*a");
 	map["a"] = &f1;

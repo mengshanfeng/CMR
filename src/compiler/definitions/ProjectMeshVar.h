@@ -11,7 +11,7 @@
 #define CMR_COMPILER_PROJECT_VARIABLE_H
 
 /********************  HEADERS  *********************/
-#include "CMRProjectEntity.h"
+#include "ProjectEntity.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -30,12 +30,12 @@ struct ProjectMeshVarDef
 typedef std::vector<ProjectMeshVarDef> ProjectMeshVarDefVector;
 
 /*********************  CLASS  **********************/
-class ProjectMeshVar : public CMRProjectEntity
+class ProjectMeshVar : public ProjectEntity
 {
 	public:
 		ProjectMeshVar ( const std::string& latexName, const std::string& longName, const std::string& type );
 		void addDim( const std::string& name,int size, int start = 0);
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write = false ) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int indent = 0 ) const;
 		std::string getTypeWithDims(void) const;
 		std::ostream & genCPPAccessorDefinition(std::ostream & out);

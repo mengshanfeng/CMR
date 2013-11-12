@@ -22,11 +22,11 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 ProjectMeshVar::ProjectMeshVar ( const string& latexName, const string& longName , const std::string & type) 
-	: CMRProjectEntity ( latexName, longName )
+	: ProjectEntity ( latexName, longName )
 {
 	//setup capture
-	changeCaptureType("i",CMR_CAPTURE_REQUIRED);
-	changeCaptureType("j",CMR_CAPTURE_REQUIRED);
+	changeCaptureType("i",CAPTURE_REQUIRED);
+	changeCaptureType("j",CAPTURE_REQUIRED);
 	
 	//check that we have i/j for capture
 	assert(haveCapture("i"));
@@ -43,7 +43,7 @@ void ProjectMeshVar::addDim ( const string& name,int size,int start )
 	assert(size > 0);
 	assert(name.empty() == false);
 	defs.push_back(ProjectMeshVarDef(name,size,start));
-	changeCaptureType(name,CMR_CAPTURE_REQUIRED);
+	changeCaptureType(name,CAPTURE_REQUIRED);
 }
 
 /*******************  FUNCTION  *********************/
@@ -98,7 +98,7 @@ string ProjectMeshVar::getTypeWithDims ( void ) const
 /*******************  FUNCTION  *********************/
 void ProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
-	CMRProjectCaptureMap capture;
+	ProjectCaptureMap capture;
 
 	//select out mode
 	if (write)
@@ -113,8 +113,8 @@ void ProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& conte
 	cmrGenEqCCode(out,context,*capture["i"]) << ", ";
 	cmrGenEqCCode(out,context,*capture["j"]) << ")";
 	
-	CMRStringVector indices = getCapturedIndices();
-	for (CMRStringVector::iterator it = indices.begin() ; it != indices.end() ; ++it)
+	StringVector indices = getCapturedIndices();
+	for (StringVector::iterator it = indices.begin() ; it != indices.end() ; ++it)
 	{
 		if ( *it != "i" && *it != "j")
 		{

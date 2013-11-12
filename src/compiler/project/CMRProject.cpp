@@ -35,26 +35,26 @@ ProjectAction& CMRProject2::addAction ( std::string name, std::string descr )
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectDefinition& CMRProject2::addDefinition ( const std::string& latexName, const std::string& longName )
+ProjectDefinition& CMRProject2::addDefinition ( const std::string& latexName, const std::string& longName )
 {
-	CMRProjectDefinition * def = new CMRProjectDefinition(latexName,longName,&rootContext);
+	ProjectDefinition * def = new ProjectDefinition(latexName,longName,&rootContext);
 	definitions.push_back(def);
 	rootContext.addEntry(def);
 	return *def;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectDefinition& CMRProject2::addDefinition ( const std::string& latexName, const std::string& longName, const std::string& compute )
+ProjectDefinition& CMRProject2::addDefinition ( const std::string& latexName, const std::string& longName, const std::string& compute )
 {
-	CMRProjectDefinition & def = addDefinition(latexName,longName);
+	ProjectDefinition & def = addDefinition(latexName,longName);
 	def.addEquation(latexName,compute);
 	return def;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectIterator& CMRProject2::addIterator ( const std::string& latexName, const std::string& longName, int start, int end )
+ProjectIterator& CMRProject2::addIterator ( const std::string& latexName, const std::string& longName, int start, int end )
 {
-	CMRProjectIterator * it = new CMRProjectIterator(latexName,longName,start,end);
+	ProjectIterator * it = new ProjectIterator(latexName,longName,start,end);
 	iterators.push_back(it);
 	rootContext.addEntry(it);
 	return *it;

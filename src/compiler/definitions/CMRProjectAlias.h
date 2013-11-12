@@ -11,7 +11,7 @@
 #define CMR_PROJECT_ALIAS_H
 
 /********************  HEADERS  *********************/
-#include "CMRProjectEntity.h"
+#include "ProjectEntity.h"
 #include "../transformations/CMRModelBasedReplacement.h"
 
 /********************  NAMESPACE  *******************/

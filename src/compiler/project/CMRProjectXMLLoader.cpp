@@ -283,7 +283,7 @@ bool CMRProjectXMLLoader::loadCodeNode ( CMRProject2& project, T& parent, CMRXml
 		string paramLongName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
 		string type = node.getNonEmptyProperty("type");
 		cmrDebug("   -> param : %s",paramMathName.c_str());
-		parent.changeCaptureType(paramMathName,CMR_CAPTURE_REQUIRED);
+		parent.changeCaptureType(paramMathName,CAPTURE_REQUIRED);
 	} else if (node.isNamed(CMR_NODE_DECL_VAR)) {
 		string declVarMathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
 		string declVarLongName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
@@ -344,7 +344,7 @@ void CMRProjectXMLLoader::loadDefinition ( CMRProject2& project, CMRXmlNode& nod
 	string longName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
 
 	//create the definition
-	CMRProjectDefinition & def = project.addDefinition(mathName,longName);
+	ProjectDefinition & def = project.addDefinition(mathName,longName);
 	
 	//load code
 	loadCode(project,def,node);

@@ -8,13 +8,10 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <cstdio>
-#include <iostream>
-#include <cstdlib>
-#include <sstream>
-#include "CMRProjectIterator.h"
 #include "CMRProjectContext.h"
+#include "ProjectIterator.h"
 
+/**********************  USING  *********************/
 using namespace std;
 
 /********************  NAMESPACE  *******************/
@@ -22,29 +19,29 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-CMRProjectIterator::CMRProjectIterator ( const string& latexName, const string& longName, int start, int end ) 
-	: CMRProjectEntity ( latexName, longName )
+ProjectIterator::ProjectIterator ( const string& latexName, const string& longName, int start, int end ) 
+	: ProjectEntity ( latexName, longName )
 {
 	this->start = start;
 	this->end = end;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectIterator::printDebug ( std::ostream & out ) const
+void ProjectIterator::printDebug ( std::ostream & out ) const
 {
-	CMRProjectEntity::printDebug(out);
+	ProjectEntity::printDebug(out);
 	out << "    - values     : "<< start << " .. " << end << endl;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectIterator::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ,int indent ) const
+void ProjectIterator::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ,int indent ) const
 {
 	//TODO indent
 	out << "int " << getLongName() << " = " << start << " ; " << getLongName() << " <= " << end << " ; " << getLongName() << "++";
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectIterator::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectIterator::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 // 	stringstream err;
 // 	err << "Error, iterator may not be used out of loop definition : " << getLatexName() << " : " << start << " -> " << end << endl;

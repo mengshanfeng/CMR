@@ -7,24 +7,24 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_PROJECT_ITERATOR_H
-#define CMR_PROJECT_ITERATOR_H
+#ifndef CMR_COMPILER_PROJECT_ITERATOR_H
+#define CMR_COMPILER_PROJECT_ITERATOR_H
 
 /********************  HEADERS  *********************/
-#include "CMRProjectEntity.h"
+#include "ProjectEntity.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
 {
 
 /*********************  CLASS  **********************/
-class CMRProjectIterator : public CMRProjectEntity
+class ProjectIterator : public ProjectEntity
 {
 	public:
-		CMRProjectIterator ( const std::string& latexName, const std::string& longName ,int start, int end);
+		ProjectIterator ( const std::string& latexName, const std::string& longName ,int start, int end);
 		void printDebug(std::ostream & out) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context ,int indent = 0) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write = false ) const;
 	private:
 		int start;
 		int end;
@@ -32,4 +32,4 @@ class CMRProjectIterator : public CMRProjectEntity
 
 }
 
-#endif //CMR_PROJECT_ITERATOR_H
+#endif //CMR_COMPILER_PROJECT_ITERATOR_H

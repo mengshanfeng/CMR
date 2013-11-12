@@ -35,7 +35,7 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 		return;
 	
 	//find the definition
-	const CMRProjectEntity * projectEntity = equation.getContext().find(entity);
+	const ProjectEntity * projectEntity = equation.getContext().find(entity);
 	if (projectEntity == NULL)
 		exponent = entity.exponents[0];
 	else if (projectEntity->getExponents().empty())
@@ -50,7 +50,7 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 	LatexEntity * innerPart = new LatexEntity(entity);
 	innerPartF.push_back(innerPart);
 	innerPart->exponents.erase(innerPart->exponents.begin() + (innerPart->exponents.size()-1));
-	CMRProjectCaptureMap values;
+	ProjectCaptureMap values;
 	values["x"] = &innerPartF;
 	values["e"] = exponent;
 	

@@ -14,7 +14,7 @@
 #include <CMRTransformationExpandFrac.h>
 #include <CMRTransformationExtractLoops.h>
 #include <../definitions/CMRProjectCode.h>
-#include <../definitions/CMRProjectIterator.h>
+#include <../definitions/ProjectIterator.h>
 #include <../definitions/CMRProjectConstant.h>
 
 /**********************  USING  *********************/
@@ -60,7 +60,7 @@ TEST(TestExtractLoops,testRun_1)
 	MockTransfToPrint out;
 	
 	CMRProjectContext context;
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
@@ -81,7 +81,7 @@ TEST(TestExtractLoops,testRun_2)
 	MockTransfToPrint out;
 	
 	CMRProjectContext context;
-	CMRProjectIterator it("k","testK",0,9);
+	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
@@ -102,8 +102,8 @@ TEST(TestExtractLoops,testRun_3)
 	MockTransfToPrint out;
 	
 	CMRProjectContext context;
-	CMRProjectIterator it("k","testK",0,9);
-	CMRProjectIterator it2("l","testL",0,9);
+	ProjectIterator it("k","testK",0,9);
+	ProjectIterator it2("l","testL",0,9);
 	context.addEntry(&it);
 	context.addEntry(&it2);
 	CMRProjectCodeNode root(&context);

@@ -11,7 +11,7 @@
 #include "../CMRTransformationMarkNoTransf.h"
 #include <CMRTransformationReplaceAlias.h>
 #include <../definitions/CMRProjectCode.h>
-#include <../definitions/CMRProjectIterator.h>
+#include <../definitions/ProjectIterator.h>
 #include <../definitions/CMRProjectConstant.h>
 #include <../definitions/CMRProjectAlias.h>
 

@@ -3,7 +3,7 @@
 #define CMR_PROJECT_CONSTANT_H
 
 /********************  HEADERS  *********************/
-#include "CMRProjectEntity.h"
+#include "ProjectEntity.h"
 
 
 /********************  NAMESPACE  *******************/
@@ -18,7 +18,7 @@ class CMRModelBasedReplacement;
 typedef std::vector<CMRCompiler::LatexFormulas> CMRConstantFormulaVector;
 
 /*********************  CLASS  **********************/
-class CMRProjectConstant : public CMRProjectEntity
+class CMRProjectConstant : public ProjectEntity
 {
 	public:
 		CMRProjectConstant( const std::string& latexName, const std::string& longName );
@@ -36,7 +36,7 @@ class CMRProjectConstant : public CMRProjectEntity
 		void transform(CMRCompiler::LatexFormulas& formula, CMRModelBasedReplacement & action);
 		void transform(CMRCompiler::LatexEntity& entity, CMRModelBasedReplacement & action);
 	protected:
-		CMRConstantDimensionsVector dims;
+		ConstantDimensionsVector dims;
 		CMRConstantFormulaVector formulas;
 };
 

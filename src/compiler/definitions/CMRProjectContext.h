@@ -13,14 +13,14 @@
 /********************  HEADERS  *********************/
 #include <vector>
 #include <iostream>
-#include "CMRProjectEntity.h"
+#include "ProjectEntity.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
 {
 
 /*********************  TYPES  **********************/
-typedef std::vector <CMRProjectEntity*> CMRProjectEntityList;
+typedef std::vector <ProjectEntity*> CMRProjectEntityList;
 
 /*********************  STRUCT  *********************/
 struct CMRTempNames
@@ -36,10 +36,10 @@ class CMRProjectContext
 		CMRProjectContext(const CMRProjectContext * parent = NULL);
 		int countTotalEntries(void) const;
 		void printDebug(std::ostream & out = std::cerr) const;
-		CMRProjectEntity & addEntry(CMRProjectEntity * entry);
-		CMRProjectEntity* checkUnique( const CMRProjectEntity& entry );
-		const CMRProjectEntity * find( const CMRCompiler::LatexEntity& entity, bool onlyWildCardNames = false ) const;
-		const CMRProjectEntity * findInParent( const CMRCompiler::LatexEntity& entity, bool onlyWildCardNames = false ) const;
+		ProjectEntity & addEntry(ProjectEntity * entry);
+		ProjectEntity* checkUnique( const ProjectEntity& entry );
+		const ProjectEntity * find( const CMRCompiler::LatexEntity& entity, bool onlyWildCardNames = false ) const;
+		const ProjectEntity * findInParent( const CMRCompiler::LatexEntity& entity, bool onlyWildCardNames = false ) const;
 		int getDepth(void) const;
 		CMRTempNames genTempName( const std::string& base = "temp");
 		void setParent(const CMRProjectContext * parent);

@@ -89,7 +89,7 @@ TEST(TestProjectContext,testAddEntry_conflict_reverse)
 {
 	CMRProjectContext context;
 	MockProjectEntity entry1("A_i","testA");
-	entry1.changeCaptureType("i",CMR_CAPTURE_REQUIRED);
+	entry1.changeCaptureType("i",CAPTURE_REQUIRED);
 	MockProjectEntity entry2("A_j","testB");
 	EXPECT_NO_THROW(context.addEntry(&entry1));
 	EXPECT_THROW(context.addEntry(&entry2),LatexException);

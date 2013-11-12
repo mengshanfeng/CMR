@@ -28,7 +28,7 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 CMRProjectConstant::CMRProjectConstant ( const string& latexName, const string& longName) 
-	: CMRProjectEntity ( latexName, longName )
+	: ProjectEntity ( latexName, longName )
 {
 }
 
@@ -63,8 +63,8 @@ void CMRProjectConstant::loadValuesScalar ( const string& data )
 		throw LatexException("Invalid empty data to be loaded as scalar !");
 	
 	//error
-	CMRStringVector vs1 = cmrStringSplit(data,";");
-	CMRStringVector vs2 = cmrStringSplit(data,"\\\\");
+	StringVector vs1 = cmrStringSplit(data,";");
+	StringVector vs2 = cmrStringSplit(data,"\\\\");
 	if (vs1.size() > 1 || vs2.size() > 1)
 		throw LatexException("Caution, you say scalar but provide vector or matrix as data !");
 	
@@ -79,16 +79,16 @@ void CMRProjectConstant::loadValuesVector ( const string& data )
 		throw LatexException("Invalid empty data to be loaded as scalar !");
 	
 	//error
-	CMRStringVector vs2 = cmrStringSplit(data,"\\\\");
+	StringVector vs2 = cmrStringSplit(data,"\\\\");
 	if (vs2.size() > 1)
 		throw LatexException("Caution, you say vector but provide matrix as data !");
 	
 	//split
-	CMRStringVector vs = cmrStringSplit(data,"&");
+	StringVector vs = cmrStringSplit(data,"&");
 	addDimension(vs.size());
 	
 	//push all
-	for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
+	for (StringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
 		formulas.push_back(LatexFormulas(*it));
 	
 // 	if (values.size() == 1)
@@ -106,19 +106,19 @@ void CMRProjectConstant::loadValuesMatrix ( const string& data )
 	if(data.empty())
 		throw LatexException("Invalid empty data to be loaded as scalar !");
 	
-	CMRStringVector ms = cmrStringSplit(data,"\\\\");
+	StringVector ms = cmrStringSplit(data,"\\\\");
 	dim1 = ms.size();
 	
-	for (CMRStringVector::const_iterator it = ms.begin() ; it != ms.end() ; ++it)
+	for (StringVector::const_iterator it = ms.begin() ; it != ms.end() ; ++it)
 	{
-		CMRStringVector vs = cmrStringSplit(*it,"&");
+		StringVector vs = cmrStringSplit(*it,"&");
 		if (dim2 == -1)
 		{
 			dim2 = vs.size();
 		} else if(dim2 != vs.size()) {
 			throw LatexException("Caution you prides lines which do not have the same size !");
 		}
-		for (CMRStringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
+		for (StringVector::const_iterator it = vs.begin() ; it != vs.end() ; ++it)
 			formulas.push_back(LatexFormulas(*it));
 	}
 	
@@ -136,10 +136,10 @@ void CMRProjectConstant::addDimension ( int size )
 	switch(dims.size())
 	{
 		case 1:
-			addIndice("\\cmr{cstid}{i}",CMR_CAPTURE_REQUIRED);
+			addIndice("\\cmr{cstid}{i}",CAPTURE_REQUIRED);
 			break;
 		case 2:
-			addIndice("\\cmr{cstid}{j}",CMR_CAPTURE_REQUIRED);
+			addIndice("\\cmr{cstid}{j}",CAPTURE_REQUIRED);
 			break;
 		default:
 			stringstream err;
@@ -152,7 +152,7 @@ void CMRProjectConstant::addDimension ( int size )
 void CMRProjectConstant::printDebug ( std::ostream & out ) const
 {
 	//default
-	CMRProjectEntity::printDebug(out);
+	ProjectEntity::printDebug(out);
 	
 	//dims
 	out << "    - dims       : " << dims.size() << " : [ ";
@@ -219,7 +219,7 @@ void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectCont
 void CMRProjectConstant::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	//extract matching
-	CMRProjectCaptureMap capture;
+	ProjectCaptureMap capture;
 	
 	//error
 	if (write)
