@@ -11,7 +11,7 @@
 #define CMR_PROJECT_TRANSFORMATION_H
 
 /********************  HEADERS  *********************/
-#include "CMRProjectAction.h"
+#include "ProjectActionOld.h"
 
 /*********************  TYPES  **********************/
 namespace CMRCompiler
@@ -20,18 +20,22 @@ namespace CMRCompiler
 	struct LatexFormulasOld;
 }
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*********************  CLASS  **********************/
 class CMRProjectTransformation
 {
 	public:
 		CMRProjectTransformation(bool loopOnLatexEntities = true);
 		virtual ~CMRProjectTransformation(void);
-		void run(CMRProjectAction * rootAction);
+		void run(ProjectActionOld * rootAction);
 	protected:
 		virtual void init(void);
 		virtual void finish(void);
-		virtual CMRProjectAction::Iterator transform( CMRProjectAction::Iterator action,int depth);
-		virtual void closeNode(CMRProjectAction::Iterator,int depth);
+		virtual ProjectActionOld::Iterator transform( ProjectActionOld::Iterator action,int depth);
+		virtual void closeNode(ProjectActionOld::Iterator,int depth);
 	private:
 		bool loopOnLatexEntities;
 };
@@ -43,7 +47,7 @@ class CMRProjectTransfExtractLoops : public CMRProjectTransformation
 		CMRProjectTransfExtractLoops(void);
 		virtual void init ( void );
 	protected:
-		virtual CMRProjectAction::Iterator transform( CMRProjectAction::Iterator action,int depth);
+		virtual ProjectActionOld::Iterator transform( ProjectActionOld::Iterator action,int depth);
 	private:
 		int tmpId;
 };
@@ -56,7 +60,7 @@ class CMRProjectTransfImplicitMul : public CMRProjectTransformation
 	protected:
 		void replaceImplMul(CMRCompiler::LatexFormulasListOld & formula);
 		void replaceImplMul(CMRCompiler::LatexFormulasOld & formula);
-		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );
+		virtual ProjectActionOld::Iterator transform ( ProjectActionOld::Iterator action, int depth );
 };
 
 /*********************  CLASS  **********************/
@@ -66,16 +70,18 @@ class CMRProjectTransfExpandFrac : public CMRProjectTransformation
 		void expandFrac(CMRCompiler::LatexFormulasListOld & forumlas);
 		void expandFrac(CMRCompiler::LatexEntityOld & entity);
 		void expandFrac(CMRCompiler::LatexFormulasOld & forumlas);
-		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );
+		virtual ProjectActionOld::Iterator transform ( ProjectActionOld::Iterator action, int depth );
 };
 
 /*********************  CLASS  **********************/
 class CMRProjectTransfExpendExponent : public CMRProjectTransformation
 {
 	protected:
-		void expandExponent( CMRCompiler::LatexFormulasOld& formulas, CMRProjectAction& action );
-		void expandExponent( CMRCompiler::LatexEntityOld& entity, CMRProjectAction& action );
-		virtual CMRProjectAction::Iterator transform ( CMRProjectAction::Iterator action, int depth );
+		void expandExponent( CMRCompiler::LatexFormulasOld& formulas, ProjectActionOld& action );
+		void expandExponent( CMRCompiler::LatexEntityOld& entity, ProjectActionOld& action );
+		virtual ProjectActionOld::Iterator transform ( ProjectActionOld::Iterator action, int depth );
 };
+
+}
 
 #endif //CMR_PROJECT_TRANSFORMATION_H

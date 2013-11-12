@@ -12,7 +12,7 @@
 #include "../../parsor/LatexFormula.h"
 #include <sstream>
 #include "MockProjectEntity.h"
-#include "../CMRGenCode.h"
+#include "GenCode.h"
 
 /**********************  USING  *********************/
 using namespace testing;

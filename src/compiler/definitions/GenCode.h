@@ -7,23 +7,27 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_GEN_CODE_H
-#define CMR_GEN_CODE_H
+#ifndef CMR_COMPILER_GEN_CODE_H
+#define CMR_COMPILER_GEN_CODE_H
 
 /********************  HEADERS  *********************/
 #include <ostream>
 
+class CMRProjectContext;
+
 /********************  NAMESPACE  *******************/
-namespace CMRCompilerOld
+namespace CMRCompiler
 {
 
-struct CMRProjectContext;
+/*********************  TYPES  **********************/
+class LatexFormulas;
+class LatexEntity;
 
 /*******************  FUNCTION  *********************/
-std::ostream& cmrGenEqCCode(std::ostream& out, const CMRProjectContext& context, CMRCompiler::LatexEntityOld& entity);
-std::ostream& cmrGenEqCCode ( std::ostream& out, const CMRProjectContext& context, CMRCompiler::LatexFormulasOld& formula );
-bool latexEntityIsInteger(CMRCompiler::LatexEntityOld & entity);
+std::ostream& cmrGenEqCCode(std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity);
+std::ostream& cmrGenEqCCode ( std::ostream& out, const CMRProjectContext& context, const LatexFormulas& formula );
+bool latexEntityIsInteger(const LatexEntity & entity);
 
 }
 
-#endif //CMR_GEN_CODE_H
+#endif //CMR_COMPILER_GEN_CODE_H

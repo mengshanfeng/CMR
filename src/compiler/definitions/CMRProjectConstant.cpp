@@ -16,7 +16,7 @@
 #include "CMRProjectConstant.h"
 #include "../parsor/ParsorBasics.h"
 #include "../parsor/LatexFormula.h"
-#include "CMRGenCode.h"
+#include "GenCode.h"
 #include "../transformations/CMRModelBasedReplacement.h"
 
 /********************  NAMESPACE  *******************/

@@ -5,6 +5,10 @@
 /********************  HEADERS  *********************/
 #include "CMRProjectEntity.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*********************  CLASS  **********************/
 //<param short_name="R" long_name="relax_param" type="double" unit="??" estimated_min="0" estimated_max="1.3" value="1" comment=""/>
 class CMREntityConstant : public CMRProjectEntity
@@ -28,5 +32,7 @@ class CMREntityConstant : public CMRProjectEntity
 		CMRConstantDimensionsVector dims;
 		CMRConstantValueVector values;
 };
+
+}
 
 #endif //CMR_PROJECT_CONSTANT_H

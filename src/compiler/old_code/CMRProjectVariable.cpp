@@ -18,6 +18,10 @@
 using namespace std;
 using namespace CMRCompiler;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
 CMRProjectVariable::CMRProjectVariable ( const string& latexName, const string& longName , const std::string & type) 
 	: CMRProjectEntity ( latexName, longName )
@@ -134,4 +138,6 @@ ostream& CMRProjectVariable::genUsageCCode(ostream& out, const CMRProjectContext
 	}
 	
 	return out;
+}
+
 }

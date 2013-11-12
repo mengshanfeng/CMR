@@ -24,9 +24,9 @@ CMRProjectConstant& CMRProject2::addConstant ( const std::string& latexName, con
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction& CMRProject2::addAction ( std::string name, std::string descr )
+ProjectAction& CMRProject2::addAction ( std::string name, std::string descr )
 {
-	CMRProjectAction * action = new CMRProjectAction(name,descr,&rootContext);
+	ProjectAction * action = new ProjectAction(name,descr,&rootContext);
 	actions.push_back(action);
 	return *action;
 }
@@ -58,9 +58,9 @@ CMRProjectIterator& CMRProject2::addIterator ( const std::string& latexName, con
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectMeshVar& CMRProject2::addvariable ( const std::string& latexName, const std::string& longName, const std::string& type )
+ProjectMeshVar& CMRProject2::addvariable ( const std::string& latexName, const std::string& longName, const std::string& type )
 {
-	CMRProjectMeshVar * tmp = new CMRProjectMeshVar(latexName,longName,type);
+	ProjectMeshVar * tmp = new ProjectMeshVar(latexName,longName,type);
 	variables.push_back(tmp);
 	rootContext.addEntry(tmp);
 	//TODO create alias

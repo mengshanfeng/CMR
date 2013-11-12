@@ -13,6 +13,10 @@
 /********************  HEADERS  *********************/
 #include "CMRProjectEntity.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*********************  CLASS  **********************/
 class CMRProjectIterator : public CMRProjectEntity
 {
@@ -25,5 +29,7 @@ class CMRProjectIterator : public CMRProjectEntity
 		int start;
 		int end;
 };
+
+}
 
 #endif //CMR_PROJECT_ITERATOR_H

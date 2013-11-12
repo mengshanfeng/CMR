@@ -18,6 +18,10 @@
 using namespace std;
 using namespace CMRCompiler;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
 CMRProjectDefinition::CMRProjectDefinition(const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext)
 	:CMRProjectEntity(latexName,longName), ops("body","body",parentContext)
@@ -91,7 +95,7 @@ CMRProjectEquation& CMRProjectDefinition::addEquation(const string& latexName, c
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction& CMRProjectDefinition::addSubBlock(string loopDescr, string parameter, CMRProjectCodeTreeInsert location)
+ProjectActionOld& CMRProjectDefinition::addSubBlock(string loopDescr, string parameter, CMRProjectCodeTreeInsert location)
 {
 	return ops.addSubBlock(loopDescr,parameter,location);
 }
@@ -114,4 +118,6 @@ void CMRProjectDefinition::madeCaptureIndice ( const string name, CMRCaptureType
 {
 	CMRProjectEntity::madeCaptureIndice ( name, capture );
 	this->ops.addContextEntry(new CMRProjectLocalVariable(name,"tmpvariable"));
+}
+
 }

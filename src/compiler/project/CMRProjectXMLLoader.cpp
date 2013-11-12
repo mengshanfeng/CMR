@@ -183,7 +183,7 @@ void CMRProjectXMLLoader::loadMeshVar ( CMRProject2& project, CMRXmlNode& node )
 	cmrDebug("Load mesh variable %s -> %s",mathName.c_str(),longName.c_str());
 
 	//create
-	CMRProjectMeshVar & var = project.addvariable(mathName,longName,type);
+	ProjectMeshVar & var = project.addvariable(mathName,longName,type);
 
 	//loop on extra dims
 	CMRXmlNode extraDimsNode = node.getUniqChild(CMR_NODE_EXTRA_DIMS);
@@ -377,7 +377,7 @@ void CMRProjectXMLLoader::loadCellAction ( CMRProject2& project, CMRXmlNode& nod
 	string name = node.getNonEmptyProperty("name");
 
 	//create the definition
-	CMRProjectAction & action = project.addAction(name);
+	ProjectAction & action = project.addAction(name);
 
 	//load code
 	CMRXmlNode cur = node.getFirstChild();

@@ -8,18 +8,20 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "../transformations/CMRTransformation.h"
+#include "transformations/CMRTransformation.h"
+#include "common/LangDef.h"
 #include "common/Common.h"
-#include "../common/CodeTemplate.h"
-#include "../common/LangDef.h"
-#include "CMRProjectAction.h"
+#include "ProjectAction.h"
 
 /**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction::CMRProjectAction ( const string& name, const string& descr, CMRProjectContext* parentContext )
+ProjectAction::ProjectAction ( const string& name, const string& descr, CMRProjectContext* parentContext )
 	:ops(parentContext)
 {
 	this->name = name;
@@ -27,37 +29,37 @@ CMRProjectAction::CMRProjectAction ( const string& name, const string& descr, CM
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEquation& CMRProjectAction::addEquation ( const string& latexName, const string& compute, const string& op )
+CMRProjectCodeEquation& ProjectAction::addEquation ( const string& latexName, const string& compute, const string& op )
 {
 	return ops.addEquation(latexName,compute,op);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectIterator& CMRProjectAction::addIterator ( const string& latexName, const string& longName, int start, int end )
+CMRProjectIterator& ProjectAction::addIterator ( const string& latexName, const string& longName, int start, int end )
 {
 	return ops.addIterator(latexName,longName,start,end);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeIteratorLoop& CMRProjectAction::addIteratorLoop ( const string& iterator )
+CMRProjectCodeIteratorLoop& ProjectAction::addIteratorLoop ( const string& iterator )
 {
 	return ops.addIteratorLoop(iterator);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectLocalVariable& CMRProjectAction::addLocalVariable ( const string& latexName, const string& longName, const string& type, const string& defaultValue )
+CMRProjectLocalVariable& ProjectAction::addLocalVariable ( const string& latexName, const string& longName, const string& type, const string& defaultValue )
 {
 	return ops.addLocalVariable(latexName,longName,type,defaultValue);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::runTransformation ( CMRTransformation& transf )
+void ProjectAction::runTransformation ( CMRTransformation& transf )
 {
 	transf.run(ops);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEquation& CMRProjectAction::addEquation ( const string& eq )
+CMRProjectCodeEquation& ProjectAction::addEquation ( const string& eq )
 {
 	//search position of =
 	int equalPos = -1;
@@ -80,7 +82,7 @@ CMRProjectCodeEquation& CMRProjectAction::addEquation ( const string& eq )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::LangDef & lang,const CMRProjectContext& context, int padding ) const
+void ProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::LangDef & lang,const CMRProjectContext& context, int padding ) const
 {
 	CMRCompiler::CodeTemplateValueDic dic;
 	dic.set("descr",this->descr);
@@ -93,65 +95,65 @@ void CMRProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::Lan
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectAction::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	assert(false);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::printDebug ( ostream& out ) const
+void ProjectAction::printDebug ( ostream& out ) const
 {
 	out << "TODO" << endl;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectContext& CMRProjectAction::getContext ( void )
+CMRProjectContext& ProjectAction::getContext ( void )
 {
 	return ops.getContext();
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEntry* CMRProjectAction::insert ( CMRProjectCodeEntry* entry, CMRProjectCodeTreeInsert location )
+CMRProjectCodeEntry* ProjectAction::insert ( CMRProjectCodeEntry* entry, CMRProjectCodeTreeInsert location )
 {
 	return ops.insert(entry,location);
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectActionParameter& CMRProjectAction::addParameter ( const string& latexName, const string& longName, const string& type )
+ProjectActionParameter& ProjectAction::addParameter ( const string& latexName, const string& longName, const string& type )
 {
-	CMRProjectActionParameter * res = new CMRProjectActionParameter(latexName,longName,type);
+	ProjectActionParameter * res = new ProjectActionParameter(latexName,longName,type);
 	parameters.push_back(res);
 	ops.getContext().addEntry(res);
 	return *res;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectActionParameter::CMRProjectActionParameter ( const string& latexName, const string& longName, const string& type ) 
+ProjectActionParameter::ProjectActionParameter ( const string& latexName, const string& longName, const string& type ) 
 	: CMRProjectEntity ( latexName, longName )
 {
 	this->type = type;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectActionParameter::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int padding ) const
+void ProjectActionParameter::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int padding ) const
 {
 	return;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectActionParameter::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectActionParameter::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	out << this->getLongName();
 }
 
 /*******************  FUNCTION  *********************/
-const string& CMRProjectActionParameter::getType ( void ) const
+const string& ProjectActionParameter::getType ( void ) const
 {
 	return this->type;
 }
 
 /*******************  FUNCTION  *********************/
-CodeTemplateValueActionParameters::CodeTemplateValueActionParameters ( const CMRProjectActionParameterVector* list, const string& separator, bool firstSeparator, bool lastSeparator, bool indentEach )
+CodeTemplateValueActionParameters::CodeTemplateValueActionParameters ( const ProjectActionParameterVector* list, const string& separator, bool firstSeparator, bool lastSeparator, bool indentEach )
 {
 	assert(list != NULL);
 	this->list = list;
@@ -167,7 +169,7 @@ void CodeTemplateValueActionParameters::genCode ( ostream& out, int indent ) con
 	if (firstSeparator && list->empty() == false)
 		out << separator;
 	
-	for (CMRProjectActionParameterVector::const_iterator it = list->begin() ; it != list->end() ; ++it)
+	for (ProjectActionParameterVector::const_iterator it = list->begin() ; it != list->end() ; ++it)
 	{
 		if (it != list->begin())
 			out << separator;
@@ -182,4 +184,6 @@ void CodeTemplateValueActionParameters::genCode ( ostream& out, int indent ) con
 	
 	if (lastSeparator && list->empty() == false)
 		out << separator;
+}
+
 }

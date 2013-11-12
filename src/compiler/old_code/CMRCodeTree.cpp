@@ -12,6 +12,10 @@
 #include <cstdlib>
 #include "CMRCodeTree.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
 CMRCodeTree::CMRCodeTree(void )
 {
@@ -425,4 +429,6 @@ int CMRCodeTree::getDepth ( void ) const
 		current = current->parent;
 	}
 	return tmp;
+}
+
 }

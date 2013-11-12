@@ -12,6 +12,7 @@
 
 /**********************  USING  *********************/
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 void test1(void)
@@ -32,7 +33,7 @@ void test1(void)
 	reynolds.loadValues("300",0);
 	///////
 		
-	CMRProjectMeshVar & var2 = project.addvariable("f_{i,j,k}","pdf","double");
+	ProjectMeshVar & var2 = project.addvariable("f_{i,j,k}","pdf","double");
 	var2.addDim("k",9);
 		
 	project.addvariable("T_{i,j}","cell_type","LBMCellType");

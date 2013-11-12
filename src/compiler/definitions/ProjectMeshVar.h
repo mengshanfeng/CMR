@@ -7,30 +7,33 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_PROJECT_VARIABLE_H
-#define CMR_PROJECT_VARIABLE_H
+#ifndef CMR_COMPILER_PROJECT_VARIABLE_H
+#define CMR_COMPILER_PROJECT_VARIABLE_H
 
-
+/********************  HEADERS  *********************/
 #include "CMRProjectEntity.h"
-#include "parsor/ParsorBasics.h"
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*********************  STRUCT  *********************/
-struct CMRProjectMeshVarDef
+struct ProjectMeshVarDef
 {
-	CMRProjectMeshVarDef(const std::string & name,int dims,int start = 0);
+	ProjectMeshVarDef(const std::string & name,int dims,int start = 0);
 	std::string name;
 	int dims;
 	int start;
 };
 
 /*********************  TYPES  **********************/
-typedef std::vector<CMRProjectMeshVarDef> CMRProjectMeshVarDefVector;
+typedef std::vector<ProjectMeshVarDef> ProjectMeshVarDefVector;
 
 /*********************  CLASS  **********************/
-class CMRProjectMeshVar : public CMRProjectEntity
+class ProjectMeshVar : public CMRProjectEntity
 {
 	public:
-		CMRProjectMeshVar ( const std::string& latexName, const std::string& longName, const std::string& type );
+		ProjectMeshVar ( const std::string& latexName, const std::string& longName, const std::string& type );
 		void addDim( const std::string& name,int size, int start = 0);
 		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int indent = 0 ) const;
@@ -43,7 +46,9 @@ class CMRProjectMeshVar : public CMRProjectEntity
 		int ghostDepths;
 		std::string type;
 		std::string memoryModel;
-		CMRProjectMeshVarDefVector defs;
+		ProjectMeshVarDefVector defs;
 };
 
-#endif //CMR_PROJECT_VARIABLE_H
+}
+
+#endif //CMR_COMPILER_PROJECT_VARIABLE_H

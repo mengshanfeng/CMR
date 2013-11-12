@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 #include <CMRProjectCode.h>
 #include <sstream>
-#include <CMRProjectAction.h>
+#include <ProjectAction.h>
 #include <../common/LangDef.h>
 
 /**********************  USING  *********************/
@@ -39,13 +39,13 @@ struct Actionupdate_enery\n\
 /*******************  FUNCTION  *********************/
 TEST(TestProjectAction,testConstructor)
 {
-	CMRProjectAction action("update_enery","blablablalbl");
+	ProjectAction action("update_enery","blablablalbl");
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectAction,testAddBasicActions)
 {
-	CMRProjectAction action("update_enery","blablablalbl");
+	ProjectAction action("update_enery","blablablalbl");
 	action.addEquation("E","4*5");
 	action.addIteratorLoop("k");
 	action.addLocalVariable("t","tmp","int","0");
@@ -71,7 +71,7 @@ TEST(TestProjectAction,testAddBasicActions)
 TEST(TestProjectAction,testGenDefinitionCCode)
 {
 	LangDef def;
-	CMRProjectAction action("update_enery","blablablalbl");
+	ProjectAction action("update_enery","blablablalbl");
 	action.addLocalVariable("E","enegry","double","0");
 	action.addIterator("k","k",1,10);
 	action.addLocalVariable("t","tmp","int","0");

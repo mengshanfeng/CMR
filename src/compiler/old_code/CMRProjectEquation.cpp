@@ -15,6 +15,10 @@
 using namespace std;
 using namespace CMRCompiler;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
 CMRProjectEquation::CMRProjectEquation ( const string& latexName, const string& longName, const string& compute ) 
 	: CMRProjectEntity ( latexName, longName )
@@ -45,4 +49,6 @@ LatexEntityOld* extractFirstInnerLoop(LatexFormulasOld & formula)
 			return *it;
 	}
 	return NULL;
+}
+
 }

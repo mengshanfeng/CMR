@@ -9,17 +9,19 @@
 
 /********************  HEADERS  *********************/
 #include <cassert>
-#include <iostream>
 #include <sstream>
-#include <cstdlib>
-#include "CMRProjectMeshVar.h"
-#include "CMRGenCode.h"
+#include "GenCode.h"
+#include "ProjectMeshVar.h"
 
+/**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
-CMRProjectMeshVar::CMRProjectMeshVar ( const string& latexName, const string& longName , const std::string & type) 
+ProjectMeshVar::ProjectMeshVar ( const string& latexName, const string& longName , const std::string & type) 
 	: CMRProjectEntity ( latexName, longName )
 {
 	//setup capture
@@ -36,16 +38,16 @@ CMRProjectMeshVar::CMRProjectMeshVar ( const string& latexName, const string& lo
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectMeshVar::addDim ( const string& name,int size,int start )
+void ProjectMeshVar::addDim ( const string& name,int size,int start )
 {
 	assert(size > 0);
 	assert(name.empty() == false);
-	defs.push_back(CMRProjectMeshVarDef(name,size,start));
+	defs.push_back(ProjectMeshVarDef(name,size,start));
 	changeCaptureType(name,CMR_CAPTURE_REQUIRED);
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectMeshVar::genCPPAccessorDefinition(ostream& out)
+ostream& ProjectMeshVar::genCPPAccessorDefinition(ostream& out)
 {
 	out << "\t\t\tCMRCellAccessor<" << type;
 	for (int i = 0 ; i < defs.size() ; i++)
@@ -55,7 +57,7 @@ ostream& CMRProjectMeshVar::genCPPAccessorDefinition(ostream& out)
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectMeshVar::genCPPAccessorAddVar(ostream& out)
+ostream& ProjectMeshVar::genCPPAccessorAddVar(ostream& out)
 {
 	//definition
 	out << "\t//define variable " << getLatexName() << endl;
@@ -64,27 +66,27 @@ ostream& CMRProjectMeshVar::genCPPAccessorAddVar(ostream& out)
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectMeshVar::genCPPAccessorConstrSys(ostream& out,int id)
+ostream& ProjectMeshVar::genCPPAccessorConstrSys(ostream& out,int id)
 {
 	out << getLongName() << "*(sys.getDomain(" << id << ",tstep)),x,y,absolute)" << endl;
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-ostream& CMRProjectMeshVar::genCPPAccessorConstrAcc(ostream& out)
+ostream& ProjectMeshVar::genCPPAccessorConstrAcc(ostream& out)
 {
 	out << getLongName() << "(acc." << getLongName() << ",x,y,absolute)" << endl;
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectMeshVar::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int indent ) const
+void ProjectMeshVar::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int indent ) const
 {
 	throw LatexException("Variable must be defined by calling special functions from project structure, not directly by genDefinitionCCode function.");
 }
 
 /*******************  FUNCTION  *********************/
-string CMRProjectMeshVar::getTypeWithDims ( void ) const
+string ProjectMeshVar::getTypeWithDims ( void ) const
 {
 	stringstream res;
 	res << type;
@@ -94,7 +96,7 @@ string CMRProjectMeshVar::getTypeWithDims ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	CMRProjectCaptureMap capture;
 
@@ -123,9 +125,11 @@ void CMRProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& co
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectMeshVarDef::CMRProjectMeshVarDef ( const string& name, int dims, int start )
+ProjectMeshVarDef::ProjectMeshVarDef ( const string& name, int dims, int start )
 {
 	this->name = name;
 	this->dims = dims;
 	this->start = start;
+}
+
 }

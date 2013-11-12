@@ -16,6 +16,10 @@
 #include <vector>
 #include "parsor/LatexEntityOld.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /********************  ENUM  ************************/
 enum CMRCaptureType
 {
@@ -58,5 +62,7 @@ class CMRProjectEntity
 		CMRCompiler::LatexEntityOld latexEntity;
 		bool captureExponent;
 };
+
+}
 
 #endif //CMR_PROJECT_ENTITY_H

@@ -9,11 +9,12 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include "CMRProjectCode.h"
-#include <CMRProjectMeshVar.h>
+#include "ProjectMeshVar.h"
 
 /**********************  USING  *********************/
 using namespace testing;
 using namespace std;
+using namespace CMRCompiler;
 
 /*******************  FUNCTION  *********************/
 TEST(TestCConstruct,testConstructor)
@@ -41,7 +42,7 @@ TEST(TestCConstruct,testUserArgs1)
 {
 	//setup context
 	CMRProjectContext context;
-	CMRProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);
@@ -63,7 +64,7 @@ TEST(TestCConstruct,testUserArgs2)
 {
 	//setup context
 	CMRProjectContext context;
-	CMRProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);
@@ -86,7 +87,7 @@ TEST(TestCConstruct,testUserArgs3)
 {
 	//setup context
 	CMRProjectContext context;
-	CMRProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);
@@ -109,7 +110,7 @@ TEST(TestCConstruct,testAutoArgs1)
 {
 	//setup context
 	CMRProjectContext context;
-	CMRProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);
@@ -130,7 +131,7 @@ TEST(TestCConstruct,testMixArgs)
 {
 	//setup context
 	CMRProjectContext context;
-	CMRProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);

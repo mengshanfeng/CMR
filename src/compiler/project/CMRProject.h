@@ -15,8 +15,8 @@
 #include "../definitions/CMRProjectEntity.h"
 #include "../definitions/CMRProjectContext.h"
 #include "../definitions/CMRProjectConstant.h"
-#include "../definitions/CMRProjectMeshVar.h"
-#include "../definitions/CMRProjectAction.h"
+#include "../definitions/ProjectMeshVar.h"
+#include "../definitions/ProjectAction.h"
 #include "../definitions/CMRProjectIterator.h"
 #include "../definitions/CMRProjectDefinition.h"
 #include <definitions/CMRProjectCallAction.h>
@@ -25,9 +25,9 @@
 
 /*********************  TYPES  **********************/
 typedef std::vector <CMRProjectConstant*> CMRProjectConstantVector;
-typedef std::vector <CMRProjectMeshVar*> CMRProjectVariableVector;
+typedef std::vector <CMRCompiler::ProjectMeshVar*> CMRProjectVariableVector;
 typedef std::vector <CMRProjectIterator*> CMRProjectIteratorVector;
-typedef std::vector <CMRProjectAction*> CMRProjectActionVector;
+typedef std::vector <CMRCompiler::ProjectAction*> CMRProjectActionVector;
 typedef std::vector <CMRProjectDefinition*> CMRProjectDefinitionVector;
 typedef std::vector <CMRProjectCallAction*> CMRProjectCallActionVector;
 
@@ -37,8 +37,8 @@ class CMRProject2
 	public:
 		CMRProject2(void);
 		CMRProjectConstant & addConstant(const std::string& latexName, const std::string& longName);
-		CMRProjectMeshVar & addvariable(const std::string& latexName, const std::string& longName, const std::string& type);
-		CMRProjectAction & addAction(std::string name,std::string descr = "");
+		CMRCompiler::ProjectMeshVar & addvariable(const std::string& latexName, const std::string& longName, const std::string& type);
+		CMRCompiler::ProjectAction & addAction(std::string name,std::string descr = "");
 		CMRProjectDefinition & addDefinition(const std::string& latexName, const std::string& longName);
 		CMRProjectDefinition& addDefinition( const std::string& latexName, const std::string& longName, const std::string& compute );
 		CMRProjectIterator & addIterator(const std::string& latexName, const std::string& longName ,int start, int end);

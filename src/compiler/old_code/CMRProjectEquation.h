@@ -14,6 +14,10 @@
 #include "CMRProjectEntity.h"
 #include <string>
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*********************  CLASS  **********************/
 class CMRProjectEquation : public CMRProjectEntity
 {
@@ -27,5 +31,7 @@ class CMRProjectEquation : public CMRProjectEntity
 
 /*******************  FUNCTION  *********************/
 CMRCompiler::LatexEntityOld* extractFirstInnerLoop(CMRCompiler::LatexFormulasOld & formula);
+
+}
 
 #endif

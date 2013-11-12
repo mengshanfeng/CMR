@@ -12,13 +12,17 @@
 #include <iostream>
 #include <sstream>
 #include "CMRProjectTransformation.h"
-#include "CMRProjectAction.h"
+#include "ProjectActionOld.h"
 #include "parsor/TexParsor.h"
 #include "parsor/LatexEntityOld.h"
 #include "parsor/ParsorBasics.h"
 
 using namespace std;
 using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
 
 /*******************  FUNCTION  *********************/
 CMRProjectTransformation::CMRProjectTransformation ( bool loopOnLatexEntities)
@@ -45,7 +49,7 @@ void CMRProjectTransformation::finish ( void )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransformation::run ( CMRProjectAction* rootAction )
+void CMRProjectTransformation::run ( ProjectActionOld* rootAction )
 {
 	int depth ;
 	int initDepth;
@@ -57,7 +61,7 @@ void CMRProjectTransformation::run ( CMRProjectAction* rootAction )
 	init();
 	
 	//loop until end
-	CMRProjectAction::Iterator it(rootAction);
+	ProjectActionOld::Iterator it(rootAction);
 	
 	//setup
 	initDepth = depth = it->getDepth();
@@ -65,7 +69,7 @@ void CMRProjectTransformation::run ( CMRProjectAction* rootAction )
 	//loop
 	while(!it.isEnd() && depth >= initDepth)
 	{
-		CMRProjectAction::Iterator next = transform(it,depth);
+		ProjectActionOld::Iterator next = transform(it,depth);
 		if (next != it) {
 			it = next;
 			depth = it->getDepth();
@@ -91,13 +95,13 @@ void CMRProjectTransformation::run ( CMRProjectAction* rootAction )
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction::Iterator CMRProjectTransformation::transform ( CMRProjectAction::Iterator action,int depth )
+ProjectActionOld::Iterator CMRProjectTransformation::transform ( ProjectActionOld::Iterator action,int depth )
 {
 	return action;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransformation::closeNode ( CMRProjectAction::Iterator , int depth )
+void CMRProjectTransformation::closeNode ( ProjectActionOld::Iterator , int depth )
 {
 
 }
@@ -132,7 +136,7 @@ static std::string getLongTempName(int id)
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction::Iterator CMRProjectTransfExtractLoops::transform ( CMRProjectAction::Iterator action, int depth )
+ProjectActionOld::Iterator CMRProjectTransfExtractLoops::transform ( ProjectActionOld::Iterator action, int depth )
 {
 	LatexEntityOld * term;
 	string op;
@@ -153,7 +157,7 @@ CMRProjectAction::Iterator CMRProjectTransfExtractLoops::transform ( CMRProjectA
 			tmpId++;
 			action->addEquation(tmpName,longTmpName,"0",CMR_INSERT_BEFORE);
 			cout << "Replace loops with iterator (" << term->subscriptTotalValue << ") and core (" << term->params[0]->string << ")" << endl;
- 			CMRProjectAction & ac = action->addIteratorLoop(term->subscriptTotalValue,CMR_INSERT_BEFORE);
+ 			ProjectActionOld & ac = action->addIteratorLoop(term->subscriptTotalValue,CMR_INSERT_BEFORE);
 			ac.addEquation(tmpName,longTmpName,string(tmpName) + op + term->params[0]->string);
 			cmrParseLatexFormula(f,tmpName);
 			*term = *f.childs[0];
@@ -215,7 +219,7 @@ void CMRProjectTransfImplicitMul::replaceImplMul ( LatexFormulasOld & formula )
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction::Iterator CMRProjectTransfImplicitMul::transform ( CMRProjectAction::Iterator action, int depth )
+ProjectActionOld::Iterator CMRProjectTransfImplicitMul::transform ( ProjectActionOld::Iterator action, int depth )
 {
 	if (action->getName() == "cmrEquation")
 	{
@@ -226,7 +230,7 @@ CMRProjectAction::Iterator CMRProjectTransfImplicitMul::transform ( CMRProjectAc
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction::Iterator CMRProjectTransfExpandFrac::transform ( CMRProjectAction::Iterator action, int depth )
+ProjectActionOld::Iterator CMRProjectTransfExpandFrac::transform ( ProjectActionOld::Iterator action, int depth )
 {
 	if (action->getName() == "cmrEquation")
 	{
@@ -288,7 +292,7 @@ void CMRProjectTransfExpandFrac::expandFrac ( LatexFormulasOld& forumlas )
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction::Iterator CMRProjectTransfExpendExponent::transform ( CMRProjectAction::Iterator action, int depth )
+ProjectActionOld::Iterator CMRProjectTransfExpendExponent::transform ( ProjectActionOld::Iterator action, int depth )
 {
 	if (action->getName() == "cmrEquation")
 	{
@@ -299,7 +303,7 @@ CMRProjectAction::Iterator CMRProjectTransfExpendExponent::transform ( CMRProjec
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfExpendExponent::expandExponent ( LatexFormulasOld& formulas,CMRProjectAction & action)
+void CMRProjectTransfExpendExponent::expandExponent ( LatexFormulasOld& formulas,ProjectActionOld & action)
 {
 	LatexEntityVectorOld & elems = formulas.childs;
 	for (LatexEntityVectorOld::iterator it = elems.begin() ;  it != elems.end() ; ++it)
@@ -307,7 +311,7 @@ void CMRProjectTransfExpendExponent::expandExponent ( LatexFormulasOld& formulas
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectTransfExpendExponent::expandExponent ( LatexEntityOld& entity ,CMRProjectAction & action)
+void CMRProjectTransfExpendExponent::expandExponent ( LatexEntityOld& entity ,ProjectActionOld & action)
 {
 	if (entity.name[0] == '\\' || entity.superscript.empty())
 		return;
@@ -343,4 +347,6 @@ void CMRProjectTransfExpendExponent::expandExponent ( LatexEntityOld& entity ,CM
 			entity.params.push_back(f);
 		}
 	}
+}
+
 }

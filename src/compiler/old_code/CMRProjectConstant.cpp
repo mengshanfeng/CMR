@@ -20,6 +20,10 @@
 using namespace std;
 using namespace CMRCompiler;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
 CMREntityConstant::CMREntityConstant ( const string& latexName, const string& longName) 
 	: CMRProjectEntity ( latexName, longName )
@@ -205,4 +209,6 @@ ostream& CMREntityConstant::genUsageCCode(ostream& out, const CMRProjectContext&
 	}
 	
 	return out;
+}
+
 }

@@ -16,6 +16,10 @@
 #include "CMRProjectContext.h"
 #include "CMRProjectEquation.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*********************  TYPES  **********************/
 enum CMRProjectCodeTreeInsert
 {
@@ -121,5 +125,7 @@ class CMRCodeTreeAbstract : public CMRCodeTree
 	private:
 		T value;
 };
+
+}
 
 #endif //CMR_CODE_TREE_H

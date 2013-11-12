@@ -14,6 +14,10 @@
 #include "CMRProjectEntity.h"
 #include "parsor/ParsorBasics.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*********************  CLASS  **********************/
 class CMRProjectVariable : public CMRProjectEntity
 {
@@ -35,5 +39,7 @@ class CMRProjectVariable : public CMRProjectEntity
 		CMRConstantDimensionsVector dimStart;
 		CMRCompiler::StringVector dimNames;
 };
+
+}
 
 #endif //CMR_PROJECT_VARIABLE_H

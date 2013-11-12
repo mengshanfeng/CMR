@@ -12,17 +12,22 @@
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
-#include "CMRProjectAction.h"
+#include "ProjectActionOld.h"
 #include "CMRProject.h"
 #include "parsor/TexParsor.h"
 #include "parsor/ParsorBasics.h"
 #include "CMRProjectIterator.h"
 #include "CMRGenCode.h"
 
+/**********************  USING  *********************/
 using namespace std;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
-CMRProjectAction::CMRProjectAction ( string name, string descr , CMRProjectContext  * parentContext)
+ProjectActionOld::ProjectActionOld ( string name, string descr , CMRProjectContext  * parentContext)
 	:context(parentContext)
 {
 	this->name = name;
@@ -31,9 +36,9 @@ CMRProjectAction::CMRProjectAction ( string name, string descr , CMRProjectConte
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectEquation& CMRProjectAction::addEquation ( const string& latexName, const string& longName, const string& compute,CMRProjectCodeTreeInsert location )
+CMRProjectEquation& ProjectActionOld::addEquation ( const string& latexName, const string& longName, const string& compute,CMRProjectCodeTreeInsert location )
 {
-	CMRProjectAction * tmpBlock = new CMRProjectAction("cmrEquation",latexName);
+	ProjectActionOld * tmpBlock = new ProjectActionOld("cmrEquation",latexName);
 	CMRProjectEquation * tmp = tmpBlock->eq = new CMRProjectEquation(latexName,longName,compute);
 	insertAction(tmpBlock,location);
 	
@@ -44,24 +49,24 @@ CMRProjectEquation& CMRProjectAction::addEquation ( const string& latexName, con
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction& CMRProjectAction::addSubBlock ( string loopDescr, string parameter,CMRProjectCodeTreeInsert location )
+ProjectActionOld& ProjectActionOld::addSubBlock ( string loopDescr, string parameter,CMRProjectCodeTreeInsert location )
 {
-	CMRProjectAction * tmpBlock = new CMRProjectAction("cmrSubBlock",loopDescr);
+	ProjectActionOld * tmpBlock = new ProjectActionOld("cmrSubBlock",loopDescr);
 	tmpBlock->eq = new CMRProjectEquation(parameter,"cmrIndice",parameter);
 	insertAction(tmpBlock,location);
 	return *tmpBlock;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction& CMRProjectAction::addIteratorLoop ( const string& iterator ,CMRProjectCodeTreeInsert location)
+ProjectActionOld& ProjectActionOld::addIteratorLoop ( const string& iterator ,CMRProjectCodeTreeInsert location)
 {
-	CMRProjectAction & ac = this->addSubBlock("cmrIteratorLoop",iterator,location);
+	ProjectActionOld & ac = this->addSubBlock("cmrIteratorLoop",iterator,location);
 	ac.context.addEntry(new CMRProjectLocalVariable(iterator,iterator));
 	return ac;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::addContextEntry ( CMRProjectEntity* entity )
+void ProjectActionOld::addContextEntry ( CMRProjectEntity* entity )
 {
 	context.addEntry(entity);
 }
@@ -83,7 +88,7 @@ std::string getLongTempName(int id)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::printDebug(int depth) const
+void ProjectActionOld::printDebug(int depth) const
 {
 	for (int i = 0 ; i < depth ; i++)
 			cout << "\t";
@@ -101,7 +106,7 @@ void CMRProjectAction::printDebug(int depth) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::insertAction(CMRProjectAction* action, CMRProjectCodeTreeInsert location)
+void ProjectActionOld::insertAction(ProjectActionOld* action, CMRProjectCodeTreeInsert location)
 {
 	insert(action,location);
 	
@@ -139,7 +144,7 @@ std::string genCCodeIndent(int depth)
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::checkContext ( CMRProjectContext& context ) const
+void ProjectActionOld::checkContext ( CMRProjectContext& context ) const
 {
 	ConstIterator it(this);
 	const CMRProjectContext * cur = &this->context;
@@ -163,7 +168,7 @@ void CMRProjectAction::checkContext ( CMRProjectContext& context ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genEqCCode(ostream& out, const CMRProjectContext& context, int depth) const
+void ProjectActionOld::genEqCCode(ostream& out, const CMRProjectContext& context, int depth) const
 {
 	//errors
 	assert(eq != NULL);
@@ -191,7 +196,7 @@ void CMRProjectAction::genEqCCode(ostream& out, const CMRProjectContext& context
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::addContextEntry ( CMRProjectEntity* entity, CMRProjectCodeTreeInsert location )
+void ProjectActionOld::addContextEntry ( CMRProjectEntity* entity, CMRProjectCodeTreeInsert location )
 {
 	Iterator it(this);
 
@@ -216,7 +221,7 @@ void CMRProjectAction::addContextEntry ( CMRProjectEntity* entity, CMRProjectCod
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genItLoopCCode ( ostream& out, const CMRProjectContext& context, int depth ) const
+void ProjectActionOld::genItLoopCCode ( ostream& out, const CMRProjectContext& context, int depth ) const
 {
 	CMRProjectContext localContext(&context);
 
@@ -253,7 +258,7 @@ void CMRProjectAction::genItLoopCCode ( ostream& out, const CMRProjectContext& c
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genRootElemCCode ( ostream& out, const CMRProjectContext& context, int depth ) const
+void ProjectActionOld::genRootElemCCode ( ostream& out, const CMRProjectContext& context, int depth ) const
 {
 	CMRProjectContext localContext(&context);
 	for (ConstIterator it = getFirstChild() ; ! it.isEnd() ; ++it)
@@ -263,7 +268,7 @@ void CMRProjectAction::genRootElemCCode ( ostream& out, const CMRProjectContext&
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectAction::genCCode( ostream& out, const CMRProjectContext& context, int depth ) const
+void ProjectActionOld::genCCode( ostream& out, const CMRProjectContext& context, int depth ) const
 {
 	//cases
 	if (depth <= 1)
@@ -284,7 +289,9 @@ void CMRProjectAction::genCCode( ostream& out, const CMRProjectContext& context,
 }
 
 /*******************  FUNCTION  *********************/
-const CMRProjectContext& CMRProjectAction::getContext ( void ) const
+const CMRProjectContext& ProjectActionOld::getContext ( void ) const
 {
 	return context;
+}
+
 }

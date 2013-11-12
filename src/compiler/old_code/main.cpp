@@ -18,7 +18,7 @@
 #include "CMRProjectEquation.h"
 #include "CMRProjectIterator.h"
 #include "CMRProjectVariable.h"
-#include "CMRProjectAction.h"
+#include "ProjectActionOld.h"
 #include "CMRProject.h"
 #include "CMRCodeTree.h"
 #include "CMRProjectTransformation.h"
@@ -27,6 +27,7 @@
 /********************  NAMESPACE  *******************/
 using namespace std;
 using namespace CMRCompiler;
+using namespace CMRCompilerOld;
 
 /*******************  FUNCTION  *********************/
 CMRProjectEquation * convertLoopToEq(LatexEntityOld * entity)

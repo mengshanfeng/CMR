@@ -14,6 +14,10 @@
 #include <vector>
 #include "CMRProjectEntity.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*********************  TYPES  **********************/
 typedef std::vector <CMRProjectEntity*> CMRProjectEntityList;
 
@@ -30,5 +34,7 @@ struct CMRProjectContext
 	const CMRProjectContext * parent;
 	CMRProjectEntityList entities;
 };
+
+}
 
 #endif //CMR_PROJECT_CONTEXT_H

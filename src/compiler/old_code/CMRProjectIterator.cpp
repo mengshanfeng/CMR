@@ -17,6 +17,10 @@
 using namespace std;
 using namespace CMRCompiler;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
 CMRProjectIterator::CMRProjectIterator ( const string& latexName, const string& longName, int start, int end ) 
 	: CMRProjectEntity ( latexName, longName )
@@ -44,4 +48,6 @@ ostream& CMRProjectIterator::genUsageCCode ( ostream& out, const CMRProjectConte
 	cerr << "Error, iterator may not be used out of loop definition : " << latexName << " : " << start << " -> " << end << endl;
 	context.printDebug();
 	abort();
+}
+
 }

@@ -17,37 +17,40 @@
 #include "CMRProjectEquation.h"
 #include "CMRCodeTree.h"
 
+namespace CMRCompilerOld
+{
+
 /*********************  CLASS  *********************/
-class CMRProjectAction : public CMRCodeTree
+class ProjectActionOld : public CMRCodeTree
 {
 	public:
 		class Iterator : public CMRCodeTree::Iterator
 		{
 			public:
-				Iterator(CMRProjectAction * current) :CMRCodeTree::Iterator(current){};
+				Iterator(ProjectActionOld * current) :CMRCodeTree::Iterator(current){};
 				Iterator(CMRCodeTree::Iterator it) :CMRCodeTree::Iterator(it) {};
-				CMRProjectAction & operator*(void) {return *((CMRProjectAction*)current);};
-				CMRProjectAction * operator->(void) {return ((CMRProjectAction*)current);};
+				ProjectActionOld & operator*(void) {return *((ProjectActionOld*)current);};
+				ProjectActionOld * operator->(void) {return ((ProjectActionOld*)current);};
 				Iterator & operator = (CMRCodeTree::Iterator it) {*(CMRCodeTree::Iterator*)this = it; return *this;};
 		};
 		
 		class ConstIterator : public CMRCodeTree::ConstIterator
 		{
 			public:
-				ConstIterator(const CMRProjectAction * current) :CMRCodeTree::ConstIterator(current){};
+				ConstIterator(const ProjectActionOld * current) :CMRCodeTree::ConstIterator(current){};
 				ConstIterator(CMRCodeTree::ConstIterator it) :CMRCodeTree::ConstIterator(it) {};
-				const CMRProjectAction & operator*(void) {return *((const CMRProjectAction*)current);};
-				const CMRProjectAction * operator->(void) {return ((const CMRProjectAction*)current);};
+				const ProjectActionOld & operator*(void) {return *((const ProjectActionOld*)current);};
+				const ProjectActionOld * operator->(void) {return ((const ProjectActionOld*)current);};
 				ConstIterator & operator = (CMRCodeTree::ConstIterator it) {*(CMRCodeTree::ConstIterator*)this = it; return *this;};
 		};
 	public:
-		CMRProjectAction( std::string name, std::string descr, CMRProjectContext* parentContext = NULL );
-		CMRProjectAction & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		ProjectActionOld( std::string name, std::string descr, CMRProjectContext* parentContext = NULL );
+		ProjectActionOld & addSubBlock(std::string loopDescr,std::string parameter,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		CMRProjectEquation& addEquation( const std::string& latexName, const std::string& longName, const std::string& compute,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
-		CMRProjectAction & addIteratorLoop( const std::string& iterator, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		ProjectActionOld & addIteratorLoop( const std::string& iterator, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		void genCCode(std::ostream& out, const CMRProjectContext & context ,int depth) const;
 		void printDebug(int depth) const;
-		void insertAction(CMRProjectAction * action,CMRProjectCodeTreeInsert location);
+		void insertAction(ProjectActionOld * action,CMRProjectCodeTreeInsert location);
 		const std::string & getName(void) const {return name;};
 		const std::string & getDescription(void) const {return description;};
 		CMRProjectEquation & getEquation(void) {return *eq;};
@@ -66,5 +69,7 @@ class CMRProjectAction : public CMRCodeTree
 		std::string description;
 		CMRProjectContext context;
 };
+
+}
 
 #endif //CMR_PROJECT_ACTION_H

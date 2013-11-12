@@ -12,7 +12,7 @@
 #include <cstdio>
 #include "../common/Debug.h"
 #include "CMRProjectCode.h"
-#include "CMRGenCode.h"
+#include "GenCode.h"
 #include "common/Common.h"
 #include "CMRProjectIterator.h"
 

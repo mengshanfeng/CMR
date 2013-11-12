@@ -15,13 +15,17 @@
 #include "CMRProjectEntity.h"
 #include "CMRProjectContext.h"
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 class CMRProjectTransformation;
 /*********************  TYPES  **********************/
 class CMREntityConstant;
 class CMRProjectVariable;
 class CMRProjectIterator;
 class CMRProjectEquation;
-class CMRProjectAction;
+class ProjectActionOld;
 class CMRProjectDefinition;
 struct CMRProjectContext;
 
@@ -29,7 +33,7 @@ struct CMRProjectContext;
 typedef std::vector <CMREntityConstant*> CMRProjectConstantVector;
 typedef std::vector <CMRProjectVariable*> CMRProjectVariableVector;
 typedef std::vector <CMRProjectIterator*> CMRProjectIteratorVector;
-typedef std::vector <CMRProjectAction*> CMRProjectActionVector;
+typedef std::vector <ProjectActionOld*> CMRProjectActionVector;
 typedef std::vector <CMRProjectDefinition*> CMRProjectDefinitionVector;
 
 /*********************  CLASS  **********************/
@@ -65,7 +69,7 @@ class CMRProject
 		CMRProject(void);
 		CMREntityConstant & addConstant(const std::string& latexName, const std::string& longName);
 		CMRProjectVariable & addvariable(const std::string& latexName, const std::string& longName, const std::string& type);
-		CMRProjectAction & addAction(std::string name,std::string descr = "");
+		ProjectActionOld & addAction(std::string name,std::string descr = "");
 		CMRProjectDefinition & addDefinition(const std::string& latexName, const std::string& longName);
 		CMRProjectDefinition& addDefinition( const std::string& latexName, const std::string& longName, const std::string& compute );
 		CMRProjectIterator & addIterator(const std::string& latexName, const std::string& longName ,int start, int end);
@@ -88,5 +92,7 @@ class CMRProject
 		CMRProjectIteratorVector iterators;
 		CMRProjectContext rootContext;
 };
+
+}
 
 #endif //CMR_PROJECT_H

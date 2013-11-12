@@ -19,6 +19,10 @@
 using namespace std;
 using namespace CMRCompiler;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
 bool latexEntityIsInteger(LatexEntityOld & entity)
 {
@@ -67,4 +71,6 @@ std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, Lat
 		out << " ";
 	}
 	return out;
+}
+
 }

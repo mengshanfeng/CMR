@@ -12,12 +12,16 @@
 #include "CMRProject.h"
 #include "CMRProjectConstant.h"
 #include "CMRProjectVariable.h"
-#include "CMRProjectAction.h"
+#include "ProjectActionOld.h"
 #include "CMRProjectDefinition.h"
 #include "CMRProjectIterator.h"
 #include "CMRProjectTransformation.h"
 
 using namespace std;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
 
 /*******************  FUNCTION  *********************/
 CMRProject::CMRProject ( void )
@@ -46,9 +50,9 @@ CMRProjectVariable& CMRProject::addvariable ( const string& latexName, const str
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectAction& CMRProject::addAction ( string name, string descr )
+ProjectActionOld& CMRProject::addAction ( string name, string descr )
 {
-	CMRProjectAction * action = new CMRProjectAction(name,descr,&rootContext);
+	ProjectActionOld * action = new ProjectActionOld(name,descr,&rootContext);
 	actions.push_back(action);
 	return *action;
 }
@@ -246,4 +250,6 @@ CMRProjectIterator& CMRProject::addIterator(const string& latexName, const strin
 	iterators.push_back(it);
 	rootContext.addEntry(it);
 	return *it;
+}
+
 }

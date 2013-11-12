@@ -8,18 +8,21 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
+//system headers
 #include <cassert>
-#include <iostream>
-#include <cstdlib>
 #include <sstream>
-#include "../parsor/ParsorBasics.h"
-#include "../parsor/LatexEntity.h"
-#include "../parsor/LatexFormula.h"
-#include "CMRGenCode.h"
+//internal headers
 #include "CMRProjectContext.h"
+#include "parsor/ParsorBasics.h"
+#include "parsor/LatexFormula.h"
+#include "GenCode.h"
 
+/**********************  USING  *********************/
 using namespace std;
-using namespace CMRCompiler;
+
+/********************  NAMESPACE  *******************/
+namespace CMRCompiler
+{
 
 /*******************  FUNCTION  *********************/
 bool latexEntityIsInteger(const LatexEntity & entity)
@@ -104,4 +107,6 @@ std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, con
 		out << " ";
 	}
 	return out;
+}
+
 }

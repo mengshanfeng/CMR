@@ -16,6 +16,10 @@
 using namespace std;
 using namespace CMRCompiler;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
 CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
 {
@@ -95,4 +99,6 @@ void CMRProjectContext::printDebug ( void ) const
 			cerr << "          + " << (*it)->latexName << " : " << (*it)->longName << endl;
 		cur = cur->parent;
 	}
+}
+
 }

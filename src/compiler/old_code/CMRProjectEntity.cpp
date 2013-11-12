@@ -18,6 +18,10 @@
 using namespace std;
 using namespace CMRCompiler;
 
+/********************  NAMESPACE  *******************/
+namespace CMRCompilerOld
+{
+
 /*******************  FUNCTION  *********************/
 CMRProjectEntity::CMRProjectEntity ( const string& latexName, const string& longName )
 {
@@ -153,4 +157,6 @@ void CMRProjectEntity::madeCaptureIndice ( const string name, CMRCaptureType cap
 void CMRProjectEntity::setCaptureExponent(bool status)
 {
 	captureExponent = status;
+}
+
 }
