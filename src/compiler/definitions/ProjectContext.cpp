@@ -197,4 +197,27 @@ void ProjectContext::setParent ( const ProjectContext* parent )
 	this->parent = parent;
 }
 
+/*******************  FUNCTION  *********************/
+void ProjectContext::setKey ( const string& key, const string& value )
+{
+	this->keys[key] = value;
+}
+
+/*******************  FUNCTION  *********************/
+string ProjectContext::readKey ( const string& key ) const
+{
+	const ProjectContext * cur = this;
+	
+	while (cur != NULL)
+	{
+		ProjectContextKeyMap::const_iterator it = cur->keys.find(key);
+		if (it == cur->keys.end())
+			cur = cur->parent;
+		else
+			return it->second;
+	}
+	
+	return "";
+}
+
 }

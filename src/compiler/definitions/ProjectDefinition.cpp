@@ -10,6 +10,7 @@
 /********************  HEADERS  *********************/
 #include "transformations/CMRTransformation.h"
 #include "common/Common.h"
+#include "common/Debug.h"
 #include "ProjectDefinition.h"
 
 /**********************  USING  *********************/
@@ -83,11 +84,22 @@ void ProjectDefinition::genUsageCCode ( ostream& out, const ProjectContext& cont
 {
 	//extract matching
 	ProjectCaptureMap capture;
+	const std::string & loopType = context.readKey("CMRActionLoopType");
 	
 	//extract matching
 	this->capture(entity,capture);
 	
-	out << "compute_" << this->getLongName() << "(in,out,x,y";
+	out << "compute_" << this->getLongName() << "(";
+	if (loopType == "CMRMeshOperationSimpleLoop" || loopType == "CMRMeshOperationSimpleLoopWithPos" || loopType.empty())
+	{
+		out << "in,out";
+	} else if (loopType == "CMRMeshOperationSimpleLoopInPlace" || loopType == "CMRMeshOperationSimpleLoopInPlaceWithPos") {
+		out << "cell,cell";
+	} else {
+		cmrFatal("Invalid action loop type : %s",loopType.c_str());
+	}
+	
+	out << ",x,y";
 	genParameterListForUsage(out,getIndices(),capture);
 	genParameterListForUsage(out,getExponents(),capture);
 	genParameterListForUsage(out,getParameters(),capture);

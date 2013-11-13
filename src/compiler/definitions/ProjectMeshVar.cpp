@@ -11,7 +11,9 @@
 #include <cassert>
 #include <sstream>
 #include "GenCode.h"
+#include "common/Debug.h"
 #include "ProjectMeshVar.h"
+#include "ProjectContext.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -99,19 +101,27 @@ string ProjectMeshVar::getTypeWithDims ( void ) const
 void ProjectMeshVar::genUsageCCode( ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	ProjectCaptureMap capture;
-
+	const std::string & loopType = context.readKey("CMRActionLoopType");
+	
 	//select out mode
-	if (write)
-		out << "*out.";
-	else
-		out << "*in.";
+	if (loopType == "CMRMeshOperationSimpleLoop" || loopType == "CMRMeshOperationSimpleLoopWithPos" || loopType.empty())
+	{
+		if (write)
+			out << "(*out.";
+		else
+			out << "(*in.";
+	} else if (loopType == "CMRMeshOperationSimpleLoopInPlace" || loopType == "CMRMeshOperationSimpleLoopInPlaceWithPos") {
+		out << "(*cell.";
+	} else {
+		cmrFatal("Invalid action loop type : %s",loopType.c_str());
+	}
 
 	//tmp.name = shortName;
 	this->capture(entity,capture);
 	
 	out << getLongName() << "( ";
 	cmrGenEqCCode(out,context,*capture["i"]) << ", ";
-	cmrGenEqCCode(out,context,*capture["j"]) << ")";
+	cmrGenEqCCode(out,context,*capture["j"]) << "))";
 	
 	StringVector indices = getCapturedIndices();
 	for (StringVector::iterator it = indices.begin() ; it != indices.end() ; ++it)

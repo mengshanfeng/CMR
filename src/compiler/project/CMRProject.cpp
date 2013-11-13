@@ -13,23 +13,23 @@ CMRProject2::CMRProject2(void)
 {
 	rootContext.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	rootContext.addEntry(new CMRProjectLocalVariable("j","y","int"));
-	rootContext.addEntry(new CMRProjectLocalVariable("x","pos.getAbsX()","int"));
-	rootContext.addEntry(new CMRProjectLocalVariable("y","pos.getAbsY()","int"));
+	rootContext.addEntry(new CMRProjectLocalVariable("x","pos.getAbsX(x)","int"));
+	rootContext.addEntry(new CMRProjectLocalVariable("y","pos.getAbsY(y)","int"));
 }
 
 /*******************  FUNCTION  *********************/
-ProjectConstant& CMRProject2::addConstant ( const std::string& latexName, const std::string& longName )
+ProjectConstant& CMRProject2::addConstant ( const std::string& latexName, const std::string& longName, const std::string & type )
 {
-	ProjectConstant * tmp = new ProjectConstant(latexName,longName);
+	ProjectConstant * tmp = new ProjectConstant(latexName,longName,type);
 	constants.push_back(tmp);
 	rootContext.addEntry(tmp);
 	return *tmp;
 }
 
 /*******************  FUNCTION  *********************/
-ProjectAction& CMRProject2::addAction ( std::string name, std::string descr )
+ProjectAction& CMRProject2::addAction ( std::string name, std::string descr, const std::string & loopType )
 {
-	ProjectAction * action = new ProjectAction(name,descr,&rootContext);
+	ProjectAction * action = new ProjectAction(name,descr,loopType,&rootContext);
 	actions.push_back(action);
 	return *action;
 }
@@ -95,6 +95,10 @@ void CMRProject2::genCCode ( std::ostream& out )
 	for (StringVector::const_iterator it = userHeaders.begin() ; it != userHeaders.end() ; ++it)
 		out << "#include <" << *it << ">" << endl;
 	out << endl;
+	out << "#define WIDTH 800" <<endl;
+	out << "#define HEIGHT 100" << endl;
+	out << "#define WRITE_STEP_INTERVAL 50" << endl;
+	out << "#define ITERATIONS 8000" << endl;
 		
 	genCCodeOfConsts(out);
 	output.genCode(out,rootContext,"DeclStruct");
@@ -234,6 +238,9 @@ void CMRProject2::genCCodeOfMain ( ostream& out, LangDef& lang )
 	out << "\tCMRRect domainSize(0,0,WIDTH,HEIGHT);" << endl;
 	out << "\tCMRBasicSeqRunner<VarSystem> app(argc,argv,domainSize);" << endl;
 	out << endl;
+	out << "\tCMRRect local = app.getLocalRect();" << endl;
+	out << "\tCMRRect global = app.getGlobalRect();" << endl;
+	out << endl;
 	out << "\t//setup write system" << endl;
 	out << "\tapp.setWriter(new CMRBasicOutputer(\"output-runner.raw\",app.getSplitter()),WRITE_STEP_INTERVAL);" << endl;
 	out << "\tapp.addPrepareWriteAction(new ActionUpdateFileout::LoopType(),app.getLocalRect());" << endl;
@@ -242,13 +249,13 @@ void CMRProject2::genCCodeOfMain ( ostream& out, LangDef& lang )
 	out << "\t//setup init actions" << endl;
 	int cnt = 0;
 	for (CMRProjectCallActionVector::const_iterator it = initActions.begin() ; it != initActions.end() ; ++it)
-		(*it)->genCode(out,lang,cnt++,1);
+		(*it)->genCode(out,lang,"addInitAction",cnt++,1);
 	out << endl;
 	
 	out << "\t//setup compute actions" << endl;
 	cnt = 0;
 	for (CMRProjectCallActionVector::const_iterator it = loopActions.begin() ; it != loopActions.end() ; ++it)
-		(*it)->genCode(out,lang,cnt++,1);
+		(*it)->genCode(out,lang,"addLoopAction",cnt++,1);
 	out << endl;
 
 	//runner

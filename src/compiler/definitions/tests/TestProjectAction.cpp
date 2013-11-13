@@ -39,13 +39,13 @@ struct Actionupdate_enery\n\
 /*******************  FUNCTION  *********************/
 TEST(TestProjectAction,testConstructor)
 {
-	ProjectAction action("update_enery","blablablalbl");
+	ProjectAction action("update_enery","blablablalbl","CMRMeshOperationSimpleLoop");
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectAction,testAddBasicActions)
 {
-	ProjectAction action("update_enery","blablablalbl");
+	ProjectAction action("update_enery","blablablalbl","CMRMeshOperationSimpleLoop");
 	action.addEquation("E","4*5");
 	action.addIteratorLoop("k");
 	action.addLocalVariable("t","tmp","int","0");
@@ -71,7 +71,7 @@ TEST(TestProjectAction,testAddBasicActions)
 TEST(TestProjectAction,testGenDefinitionCCode)
 {
 	LangDef def;
-	ProjectAction action("update_enery","blablablalbl");
+	ProjectAction action("update_enery","blablablalbl","CMRMeshOperationSimpleLoop");
 	action.addLocalVariable("E","enegry","double","0");
 	action.addIterator("k","k",1,10);
 	action.addLocalVariable("t","tmp","int","0");

@@ -34,8 +34,12 @@ CMRProjectLocalVariable::CMRProjectLocalVariable ( const std::string& latexName,
 /*******************  FUNCTION  *********************/
 void CMRProjectLocalVariable::genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding ) const
 {
-	doIndent(out,padding) << type << " " << getLongName() << " = ";
-	cmrGenEqCCode(out,context,defaultValue);
+	doIndent(out,padding) << type << " " << getLongName();
+	if (defaultValue.empty() == false)
+	{
+		out << " = ";
+		cmrGenEqCCode(out,context,defaultValue);
+	}
 	out << ";" << endl;
 }
 

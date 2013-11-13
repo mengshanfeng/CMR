@@ -120,13 +120,17 @@ VarSystem::VarSystem ( CMRDomainBuilder * builder)
 
 
 VarSystem::CellAccessor::CellAccessor (CMRVarSystem & sys,int tstep,int x,int y,bool absolute)
-	:directions(*(sys.getDomain(0,tstep)),x,y,absolute),cellType(*sys.getDomain(1,tstep),x,y,absolute),fileout(*sys.getDomain(2,tstep),x,y,absolute)
+	:directions(*(sys.getDomain(0,tstep)),x,y,absolute)
+	,cellType(*sys.getDomain(1,tstep),x,y,absolute)
+	,fileout(*sys.getDomain(2,tstep),x,y,absolute)
 {
 	
 }
 
 VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y,bool absolute)
-	:directions(acc.directions,x,y,absolute),cellType(acc.cellType,x,y,absolute),fileout(acc.cellType,x,y,absolute)
+	:directions(acc.directions,x,y,absolute)
+	,cellType(acc.cellType,x,y,absolute)
+	,fileout(acc.cellType,x,y,absolute)
 {
 }
 
@@ -393,7 +397,7 @@ struct ActionSpecialCells
 /*******************  FUNCTION  *********************/
 struct ActionCollision
 {
-	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y)
+	void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y) const
 	{
 		//vars
 		int k;
@@ -421,7 +425,7 @@ struct ActionCollision
 /*******************  FUNCTION  *********************/
 struct ActionInitStatePoiseuil
 {
-	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos,int x,int y)
+	void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,const CMRCellPosition & pos,int x,int y) const
 	{
 		//vars
 		int k;

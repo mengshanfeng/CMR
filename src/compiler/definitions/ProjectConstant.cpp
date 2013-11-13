@@ -24,9 +24,10 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-ProjectConstant::ProjectConstant ( const string& latexName, const string& longName) 
+ProjectConstant::ProjectConstant ( const string& latexName, const string& longName, const string& type ) 
 	: ProjectEntity ( latexName, longName )
 {
+	this->type = type;
 }
 
 /*******************  FUNCTION  *********************/
@@ -182,7 +183,7 @@ void ProjectConstant::genDefinitionCCode ( ostream& out, const ProjectContext& c
 	if (dims.size() > 0)
 	{
 		out << "//Definition of constant " << getShortName() << endl;
-		out << "static const float " << getLongName();
+		out << "static const " << type << " " << getLongName();
 		for (size_t i = 0 ; i < dims.size() ; i++)
 			out << "[" << dims[dims.size() - i - 1] << "]";
 		out << "=";
@@ -234,20 +235,20 @@ void ProjectConstant::genUsageCCode ( ostream& out, const ProjectContext& contex
 	//not managed
 	assert(dims.size() <= 2);
 	
-	//matrix
-	if (dims.size() >= 2)
-	{
-		assert(capture.find("\\cmr{cstid}{j}") != capture.end());
-		out << "[ ";
-		cmrGenEqCCode(out,context, *capture["\\cmr{cstid}{j}"]) << "]";
-	}
-	
 	//vector
 	if (dims.size() >= 1)
 	{
 		assert(capture.find("\\cmr{cstid}{i}") != capture.end());
 		out << "[ ";
 		cmrGenEqCCode(out,context, *capture["\\cmr{cstid}{i}"]) << "]";
+	}
+	
+	//matrix
+	if (dims.size() >= 2)
+	{
+		assert(capture.find("\\cmr{cstid}{j}") != capture.end());
+		out << "[ ";
+		cmrGenEqCCode(out,context, *capture["\\cmr{cstid}{j}"]) << "]";
 	}
 }
 

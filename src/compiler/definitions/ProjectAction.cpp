@@ -21,11 +21,13 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-ProjectAction::ProjectAction ( const string& name, const string& descr, ProjectContext* parentContext )
+ProjectAction::ProjectAction ( const string& name, const string& descr, const string& loopType, CMRCompiler::ProjectContext* parentContext )
 	:ops(parentContext)
 {
 	this->name = name;
 	this->descr = descr;
+	this->loopType = loopType;
+	this->ops.getContext().setKey("CMRActionLoopType",loopType);
 }
 
 /*******************  FUNCTION  *********************/
@@ -87,11 +89,12 @@ void ProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::LangDe
 	CMRCompiler::CodeTemplateValueDic dic;
 	dic.set("descr",this->descr);
 	dic.set("name",this->name);
+	dic.set("looptype",this->loopType);
 	dic.set("code",new CMRCodeValueForCodeEntry(&this->ops,-1));
-	dic.set("params",new CodeTemplateValueActionParameters(&parameters,",",true));
+	//dic.set("params",new CodeTemplateValueActionParameters(&parameters,",",true));
 	dic.set("storage",new CodeTemplateValueActionParameters(&parameters,";",false,true,true));
-	
-	lang.applyOn(out,"cellActionBodyCode", dic,padding);
+
+	lang.applyOn(out,string("cellActionBodyCode") + loopType, dic,padding);
 }
 
 /*******************  FUNCTION  *********************/

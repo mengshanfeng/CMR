@@ -206,13 +206,14 @@ void CMRProjectXMLLoader::loadConst ( CMRProject2& project, CMRXmlNode& node )
 	string mathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
 	string longName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
 	string value = node.getContent();
+	string type = node.getNonEmptyProperty("type");
 	
 	//errors
 	assert(dims >=0 && dims <= 2);
 	cmrDebug("Load constant : %s",mathName.c_str());
 	
 	//insert in project
-	ProjectConstant & entity = project.addConstant(mathName,longName);
+	ProjectConstant & entity = project.addConstant(mathName,longName,type);
 	entity.loadValues(value,dims);
 }
 
@@ -441,9 +442,10 @@ void CMRProjectXMLLoader::loadCellAction ( CMRProject2& project, CMRXmlNode& nod
 
 	//extract info
 	string name = node.getNonEmptyProperty("name");
+	string loopType = node.getNonEmptyProperty("loop");
 
 	//create the definition
-	ProjectAction & action = project.addAction(name);
+	ProjectAction & action = project.addAction(name,"",loopType);
 
 	//load code
 	CMRXmlNode cur = node.getFirstChild();

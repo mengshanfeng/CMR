@@ -10,6 +10,7 @@
 #include "definitions/GenCode.h"
 #include "common/Debug.h"
 #include "ProjectOutput.h"
+#include "ProjectContext.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -33,7 +34,7 @@ void ProjectOutputEntry::genCode ( std::ostream& out , const ProjectContext & co
 	{
 		out << "\t" << type << " " << name << ";" << endl;
 	} else if (codeType == "ImplAction") {
-		out << "\t\t" << name << " = ";
+		out << "\t\tcell.fileout(x,y)->" << name << " = ";
 		cmrGenEqCCode(out,context,*value) << ";" << endl; 
 	} else {
 		cmrFatal("Invalid code type for project output : %s",codeType.c_str());
@@ -50,13 +51,20 @@ void ProjectOutput::addEntry ( const std::string& name, const std::string& type,
 /*******************  FUNCTION  *********************/
 void ProjectOutput::genCode ( std::ostream& out ,  const ProjectContext & context, const std::string & codeType)
 {
+	ProjectContext localContext(&context);
+	localContext.setKey("CMRActionLoopType","CMRMeshOperationSimpleLoopInPlace");
 	if (codeType == "DeclStruct")
 	{
 		out << "struct LBMFileEntry" << endl;
 		out << "{" << endl;
 		for (ProjectOutputEntryVector::iterator it = entries.begin() ; it != entries.end() ; ++it)
-			it->genCode(out, context,codeType);
+			it->genCode(out, localContext,codeType);
 		out << "};" << endl << endl;
+		out << "/*******************  FUNCTION  *********************/" << endl;
+		out << "std::string cmrTypeToString(const LBMFileEntry & value)" << endl;
+		out << "{" << endl;
+		out << "	return \"??\";" << endl;
+		out << "}" << endl << endl;
 	} else if (codeType == "ImplAction") {
 		out << "/*******************  FUNCTION  *********************/" << endl;
 		out << "struct ActionUpdateFileout" << endl;
@@ -64,7 +72,7 @@ void ProjectOutput::genCode ( std::ostream& out ,  const ProjectContext & contex
 		out << "\tvoid cellAction(VarSystem::CellAccessor & cell,int x,int y) const" << endl;
 		out << "\t{" << endl;
 		for (ProjectOutputEntryVector::iterator it = entries.begin() ; it != entries.end() ; ++it)
-			it->genCode(out, context,codeType);
+			it->genCode(out, localContext,codeType);
 		out << "\t}" << endl;
 		out << "\t//select the type of loop" << endl;
 		out << "\ttypedef CMRMeshOperationSimpleLoopInPlace<VarSystem,ActionUpdateFileout> LoopType;" << endl;

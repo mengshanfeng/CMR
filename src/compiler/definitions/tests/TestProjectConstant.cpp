@@ -43,13 +43,13 @@ const CMRMathMatrix testC(TMP_VALUE_testC,3,2);\n";
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testConstructor)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_scalar)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("55",0);
 
 	stringstream out;
@@ -63,7 +63,7 @@ TEST(TestProjectConstant,testLoadValue_scalar)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_scalar_invalid)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	EXPECT_THROW(constant.loadValues("55;5",0),LatexException);
 	EXPECT_THROW(constant.loadValues("55\\\\5",0),LatexException);
 	EXPECT_THROW(constant.loadValues("",0),LatexException);
@@ -72,7 +72,7 @@ TEST(TestProjectConstant,testLoadValue_scalar_invalid)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_vector)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("1;2;3;4;5;6",1);
 
 	stringstream out;
@@ -86,7 +86,7 @@ TEST(TestProjectConstant,testLoadValue_vector)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_vector_invalid)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	EXPECT_THROW(constant.loadValues("55\\\\5",1),LatexException);
 	EXPECT_THROW(constant.loadValues("",1),LatexException);
 }
@@ -94,7 +94,7 @@ TEST(TestProjectConstant,testLoadValue_vector_invalid)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_matrix)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2;2.3\\\\3.1;3.2;3.3\\\\4.1;4.2;4.3\\\\5.1;5.2;5.3\\\\6.1;6.2;6.3",2);
 
 	stringstream out;
@@ -108,7 +108,7 @@ TEST(TestProjectConstant,testLoadValue_matrix)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_scalar_matrix_invalid)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	EXPECT_THROW(constant.loadValues("",2),LatexException);
 	EXPECT_THROW(constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2\\\\3.1;3.2;3.3",2),LatexException);
 }
@@ -116,7 +116,7 @@ TEST(TestProjectConstant,testLoadValue_scalar_matrix_invalid)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testPrintDebug)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2;2.3",2);
 	
 	stringstream out;
@@ -128,7 +128,7 @@ TEST(TestProjectConstant,testPrintDebug)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenDefinitionCCode_scalar)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("5.5",0);
 	
 	ProjectContext context;
@@ -141,7 +141,7 @@ TEST(TestProjectConstant,testGenDefinitionCCode_scalar)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenDefinitionCCode_vector)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("1;2;3",1);
 	
 	ProjectContext context;
@@ -154,7 +154,7 @@ TEST(TestProjectConstant,testGenDefinitionCCode_vector)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenDefinitionCCode_matrix)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("1;2;3\\\\4;5;6",2);
 	
 	ProjectContext context;
@@ -167,7 +167,7 @@ TEST(TestProjectConstant,testGenDefinitionCCode_matrix)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenUsageCCode_scalar)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("1",0);
 	
 	ProjectContext context;
@@ -181,7 +181,7 @@ TEST(TestProjectConstant,testGenUsageCCode_scalar)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenUsageCCode_vector)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("1;10",1);
 	
 	ProjectContext context;
@@ -197,7 +197,7 @@ TEST(TestProjectConstant,testGenUsageCCode_vector)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenUsageCCode_matrix)
 {
-	ProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC","double");
 	constant.loadValues("1;10\\2;5",2);
 	
 	ProjectContext context;

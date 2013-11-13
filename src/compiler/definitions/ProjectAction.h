@@ -57,7 +57,7 @@ class CodeTemplateValueActionParameters : public CodeTemplateValue
 class ProjectAction
 {
 	public:
-		ProjectAction ( const std::string & name, const std::string & descr,ProjectContext * parentContext = NULL);
+		ProjectAction ( const std::string & name, const std::string & descr, const std::string & loopType,ProjectContext * parentContext = NULL);
 		virtual void printDebug(std::ostream & out) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const LangDef & lang, const ProjectContext& context, int padding = 0 ) const;
 		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false ) const;
@@ -75,6 +75,7 @@ class ProjectAction
 		CMRProjectCodeRootNode ops;
 		std::string name;
 		std::string descr;
+		std::string loopType;
 		ProjectActionParameterVector parameters;
 };
 

@@ -20,7 +20,7 @@ typedef std::vector<LatexFormulas> ConstantFormulaVector;
 class ProjectConstant : public ProjectEntity
 {
 	public:
-		ProjectConstant( const std::string& latexName, const std::string& longName );
+		ProjectConstant( const std::string& latexName, const std::string& longName, const std::string & type );
 		void loadValues(const std::string & data,int dimensions);
 		virtual void printDebug(std::ostream & out) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context ,int indent = 0) const;
@@ -37,6 +37,7 @@ class ProjectConstant : public ProjectEntity
 	protected:
 		ConstantDimensionsVector dims;
 		ConstantFormulaVector formulas;
+		std::string type;
 };
 
 }

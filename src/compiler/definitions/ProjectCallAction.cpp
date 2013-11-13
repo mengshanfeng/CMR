@@ -39,7 +39,7 @@ ProjectCallAction& ProjectCallAction::addZone ( const std::string& zone )
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectCallAction::genCode ( ostream& out, CMRCompiler::LangDef& lang, int id, int indent ) const
+void ProjectCallAction::genCode ( ostream& out, CMRCompiler::LangDef& lang, const std::string & addFName , int id, int indent ) const
 {
 	//ideally we may generate :
 	//app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_LEFT_IN)),
@@ -50,15 +50,15 @@ void ProjectCallAction::genCode ( ostream& out, CMRCompiler::LangDef& lang, int 
 		doIndent(out,indent) << "Action" << actionName << " * action" << id << " = new Action" << actionName << "();" << endl;
 		
 		for (CallActionParameters::const_iterator it = parameters.begin() ; it != parameters.end() ; ++it)
-			doIndent(out,indent) << "action" << id << "->" << it->first << " = " << it->second << endl;
+			doIndent(out,indent) << "action" << id << "->" << it->first << " = " << it->second << ";" << endl;
 	}
 	
 	for (CallActionZoneVector::const_iterator it = zones.begin() ; it != zones.end() ; ++it)
 	{
 		if (parameters.empty())
-			doIndent(out,indent) << "app.addInitAction(new Action" << actionName << "::LoopType(new Action" << actionName << "())),";
+			doIndent(out,indent) << "app."<< addFName << "(new Action" << actionName << "::LoopType(new Action" << actionName << "),";
 		else
-			doIndent(out,indent) << "app.addInitAction(new Action" << actionName << "::LoopType(action" << id << ")),";
+			doIndent(out,indent) << "app."<< addFName << "(new Action" << actionName << "::LoopType(action" << id << "),";
 		doIndent(out,indent) << *it << ");" << endl;
 	}
 }

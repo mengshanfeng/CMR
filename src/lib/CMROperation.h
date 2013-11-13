@@ -36,7 +36,11 @@ template <class T,class U>
 class CMRMeshOperationSimpleLoop : public CMRMeshOperation
 {
 	public:
+		CMRMeshOperationSimpleLoop(const U * action = NULL) {this->action = action;};
+		~CMRMeshOperationSimpleLoop(void) {if (action != NULL) delete action;};
 		virtual void run (CMRVarSystem * sys, const CMRRect& zone );
+	protected:
+		const U * action;
 };
 
 /*******************  FUNCTION  *********************/
@@ -69,10 +73,11 @@ void CMRMeshOperationSimpleLoop<T,U>::run ( CMRVarSystem * sys, const CMRRect & 
 	
 	const typename T::CellAccessor cellIn(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
 	typename T::CellAccessor cellOut(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y,true);
+	const U * localAction = action;
 	
 	for(int y = 0 ; y < localZone.height ; y++)
 		for(int x = 0 ; x < localZone.width ; x++)
-			U::cellAction(cellIn,cellOut,x,y);
+			localAction->cellAction(cellIn,cellOut,x,y);
 }
 
 /*********************  CLASS  **********************/
@@ -195,7 +200,11 @@ template <class T,class U>
 class CMRMeshOperationSimpleLoopWithPos : public CMRMeshOperation
 {
 	public:
+		CMRMeshOperationSimpleLoopWithPos(const U * action = NULL) {this->action = action;};;
+		~CMRMeshOperationSimpleLoopWithPos(void) {if (action != NULL) delete action;};
 		virtual void run (CMRVarSystem * sys,const CMRRect& zone );
+	protected:
+		const U * action;
 };
 
 /*******************  FUNCTION  *********************/
@@ -229,10 +238,11 @@ void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( CMRVarSystem * sys,const CMRR
 	typename T::CellAccessor cellIn(*sys,CMR_PREV_STEP,localZone.x,localZone.y);
 	typename T::CellAccessor cellOut(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y);
 	CMRCellPosition pos(sys->getDomain(0,0)->getGlobalRect(),sys->getDomain(0,0)->getLocalDomainRect(),localZone.x,localZone.y);
+	const U * localAction = action;
 	
 	for(int y = 0 ; y < localZone.height ; y++)
 		for(int x = 0 ; x < localZone.width ; x++)
-			U::cellAction(cellIn,cellOut,pos,x,y);
+			localAction->cellAction(cellIn,cellOut,pos,x,y);
 }
 
 /*******************  FUNCTION  *********************/
@@ -292,6 +302,62 @@ void CMRMeshReduction<T,U>::run ( CMRVarSystem * sys , const CMRRect & zone )
 			reduction.cellAction(cell,x,y);
 
 	gblReduction->doReduce(reduction);
+}
+
+/*********************  CLASS  **********************/
+template <class T,class U>
+class CMRMeshOperationSimpleLoopInPlaceWithPos : public CMRMeshOperation
+{
+	public:
+		CMRMeshOperationSimpleLoopInPlaceWithPos(const U * action = NULL);
+		~CMRMeshOperationSimpleLoopInPlaceWithPos(void) {if (action != NULL) delete action;};
+		virtual void run (CMRVarSystem * sys,const CMRRect& zone);
+	private:
+		const U * action;
+};
+
+/*******************  FUNCTION  *********************/
+template <class T,class U>
+CMRMeshOperationSimpleLoopInPlaceWithPos<T,U>::CMRMeshOperationSimpleLoopInPlaceWithPos (const U * action)
+{
+	//setup
+	this->action = action;
+}
+
+/*******************  FUNCTION  *********************/
+template <class T,class U>
+void CMRMeshOperationSimpleLoopInPlaceWithPos<T,U>::run ( CMRVarSystem * sys, const CMRRect & zone )
+{
+	//errors
+	//assume(domainIn->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
+	//assume(domainOut->isFullyInDomainMemory(zone),"Invalid zone not fully in domain.");
+	//TODO : to check if the computation accept local calculation (same somaines)
+	//assert(domainIn != domainOut || T::acceptLocalCompute());
+	
+	//errors if no contiguous on X axis
+	//if (!domainIn->isContiguous(0) && ! domainOut->isContiguous(0))
+	//	warning("Caution, you loop on two domain with inner loop on X but the two domains are contiguous on Y !");
+	
+	//local copy to avoid deref
+	CMRRect memoryRect(sys->getDomain(0,0)->getMemoryRect());
+	CMRRect localZone(memoryRect.intersect(zone));
+	
+	debug("Start to compute on [ %d , %d : %d x %d ] into [ %d , %d : %d x %d ]",zone.x,zone.y,zone.width,zone.height,memoryRect.x,memoryRect.y,memoryRect.width,memoryRect.height);
+	
+	//if not in zone, exit
+	if (localZone.surface() == 0)
+	{
+		debug("Caution, you request an operation out of local zone, do nothing.");
+		return;
+	}
+	
+	typename T::CellAccessor cell(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
+	const U * loacalAction = action;
+	CMRCellPosition pos(sys->getDomain(0,0)->getGlobalRect(),sys->getDomain(0,0)->getLocalDomainRect(),localZone.x,localZone.y);
+	
+	for(int y = 0 ; y < localZone.height ; y++)
+		for(int x = 0 ; x < localZone.width ; x++)
+			loacalAction->cellAction(cell,pos,x,y);
 }
 
 #endif // CMR_SPACE_SPLITTER_H

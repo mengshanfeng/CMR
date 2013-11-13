@@ -16,20 +16,54 @@ namespace CMRCompiler
 {
 
 /*********************  CONSTS  *********************/
-static const char * CELL_ACTION_BODY = "//@descr@\n\
+static const char * CELL_ACTION_BODY_OUTPLACE_WITHPOS = "//@descr@\n\
 struct Action@name@\n\
 {\n\
-	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y@params@)\n\
+	void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y) const\n\
 	{\n\
 		@code@\n\
 	}\n\
 	@storage@\n\
+	typedef @looptype@<VarSystem,Action@name@> LoopType;\n\
+};\n\n";
+static const char * CELL_ACTION_BODY_OUTPLACE_NOPOS = "//@descr@\n\
+struct Action@name@\n\
+{\n\
+	void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,int x,int y) const\n\
+	{\n\
+		@code@\n\
+	}\n\
+	@storage@\n\
+	typedef @looptype@<VarSystem,Action@name@> LoopType;\n\
+};\n\n";
+static const char * CELL_ACTION_BODY_INPLACE_NOPOS = "//@descr@\n\
+struct Action@name@\n\
+{\n\
+	void cellAction(VarSystem::CellAccessor & cell,int x,int y) const\n\
+	{\n\
+		@code@\n\
+	}\n\
+	@storage@\n\
+	typedef @looptype@<VarSystem,Action@name@> LoopType;\n\
+};\n\n";
+static const char * CELL_ACTION_BODY_INPLACE_WITHPOS = "//@descr@\n\
+struct Action@name@\n\
+{\n\
+	void cellAction(VarSystem::CellAccessor & cell,const CMRCellPosition & pos,int x,int y) const\n\
+	{\n\
+		@code@\n\
+	}\n\
+	@storage@\n\
+	typedef @looptype@<VarSystem,Action@name@> LoopType;\n\
 };\n\n";
 
 /*******************  FUNCTION  *********************/
 LangDef::LangDef ( void )
 {
-	setup("cellActionBodyCode",CELL_ACTION_BODY);
+	setup("cellActionBodyCodeCMRMeshOperationSimpleLoopWithPos",CELL_ACTION_BODY_OUTPLACE_WITHPOS);
+	setup("cellActionBodyCodeCMRMeshOperationSimpleLoop",CELL_ACTION_BODY_OUTPLACE_NOPOS);
+	setup("cellActionBodyCodeCMRMeshOperationSimpleLoopInPlaceWithPos",CELL_ACTION_BODY_INPLACE_WITHPOS);
+	setup("cellActionBodyCodeCMRMeshOperationSimpleLoopInPlace",CELL_ACTION_BODY_INPLACE_NOPOS);
 }
 
 /*******************  FUNCTION  *********************/

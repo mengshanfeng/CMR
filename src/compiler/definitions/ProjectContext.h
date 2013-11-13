@@ -21,6 +21,7 @@ namespace CMRCompiler
 
 /*********************  TYPES  **********************/
 typedef std::vector <ProjectEntity*> ProjectEntityList;
+typedef std::map<std::string,std::string> ProjectContextKeyMap;
 
 /*********************  STRUCT  *********************/
 struct ProjectTempNames
@@ -40,12 +41,15 @@ class ProjectContext
 		ProjectEntity* checkUnique( const ProjectEntity& entry );
 		const ProjectEntity * find( const LatexEntity& entity, bool onlyWildCardNames = false ) const;
 		const ProjectEntity * findInParent( const LatexEntity& entity, bool onlyWildCardNames = false ) const;
+		std::string readKey(const std::string & key) const;
+		void setKey(const std::string & key, const std::string & value);
 		int getDepth(void) const;
 		ProjectTempNames genTempName( const std::string& base = "temp");
 		void setParent(const ProjectContext * parent);
 	private:
 		const ProjectContext * parent;
 		ProjectEntityList entities;
+		ProjectContextKeyMap keys;
 };
 
 }
