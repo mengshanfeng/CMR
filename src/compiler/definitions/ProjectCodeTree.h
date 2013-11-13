@@ -7,21 +7,15 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_PROJECT_CODE_TREE_H
-#define CMR_PROJECT_CODE_TREE_H
-
-/********************  HEADERS  *********************/
-#include <cstdlib>
-#include <cassert>
-#include "CMRProjectContext.h"
-
+#ifndef CMR_COMPILER_PROJECT_CODE_TREE_H
+#define CMR_COMPILER_PROJECT_CODE_TREE_H
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
 {
 
 /*********************  TYPES  **********************/
-enum CMRProjectCodeTreeInsert
+enum ProjectCodeTreeInsert
 {
 	CMR_INSERT_FIRST_CHILD,
 	CMR_INSERT_LAST_CHILD,
@@ -34,12 +28,12 @@ enum CMRProjectCodeTreeInsert
 
 /*********************  CLASS  *********************/
 template <class T>
-class CMRProjectCodeTree
+class ProjectCodeTree
 {
 	public:
-		CMRProjectCodeTree(void);
-		virtual ~CMRProjectCodeTree(void);
-		T * insert(T * entry,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		ProjectCodeTree(void);
+		virtual ~ProjectCodeTree(void);
+		T * insert(T * entry,ProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		void detach(void);
 		void clearChilds(void);
 		bool hasChild(void) const;
@@ -57,8 +51,8 @@ class CMRProjectCodeTree
 	protected:
 		virtual void onParentChange(T * newParent);
 	private:
-		CMRProjectCodeTree(const CMRProjectCodeTree<T> & orig);
-		CMRProjectCodeTree & operator=(const CMRProjectCodeTree<T> & orig);
+		ProjectCodeTree(const ProjectCodeTree<T> & orig);
+		ProjectCodeTree & operator=(const ProjectCodeTree<T> & orig);
 	private:
 		T * next;
 		T * prev;
@@ -70,6 +64,6 @@ class CMRProjectCodeTree
 }
 
 /*******************  FUNCTION  *********************/
-#include "CMRProjectCodeTree_impl.h"
+#include "ProjectCodeTree_impl.h"
 
-#endif //CMR_PROJECT_CODE_TREE_H
+#endif //CMR_COMPILER_PROJECT_CODE_TREE_H

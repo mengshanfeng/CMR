@@ -14,7 +14,7 @@
 #include <CMRTransformationExpandExpo.h>
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/ProjectIterator.h>
-#include <../definitions/CMRProjectConstant.h>
+#include <../definitions/ProjectConstant.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -33,7 +33,7 @@ TEST(TestExpandExpo,testRun_simple_exp2)
 {
 	CMRTransformationExpandExpo transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -50,7 +50,7 @@ TEST(TestExpandExpo,testRun_complex_exp2)
 {
 	CMRTransformationExpandExpo transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -67,7 +67,7 @@ TEST(TestExpandExpo,testRun_simple_exp3)
 {
 	CMRTransformationExpandExpo transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -84,7 +84,7 @@ TEST(TestExpandExpo,testRun_simple_exp55)
 {
 	CMRTransformationExpandExpo transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -101,7 +101,7 @@ TEST(TestExpandExpo,testRun_complex_exp55)
 {
 	CMRTransformationExpandExpo transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -118,7 +118,7 @@ TEST(TestExpandExpo,testRun_simple_sqrt)
 {
 	CMRTransformationExpandExpo transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");

@@ -65,13 +65,13 @@ bool CMRModelBasedReplacement::apply( LatexEntity& entity ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRModelBasedReplacement::genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int indent ) const
+void CMRModelBasedReplacement::genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int indent ) const
 {
 	cmrFatal("Caution, CMRModelBasedReplacement objects cannot be translated to C++ code.");
 }
 
 /*******************  FUNCTION  *********************/
-void CMRModelBasedReplacement::genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void CMRModelBasedReplacement::genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	cmrFatal("Caution, CMRModelBasedReplacement objects cannot be translated to C++ code.");
 }

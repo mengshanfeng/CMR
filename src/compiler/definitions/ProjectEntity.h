@@ -37,7 +37,7 @@ struct CaptureDef
 };
 
 /*********************  TYPES  **********************/
-class CMRProjectContext;
+class ProjectContext;
 typedef std::vector<int> ConstantDimensionsVector;
 typedef std::vector<std::string> ConstantValueVector;
 typedef std::vector<std::string> StringVector;
@@ -70,8 +70,8 @@ class ProjectEntity
 		bool isWildcardName(void);
 		
 		//to overload
-		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context, int padding = 0) const = 0;
-		virtual void genUsageCCode(std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false) const = 0;
+		virtual void genDefinitionCCode(std::ostream& out, const ProjectContext& context, int padding = 0) const = 0;
+		virtual void genUsageCCode(std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false) const = 0;
 		virtual void printDebug(std::ostream & out) const;
 	public:
 		friend std::ostream & operator << (std::ostream & out,const ProjectEntity & value);

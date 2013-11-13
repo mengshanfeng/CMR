@@ -15,7 +15,7 @@
 #include <CMRTransformationExtractLoops.h>
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/ProjectIterator.h>
-#include <../definitions/CMRProjectConstant.h>
+#include <../definitions/ProjectConstant.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -59,7 +59,7 @@ TEST(TestExtractLoops,testRun_1)
 	CMRTransformationExtractLoops transf;
 	MockTransfToPrint out;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
@@ -80,7 +80,7 @@ TEST(TestExtractLoops,testRun_2)
 	CMRTransformationExtractLoops transf;
 	MockTransfToPrint out;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
@@ -101,7 +101,7 @@ TEST(TestExtractLoops,testRun_3)
 	CMRTransformationExtractLoops transf;
 	MockTransfToPrint out;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectIterator it("k","testK",0,9);
 	ProjectIterator it2("l","testL",0,9);
 	context.addEntry(&it);

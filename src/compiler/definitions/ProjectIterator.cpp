@@ -8,7 +8,7 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "CMRProjectContext.h"
+#include "ProjectContext.h"
 #include "ProjectIterator.h"
 
 /**********************  USING  *********************/
@@ -34,14 +34,14 @@ void ProjectIterator::printDebug ( std::ostream & out ) const
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectIterator::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ,int indent ) const
+void ProjectIterator::genDefinitionCCode ( ostream& out, const ProjectContext& context ,int indent ) const
 {
 	//TODO indent
 	out << "int " << getLongName() << " = " << start << " ; " << getLongName() << " <= " << end << " ; " << getLongName() << "++";
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectIterator::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectIterator::genUsageCCode ( ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 // 	stringstream err;
 // 	err << "Error, iterator may not be used out of loop definition : " << getLatexName() << " : " << start << " -> " << end << endl;

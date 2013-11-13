@@ -4,7 +4,7 @@
 #include "CMRXmlDoc.h"
 #include "CMRProjectXMLLoader.h"
 #include "../common/Debug.h"
-#include "../definitions/CMRProjectAlias.h"
+#include "../definitions/ProjectMathAlias.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -212,7 +212,7 @@ void CMRProjectXMLLoader::loadConst ( CMRProject2& project, CMRXmlNode& node )
 	cmrDebug("Load constant : %s",mathName.c_str());
 	
 	//insert in project
-	CMRProjectConstant & entity = project.addConstant(mathName,longName);
+	ProjectConstant & entity = project.addConstant(mathName,longName);
 	entity.loadValues(value,dims);
 }
 
@@ -366,9 +366,9 @@ bool CMRProjectXMLLoader::loadCodeNode ( CMRProject2& project, T& parent, CMRXml
 		bool aliasCaptureAll = (aliasCaptureAllStr.empty() || aliasCaptureAllStr == "true");
 		cmrDebug("    -> Alias : %s",aliasMathName.c_str());
 		if (aliasWildcardName)
-			parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll)).captureName();
+			parent.getContext().addEntry(new ProjectMathAlias(aliasMathName,aliasBody,aliasCaptureAll)).captureName();
 		else
-			parent.getContext().addEntry(new CMRProjectAlias(aliasMathName,aliasBody,aliasCaptureAll));
+			parent.getContext().addEntry(new ProjectMathAlias(aliasMathName,aliasBody,aliasCaptureAll));
 	} else if (node.isNamed(CMR_NODE_CCODE)) {
 		string codeContent = node.getContent();
 		cmrDebug("    -> CCode : %s",codeContent.c_str());
@@ -511,7 +511,7 @@ void CMRProjectXMLLoader::loadInitCallAction ( CMRProject2& project, CMRXmlNode&
 	
 	//extract info
 	string name = node.getNonEmptyProperty("name");
-	CMRProjectCallAction & action = project.addInitCallAction(name);
+	ProjectCallAction & action = project.addInitCallAction(name);
 	
 	//loop on childs
 	CMRXmlNode cur = node.getFirstChild();
@@ -541,7 +541,7 @@ void CMRProjectXMLLoader::loadMainCallAction ( CMRProject2& project, CMRXmlNode&
 	
 	//extract info
 	string name = node.getNonEmptyProperty("name");
-	CMRProjectCallAction & action = project.addMainLoopCallAction(name);
+	ProjectCallAction & action = project.addMainLoopCallAction(name);
 	
 	//loop on childs
 	CMRXmlNode cur = node.getFirstChild();

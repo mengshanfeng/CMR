@@ -7,8 +7,8 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_PROJECT_CONTEXT_H
-#define CMR_PROJECT_CONTEXT_H
+#ifndef CMR_COMPILER_PROJECT_CONTEXT_H
+#define CMR_COMPILER_PROJECT_CONTEXT_H
 
 /********************  HEADERS  *********************/
 #include <vector>
@@ -20,34 +20,34 @@ namespace CMRCompiler
 {
 
 /*********************  TYPES  **********************/
-typedef std::vector <ProjectEntity*> CMRProjectEntityList;
+typedef std::vector <ProjectEntity*> ProjectEntityList;
 
 /*********************  STRUCT  *********************/
-struct CMRTempNames
+struct ProjectTempNames
 {
 	std::string shortName;
 	std::string longName;
 };
 
 /*********************  CLASS  **********************/
-class CMRProjectContext
+class ProjectContext
 {
 	public:
-		CMRProjectContext(const CMRProjectContext * parent = NULL);
+		ProjectContext(const ProjectContext * parent = NULL);
 		int countTotalEntries(void) const;
 		void printDebug(std::ostream & out = std::cerr) const;
 		ProjectEntity & addEntry(ProjectEntity * entry);
 		ProjectEntity* checkUnique( const ProjectEntity& entry );
-		const ProjectEntity * find( const CMRCompiler::LatexEntity& entity, bool onlyWildCardNames = false ) const;
-		const ProjectEntity * findInParent( const CMRCompiler::LatexEntity& entity, bool onlyWildCardNames = false ) const;
+		const ProjectEntity * find( const LatexEntity& entity, bool onlyWildCardNames = false ) const;
+		const ProjectEntity * findInParent( const LatexEntity& entity, bool onlyWildCardNames = false ) const;
 		int getDepth(void) const;
-		CMRTempNames genTempName( const std::string& base = "temp");
-		void setParent(const CMRProjectContext * parent);
+		ProjectTempNames genTempName( const std::string& base = "temp");
+		void setParent(const ProjectContext * parent);
 	private:
-		const CMRProjectContext * parent;
-		CMRProjectEntityList entities;
+		const ProjectContext * parent;
+		ProjectEntityList entities;
 };
 
 }
 
-#endif //CMR_PROJECT_CONTEXT_H
+#endif //CMR_COMPILER_PROJECT_CONTEXT_H

@@ -27,7 +27,7 @@ ProjectOutputEntry::ProjectOutputEntry ( const std::string& name, const std::str
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectOutputEntry::genCode ( std::ostream& out , const CMRProjectContext & context, const std::string & codeType)
+void ProjectOutputEntry::genCode ( std::ostream& out , const ProjectContext & context, const std::string & codeType)
 {
 	if (codeType == "DeclStruct")
 	{
@@ -48,7 +48,7 @@ void ProjectOutput::addEntry ( const std::string& name, const std::string& type,
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectOutput::genCode ( std::ostream& out ,  const CMRProjectContext & context, const std::string & codeType)
+void ProjectOutput::genCode ( std::ostream& out ,  const ProjectContext & context, const std::string & codeType)
 {
 	if (codeType == "DeclStruct")
 	{

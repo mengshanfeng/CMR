@@ -78,7 +78,7 @@ TEST(TestProjectAction,testGenDefinitionCCode)
 	action.addEquation("E","4*5");
 	action.addIteratorLoop("k").addEquation("t","3*k","+=");
 	action.addEquation("E","t*3","+=");
-	CMRProjectContext context;
+	ProjectContext context;
 	
 	stringstream out;
 	action.genDefinitionCCode(out,def,&context,0);

@@ -10,32 +10,29 @@
 #define CMR_COMPILER_PROJECT_CALL_ACTION_H
 
 /********************  HEADERS  *********************/
-#include <string>
 #include <vector>
-#include <ostream>
-#include <common/LangDef.h>
-
+#include "common/LangDef.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
 {
 
 /*********************  TYPES  **********************/
-typedef std::vector<std::string> CMRCallZoneVector;
-typedef std::map<std::string,std::string> CMRCallParameters;
+typedef std::vector<std::string> CallActionZoneVector;
+typedef std::map<std::string,std::string> CallActionParameters;
 
 /*********************  CLASS  **********************/
-class CMRProjectCallAction
+class ProjectCallAction
 {
 	public:
-		CMRProjectCallAction(const std::string & actionName);
-		CMRProjectCallAction & addZone(const std::string & zone);
-		CMRProjectCallAction & addParameter(const std::string & name,const std::string & value);
+		ProjectCallAction(const std::string & actionName);
+		ProjectCallAction & addZone(const std::string & zone);
+		ProjectCallAction & addParameter(const std::string & name,const std::string & value);
 		void genCode( std::ostream& out, CMRCompiler::LangDef& lang, int id, int indent ) const;
 	private:
 		std::string actionName;
-		CMRCallZoneVector zones;
-		CMRCallParameters parameters;
+		CallActionZoneVector zones;
+		CallActionParameters parameters;
 };
 
 }

@@ -27,18 +27,18 @@ class ProjectIterator;
 class ProjectDefinition : public ProjectEntity
 {
 	public:
-		ProjectDefinition ( const std::string& latexName, const std::string& longName,CMRProjectContext * parentContext = NULL);
+		ProjectDefinition ( const std::string& latexName, const std::string& longName,ProjectContext * parentContext = NULL);
 		virtual void printDebug(std::ostream & out) const;
-		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
+		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding = 0 ) const;
+		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
 		void runTransformation(CMRTransformation & transf);
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=");
 		CMRProjectCodeEquation & addEquation(const std::string& eq);
 		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator);
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue);
 		ProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
-		CMRProjectContext & getContext(void);
-		CMRProjectCodeEntry * insert(CMRProjectCodeEntry * entry,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		ProjectContext & getContext(void);
+		CMRProjectCodeEntry * insert(CMRProjectCodeEntry * entry,ProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 	protected:
 		void genParameterListForDef(std::ostream& out,const ProjectCaptureDefMap & map) const;
 		void genParameterListForUsage( std::ostream& out, const ProjectCaptureDefMap& map, ProjectCaptureMap& capture ) const;
@@ -50,7 +50,7 @@ class ProjectDefinition : public ProjectEntity
 		void runTransformation(CMRProjectTransformation & transf);
 		virtual std::ostream& genUsageCCode ( std::ostream& out, const CMRProjectContext& context, CMRLatexEntity& entity ) const;*/
 	private:
-		CMRProjectContext parametersContext;
+		ProjectContext parametersContext;
 		CMRProjectCodeRootNode ops;
 };
 

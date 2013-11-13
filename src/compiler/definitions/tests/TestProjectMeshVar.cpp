@@ -12,7 +12,7 @@
 #include "../parsor/LatexFormula.h"
 #include <sstream>
 #include "MockProjectEntity.h"
-#include "CMRProjectContext.h"
+#include "ProjectContext.h"
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -58,7 +58,7 @@ TEST(TestProjectMeshVar,testGenUsageCCode_1)
 	variable.addDim("k",5);
 
 	LatexEntity entity("A_{2+1,2+1,55}");
-	CMRProjectContext context;
+	ProjectContext context;
 	
 	stringstream outr;
 	variable.genUsageCCode(outr,context,entity);
@@ -77,7 +77,7 @@ TEST(TestProjectMeshVar,testGenUsageCCode_2)
 
 	LatexEntity entity("A_{m+1,m+1,55}");
 	MockProjectEntity entity2("m","testM");
-	CMRProjectContext context;
+	ProjectContext context;
 	context.addEntry(&entity2);
 
 	stringstream outr;
@@ -95,7 +95,7 @@ TEST(TestProjectMeshVar,testGenDefinitionCCode)
 	ProjectMeshVar variable("A_{i,j,k}","testA","int");
 	variable.addDim("k",5);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	
 	stringstream out;
 	EXPECT_THROW(variable.genDefinitionCCode(out,context),LatexException);

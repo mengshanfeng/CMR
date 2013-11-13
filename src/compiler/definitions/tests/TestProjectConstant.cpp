@@ -8,11 +8,11 @@
 
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
-#include <CMRProjectConstant.h>
+#include <ProjectConstant.h>
 #include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
-#include <CMRProjectContext.h>
+#include <ProjectContext.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -43,13 +43,13 @@ const CMRMathMatrix testC(TMP_VALUE_testC,3,2);\n";
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testConstructor)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_scalar)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("55",0);
 
 	stringstream out;
@@ -63,7 +63,7 @@ TEST(TestProjectConstant,testLoadValue_scalar)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_scalar_invalid)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	EXPECT_THROW(constant.loadValues("55;5",0),LatexException);
 	EXPECT_THROW(constant.loadValues("55\\\\5",0),LatexException);
 	EXPECT_THROW(constant.loadValues("",0),LatexException);
@@ -72,7 +72,7 @@ TEST(TestProjectConstant,testLoadValue_scalar_invalid)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_vector)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("1;2;3;4;5;6",1);
 
 	stringstream out;
@@ -86,7 +86,7 @@ TEST(TestProjectConstant,testLoadValue_vector)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_vector_invalid)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	EXPECT_THROW(constant.loadValues("55\\\\5",1),LatexException);
 	EXPECT_THROW(constant.loadValues("",1),LatexException);
 }
@@ -94,7 +94,7 @@ TEST(TestProjectConstant,testLoadValue_vector_invalid)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_matrix)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2;2.3\\\\3.1;3.2;3.3\\\\4.1;4.2;4.3\\\\5.1;5.2;5.3\\\\6.1;6.2;6.3",2);
 
 	stringstream out;
@@ -108,7 +108,7 @@ TEST(TestProjectConstant,testLoadValue_matrix)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testLoadValue_scalar_matrix_invalid)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	EXPECT_THROW(constant.loadValues("",2),LatexException);
 	EXPECT_THROW(constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2\\\\3.1;3.2;3.3",2),LatexException);
 }
@@ -116,7 +116,7 @@ TEST(TestProjectConstant,testLoadValue_scalar_matrix_invalid)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testPrintDebug)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2;2.3",2);
 	
 	stringstream out;
@@ -128,10 +128,10 @@ TEST(TestProjectConstant,testPrintDebug)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenDefinitionCCode_scalar)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("5.5",0);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	stringstream out;
 	constant.genDefinitionCCode(out,context);
 	
@@ -141,10 +141,10 @@ TEST(TestProjectConstant,testGenDefinitionCCode_scalar)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenDefinitionCCode_vector)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("1;2;3",1);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	stringstream out;
 	constant.genDefinitionCCode(out,context);
 	
@@ -154,10 +154,10 @@ TEST(TestProjectConstant,testGenDefinitionCCode_vector)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenDefinitionCCode_matrix)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("1;2;3\\\\4;5;6",2);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	stringstream out;
 	constant.genDefinitionCCode(out,context);
 	
@@ -167,10 +167,10 @@ TEST(TestProjectConstant,testGenDefinitionCCode_matrix)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenUsageCCode_scalar)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("1",0);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	LatexEntity entity("C");
 	stringstream out;
 	constant.genUsageCCode(out,context,entity);
@@ -181,10 +181,10 @@ TEST(TestProjectConstant,testGenUsageCCode_scalar)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenUsageCCode_vector)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("1;10",1);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	MockProjectEntity var("m","testM");
 	context.addEntry(&var);
 	LatexEntity entity("C_{m +5}");
@@ -197,10 +197,10 @@ TEST(TestProjectConstant,testGenUsageCCode_vector)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenUsageCCode_matrix)
 {
-	CMRProjectConstant constant("C","testC");
+	ProjectConstant constant("C","testC");
 	constant.loadValues("1;10\\2;5",2);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	MockProjectEntity var("m","testM");
 	context.addEntry(&var);
 	LatexEntity entity("C_{m +5,m*2}");

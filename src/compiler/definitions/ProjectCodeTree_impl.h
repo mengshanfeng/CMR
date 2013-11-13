@@ -7,12 +7,14 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-#ifndef CMR_PROJECT_CODE_TREE_IMPL_H
-#define CMR_PROJECT_CODE_TREE_IMPL_H
+#ifndef CMR_COMPILER_PROJECT_CODE_TREE_IMPL_H
+#define CMR_COMPILER_PROJECT_CODE_TREE_IMPL_H
 
 /********************  HEADERS  *********************/
-#include "CMRProjectCodeTree.h"
-
+#include <cstdlib>
+#include <cassert>
+#include "ProjectContext.h"
+#include "ProjectCodeTree.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -20,7 +22,7 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 template <class T>
-CMRProjectCodeTree<T>::CMRProjectCodeTree ( void )
+ProjectCodeTree<T>::ProjectCodeTree ( void )
 {
 	//init vars
 	this->next = NULL;
@@ -32,14 +34,14 @@ CMRProjectCodeTree<T>::CMRProjectCodeTree ( void )
 
 /*******************  FUNCTION  *********************/
 template <class T>
-CMRProjectCodeTree<T>::~CMRProjectCodeTree ( void )
+ProjectCodeTree<T>::~ProjectCodeTree ( void )
 {
 	clearChilds();
 }
 
 /*******************  FUNCTION  *********************/
 template <class T>
-void CMRProjectCodeTree<T>::clearChilds ( void )
+void ProjectCodeTree<T>::clearChilds ( void )
 {
 	//vars
 	T * cur = firstChild;
@@ -60,7 +62,7 @@ void CMRProjectCodeTree<T>::clearChilds ( void )
 
 /*******************  FUNCTION  *********************/
 template <class T>
-void CMRProjectCodeTree<T>::detach ( void )
+void ProjectCodeTree<T>::detach ( void )
 {
 	//update next
 	if (next != NULL)
@@ -85,7 +87,7 @@ void CMRProjectCodeTree<T>::detach ( void )
 
 /*******************  FUNCTION  *********************/
 template <class T>
-int CMRProjectCodeTree<T>::getDepth ( void ) const
+int ProjectCodeTree<T>::getDepth ( void ) const
 {
 	//vars
 	int tmp = 0;
@@ -104,7 +106,7 @@ int CMRProjectCodeTree<T>::getDepth ( void ) const
 
 /*******************  FUNCTION  *********************/
 template <class T>
-bool CMRProjectCodeTree<T>::hasChild ( void ) const
+bool ProjectCodeTree<T>::hasChild ( void ) const
 {
 	assert(firstChild == NULL || lastChild != NULL);
 	return (firstChild != NULL);
@@ -112,14 +114,14 @@ bool CMRProjectCodeTree<T>::hasChild ( void ) const
 
 /*******************  FUNCTION  *********************/
 template <class T>
-void CMRProjectCodeTree<T>::onParentChange ( T* newParent )
+void ProjectCodeTree<T>::onParentChange ( T* newParent )
 {
 
 }
 
 /*******************  FUNCTION  *********************/
 template <class T>
-T * CMRProjectCodeTree<T>::insert ( T* entry, CMRProjectCodeTreeInsert location )
+T * ProjectCodeTree<T>::insert ( T* entry, ProjectCodeTreeInsert location )
 {
 	//vars
 	T * localParent;
@@ -198,7 +200,7 @@ T * CMRProjectCodeTree<T>::insert ( T* entry, CMRProjectCodeTreeInsert location 
 	if (localParent != parent)
 		onParentChange(parent);
 	if (entryParent != entry->parent)
-		((CMRProjectCodeTree<T>*)entry)->onParentChange(entry->parent);
+		((ProjectCodeTree<T>*)entry)->onParentChange(entry->parent);
 	
 	//finish
 	return entry;
@@ -206,4 +208,4 @@ T * CMRProjectCodeTree<T>::insert ( T* entry, CMRProjectCodeTreeInsert location 
 
 }
 
-#endif //CMR_PROJECT_CODE_TREE_IMPL_H
+#endif //CMR_COMPILER_PROJECT_CODE_TREE_IMPL_H

@@ -1,10 +1,9 @@
 
-#ifndef CMR_PROJECT_CONSTANT_H
-#define CMR_PROJECT_CONSTANT_H
+#ifndef CMR_COMPILER_PROJECT_CONSTANT_H
+#define CMR_COMPILER_PROJECT_CONSTANT_H
 
 /********************  HEADERS  *********************/
 #include "ProjectEntity.h"
-
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -15,17 +14,17 @@ class CMRTransformation;
 class CMRModelBasedReplacement;
 
 /*********************  TYPES  **********************/
-typedef std::vector<CMRCompiler::LatexFormulas> CMRConstantFormulaVector;
+typedef std::vector<LatexFormulas> ConstantFormulaVector;
 
 /*********************  CLASS  **********************/
-class CMRProjectConstant : public ProjectEntity
+class ProjectConstant : public ProjectEntity
 {
 	public:
-		CMRProjectConstant( const std::string& latexName, const std::string& longName );
+		ProjectConstant( const std::string& latexName, const std::string& longName );
 		void loadValues(const std::string & data,int dimensions);
 		virtual void printDebug(std::ostream & out) const;
-		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context ,int indent = 0) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
+		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context ,int indent = 0) const;
+		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false ) const;
 		void printValues(std::ostream & out) const;
 	protected:
 		void addDimension(int size);
@@ -33,13 +32,13 @@ class CMRProjectConstant : public ProjectEntity
 		void loadValuesVector(const std::string & data);
 		void loadValuesMatrix(const std::string & data);
 		void transform(void);
-		void transform(CMRCompiler::LatexFormulas& formula, CMRModelBasedReplacement & action);
-		void transform(CMRCompiler::LatexEntity& entity, CMRModelBasedReplacement & action);
+		void transform(LatexFormulas& formula, CMRModelBasedReplacement & action);
+		void transform(LatexEntity& entity, CMRModelBasedReplacement & action);
 	protected:
 		ConstantDimensionsVector dims;
-		CMRConstantFormulaVector formulas;
+		ConstantFormulaVector formulas;
 };
 
 }
 
-#endif //CMR_PROJECT_CONSTANT_H
+#endif //CMR_COMPILER_PROJECT_CONSTANT_H

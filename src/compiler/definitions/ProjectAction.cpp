@@ -21,7 +21,7 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-ProjectAction::ProjectAction ( const string& name, const string& descr, CMRProjectContext* parentContext )
+ProjectAction::ProjectAction ( const string& name, const string& descr, ProjectContext* parentContext )
 	:ops(parentContext)
 {
 	this->name = name;
@@ -82,7 +82,7 @@ CMRProjectCodeEquation& ProjectAction::addEquation ( const string& eq )
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::LangDef & lang,const CMRProjectContext& context, int padding ) const
+void ProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::LangDef & lang,const ProjectContext& context, int padding ) const
 {
 	CMRCompiler::CodeTemplateValueDic dic;
 	dic.set("descr",this->descr);
@@ -95,7 +95,7 @@ void ProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::LangDe
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectAction::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectAction::genUsageCCode ( ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	assert(false);
 }
@@ -107,13 +107,13 @@ void ProjectAction::printDebug ( ostream& out ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectContext& ProjectAction::getContext ( void )
+ProjectContext& ProjectAction::getContext ( void )
 {
 	return ops.getContext();
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEntry* ProjectAction::insert ( CMRProjectCodeEntry* entry, CMRProjectCodeTreeInsert location )
+CMRProjectCodeEntry* ProjectAction::insert ( CMRProjectCodeEntry* entry, ProjectCodeTreeInsert location )
 {
 	return ops.insert(entry,location);
 }
@@ -135,13 +135,13 @@ ProjectActionParameter::ProjectActionParameter ( const string& latexName, const 
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectActionParameter::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int padding ) const
+void ProjectActionParameter::genDefinitionCCode ( ostream& out, const ProjectContext& context, int padding ) const
 {
 	return;
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectActionParameter::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectActionParameter::genUsageCCode ( ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	out << this->getLongName();
 }

@@ -32,7 +32,7 @@ CMRProjectLocalVariable::CMRProjectLocalVariable ( const std::string& latexName,
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectLocalVariable::genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding ) const
+void CMRProjectLocalVariable::genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding ) const
 {
 	doIndent(out,padding) << type << " " << getLongName() << " = ";
 	cmrGenEqCCode(out,context,defaultValue);
@@ -40,19 +40,19 @@ void CMRProjectLocalVariable::genDefinitionCCode ( std::ostream& out, const CMRP
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectLocalVariable::genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void CMRProjectLocalVariable::genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	out << getLongName();
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectContext& CMRProjectCodeEntry::getContext ( void )
+ProjectContext& CMRProjectCodeEntry::getContext ( void )
 {
 	return context;
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectCodeEntry::setParentContext ( CMRProjectContext* parentContext )
+void CMRProjectCodeEntry::setParentContext ( ProjectContext* parentContext )
 {
 	this->context.setParent(parentContext);
 }
@@ -163,7 +163,7 @@ ProjectIterator& CMRProjectCodeEntry::addIterator ( const string& latexName, con
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeNode& CMRProjectCodeEntry::addSubBlock ( CMRProjectCodeTreeInsert location )
+CMRProjectCodeNode& CMRProjectCodeEntry::addSubBlock ( ProjectCodeTreeInsert location )
 {
 	CMRProjectCodeNode * res = new CMRProjectCodeNode();
 	this->insert(res,location);
@@ -171,7 +171,7 @@ CMRProjectCodeNode& CMRProjectCodeEntry::addSubBlock ( CMRProjectCodeTreeInsert 
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEquation& CMRProjectCodeEntry::addEquation ( const string& latexName, const string& compute, const string& op, CMRProjectCodeTreeInsert location )
+CMRProjectCodeEquation& CMRProjectCodeEntry::addEquation ( const string& latexName, const string& compute, const string& op, ProjectCodeTreeInsert location )
 {
 	CMRProjectCodeEquation * eq = new CMRProjectCodeEquation(latexName,compute,op);
 	this->insert(eq,location);
@@ -179,7 +179,7 @@ CMRProjectCodeEquation& CMRProjectCodeEntry::addEquation ( const string& latexNa
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeIteratorLoop & CMRProjectCodeEntry::addIteratorLoop ( const string& iterator, CMRProjectCodeTreeInsert location )
+CMRProjectCodeIteratorLoop & CMRProjectCodeEntry::addIteratorLoop ( const string& iterator, ProjectCodeTreeInsert location )
 {
 	CMRProjectCodeIteratorLoop * loop = new CMRProjectCodeIteratorLoop(iterator);
 	this->insert(loop,location);
@@ -193,7 +193,7 @@ CMRProjectCodeType CMRProjectCodeIteratorLoop::getType ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectLocalVariable& CMRProjectCodeEntry::addLocalVariable ( const string& latexName, const string& longName, const string& type, const string& defaultValue, CMRProjectCodeTreeInsert location )
+CMRProjectLocalVariable& CMRProjectCodeEntry::addLocalVariable ( const string& latexName, const string& longName, const string& type, const string& defaultValue, ProjectCodeTreeInsert location )
 {
 	CMRProjectLocalVariable * var = new CMRProjectLocalVariable(latexName,longName,type,defaultValue);
 	#warning check location of context
@@ -203,14 +203,14 @@ CMRProjectLocalVariable& CMRProjectCodeEntry::addLocalVariable ( const string& l
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeNode::CMRProjectCodeNode(CMRProjectContext* context)
+CMRProjectCodeNode::CMRProjectCodeNode(ProjectContext* context)
 	:CMRProjectCodeEntry(context)
 {
 	
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEntry::CMRProjectCodeEntry(CMRProjectContext* context)
+CMRProjectCodeEntry::CMRProjectCodeEntry(ProjectContext* context)
 	:context(context)
 {
 
@@ -296,7 +296,7 @@ void CMRProjectCodeEquation::genCCode ( ostream& out, int padding ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeRootNode::CMRProjectCodeRootNode ( CMRProjectContext* context ) : CMRProjectCodeNode ( context )
+CMRProjectCodeRootNode::CMRProjectCodeRootNode ( ProjectContext* context ) : CMRProjectCodeNode ( context )
 {
 	
 }
@@ -413,7 +413,7 @@ void CMRProjectCConstruct::extractReplacementLocus ( ExtractionLocusList& locusL
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectCConstruct::genCCode ( ostream& out, const CMRProjectContext& context, int padding ) const
+void CMRProjectCConstruct::genCCode ( ostream& out, const ProjectContext& context, int padding ) const
 {
 	//vars
 	ExtractionLocusList locusList;
@@ -456,7 +456,7 @@ const LatexFormulas* CMRProjectCConstruct::getLocusValue ( const ExtractionLocus
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCSimpleConstruct::CMRProjectCSimpleConstruct ( CMRProjectContext * parentContext, const string& code ) 
+CMRProjectCSimpleConstruct::CMRProjectCSimpleConstruct ( ProjectContext * parentContext, const string& code ) 
 	: CMRProjectCodeNode(parentContext), construct(code)
 {
 	

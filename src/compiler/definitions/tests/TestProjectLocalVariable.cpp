@@ -29,7 +29,7 @@ TEST(TestProjectLocalVariable,testGenUsageCCode)
 {
 	CMRProjectLocalVariable var("A_i","toto","int","1");
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	LatexEntity entity("A_i");
 	
 	stringstream out1;
@@ -50,7 +50,7 @@ TEST(TestProjectLocalVariable,testGenDefinitionCCode)
 {
 	CMRProjectLocalVariable var("A_i","toto","int","1");
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	LatexEntity entity("A_i");
 	
 	stringstream out1;

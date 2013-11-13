@@ -50,7 +50,7 @@ TEST(TestProjectCodeNode,testAddEquation)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectCodeNode,testIteratorLoop_ok)
 {
-	CMRProjectContext context;	
+	ProjectContext context;	
 	CMRProjectCodeNode root(&context);
 	
 	ProjectIterator it("k","itK",0,9);

@@ -19,17 +19,17 @@ void test1(void)
 {	
 	cerr << "===================================================" << endl;
 	CMRProject2 project;
-	CMRProjectConstant & direction_matrix = project.addConstant("M","direction_matrix");
+	ProjectConstant & direction_matrix = project.addConstant("M","direction_matrix");
 	direction_matrix.loadValues("0.0 & 0.0 \\\\ 1.0 & 0.0 \\\\ 0.0 & 1.0 \\\\ -1.0 & 0.0 \\\\ 0.0 & -1.0 \\\\ 1.0 & 1.0 \\\\ -1.0 & 1.0 \\\\ -1.0 & -1.0 \\\\ 1.0 & -1.0",2);
 	//cst2.addIndice("k",CMR_CAPTURE_REQUIRED);
 		
-	CMRProjectConstant & equi_weight = project.addConstant("W","equi_weight");
+	ProjectConstant & equi_weight = project.addConstant("W","equi_weight");
 	equi_weight.loadValues("4.0/9.0 & 1.0/9.0 & 1.0/9.0 & 1.0/9.0 & 1.0/9.0 & 1.0/36.0 & 1.0/36.0 & 1.0/36.0 & 1.0/36.0",1);
 		
-	CMRProjectConstant & opposite_of = project.addConstant("o","opposite_of");
+	ProjectConstant & opposite_of = project.addConstant("o","opposite_of");
 	opposite_of.loadValues("0 & 3 & 4 & 1 & 2 & 7 & 8 & 5 & 6",1);
 		
-	CMRProjectConstant & reynolds = project.addConstant("R","reynolds");
+	ProjectConstant & reynolds = project.addConstant("R","reynolds");
 	reynolds.loadValues("300",0);
 	///////
 		

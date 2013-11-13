@@ -11,7 +11,7 @@
 #include "../CMRTransformationBasic.h"
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/ProjectIterator.h>
-#include <../definitions/CMRProjectConstant.h>
+#include <../definitions/ProjectConstant.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -93,12 +93,12 @@ TEST(TestProjectTransfBasic,testTransformLoop)
 {
 	MockTransfBasic transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
 	root.addIteratorLoop("k");
-	
+
 	transf.run(root);
 	EXPECT_EQ("NODE[ LOOP[ k , NODE[  ] ] ]",transf.out.str());
 }
@@ -108,7 +108,7 @@ TEST(TestProjectTransfBasic,testTransformEquation_1)
 {
 	MockTransfBasic transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
@@ -124,7 +124,7 @@ TEST(TestProjectTransfBasic,testTransformEquation_2)
 {
 	MockTransfBasic transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
@@ -140,7 +140,7 @@ TEST(TestProjectTransfBasic,testTransformEquation_3)
 {
 	MockTransfBasic transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);
@@ -156,7 +156,7 @@ TEST(TestProjectTransfBasic,testTransformEquation_4)
 {
 	MockTransfBasic transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectIterator it("k","testK",0,9);
 	context.addEntry(&it);
 	CMRProjectCodeNode root(&context);

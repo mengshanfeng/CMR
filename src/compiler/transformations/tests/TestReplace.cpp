@@ -12,7 +12,7 @@
 #include <CMRTransformationReplace.h>
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/ProjectIterator.h>
-#include <../definitions/CMRProjectConstant.h>
+#include <../definitions/ProjectConstant.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -35,7 +35,7 @@ TEST(TestReplace,testRun_single)
 	map["b"] = &f;
 	CMRTransformationReplace transf(&map);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -55,7 +55,7 @@ TEST(TestReplace,testRun_complex)
 	map["b"] = &f;
 	CMRTransformationReplace transf(&map);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -77,7 +77,7 @@ TEST(TestReplace,testRun_recurse)
 	map["b"] = &f2;
 	CMRTransformationReplace transf(&map);
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");

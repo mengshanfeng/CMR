@@ -8,7 +8,7 @@
 
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
-#include <CMRProjectContext.h>
+#include <ProjectContext.h>
 #include "../../parsor/LatexFormula.h"
 #include <sstream>
 #include "MockProjectEntity.h"
@@ -26,7 +26,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_1)
 	MockProjectEntity entity2("A_{i,j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
 	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
-	CMRProjectContext context;
+	ProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
 	context.addEntry(&entity3);
@@ -45,7 +45,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_2)
 	MockProjectEntity entity2("A_{i,j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
 	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
-	CMRProjectContext context;
+	ProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
 	context.addEntry(&entity3);
@@ -64,7 +64,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_3)
 	MockProjectEntity entity2("A_{i, j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
 	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
-	CMRProjectContext context;
+	ProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
 	context.addEntry(&entity3);
@@ -83,7 +83,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_4)
 	MockProjectEntity entity2("A_{i, j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
 	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
-	CMRProjectContext context;
+	ProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
 	context.addEntry(&entity3);
@@ -102,7 +102,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_5)
 	MockProjectEntity entity2("A_{i, j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
 	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
-	CMRProjectContext context;
+	ProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
 	context.addEntry(&entity3);
@@ -120,7 +120,7 @@ TEST(TestGenCode,testCmrGenEqCCode_entity_6)
 	MockProjectEntity entity2("A_{i, j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
 	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
-	CMRProjectContext context;
+	ProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
 	context.addEntry(&entity3);
@@ -138,7 +138,7 @@ TEST(TestGenCode,testCmrGenEqCCode_formula)
 	MockProjectEntity entity2("A_{i,j}","testAij");
 	MockProjectEntity entity3("B_i","testB");
 	entity3.changeCaptureType("i",CAPTURE_REQUIRED);
-	CMRProjectContext context;
+	ProjectContext context;
 	context.addEntry(&entity1);
 	context.addEntry(&entity2);
 	context.addEntry(&entity3);

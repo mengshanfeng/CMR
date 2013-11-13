@@ -26,7 +26,7 @@ TEST(TestCConstruct,testConstructor)
 TEST(TestCConstruct,testSimpleGenCode)
 {
 	//setup construct
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCConstruct construct("abort();");
 	
 	//gen
@@ -41,7 +41,7 @@ TEST(TestCConstruct,testSimpleGenCode)
 TEST(TestCConstruct,testUserArgs1)
 {
 	//setup context
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
@@ -63,7 +63,7 @@ TEST(TestCConstruct,testUserArgs1)
 TEST(TestCConstruct,testUserArgs2)
 {
 	//setup context
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
@@ -86,7 +86,7 @@ TEST(TestCConstruct,testUserArgs2)
 TEST(TestCConstruct,testUserArgs3)
 {
 	//setup context
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
@@ -109,7 +109,7 @@ TEST(TestCConstruct,testUserArgs3)
 TEST(TestCConstruct,testAutoArgs1)
 {
 	//setup context
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
@@ -130,7 +130,7 @@ TEST(TestCConstruct,testAutoArgs1)
 TEST(TestCConstruct,testMixArgs)
 {
 	//setup context
-	CMRProjectContext context;
+	ProjectContext context;
 	ProjectMeshVar var("v_{i,j}","var","double");
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
@@ -152,7 +152,7 @@ TEST(TestCConstruct,testMixArgs)
 TEST(TestCConstruct,testEscape)
 {
 	//setup context
-	CMRProjectContext context;
+	ProjectContext context;
 
 	//setup construct
 	CMRProjectCConstruct construct("pow(\\$1,\\%1,\\%a1);");

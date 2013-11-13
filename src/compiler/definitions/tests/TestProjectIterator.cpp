@@ -12,7 +12,7 @@
 #include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
-#include <CMRProjectContext.h>
+#include <ProjectContext.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -50,7 +50,7 @@ TEST(TestProjectIterator,testPrintDebug)
 TEST(TestProjectIterator,testGenDefinitionCCode)
 {
 	ProjectIterator it("k","testK",0,9);
-	CMRProjectContext context;
+	ProjectContext context;
 	
 	stringstream out;
 	it.genDefinitionCCode(out,context);
@@ -62,7 +62,7 @@ TEST(TestProjectIterator,testGenDefinitionCCode)
 TEST(TestProjectIterator,testGenUsageCCode)
 {
 	ProjectIterator it("k","testK",0,9);
-	CMRProjectContext context;
+	ProjectContext context;
 	LatexEntity entity("k");
 	
 	stringstream out;

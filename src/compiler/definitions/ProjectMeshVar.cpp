@@ -80,7 +80,7 @@ ostream& ProjectMeshVar::genCPPAccessorConstrAcc(ostream& out)
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectMeshVar::genDefinitionCCode ( ostream& out, const CMRProjectContext& context, int indent ) const
+void ProjectMeshVar::genDefinitionCCode ( ostream& out, const ProjectContext& context, int indent ) const
 {
 	throw LatexException("Variable must be defined by calling special functions from project structure, not directly by genDefinitionCCode function.");
 }
@@ -96,7 +96,7 @@ string ProjectMeshVar::getTypeWithDims ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectMeshVar::genUsageCCode( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectMeshVar::genUsageCCode( ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	ProjectCaptureMap capture;
 

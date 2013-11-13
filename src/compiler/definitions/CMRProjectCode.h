@@ -13,7 +13,7 @@
 /********************  HEADERS  *********************/
 #include <ostream>
 #include <list>
-#include "CMRProjectCodeTree.h"
+#include "ProjectCodeTree.h"
 #include "ProjectIterator.h"
 #include "../parsor/LatexFormula.h"
 #include "../common/CodeTemplate.h"
@@ -61,26 +61,26 @@ class CMRProjectLocalVariable : public ProjectEntity
 {
 	public:
 		CMRProjectLocalVariable( const std::string& latexName, const std::string& longName, const std::string& type, const std::string& defaultValue = "0");
-		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
+		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding = 0 ) const;
+		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
 	private:
 		std::string type;
 		CMRCompiler::LatexFormulas defaultValue;
 };
 
 /*********************  TYPES  **********************/
-class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
+class CMRProjectCodeEntry : public ProjectCodeTree<CMRProjectCodeEntry>
 {
 	public:
-		CMRProjectCodeEntry(CMRProjectContext * context = NULL);
+		CMRProjectCodeEntry(ProjectContext * context = NULL);
 		virtual CMRProjectCodeType getType(void) const = 0;
-		virtual void setParentContext(CMRProjectContext * parentContext);
-		CMRProjectContext & getContext(void);
-		CMRProjectCodeNode& addSubBlock( CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
+		virtual void setParentContext(ProjectContext * parentContext);
+		ProjectContext & getContext(void);
+		CMRProjectCodeNode& addSubBlock( ProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
 		CMRProjectCodeEquation & addEquation ( const std::string& eq );
-		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=",CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
-		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator, CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
-		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue, CMRProjectCodeTreeInsert	
+		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=",ProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		CMRProjectCodeIteratorLoop& addIteratorLoop( const std::string& iterator, ProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD );
+		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue, ProjectCodeTreeInsert	
 		location = CMR_INSERT_FIRST_CHILD);
 		ProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start,int end);
 		virtual void genCCode(std::ostream & out,int padding = 0) const = 0;
@@ -90,7 +90,7 @@ class CMRProjectCodeEntry : public CMRProjectCodeTree<CMRProjectCodeEntry>
 	protected:
 		virtual void onParentChange ( CMRProjectCodeEntry * newParent );
 	protected:
-		CMRProjectContext context;
+		ProjectContext context;
 };
 
 /*********************  CLASS  **********************/
@@ -108,7 +108,7 @@ class CMRCodeValueForCodeEntry : public CMRCompiler::CodeTemplateValue
 class CMRProjectCodeNode : public CMRProjectCodeEntry
 {
 	public:
-		CMRProjectCodeNode(CMRProjectContext * context = NULL);
+		CMRProjectCodeNode(ProjectContext * context = NULL);
 		virtual CMRProjectCodeType getType(void ) const;
 		virtual void genCCode(std::ostream & out,int padding = 0) const;
 };
@@ -117,7 +117,7 @@ class CMRProjectCodeNode : public CMRProjectCodeEntry
 class CMRProjectCodeRootNode : public CMRProjectCodeNode
 {
 	public:
-		CMRProjectCodeRootNode(CMRProjectContext * context = NULL);
+		CMRProjectCodeRootNode(ProjectContext * context = NULL);
 		virtual void genCCode(std::ostream & out,int padding = 0) const;
 };
 
@@ -167,7 +167,7 @@ class CMRProjectCConstruct
 	public:
 		CMRProjectCConstruct(const std::string & code);
 		CMRProjectCConstruct & arg(const std::string & value);
-		void genCCode( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
+		void genCCode( std::ostream& out, const ProjectContext& context, int padding = 0 ) const;
 	private:
 		void loadCode(const std::string & code);
 		void extractReplacementLocus( ExtractionLocusList& locusList ) const;
@@ -182,7 +182,7 @@ class CMRProjectCConstruct
 class CMRProjectCSimpleConstruct : public CMRProjectCodeNode
 {
 	public:
-		CMRProjectCSimpleConstruct( CMRProjectContext * parentContext,const std::string & code);
+		CMRProjectCSimpleConstruct( ProjectContext * parentContext,const std::string & code);
 		CMRProjectCSimpleConstruct & arg(const std::string & value);
 		virtual CMRProjectCodeType getType(void) const;
 		virtual void genCCode ( std::ostream& out ,int padding = 0 ) const;

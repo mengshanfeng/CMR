@@ -9,10 +9,8 @@
 
 /********************  HEADERS  *********************/
 #include <cassert>
-#include <cstdlib>
-#include <iostream>
 #include <sstream>
-#include "CMRProjectContext.h"
+#include "ProjectContext.h"
 
 using namespace std;
 
@@ -24,7 +22,7 @@ namespace CMRCompiler
 static int tmpCnt = 0;
 
 /*******************  FUNCTION  *********************/
-CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
+ProjectContext::ProjectContext(const ProjectContext* parent)
 {
 	//errors
 	assert(parent != this);
@@ -34,7 +32,7 @@ CMRProjectContext::CMRProjectContext(const CMRProjectContext* parent)
 }
 
 /*******************  FUNCTION  *********************/
-ProjectEntity & CMRProjectContext::addEntry(ProjectEntity* entry)
+ProjectEntity & ProjectContext::addEntry(ProjectEntity* entry)
 {
 	//vars
 	ProjectEntity * conflict;
@@ -60,10 +58,10 @@ ProjectEntity & CMRProjectContext::addEntry(ProjectEntity* entry)
 }
 
 /*******************  FUNCTION  *********************/
-ProjectEntity * CMRProjectContext::checkUnique(const ProjectEntity & entry)
+ProjectEntity * ProjectContext::checkUnique(const ProjectEntity & entry)
 {
 	//search in list
-	for (CMRProjectEntityList::iterator it = entities.begin() ; it != entities.end() ; ++it)
+	for (ProjectEntityList::iterator it = entities.begin() ; it != entities.end() ; ++it)
 	{
 		//march names
 		if (entry.getLongName() == (*it)->getLongName())
@@ -83,7 +81,7 @@ ProjectEntity * CMRProjectContext::checkUnique(const ProjectEntity & entry)
 }
 
 /*******************  FUNCTION  *********************/
-const ProjectEntity* CMRProjectContext::findInParent(const LatexEntity& entity, bool onlyWildCardNames) const
+const ProjectEntity* ProjectContext::findInParent(const LatexEntity& entity, bool onlyWildCardNames) const
 {
 	if (parent == NULL)
 		return NULL;
@@ -92,7 +90,7 @@ const ProjectEntity* CMRProjectContext::findInParent(const LatexEntity& entity, 
 }
 
 /*******************  FUNCTION  *********************/
-const ProjectEntity* CMRProjectContext::find( const LatexEntity & entity , bool onlyWildCardNames) const
+const ProjectEntity* ProjectContext::find( const LatexEntity & entity , bool onlyWildCardNames) const
 {
 // 	#warning "Do some stuff on priority rules when found multiple matches (similar to what CSS dores)"
 // 	//check wildcard name in parent
@@ -104,7 +102,7 @@ const ProjectEntity* CMRProjectContext::find( const LatexEntity & entity , bool 
 // 	}
 
 	//searh in list
-	for (CMRProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
+	for (ProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
 	{
 		if ((onlyWildCardNames == false || (*it)->isWildcardName()) && (*it)->match(entity))
 			return *it;
@@ -118,11 +116,11 @@ const ProjectEntity* CMRProjectContext::find( const LatexEntity & entity , bool 
 }
 
 /*******************  FUNCTION  *********************/
-int CMRProjectContext::countTotalEntries ( void ) const
+int ProjectContext::countTotalEntries ( void ) const
 {
 	//vars
 	int cnt = 0;
-	const CMRProjectContext * cur = this;
+	const ProjectContext * cur = this;
 	
 	//sum parent entries
 	while (cur != NULL)
@@ -136,27 +134,27 @@ int CMRProjectContext::countTotalEntries ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectContext::printDebug ( std::ostream & out ) const
+void ProjectContext::printDebug ( std::ostream & out ) const
 {
 	//vars
-	const CMRProjectContext * cur = this;
+	const ProjectContext * cur = this;
 	
 	//loop on entries
 	while (cur != NULL)
 	{
 		out << "   - Level : " << endl;
-		for (CMRProjectEntityList::const_iterator it = cur->entities.begin(); it != cur->entities.end() ; ++it)
+		for (ProjectEntityList::const_iterator it = cur->entities.begin(); it != cur->entities.end() ; ++it)
 			out << "          + " << (*it)->getLatexName() << " : " << (*it)->getLongName() << endl;
 		cur = cur->parent;
 	}
 }
 
 /*******************  FUNCTION  *********************/
-int CMRProjectContext::getDepth ( void ) const
+int ProjectContext::getDepth ( void ) const
 {
 	//vars
 	int tmp = 0;
-	const CMRProjectContext * current = this;
+	const ProjectContext * current = this;
 	
 	//loop in tree
 	while (current->parent != NULL)
@@ -170,9 +168,9 @@ int CMRProjectContext::getDepth ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-CMRTempNames CMRProjectContext::genTempName ( const std::string & base )
+ProjectTempNames ProjectContext::genTempName ( const std::string & base )
 {
-	CMRTempNames res;
+	ProjectTempNames res;
 
 	stringstream tmpLong;
 	tmpLong << base << "_" << getDepth() << "_" << tmpCnt;
@@ -188,11 +186,11 @@ CMRTempNames CMRProjectContext::genTempName ( const std::string & base )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectContext::setParent ( const CMRProjectContext* parent )
+void ProjectContext::setParent ( const ProjectContext* parent )
 {
 	if (parent != NULL)
 	{
-		for (CMRProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
+		for (ProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
 			checkUnique(**it);
 	}
 	

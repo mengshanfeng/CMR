@@ -101,7 +101,7 @@ TEST(TestProjectDefinition,testGenDefinitionCCode)
 	def.addEquation("E","4*5");
 	def.addIteratorLoop("k").addEquation("t","3*k","+=");
 	def.addEquation("E","t*3","+=");
-	CMRProjectContext context;
+	ProjectContext context;
 	
 	stringstream out;
 	def.genDefinitionCCode(out,&context,0);
@@ -118,7 +118,7 @@ TEST(TestProjectDefinition,testGenDefinitionCCodeIndent)
 	def.addEquation("E","4*5");
 	def.addIteratorLoop("k").addEquation("t","3*k","+=");
 	def.addEquation("E","t*3","+=");
-	CMRProjectContext context;
+	ProjectContext context;
 	
 	stringstream out;
 	def.genDefinitionCCode(out,&context,1);
@@ -136,7 +136,7 @@ TEST(TestProjectDefinition,testGenDefinitionCCodeParams)
 	def.addEquation("E_{i,j,h}","4*5+h");
 	def.addIteratorLoop("k").addEquation("t","3*k","+=");
 	def.addEquation("E_{i,j,h}","t*3","+=");
-	CMRProjectContext context;
+	ProjectContext context;
 	
 	stringstream out;
 	def.genDefinitionCCode(out,&context,0);
@@ -154,7 +154,7 @@ TEST(TestProjectDefinition,testGenUsageCCodeRead)
 	def.addEquation("E","4*5");
 	def.addIteratorLoop("k").addEquation("t","3*k","+=");
 	def.addEquation("E","t*3","+=");
-	CMRProjectContext context;
+	ProjectContext context;
 	
 	stringstream out;
 	LatexEntity entity("E");
@@ -173,7 +173,7 @@ TEST(TestProjectDefinition,testGenUsageCCodeParamsRead)
 	def.addEquation("E_{i,j,h}","4*5+h");
 	def.addIteratorLoop("k").addEquation("t","3*k","+=");
 	def.addEquation("E_{i,j,h}","t*3","+=");
-	CMRProjectContext context;
+	ProjectContext context;
 	
 	stringstream out;
 	LatexEntity entity("E_{i,j,3}");

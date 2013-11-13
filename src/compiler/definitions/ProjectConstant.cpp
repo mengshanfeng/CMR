@@ -8,16 +8,13 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <cstdlib>
-#include <cstdio>
 #include <cassert>
-#include <iostream>
 #include <sstream>
-#include "CMRProjectConstant.h"
-#include "../parsor/ParsorBasics.h"
-#include "../parsor/LatexFormula.h"
 #include "GenCode.h"
-#include "../transformations/CMRModelBasedReplacement.h"
+#include "ProjectConstant.h"
+#include "parsor/ParsorBasics.h"
+#include "parsor/LatexFormula.h"
+#include "transformations/CMRModelBasedReplacement.h"
 
 /********************  NAMESPACE  *******************/
 using namespace std;
@@ -27,13 +24,13 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-CMRProjectConstant::CMRProjectConstant ( const string& latexName, const string& longName) 
+ProjectConstant::ProjectConstant ( const string& latexName, const string& longName) 
 	: ProjectEntity ( latexName, longName )
 {
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::loadValues ( const string& data, int dimensions )
+void ProjectConstant::loadValues ( const string& data, int dimensions )
 {
 	assert(formulas.empty());
 	switch(dimensions)
@@ -56,7 +53,7 @@ void CMRProjectConstant::loadValues ( const string& data, int dimensions )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::loadValuesScalar ( const string& data )
+void ProjectConstant::loadValuesScalar ( const string& data )
 {
 	//errors
 	if(data.empty())
@@ -72,7 +69,7 @@ void CMRProjectConstant::loadValuesScalar ( const string& data )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::loadValuesVector ( const string& data )
+void ProjectConstant::loadValuesVector ( const string& data )
 {
 	//errors
 	if(data.empty())
@@ -96,7 +93,7 @@ void CMRProjectConstant::loadValuesVector ( const string& data )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::loadValuesMatrix ( const string& data )
+void ProjectConstant::loadValuesMatrix ( const string& data )
 {
 	//vars
 	int dim1 = -1;
@@ -130,7 +127,7 @@ void CMRProjectConstant::loadValuesMatrix ( const string& data )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::addDimension ( int size )
+void ProjectConstant::addDimension ( int size )
 {
 	dims.push_back(size);
 	switch(dims.size())
@@ -149,7 +146,7 @@ void CMRProjectConstant::addDimension ( int size )
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::printDebug ( std::ostream & out ) const
+void ProjectConstant::printDebug ( std::ostream & out ) const
 {
 	//default
 	ProjectEntity::printDebug(out);
@@ -176,7 +173,7 @@ void CMRProjectConstant::printDebug ( std::ostream & out ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectContext& context ,int indent) const
+void ProjectConstant::genDefinitionCCode ( ostream& out, const ProjectContext& context ,int indent) const
 {
 	//check errors
 	assert(dims.size() <= 2);
@@ -216,7 +213,7 @@ void CMRProjectConstant::genDefinitionCCode ( ostream& out, const CMRProjectCont
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectConstant::genUsageCCode ( ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	//extract matching
 	ProjectCaptureMap capture;
@@ -255,7 +252,7 @@ void CMRProjectConstant::genUsageCCode ( ostream& out, const CMRProjectContext& 
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::printValues ( ostream& out ) const
+void ProjectConstant::printValues ( ostream& out ) const
 {
 	switch(dims.size())
 	{
@@ -280,15 +277,15 @@ void CMRProjectConstant::printValues ( ostream& out ) const
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::transform ( void )
+void ProjectConstant::transform ( void )
 {
 	CMRModelBasedReplacement frac("\\frac{a}{b}","a/b");
-	for (CMRConstantFormulaVector::iterator it = formulas.begin() ; it != formulas.end() ; ++it)
+	for (ConstantFormulaVector::iterator it = formulas.begin() ; it != formulas.end() ; ++it)
 		transform(*it,frac);
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::transform ( LatexFormulas& formula, CMRModelBasedReplacement& action )
+void ProjectConstant::transform ( LatexFormulas& formula, CMRModelBasedReplacement& action )
 {
 	for (LatexEntityVector::iterator it = formula.begin() ; it != formula.end() ; ++it)
 		if (formula.hasInfo("cmrNoTranform") == false)
@@ -296,7 +293,7 @@ void CMRProjectConstant::transform ( LatexFormulas& formula, CMRModelBasedReplac
 }
 
 /*******************  FUNCTION  *********************/
-void CMRProjectConstant::transform ( LatexEntity& entity, CMRModelBasedReplacement& action )
+void ProjectConstant::transform ( LatexEntity& entity, CMRModelBasedReplacement& action )
 {
 	action.apply(entity);
 	

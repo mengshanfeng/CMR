@@ -49,7 +49,7 @@ void CMRTransformationExtractLoops::transform ( CMRProjectCodeEquation& equation
 		assert(entity.parameters.size() == 1);
 		
 		//setup temp variable
-		CMRTempNames tmp = equation.getContext().genTempName();
+		ProjectTempNames tmp = equation.getContext().genTempName();
 		equation.getParent()->addLocalVariable(tmp.shortName,tmp.longName,"int","0");
 		
 		//create loop

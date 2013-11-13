@@ -13,7 +13,7 @@
 #include <CMRTransformationImplicitMul.h>
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/ProjectIterator.h>
-#include <../definitions/CMRProjectConstant.h>
+#include <../definitions/ProjectConstant.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -32,7 +32,7 @@ TEST(TestImplicitMul,testRun_simple)
 {
 	CMRTransformationImplicitMul transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -49,7 +49,7 @@ TEST(TestImplicitMul,testRun_complex)
 {
 	CMRTransformationImplicitMul transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -66,7 +66,7 @@ TEST(TestImplicitMul,testRun_start_minus)
 {
 	CMRTransformationImplicitMul transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");

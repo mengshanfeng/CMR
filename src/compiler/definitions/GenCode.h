@@ -18,13 +18,13 @@ namespace CMRCompiler
 {
 
 /*********************  TYPES  **********************/
-class CMRProjectContext;
+class ProjectContext;
 class LatexFormulas;
 class LatexEntity;
 
 /*******************  FUNCTION  *********************/
-std::ostream& cmrGenEqCCode(std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity);
-std::ostream& cmrGenEqCCode ( std::ostream& out, const CMRProjectContext& context, const LatexFormulas& formula );
+std::ostream& cmrGenEqCCode(std::ostream& out, const ProjectContext& context, const LatexEntity& entity);
+std::ostream& cmrGenEqCCode ( std::ostream& out, const ProjectContext& context, const LatexFormulas& formula );
 bool latexEntityIsInteger(const LatexEntity & entity);
 
 }

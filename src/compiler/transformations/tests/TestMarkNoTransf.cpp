@@ -11,7 +11,7 @@
 #include "../CMRTransformationMarkNoTransf.h"
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/ProjectIterator.h>
-#include <../definitions/CMRProjectConstant.h>
+#include <../definitions/ProjectConstant.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -98,7 +98,7 @@ TEST(TestMarkNoTransf,testRun_indice)
 	MockTransfBasic ptransf;
 	MockTransfBasic ptransf2;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("p_{bc}","testP","int","0");
 	root.addLocalVariable("a","testJ","int","0");
@@ -119,7 +119,7 @@ TEST(TestMarkNoTransf,testRun_expo)
 	MockTransfBasic ptransf;
 	MockTransfBasic ptransf2;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("p^{bc}","testP","int","0");
 	root.addLocalVariable("a","testJ","int","0");
@@ -140,7 +140,7 @@ TEST(TestMarkNoTransf,testRun_param)
 	MockTransfBasic ptransf;
 	MockTransfBasic ptransf2;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("\\frac{bc}{cd}","testP","int","0");
 	root.addLocalVariable("a","testJ","int","0");

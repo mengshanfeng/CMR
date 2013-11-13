@@ -8,7 +8,7 @@
 
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
-#include <CMRProjectContext.h>
+#include <ProjectContext.h>
 #include <../parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
@@ -23,21 +23,21 @@ using namespace CMRCompiler;
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testConstructor)
 {
-	CMRProjectContext context1;
-	CMRProjectContext context2(&context1);
+	ProjectContext context1;
+	ProjectContext context2(&context1);
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testCountTotalEntries_none)
 {
-	CMRProjectContext context;
+	ProjectContext context;
 	EXPECT_EQ(0,context.countTotalEntries());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testCountTotalEntries_no_parent)
 {
-	CMRProjectContext context;
+	ProjectContext context;
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("B_i","testB");
 	context.addEntry(&entry1);
@@ -48,8 +48,8 @@ TEST(TestProjectContext,testCountTotalEntries_no_parent)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testCountTotalEntries_parent)
 {
-	CMRProjectContext context;
-	CMRProjectContext context2(&context);
+	ProjectContext context;
+	ProjectContext context2(&context);
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("B_i","testB");
 	context.addEntry(&entry1);
@@ -61,7 +61,7 @@ TEST(TestProjectContext,testCountTotalEntries_parent)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testAddEntry_ok)
 {
-	CMRProjectContext context;
+	ProjectContext context;
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("B_i","testB");
 	MockProjectEntity entry3("B","testC");
@@ -75,7 +75,7 @@ TEST(TestProjectContext,testAddEntry_ok)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testAddEntry_conflict)
 {
-	CMRProjectContext context;
+	ProjectContext context;
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("A_i","testB");
 	MockProjectEntity entry3("C_i","testA");
@@ -87,7 +87,7 @@ TEST(TestProjectContext,testAddEntry_conflict)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testAddEntry_conflict_reverse)
 {
-	CMRProjectContext context;
+	ProjectContext context;
 	MockProjectEntity entry1("A_i","testA");
 	entry1.changeCaptureType("i",CAPTURE_REQUIRED);
 	MockProjectEntity entry2("A_j","testB");
@@ -98,8 +98,8 @@ TEST(TestProjectContext,testAddEntry_conflict_reverse)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testFind_ok_local)
 {
-	CMRProjectContext context;
-	CMRProjectContext context2(&context);
+	ProjectContext context;
+	ProjectContext context2(&context);
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("B_i","testB");
 	context.addEntry(&entry1);
@@ -112,8 +112,8 @@ TEST(TestProjectContext,testFind_ok_local)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testFind_ok_parent)
 {
-	CMRProjectContext context;
-	CMRProjectContext context2(&context);
+	ProjectContext context;
+	ProjectContext context2(&context);
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("B_i","testB");
 	context.addEntry(&entry1);
@@ -126,8 +126,8 @@ TEST(TestProjectContext,testFind_ok_parent)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testFind_not_found)
 {
-	CMRProjectContext context;
-	CMRProjectContext context2(&context);
+	ProjectContext context;
+	ProjectContext context2(&context);
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("B_i","testB");
 	context.addEntry(&entry1);
@@ -140,8 +140,8 @@ TEST(TestProjectContext,testFind_not_found)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testPrintDebug)
 {
-	CMRProjectContext context;
-	CMRProjectContext context2(&context);
+	ProjectContext context;
+	ProjectContext context2(&context);
 	MockProjectEntity entry1("A_i","testA");
 	MockProjectEntity entry2("B_i","testB");
 	context.addEntry(&entry1);
@@ -155,8 +155,8 @@ TEST(TestProjectContext,testPrintDebug)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testGetDeph)
 {
-	CMRProjectContext context;
-	CMRProjectContext context2(&context);
+	ProjectContext context;
+	ProjectContext context2(&context);
 	
 	EXPECT_EQ(0,context.getDepth());
 	EXPECT_EQ(1,context2.getDepth());
@@ -165,9 +165,9 @@ TEST(TestProjectContext,testGetDeph)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectContext,testGenTempNameLongName)
 {
-	CMRProjectContext context;
-	CMRProjectContext context2(&context);
-	CMRProjectContext context3(&context);
+	ProjectContext context;
+	ProjectContext context2(&context);
+	ProjectContext context3(&context);
 	
 	EXPECT_EQ("temp_0_0",context.genTempName().longName);
 	EXPECT_EQ("temp_0_1",context.genTempName().longName);

@@ -12,8 +12,8 @@
 #include <CMRTransformationReplaceAlias.h>
 #include <../definitions/CMRProjectCode.h>
 #include <../definitions/ProjectIterator.h>
-#include <../definitions/CMRProjectConstant.h>
-#include <../definitions/CMRProjectAlias.h>
+#include <../definitions/ProjectConstant.h>
+#include <../definitions/ProjectMathAlias.h>
 
 /**********************  USING  *********************/
 using namespace testing;
@@ -32,12 +32,12 @@ TEST(TestReplaceAlias,testRun_simple_1)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	context.addEntry(new CMRProjectAlias("L","a"));
+	context.addEntry(new ProjectMathAlias("L","a"));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L");
 	
 	transf.run(root);
@@ -50,12 +50,12 @@ TEST(TestReplaceAlias,testRun_simple_2)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	context.addEntry(new CMRProjectAlias("L^2","a",false));
+	context.addEntry(new ProjectMathAlias("L^2","a",false));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L^2");
 	
 	transf.run(root);
@@ -68,12 +68,12 @@ TEST(TestReplaceAlias,testRun_composed_1)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	context.addEntry(new CMRProjectAlias("L","abc+4"));
+	context.addEntry(new ProjectMathAlias("L","abc+4"));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L");
 	
 	transf.run(root);
@@ -86,12 +86,12 @@ TEST(TestReplaceAlias,testRun_composed_2)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	context.addEntry(new CMRProjectAlias("L_i","abc+4",false));
+	context.addEntry(new ProjectMathAlias("L_i","abc+4",false));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L_i");
 	
 	transf.run(root);
@@ -104,12 +104,12 @@ TEST(TestReplaceAlias,testRun_composed_capture_1)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	context.addEntry(new CMRProjectAlias("L_i","ibc+4"));
+	context.addEntry(new ProjectMathAlias("L_i","ibc+4"));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L_a");
 	
 	transf.run(root);
@@ -122,12 +122,12 @@ TEST(TestReplaceAlias,testRun_composed_capture_2)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	context.addEntry(new CMRProjectAlias("L_i","i+i+i"));
+	context.addEntry(new ProjectMathAlias("L_i","i+i+i"));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L_a");
 	
 	transf.run(root);
@@ -140,12 +140,12 @@ TEST(TestReplaceAlias,testRun_composed_capture_3)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	context.addEntry(new CMRProjectAlias("L_{i,j}","i+j+i"));
+	context.addEntry(new ProjectMathAlias("L_{i,j}","i+j+i"));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L_{a,b}");
 	
 	transf.run(root);
@@ -158,12 +158,12 @@ TEST(TestReplaceAlias,testRun_frac)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	context.addEntry(new CMRProjectAlias("\\frac{a}{b}","a/b"));
+	context.addEntry(new ProjectMathAlias("\\frac{a}{b}","a/b"));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b}");
 	
 	transf.run(root);
@@ -176,7 +176,7 @@ TEST(TestReplaceAlias,testRun_partial_capture)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
@@ -185,7 +185,7 @@ TEST(TestReplaceAlias,testRun_partial_capture)
 	var.addIndice("i");
 	var.addIndice("j");
 	var.addIndice("k");
-	context.addEntry(new CMRProjectAlias("L_k","d_{i,j,k}"));
+	context.addEntry(new ProjectMathAlias("L_k","d_{i,j,k}"));
 	CMRProjectCodeEquation & eq = root.addEquation("a","4 * b + \\frac{1}{b} + L_b");
 	
 	transf.run(root);
@@ -198,10 +198,10 @@ TEST(TestReplaceAlias,testRun_wildcard_alias_expo_1)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
-	context.addEntry(new CMRProjectAlias("x^4","x*x*x*x",false)).captureName();
+	context.addEntry(new ProjectMathAlias("x^4","x*x*x*x",false)).captureName();
 	CMRProjectCodeEquation & eq = root.addEquation("a","a^4");
 	
 	transf.run(root);
@@ -214,10 +214,10 @@ TEST(TestReplaceAlias,testRun_wildcard_alias_expo_2)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
-	context.addEntry(new CMRProjectAlias("x^4","x*x*x*x",false)).captureName();
+	context.addEntry(new ProjectMathAlias("x^4","x*x*x*x",false)).captureName();
 	CMRProjectCodeEquation & eq = root.addEquation("a","(a+b)^4");
 	
 	transf.run(root);
@@ -230,10 +230,10 @@ TEST(TestReplaceAlias,testRun_wildcard_alias_expo_3)
 {
 	CMRTransformationReplaceAlias transf;
 	
-	CMRProjectContext context;
+	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
-	context.addEntry(new CMRProjectAlias("x^4","x*x*x*x",false)).captureName();
+	context.addEntry(new ProjectMathAlias("x^4","x*x*x*x",false)).captureName();
 	CMRProjectCodeEquation & eq = root.addEquation("a","(\\frac{a}{2})^4");
 	
 	transf.run(root);

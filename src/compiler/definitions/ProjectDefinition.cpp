@@ -20,7 +20,7 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-ProjectDefinition::ProjectDefinition ( const string& latexName, const string& longName, CMRProjectContext* parentContext ) 
+ProjectDefinition::ProjectDefinition ( const string& latexName, const string& longName, ProjectContext* parentContext ) 
 	: ProjectEntity ( latexName, longName )
 	,parametersContext(parentContext), ops(&parametersContext)
 {
@@ -35,7 +35,7 @@ void ProjectDefinition::printDebug ( std::ostream& out ) const
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectDefinition::genDefinitionCCode ( ostream& out , const CMRProjectContext& context, int padding) const
+void ProjectDefinition::genDefinitionCCode ( ostream& out , const ProjectContext& context, int padding) const
 {
 	doIndent(out,padding) << "//Definition : " << this->getLatexName() << " : " << getLongName() << endl;
 	doIndent(out,padding) << "double compute_" << this->getLongName() << "(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y";
@@ -79,7 +79,7 @@ void ProjectDefinition::genParameterListForUsage ( ostream& out, const ProjectCa
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectDefinition::genUsageCCode ( ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write ) const
+void ProjectDefinition::genUsageCCode ( ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	//extract matching
 	ProjectCaptureMap capture;
@@ -159,13 +159,13 @@ void ProjectDefinition::onUpdateCaptureType ( const string& name, CaptureType ca
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectContext& ProjectDefinition::getContext ( void )
+ProjectContext& ProjectDefinition::getContext ( void )
 {
 	return ops.getContext();
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCodeEntry* ProjectDefinition::insert ( CMRProjectCodeEntry* entry, CMRProjectCodeTreeInsert location )
+CMRProjectCodeEntry* ProjectDefinition::insert ( CMRProjectCodeEntry* entry, ProjectCodeTreeInsert location )
 {
 	return ops.insert(entry,location);
 }

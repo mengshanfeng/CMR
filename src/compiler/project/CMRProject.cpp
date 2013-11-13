@@ -18,9 +18,9 @@ CMRProject2::CMRProject2(void)
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectConstant& CMRProject2::addConstant ( const std::string& latexName, const std::string& longName )
+ProjectConstant& CMRProject2::addConstant ( const std::string& latexName, const std::string& longName )
 {
-	CMRProjectConstant * tmp = new CMRProjectConstant(latexName,longName);
+	ProjectConstant * tmp = new ProjectConstant(latexName,longName);
 	constants.push_back(tmp);
 	rootContext.addEntry(tmp);
 	return *tmp;
@@ -211,17 +211,17 @@ void CMRProject2::genCCodeOfActions ( ostream& out, CMRCompiler::LangDef & lang 
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCallAction& CMRProject2::addInitCallAction ( const string& actionName )
+ProjectCallAction& CMRProject2::addInitCallAction ( const string& actionName )
 {
-	CMRProjectCallAction * action = new CMRProjectCallAction(actionName);
+	ProjectCallAction * action = new ProjectCallAction(actionName);
 	this->initActions.push_back(action);
 	return *action;
 }
 
 /*******************  FUNCTION  *********************/
-CMRProjectCallAction& CMRProject2::addMainLoopCallAction ( const string& actionName )
+ProjectCallAction& CMRProject2::addMainLoopCallAction ( const string& actionName )
 {
-	CMRProjectCallAction * action = new CMRProjectCallAction(actionName);
+	ProjectCallAction * action = new ProjectCallAction(actionName);
 	this->loopActions.push_back(action);
 	return *action;
 }

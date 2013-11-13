@@ -25,8 +25,8 @@ class CMRModelBasedReplacement : public ProjectEntity
 		CMRModelBasedReplacement(const std::string & model,const std::string result, bool captureAll = true);
 		bool apply(CMRCompiler::LatexEntity & entity) const;
 	private:
-		virtual void genDefinitionCCode(std::ostream& out, const CMRProjectContext& context, int indent = 0) const;
-		virtual void genUsageCCode(std::ostream& out, const CMRProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false) const;
+		virtual void genDefinitionCCode(std::ostream& out, const ProjectContext& context, int indent = 0) const;
+		virtual void genUsageCCode(std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false) const;
 	private:
 		std::string result;
 };

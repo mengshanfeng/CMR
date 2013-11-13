@@ -10,7 +10,7 @@
 /********************  HEADERS  *********************/
 #include "../common/Debug.h"
 #include "../definitions/CMRProjectCode.h"
-#include "../definitions/CMRProjectAlias.h"
+#include "../definitions/ProjectMathAlias.h"
 #include "CMRTransformationReplaceAlias.h"
 
 /********************  NAMESPACE  *******************/
@@ -30,7 +30,7 @@ void CMRTransformationReplaceAlias::transform ( CMRProjectCodeEquation& equation
 	const ProjectEntity * match = equation.getContext().find(entity);
 	
 	//if found, check if alias
-	const CMRProjectAlias * alias = dynamic_cast<const CMRProjectAlias*>(match);
+	const ProjectMathAlias * alias = dynamic_cast<const ProjectMathAlias*>(match);
 	if (alias != NULL)
 	{
 		bool res = alias->apply(entity);

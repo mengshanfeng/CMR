@@ -12,7 +12,7 @@
 #include <cassert>
 #include <sstream>
 //internal headers
-#include "CMRProjectContext.h"
+#include "ProjectContext.h"
 #include "parsor/ParsorBasics.h"
 #include "parsor/LatexFormula.h"
 #include "GenCode.h"
@@ -67,7 +67,7 @@ bool latexEntityIsNum(const LatexEntity & entity)
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, const LatexFormulas& formula )
+std::ostream&  cmrGenEqCCode ( ostream& out, const ProjectContext& context, const LatexFormulas& formula )
 {
 	const LatexEntityVector & elems = formula;
 	for (LatexEntityVector::const_iterator it = elems.begin() ;  it != elems.end() ; ++it)
@@ -76,7 +76,7 @@ std::ostream&  cmrGenEqCCode ( ostream& out, const CMRProjectContext& context, c
 }
 
 /*******************  FUNCTION  *********************/
-std::ostream&  cmrGenEqCCode(ostream& out, const CMRProjectContext& context, const LatexEntity& entity)
+std::ostream&  cmrGenEqCCode(ostream& out, const ProjectContext& context, const LatexEntity& entity)
 {
 	if (latexEntityIsNum(entity))
 	{

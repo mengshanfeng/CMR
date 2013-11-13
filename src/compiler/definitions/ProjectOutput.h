@@ -20,14 +20,14 @@ namespace CMRCompiler
 {
 
 /*********************  TYPES  **********************/
-class CMRProjectContext;
+class ProjectContext;
 	
 /*********************  CLASS  **********************/
 class ProjectOutputEntry
 {
 	public:
 		ProjectOutputEntry(const std::string & name, const std::string & type, const std::string & value);
-		void genCode( std::ostream& out, const CMRProjectContext& context, const std::string& codeType );
+		void genCode( std::ostream& out, const ProjectContext& context, const std::string& codeType );
 	private:
 		std::string name;
 		std::string type;
@@ -42,7 +42,7 @@ class ProjectOutput
 {
 	public:
 		void addEntry(const std::string & name, const std::string & type, const std::string & value);
-		void genCode( std::ostream& out, const CMRProjectContext& context, const std::string& codeType );
+		void genCode( std::ostream& out, const ProjectContext& context, const std::string& codeType );
 	private:
 		ProjectOutputEntryVector entries;
 };

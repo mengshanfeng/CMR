@@ -29,8 +29,8 @@ class ProjectActionParameter : public ProjectEntity
 {
 	public:
 		ProjectActionParameter ( const std::string& latexName, const std::string& longName, const std::string & type );
-		virtual void genDefinitionCCode ( std::ostream& out, const CMRProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write = false ) const;
+		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding = 0 ) const;
+		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false ) const;
 		const std::string & getType(void) const;
 	private:
 		std::string type;
@@ -57,10 +57,10 @@ class CodeTemplateValueActionParameters : public CodeTemplateValue
 class ProjectAction
 {
 	public:
-		ProjectAction ( const std::string & name, const std::string & descr,CMRProjectContext * parentContext = NULL);
+		ProjectAction ( const std::string & name, const std::string & descr,ProjectContext * parentContext = NULL);
 		virtual void printDebug(std::ostream & out) const;
-		virtual void genDefinitionCCode ( std::ostream& out, const LangDef & lang, const CMRProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const CMRProjectContext& context, const LatexEntity& entity, bool write = false ) const;
+		virtual void genDefinitionCCode ( std::ostream& out, const LangDef & lang, const ProjectContext& context, int padding = 0 ) const;
+		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false ) const;
 		void runTransformation(CMRTransformation & transf);
 		CMRProjectCodeEquation & addEquation(const std::string& eq);
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=");
@@ -68,8 +68,8 @@ class ProjectAction
 		CMRProjectLocalVariable & addLocalVariable(const std::string & latexName, const std::string & longName,const std::string &type, const std::string & defaultValue);
 		ProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
 		void changeCaptureType(const std::string & name, CaptureType captureType) { assert(false);};
-		CMRProjectContext & getContext(void);
-		CMRProjectCodeEntry * insert(CMRProjectCodeEntry * entry,CMRProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		ProjectContext & getContext(void);
+		CMRProjectCodeEntry * insert(CMRProjectCodeEntry * entry,ProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		ProjectActionParameter & addParameter(const std::string & latexName, const std::string & longName,const std::string &type);
 	private:
 		CMRProjectCodeRootNode ops;

@@ -8,7 +8,7 @@
 
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
-#include <CMRProjectCodeTree.h>
+#include <ProjectCodeTree.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 
@@ -26,7 +26,7 @@ struct TestEntry
 };
 
 /*********************  TYPES  **********************/
-class TestCodeTree : public CMRProjectCodeTree<TestCodeTree> 
+class TestCodeTree : public ProjectCodeTree<TestCodeTree> 
 {
 	public:
 		TestCodeTree(int value) : entry(value) {localParent = NULL;};
