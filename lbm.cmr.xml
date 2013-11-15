@@ -9,6 +9,10 @@
 		<headers>
 			<include>LBMStructs.h</include>
 		</headers>
+		<doc>
+			Simulation Lattice Boltzman....
+		</doc>
+		<screen>./img.png</screen>
 	</project>
 	<elements>
 		<!-- ********************* CONSTS **************** -->
