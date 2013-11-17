@@ -50,7 +50,7 @@ void CMRTransformationExtractLoops::transform ( CMRProjectCodeEquation& equation
 		
 		//setup temp variable
 		ProjectTempNames tmp = equation.getContext().genTempName();
-		equation.getParent()->addLocalVariable(tmp.shortName,tmp.longName,"int","0");
+		equation.getParent()->addLocalVariable(tmp.shortName,tmp.longName,"double","0");
 		
 		//create loop
 		MsgFormat("Replace loops with iterator (%1) and core (%2)").arg(*entity.indices[0]).arg(*entity.parameters[0]).debug();

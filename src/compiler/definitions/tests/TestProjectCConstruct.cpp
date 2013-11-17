@@ -42,7 +42,7 @@ TEST(TestCConstruct,testUserArgs1)
 {
 	//setup context
 	ProjectContext context;
-	ProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double",0);
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);
@@ -64,7 +64,7 @@ TEST(TestCConstruct,testUserArgs2)
 {
 	//setup context
 	ProjectContext context;
-	ProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double",0);
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);
@@ -87,7 +87,7 @@ TEST(TestCConstruct,testUserArgs3)
 {
 	//setup context
 	ProjectContext context;
-	ProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double",0);
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);
@@ -110,7 +110,7 @@ TEST(TestCConstruct,testAutoArgs1)
 {
 	//setup context
 	ProjectContext context;
-	ProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double",0);
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);
@@ -131,7 +131,7 @@ TEST(TestCConstruct,testMixArgs)
 {
 	//setup context
 	ProjectContext context;
-	ProjectMeshVar var("v_{i,j}","var","double");
+	ProjectMeshVar var("v_{i,j}","var","double",0);
 	context.addEntry(new CMRProjectLocalVariable("i","x","int"));
 	context.addEntry(new CMRProjectLocalVariable("j","y","int"));
 	context.addEntry(&var);

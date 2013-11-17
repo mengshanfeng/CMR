@@ -91,13 +91,15 @@ std::ostream&  cmrGenEqCCode(ostream& out, const ProjectContext& context, const 
 	} else if (entity.name == "\\cmrsubaction") {
 		#warning "Remove this from here"
 		out << "((Action" << *entity.getParameter(0) << "*)NULL)->cellAction(in,out,pos,x,y)";
+	} else if (entity.name == "\\mathrm") {
+		out << entity.getParameter(0)->front()->getName();
 	} else {
 		//search matching in context
 		const ProjectEntity * def = context.find(entity);
 		if (def == NULL)
 		{
 			stringstream out;
-			out << endl << "Unknown member " << entity.getString();// << " in equation " << eq->latexName << " = " << eq->compute << endl;
+			out << endl << "Unknown member for latex entity conversion to C " << entity.getString();// << " in equation " << eq->latexName << " = " << eq->compute << endl;
 			out << endl;
 			out << "Context is : " << endl;
 			context.printDebug(out);

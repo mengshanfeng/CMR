@@ -42,7 +42,7 @@ class CMRProject2
 	public:
 		CMRProject2(void);
 		ProjectConstant & addConstant( const std::string& latexName, const std::string& longName, const std::string& type );
-		CMRCompiler::ProjectMeshVar & addvariable(const std::string& latexName, const std::string& longName, const std::string& type);
+		CMRCompiler::ProjectMeshVar & addvariable( const std::string& latexName, const std::string& longName, const std::string& type, int ghost );
 		CMRCompiler::ProjectAction & addAction( std::string name, std::string descr, const std::string& loopType );
 		ProjectDefinition & addDefinition(const std::string& latexName, const std::string& longName);
 		ProjectDefinition& addDefinition( const std::string& latexName, const std::string& longName, const std::string& compute );

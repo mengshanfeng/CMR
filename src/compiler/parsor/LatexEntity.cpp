@@ -376,6 +376,46 @@ void LatexEntity::extractParameters ( LatexParsorContext& context )
 }
 
 /*******************  FUNCTION  *********************/
+void LatexEntity::extractMathRmParameter ( LatexParsorContext& context )
+{
+	//errors
+	assert(this->name == "\\mathrm");
+
+	//remove padding
+	context.skipWhiteSpace();
+	
+	//search {
+	if (context.startBy("{") == false)
+		context.fatal("\\mathrm must be follow by value in {}");
+
+	//move
+	context.move(1);
+	
+	//eat until end
+	string tmp;
+	char prev='\0';
+	while (!context.startBy("}") || prev == '\\')
+	{
+		prev = context.getCurAndMove(1);
+		tmp += prev;
+	}
+	
+	//check end and move
+	if (context.startBy("}"))
+		context.move(1);
+	else
+		context.fatal("Missing closure of \\mathrm{}");
+	
+	//create the special formula
+	LatexFormulas * f = new LatexFormulas();
+	LatexEntity * e = new LatexEntity();
+	e->name = tmp;
+	f->push_back(e);
+
+	parameters.push_back(f);
+}
+
+/*******************  FUNCTION  *********************/
 void LatexEntity::parseStandard ( LatexParsorContext& context )
 {
 	this->name = this->extractName(context);
@@ -386,10 +426,16 @@ void LatexEntity::parseStandard ( LatexParsorContext& context )
 	if (context.startBy('_') || context.startBy('^'))
 		extractSubAndSuperScript(context);
 	
-	//parameters
-	int params = cmrRequireParameters(this->name,context);
-	for (int i = 0 ; i < params ; i++)
-		extractParameters(context);
+	//check for mathrm
+	if (this->name == "\\mathrm")
+	{
+		extractMathRmParameter(context);
+	} else {
+		//parameters
+		int params = cmrRequireParameters(this->name,context);
+		for (int i = 0 ; i < params ; i++)
+			extractParameters(context);
+	}
 }
 
 /*******************  FUNCTION  *********************/

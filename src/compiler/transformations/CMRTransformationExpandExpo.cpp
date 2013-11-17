@@ -12,6 +12,7 @@
 #include "CMRTransformationReplace.h"
 #include "../parsor/LatexEntity.h"
 #include "../definitions/CMRProjectCode.h"
+#include "common/Debug.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -29,22 +30,33 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 {
 	//vars
 	const LatexFormulas * exponent = NULL;
-	
+
 	//trivial if no exponents or more than 1
 	if (entity.countExponents() != 1)
+	{
+		//loop on childs
+		CMRTransformationBasic::transform ( equation, entity );	
 		return;
+	}
+
+	cmrDebug("May Expend expend => %s",entity.getString().c_str());
 	
 	//find the definition
 	const ProjectEntity * projectEntity = equation.getContext().find(entity);
 	if (projectEntity == NULL)
+	{
 		exponent = entity.exponents[0];
-	else if (projectEntity->getExponents().empty())
+	} else if (projectEntity->getExponents().empty()) {
 		exponent = entity.exponents[0];	
-	else 
+	} else  {
+		//loop on childs
+		CMRTransformationBasic::transform ( equation, entity );
 		return;
+	}
 	
 	//convert to string for easer conpare
 	std::string tmp = exponent->getString();
+	cmrDebug("Expend expo => %s => %s",tmp.c_str(),entity.getString().c_str());
 	//gen an entity without the exponent
 	LatexFormulas innerPartF;
 	LatexEntity * innerPart = new LatexEntity(entity);

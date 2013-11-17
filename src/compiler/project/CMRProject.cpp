@@ -61,9 +61,9 @@ ProjectIterator& CMRProject2::addIterator ( const std::string& latexName, const 
 }
 
 /*******************  FUNCTION  *********************/
-ProjectMeshVar& CMRProject2::addvariable ( const std::string& latexName, const std::string& longName, const std::string& type )
+ProjectMeshVar& CMRProject2::addvariable ( const std::string& latexName, const std::string& longName, const std::string& type , int ghost)
 {
-	ProjectMeshVar * tmp = new ProjectMeshVar(latexName,longName,type);
+	ProjectMeshVar * tmp = new ProjectMeshVar(latexName,longName,type, ghost);
 	variables.push_back(tmp);
 	rootContext.addEntry(tmp);
 	//TODO create alias
@@ -260,7 +260,7 @@ void CMRProject2::genCCodeOfMain ( ostream& out, LangDef& lang )
 
 	//runner
 	out << "\t//run" << endl;
-	out << "\tapp.run(ITERATIONS);" << endl;
+	out << "\tapp.run(100);" << endl;
 	out << endl;
 	out << "\treturn EXIT_SUCCESS;" << endl;
 	out << "}" << endl << endl;

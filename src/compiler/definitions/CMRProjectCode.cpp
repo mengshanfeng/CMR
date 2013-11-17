@@ -266,7 +266,7 @@ void CMRProjectCodeNode::genCCode ( ostream& out, int padding ) const
 void CMRProjectCodeEquation::genCCode ( ostream& out, int padding ) const
 {
 	const ProjectEntity * outputEntity = context.find(output);
-	assert(outputEntity != NULL);
+	cmrAssume(outputEntity != NULL,"Fail to find definition for latex entity : '%s'",output.getString().c_str());
 	
 	doIndent(out,padding);
 	outputEntity->genUsageCCode(out,context,output,true);

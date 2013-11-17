@@ -23,7 +23,7 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-ProjectMeshVar::ProjectMeshVar ( const string& latexName, const string& longName , const std::string & type) 
+ProjectMeshVar::ProjectMeshVar ( const string& latexName, const string& longName, const string& type, int ghost ) 
 	: ProjectEntity ( latexName, longName )
 {
 	//setup capture
@@ -34,7 +34,9 @@ ProjectMeshVar::ProjectMeshVar ( const string& latexName, const string& longName
 	assert(haveCapture("i"));
 	assert(haveCapture("j"));
 	assert(type.empty() == false);
-	ghostDepths = 1;
+	assert(ghost >= 0);
+	
+	ghostDepths = ghost;
 	memoryModel = "CMRMemoryModelColMajor";
 	this->type = type;
 }
@@ -54,7 +56,7 @@ ostream& ProjectMeshVar::genCPPAccessorDefinition(ostream& out)
 	out << "\t\t\tCMRCellAccessor<" << type;
 	for (int i = 0 ; i < defs.size() ; i++)
 		out << "[" << defs[i].dims << "]";
-	out << ",CMRMemoryModelRowMajor> " << getLongName() << ";" << endl;
+	out << "," << memoryModel << "> " << getLongName() << ";" << endl;
 	return out;
 }
 
@@ -140,6 +142,12 @@ ProjectMeshVarDef::ProjectMeshVarDef ( const string& name, int dims, int start )
 	this->name = name;
 	this->dims = dims;
 	this->start = start;
+}
+
+/*******************  FUNCTION  *********************/
+void ProjectMeshVar::setMemoryModel ( const string& value )
+{
+	this->memoryModel = value;
 }
 
 }

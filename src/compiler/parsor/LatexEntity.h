@@ -60,6 +60,7 @@ class LatexEntity
 		bool hasInfo(const std::string & key) const;
 		LatexEntity & operator=(const LatexEntity & value);
 	protected:
+		void extractMathRmParameter(LatexParsorContext & context);
 		void copy(const LatexEntity & value);
 		static void copy(LatexFormulasVector & vectorOut,const LatexFormulasVector & vectorOrig);
 		static void writeFormulaList(std::ostream & out,const LatexFormulasVector & value,const std::string & sep=",",const std::string & open = "{",const std::string & close =  "}", bool forceOpenClose = false);

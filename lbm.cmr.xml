@@ -37,20 +37,21 @@
 				0 &amp; 3 &amp; 4 &amp; 1 &amp; 2 &amp; 7 &amp; 8 &amp; 5 &amp; 6
 			</const>
 			<!-- ***** -->
+			<const mathname='O_R' longname='OBSTACLE_R' type="double">\mathrm{HEIGHT}/8.0</const>
 			<const mathname='R' longname='REYNOLDS' type="double">300</const>
 			<const mathname='V' longname='INFLOW_MAX_VELOCITY' type="double">0.1</const>
-			<const mathname='r' longname='RELAX_PARAMETER' type="double">1.0</const>
-			<const mathname='O_R' longname='OBSTABLE_R' type="double">1.0</const>
+			<const mathname='K' longname='KINETIC_VISCOSITY' type='double'>\mathrm{(INFLOW_MAX_VELOCITY * 2.0 * OBSTACLE_R / REYNOLDS)}</const>
+			<const mathname='r' longname='RELAX_PARAMETER' type="double">\mathrm{(1.0 / (3.0 * KINETIC_VISCOSITY + 1.0/2.0))}</const>
 		</consts>
 		<!-- ********************* MESH ****************** -->
 		<mesh>
-			<var mathname='f_{i,j,k}' longname='pdf' type='double' doc='Densité de particule dans différentes directions.'>
+			<var mathname='f_{i,j,k}' longname='pdf' type='double' ghost='1' memory="CMRMemoryModelRowMajor" doc='Densité de particule dans différentes directions.'>
 				<extradims>
 					<extradim mathname='k' longname='direction' size='9' start='0' doc="Direction à l'interieur de la maille."/>
 				</extradims>
 			</var>
-			<var mathname='T_{i,j}' longname='cell_type' type='LBMCellType'   doc='Type de cellule.'/>
-			<var mathname='F_{i,j}' longname='fileout'   type='LBMFileEntry' doc='Structure de stokage pour la sortie.'/>
+			<var mathname='T_{i,j}' longname='cell_type' type='LBMCellType'  memory="CMRMemoryModelRowMajor"   ghost='1' doc='Type de cellule.'/>
+			<var mathname='F_{i,j}' longname='fileout'   type='LBMFileEntry'  memory="CMRMemoryModelColMajor" doc='Structure de stokage pour la sortie.'/>
 		</mesh>
 		<!-- ****************** ITERATORS **************** -->
 		<iterators>
@@ -76,15 +77,18 @@
 				<defparameter mathname='k' longname='k' type='int' doc='Direction considérée (1 à 9).'/>
 				<declvar mathname='p' longname='p' type='double' default='0'/>
 				<mathstep>p = \sum_s{M^{dir}_{k,s} * v_{i,j,s}}</mathstep>
- 				<mathstep>f_{eq,i,j,k} = 1 + 3p + \frac{9}{2}p^2 - \frac{3}{2}v^2</mathstep> 
+ 				<mathstep>f_{eq,i,j,k} = 1.0 + 3.0p + \frac{9.0}{2.0}p^2 - \frac{3.0}{2.0}v^2</mathstep> 
 			</def>
-			<def mathname='v_{pois,i}' longname='poiseuil' doc='Fonction de poiseuil pour une hauteur de fluide donnée.'>
-				<declvar mathname='y' longname='Y' type='int' default='0'/>
-				<declvar mathname='L' longname='L' type='int' default='0'/>
-				<declvar mathname='H' longname='H' type='int' default='0'/>
-				<mathstep>y = i - 1</mathstep>
+			<def mathname='v_{pois,j}' longname='poiseuil' doc='Fonction de poiseuil pour une hauteur de fluide donnée.'>
+<!-- 				<declvar mathname='y' longname='Y' type='int'/> -->
+				<declvar mathname='L' longname='L' type='double'/>
+				<declvar mathname='H' longname='H' type='double' default='100'/>
+<!-- 				<mathstep>y = j - 1</mathstep> -->
 				<mathstep>L = H - 1</mathstep>
-				<mathstep>v_{pois,i} = \frac{4V}{L^2} (Ly - y^2)</mathstep>
+				<mathstep>v_{pois,j} = \frac{4V}{L^2} (Lj - j^2)</mathstep>
+			</def>
+			<def mathname='v_{i,j}' longname='vmacro' doc="Norme de la vitesse macroscopique de la cellule.">
+				<mathstep>v_{i,j} = \sqrt{v^2}</mathstep>
 			</def>
 		</defs>
 		<!-- *************** CELLACTION *************-** -->
@@ -98,7 +102,7 @@
 				<alias mathname="L_k">f_{i,j,k}</alias>
 				<declvar mathname='d' longname='d' type='double' default='0' doc='Densité moyenne locale.'/>
 				<declvar mathname='v' longname='v' type='double' default='0' doc='Vistesse moyenne locale.'/>
-				<mathstep>v = v_{pois,i}</mathstep>
+				<mathstep>v = v_{pois,j}</mathstep>
 				<mathstep>d = \frac{L_0 + L_2 + L_4 + 2 (L_3 + L_6 + L_7)}{1-v}</mathstep>
 				<mathstep>f_{i,j,1} = L_3</mathstep>
 				<mathstep>f_{i,j,5} = L_7-\frac{1}{2}(L_2 - L_4) + \frac{1}{6}(dv)</mathstep>
@@ -113,14 +117,20 @@
 				<mathstep>f_{i,j,7} = L_5 - \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv</mathstep>
 				<mathstep>f_{i,j,6} = L_8 + \frac{1}{2} (L_2 - L_4) + \frac{1}{6} dv</mathstep>
 			</cellaction>
+			<cellaction name='simple_copy'  loop='CMRMeshOperationSimpleLoopWithPos' doc='Simple copie des anciennes valeurs.'>
+				<foreach iterator='k'>
+					<mathstep>f_{i,j,k} = f_{i,j,k}</mathstep>
+				</foreach>
+			</cellaction>
 			<cellaction name='SpecialCells'  loop='CMRMeshOperationSimpleLoopWithPos' doc='Applique les opérations en fonction du type de cellule.'>
 				<ccode>switch($T_{i,j}$)                             </ccode>
 				<ccode>{                                             </ccode>
 				<ccode>	case CELL_FLUID:                             </ccode>
-				<ccode>		//do nothing                             </ccode>
+				<ccode>		$\cmrsubaction{simple_copy}$;            </ccode>
 				<ccode>		break;                                   </ccode>
 				<ccode>	case CELL_BOUNCE_BACK:                       </ccode>
-				<ccode>		$\cmrsubaction{bounce\_back}$;           </ccode>
+				<ccode>		$\cmrsubaction{simple_copy}$;            </ccode>
+<!-- 				<ccode>		$\cmrsubaction{bounce\_back}$;           </ccode> -->
 				<ccode>		break;                                   </ccode>
 				<ccode>	case CELL_LEFT_IN:                           </ccode>
 				<ccode>		$\cmrsubaction{zou\_he\_poiseuil}$;      </ccode>
@@ -149,7 +159,8 @@
 			</cellaction>
 			<cellaction name='Collision'  loop='CMRMeshOperationSimpleLoop' doc='Applique les équation de collision pour re-répartir les densités microscopiques.'>
 				<foreach iterator='k'>
-					<mathstep>f_{i,j,k} = f_{i,j,k} - r * (f_{i,j,k} - f_{eq,i,j,k})</mathstep>
+					<mathstep>f_{i,j,k} = f_{i,j,k}</mathstep>
+<!-- 					 - r * (f_{i,j,k} - f_{eq,i,j,k}) -->
 				</foreach>
 			</cellaction>
 			<cellaction name='InitCellType' loop='CMRMeshOperationSimpleLoopInPlace' doc='Initialise le contenue des types de cellule.'>
@@ -157,15 +168,27 @@
 				<mathstep>T_{i,j} = t</mathstep>
 			</cellaction>
 			<cellaction name='InitStatePoiseuil' loop='CMRMeshOperationSimpleLoopInPlace' doc="Initialise le contenu des cellules avec un profile de poinseuil à l'équilibre allant vers la droite.">
+				<declvar mathname='p' longname='p' type='double' default='0'/>
 				<foreach iterator='k'>
-					<mathstep>f_{i,j,k} = f_{eq,i,j,k}</mathstep>
+					<mathstep>p = M^{dir}_{k,0} * v_{pois,j}</mathstep>
+					<mathstep>f_{i,j,k} = 1.0 + 3.0p + \frac{9.0}{2.0}p^2 - \frac{3.0}{2.0}v_{pois,j}^2</mathstep> 
 				</foreach>
+<!-- 				<ccode>printf("\%d , \%d ; \%g == \%g ; \%g , \%g\n",$i$,$j$,$v_{pois,j}$,$v_{i,j}$,$p$,$f_{i,j,8}$);</ccode> -->
 			</cellaction>
 			<cellaction name='SetupObstable' loop='CMRMeshOperationSimpleLoopInPlaceWithPos' doc="Configure les cellules de l'obstable.">
 				<defparameter mathname="O_x" longname="obstacle_x" type='double'/>
 				<defparameter mathname="O_y" longname="obstacle_y" type='double'/>
-				<ccode>if ( ( $(x-O_x)*(x-O_x)$ + $(x-O_y)*(x-O_y)$ ) &lt;= $(O_R)*(O_R)$ ) {</ccode>
+				<ccode>if ( ( $(x-O_x)*(x-O_x)$ + $(j-O_y)*(j-O_y)$ ) &lt;= $(O_R)*(O_R)$ ) {</ccode>
 				<ccode>	*cell.cell_type(x,y) = CELL_BOUNCE_BACK;</ccode><!-- TODO : work on this -->
+				<ccode>	*cell.pdf(x,y)[0] = 1.0;</ccode>
+				<ccode>	*cell.pdf(x,y)[1] = 1.0;</ccode>
+				<ccode>	*cell.pdf(x,y)[2] = 1.0;</ccode>
+				<ccode>	*cell.pdf(x,y)[3] = 1.0;</ccode>
+				<ccode>	*cell.pdf(x,y)[4] = 1.0;</ccode>
+				<ccode>	*cell.pdf(x,y)[5] = 1.0;</ccode>
+				<ccode>	*cell.pdf(x,y)[6] = 1.0;</ccode>
+				<ccode>	*cell.pdf(x,y)[7] = 1.0;</ccode>
+				<ccode>printf("ok\n");</ccode>
 				<ccode>}</ccode>
 			</cellaction>
 		</cellactions>
@@ -197,15 +220,10 @@
 			<callaction name="SpecialCells">
 				<zone>local.expended(1)</zone>
 			</callaction>
-<!-- 			<meshforward><all/></meshforward> -->
 			<!-- ************* -->
 			<callaction name="Collision">
 				<zone>local</zone>
 			</callaction>
-<!-- 			<meshforward><all/></meshforward> -->
-			
-			<!--//propagate values from node to neighboors
-			//lbm_comm_ghost_exchange( &mesh_comm, &temp );-->
 			
 			<!-- ************* -->
 			<callaction name="Propagation">
@@ -213,7 +231,7 @@
 			</callaction>
 		</mainloop>
 		<output>
-			<entry name="v"      type="float">v^2</entry>
+			<entry name="v"      type="float">v_{i,j}</entry>
 			<entry name="density" type="float">d_{i,j}</entry>
 		</output>
 	</elements>

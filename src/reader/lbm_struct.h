@@ -4,7 +4,13 @@
 /********************  HEADERS  *********************/
 #include <stdint.h>
 #include <stdio.h>
-#include "lbm_config.h"
+//#include "lbm_config.h"
+
+/********************  MACRO  ***********************/
+/* Some configs */
+#define DIMENSIONS 2
+#define DIRECTIONS 9
+#define RESULT_MAGICK 42
 
 /********************** TYPEDEF *********************/
 /**

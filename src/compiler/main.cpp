@@ -9,6 +9,7 @@
 #include "transformations/CMRTransformationExpandExpo.h"
 #include "transformations/CMRTransformationMarkNoTransf.h"
 #include "transformations/CMRTransformationReplaceAlias.h"
+#include "transformations/CMRTransformationMathFunc.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -33,12 +34,12 @@ void test1(void)
 	reynolds.loadValues("300",0);
 	///////
 		
-	ProjectMeshVar & var2 = project.addvariable("f_{i,j,k}","pdf","double");
+	ProjectMeshVar & var2 = project.addvariable("f_{i,j,k}","pdf","double",1);
 	var2.addDim("k",9);
 		
-	project.addvariable("T_{i,j}","cell_type","LBMCellType");
+	project.addvariable("T_{i,j}","cell_type","LBMCellType",1);
 
-	project.addvariable("O_{i,j}","fileout","LBMFileEntry");
+	project.addvariable("O_{i,j}","fileout","LBMFileEntry",0);
 	///////
 		
 	project.addIterator("k","k",0,9);
@@ -134,6 +135,9 @@ void test2(std::string fname)
 	project.printDebug();
 	CMRTransformationExpandExpo expandExpo;
 	project.runTransformation(expandExpo);
+	project.printDebug();
+	CMRTransformationMathFunc mathFunc;
+	project.runTransformation(mathFunc);
 	project.printDebug();
 	
 	cerr << "================================================" << endl;

@@ -247,10 +247,14 @@ void CMRProjectXMLLoader::loadMeshVar ( CMRProject2& project, CMRXmlNode& node )
 	string mathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
 	string longName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
 	string type = node.getNonEmptyProperty("type");
+	string memory = node.getProperty("memory");
+	int ghost = atoi(node.getProperty("ghost").c_str());
 	cmrDebug("Load mesh variable %s -> %s",mathName.c_str(),longName.c_str());
 
 	//create
-	ProjectMeshVar & var = project.addvariable(mathName,longName,type);
+	ProjectMeshVar & var = project.addvariable(mathName,longName,type,ghost);
+	if (!memory.empty())
+		var.setMemoryModel(memory);
 
 	//loop on extra dims
 	CMRXmlNode extraDimsNode = node.getUniqChild(CMR_NODE_EXTRA_DIMS);

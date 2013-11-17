@@ -9,7 +9,7 @@
 ######################################################
 #Cmake basic options
 cmake_minimum_required(VERSION 2.6)
-project(CartesianMeshRuntime CXX)
+project(CartesianMeshRuntime C CXX)
 set(CMR_VERSION "0.0.0-dev")
 
 ######################################################

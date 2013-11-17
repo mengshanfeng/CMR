@@ -29,13 +29,13 @@ static const char TEST_CST_4[] = "testA(acc.testA,x,y,absolute)\n";
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testConstructor)
 {
-	ProjectMeshVar variable("A_{i,j}","testA","int");
+	ProjectMeshVar variable("A_{i,j}","testA","int",0);
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testAddDim_1)
 {
-	ProjectMeshVar variable("A_{i,j,k}","testA","int");
+	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
 	EXPECT_EQ(2,variable.getCapturedIndices().size());
 	variable.addDim("k",5);
 	EXPECT_EQ("i",variable.getCapturedIndices()[0]);
@@ -46,7 +46,7 @@ TEST(TestProjectMeshVar,testAddDim_1)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testAddDim_2)
 {
-	ProjectMeshVar variable("A_{i,j}","testA","int");
+	ProjectMeshVar variable("A_{i,j}","testA","int",0);
 	EXPECT_EQ(2,variable.getCapturedIndices().size());
 	EXPECT_THROW(variable.addDim("k",5),LatexException);
 }
@@ -54,7 +54,7 @@ TEST(TestProjectMeshVar,testAddDim_2)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testGenUsageCCode_1)
 {
-	ProjectMeshVar variable("A_{i,j,k}","testA","int");
+	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
 	variable.addDim("k",5);
 
 	LatexEntity entity("A_{2+1,2+1,55}");
@@ -72,7 +72,7 @@ TEST(TestProjectMeshVar,testGenUsageCCode_1)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testGenUsageCCode_2)
 {
-	ProjectMeshVar variable("A_{i,j,k}","testA","int");
+	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
 	variable.addDim("k",5);
 
 	LatexEntity entity("A_{m+1,m+1,55}");
@@ -92,7 +92,7 @@ TEST(TestProjectMeshVar,testGenUsageCCode_2)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testGenDefinitionCCode)
 {
-	ProjectMeshVar variable("A_{i,j,k}","testA","int");
+	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
 	variable.addDim("k",5);
 	
 	ProjectContext context;
@@ -104,14 +104,14 @@ TEST(TestProjectMeshVar,testGenDefinitionCCode)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testGetTypeWithDims_0)
 {
-	ProjectMeshVar variable("A_{i,j}","testA","int");;
+	ProjectMeshVar variable("A_{i,j}","testA","int",0);;
 	EXPECT_EQ("int",variable.getTypeWithDims());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testGetTypeWithDims_1)
 {
-	ProjectMeshVar variable("A_{i,j,k}","testA","int");
+	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
 	variable.addDim("k",5);
 	EXPECT_EQ("int[5]",variable.getTypeWithDims());
 }
@@ -119,7 +119,7 @@ TEST(TestProjectMeshVar,testGetTypeWithDims_1)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testGenCPPAccessorDefinition)
 {
-	ProjectMeshVar variable("A_{i,j,k}","testA","int");
+	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
 	variable.addDim("k",5);
 	
 	stringstream out;
@@ -130,7 +130,7 @@ TEST(TestProjectMeshVar,testGenCPPAccessorDefinition)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testGenCPPAccessorAddVar)
 {
-	ProjectMeshVar variable("A_{i,j,k}","testA","int");
+	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
 	variable.addDim("k",5);
 	
 	stringstream out;
@@ -141,7 +141,7 @@ TEST(TestProjectMeshVar,testGenCPPAccessorAddVar)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testGenCPPAccessorConstrSys)
 {
-	ProjectMeshVar variable("A_{i,j,k}","testA","int");
+	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
 	variable.addDim("k",5);
 	
 	stringstream out;
@@ -152,7 +152,7 @@ TEST(TestProjectMeshVar,testGenCPPAccessorConstrSys)
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testGenCPPAccessorConstrAcc)
 {
-	ProjectMeshVar variable("A_{i,j,k}","testA","int");
+	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
 	variable.addDim("k",5);
 	
 	stringstream out;

@@ -207,7 +207,7 @@ void ProjectConstant::genDefinitionCCode ( ostream& out, const ProjectContext& c
 // 		else if (dims.size() == 2)
 // 			out << "const CMRMathMatrix " << getLongName() << "(TMP_VALUE_" << getLongName() << ","<< dims[0] << ","<< dims[1] << ");" << endl;
 	} else {
-		out << "const float " << getLongName() << " = ";
+		out << "const " << type << " " << getLongName() << " = ";
 		cmrGenEqCCode(out,context,formulas[0]);
 		out << ";" << endl;
 	}

@@ -216,3 +216,10 @@ TEST(TestLatexEntity,testCmrSubactionNameEscapte)
 	LatexEntity entity("\\cmrsubaction{bounce\\_back}");
 	EXPECT_EQ("\\cmrsubaction{bounce_back}",entity.getString());
 }
+
+/*******************  FUNCTION  *********************/
+TEST(TestLatexEntity,testMathRm)
+{
+	LatexEntity entity("\\mathrm{test\\{test__\\}^^^^}");
+	EXPECT_EQ("\\mathrm{test\\{test__\\}^^^^}",entity.getString());
+}

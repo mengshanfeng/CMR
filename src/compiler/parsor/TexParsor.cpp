@@ -158,6 +158,8 @@ int cmrRequireParameters(const string & name,const string & value,int pos)
 		return 2;
 	} else if (name == "\\cmrsubaction") {
 		return 1;
+	} else if (name == "\\sqrt") {
+		return 1;
 	} else {
 		cmrParsorError(value,pos,"Invalid latex command.");
 		return -1;
@@ -179,6 +181,8 @@ int cmrRequireParameters(const string & name,LatexParsorContext & context)
 	} else if (name == "\\cmr"){
 		return 2;
 	} else if (name == "\\cmrsubaction") {
+		return 1;
+	} else if (name == "\\sqrt") {
 		return 1;
 	} else {
 		context.fatal("Invalid latex command.");
