@@ -184,6 +184,18 @@ int cmrRequireParameters(const string & name,LatexParsorContext & context)
 		return 1;
 	} else if (name == "\\sqrt") {
 		return 1;
+	} else if (name == "\\gamma") {
+		return 0;
+	} else if (name == "\\rho") {
+		return 0;
+	} else if (name == "\\overline") {
+		return 1;
+	} else if (name == "\\Delta") {
+		return 0;
+	} else if (name == "\\varepsilon") {
+		return 0;
+	} else if (name == "\\partial") {
+		return 0;
 	} else {
 		context.fatal("Invalid latex command.");
 		return -1;
