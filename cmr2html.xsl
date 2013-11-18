@@ -9,6 +9,7 @@
 			<body>
 				<xsl:apply-templates select="cmr/project"/>
 				<xsl:apply-templates select="cmr/elements"/>
+				<!--<xsl:call-template name='CMRMain'/>-->
 			</body>
 		</html>
 	</xsl:template>
@@ -16,6 +17,115 @@
 	<!-- ********************************************************* -->
 	<xsl:template match="elements">
 		<xsl:apply-templates select="consts"/>
+		<xsl:apply-templates select="mesh"/>
+		<xsl:apply-templates select="iterators"/>
+		<xsl:apply-templates select="defs/def"/>
+		<xsl:apply-templates select="cellactions/cellaction"/>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="callaction">
+		<xsl:for-each select='zone'>
+			<div class='ccode'><xsl:value-of select='../@name'/>(,<xsl:value-of select='.'/>)</div>
+		</xsl:for-each>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template name="CMRMain">
+		<div class='CMRMain'>
+			<h2>Main</h2>
+			<div class='CMRCode'>
+				<div class='comment'>//init</div>
+				<xsl:apply-templates match='cmr/init/callaction'/>
+				<br/>
+				<div class='comment'>//boucle d'avancement</div>
+				<div class='ccode'>{</div>
+				<xsl:apply-templates match='cmr/mainloop/callaction'/>
+				<div class='ccode'>}</div>
+			</div>
+		</div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="alias">
+		<div class='alias'><font class='key'>ALIAS</font> $<xsl:value-of select='@mathname'/> = <xsl:value-of select='.'/>$</div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="mathstep">
+		<div class='mathstep'>$<xsl:value-of select='.'/>$</div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="foreach">
+		<div class='foreach'>foreach (<xsl:value-of select='@iterator'/>) {</div>
+		<xsl:apply-templates match='alias|declvar|mathstep|foreach|ccode'/>
+		<div>}</div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="ccode">
+		<div class='ccode'><xsl:value-of select='.'/></div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="declvar">
+		<!--<declvar mathname='d' longname='d' type='double' default='0' doc='Densité moyenne locale.'/>-->
+		<xsl:if test='doc'>
+			<div class='comment'>//<xsl:value-of select='doc'/></div>
+		</xsl:if>
+		<div class='declvar'><xsl:value-of select="concat(@type,' ',@longname,'($',@mathname,'$)')"/>
+			<xsl:if test='default'> = <xsl:value-of select='default'/></xsl:if>
+		</div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="def">
+		<div class='CMRDefinition'>
+			<h2>Definition : $<xsl:value-of select='@mathname'/>$</h2>
+			<p><xsl:value-of select='@doc'/></p>
+			<div class='CMRCode'>
+				<xsl:apply-templates match='alias|declvar|mathstep|foreach|ccode'/>
+			</div>
+		</div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="cellaction">
+		<div class='CMROperation'>
+			<h2>Opération sur chaque cellule : <xsl:value-of select='@name'/></h2>
+			<p><xsl:value-of select='@doc'/></p>
+			<div class='CMRCode'>
+				<xsl:apply-templates match='alias|declvar|mathstep|foreach|ccode'/>
+			</div>
+		</div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="iterators">
+		<div class='CMRIterators'>
+			<h2>Itérateurs</h2>
+			<ul>
+				<xsl:for-each select='iterator'>
+					<li>$<xsl:value-of select='@mathname'/>$ : $<xsl:value-of select='@start'/>$..$<xsl:value-of select='@end'/>$</li>
+				</xsl:for-each>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="mesh">
+		<div class='CMRMesh'>
+			<h2>Maillage</h2>
+			<ul>
+				<xsl:apply-templates select='var'/>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<!-- ********************************************************* -->
+	<xsl:template match="var">
+		<li>$<xsl:value-of select='@mathname'/>$ : <xsl:value-of select='@doc'/> (<i class='CMRConstDecl'><xsl:call-template name='CMRConstDecl'/></i>)</li>
 	</xsl:template>
 
 	<!-- ********************************************************* -->
@@ -122,12 +232,14 @@
 				font-size: 1.4em;
 				font-weight: bold;
 			}
-			.CMREquation {
+			.CMREquation, .ccode, .mathstep, .foreach, .declvar, .alias {
 				font-size:120%;
 				text-align:left;
 				font-family: "Courier", monospace;
+				margin-top:4px;
+				margin-bottom:4px;
 			}
-			.CMROperation, .CMRConsts, .CMRDefinition, .CMRInfoSection {
+			.CMROperation, .CMRConsts, .CMRDefinition, .CMRInfoSection, .CMRMesh, .CMRIterators, .CMRMain {
 				background-color:white;
 				border-radius: 15px;
 				box-shadow: 0px 0px 5px #888888;
@@ -174,6 +286,16 @@
 			}
 			.CMRConstDecl {
 				color: gray;
+			}
+			.key {
+				color: gray;
+			}
+			.comment {
+				.color: green;
+			}
+			.mathstep {
+				margin-top:4px;
+				margin-bottom:4px;
 			}
 		</style>
 	</xsl:template>
