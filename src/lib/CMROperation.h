@@ -26,9 +26,12 @@ class CMRVarSystem;
 class CMRMeshOperation
 {
 	public:
-		CMRMeshOperation(void){}
+		CMRMeshOperation(bool needPermut = false){this->needPermut = needPermut;}
 		virtual ~CMRMeshOperation(void){}
 		virtual void run(CMRVarSystem * sys, const CMRRect & zone) = 0;
+		bool checkNeedPermut(void) const {return needPermut;};
+	private:
+		bool needPermut;
 };
 
 /*********************  CLASS  **********************/
@@ -36,7 +39,7 @@ template <class T,class U>
 class CMRMeshOperationSimpleLoop : public CMRMeshOperation
 {
 	public:
-		CMRMeshOperationSimpleLoop(const U * action = NULL) {this->action = action;};
+		CMRMeshOperationSimpleLoop(const U * action = NULL) : CMRMeshOperation(true) {this->action = action;};
 		~CMRMeshOperationSimpleLoop(void) {if (action != NULL) delete action;};
 		virtual void run (CMRVarSystem * sys, const CMRRect& zone );
 	protected:
@@ -127,8 +130,8 @@ void CMRMeshOperationSimpleLoopInPlace<T,U>::run ( CMRVarSystem * sys, const CMR
 		return;
 	}
 	
-	typename T::CellAccessor cell(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
-	const U * loacalAction = action;
+	typename T::CellAccessor cell(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y,true);
+	const U * loacalAction = action;	
 	
 	for(int y = 0 ; y < localZone.height ; y++)
 		for(int x = 0 ; x < localZone.width ; x++)
@@ -200,7 +203,7 @@ template <class T,class U>
 class CMRMeshOperationSimpleLoopWithPos : public CMRMeshOperation
 {
 	public:
-		CMRMeshOperationSimpleLoopWithPos(const U * action = NULL) {this->action = action;};;
+		CMRMeshOperationSimpleLoopWithPos(const U * action = NULL) : CMRMeshOperation(true) {this->action = action;};;
 		~CMRMeshOperationSimpleLoopWithPos(void) {if (action != NULL) delete action;};
 		virtual void run (CMRVarSystem * sys,const CMRRect& zone );
 	protected:
@@ -235,7 +238,7 @@ void CMRMeshOperationSimpleLoopWithPos<T,U>::run ( CMRVarSystem * sys,const CMRR
 		return;
 	}
 	
-	typename T::CellAccessor cellIn(*sys,CMR_PREV_STEP,localZone.x,localZone.y);
+	const typename T::CellAccessor cellIn(*sys,CMR_PREV_STEP,localZone.x,localZone.y);
 	typename T::CellAccessor cellOut(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y);
 	CMRCellPosition pos(sys->getDomain(0,0)->getGlobalRect(),sys->getDomain(0,0)->getLocalDomainRect(),localZone.x,localZone.y);
 	const U * localAction = action;
@@ -294,7 +297,7 @@ void CMRMeshReduction<T,U>::run ( CMRVarSystem * sys , const CMRRect & zone )
 		return;
 	}
 
-	typename T::CellAccessor cell(*sys,CMR_PREV_STEP,localZone.x,localZone.y);
+	typename T::CellAccessor cell(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y);
 	U reduction;
 
 	for(int y = 0 ; y < localZone.height ; y++)
@@ -351,7 +354,7 @@ void CMRMeshOperationSimpleLoopInPlaceWithPos<T,U>::run ( CMRVarSystem * sys, co
 		return;
 	}
 	
-	typename T::CellAccessor cell(*sys,CMR_PREV_STEP,localZone.x,localZone.y,true);
+	typename T::CellAccessor cell(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y,true);
 	const U * loacalAction = action;
 	CMRCellPosition pos(sys->getDomain(0,0)->getGlobalRect(),sys->getDomain(0,0)->getLocalDomainRect(),localZone.x,localZone.y);
 	

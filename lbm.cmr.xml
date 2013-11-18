@@ -130,7 +130,7 @@
 				<ccode>		break;                                   </ccode>
 				<ccode>	case CELL_BOUNCE_BACK:                       </ccode>
 				<ccode>		$\cmrsubaction{simple_copy}$;            </ccode>
-<!-- 				<ccode>		$\cmrsubaction{bounce\_back}$;           </ccode> -->
+				<ccode>		$\cmrsubaction{bounce\_back}$;           </ccode>
 				<ccode>		break;                                   </ccode>
 				<ccode>	case CELL_LEFT_IN:                           </ccode>
 				<ccode>		$\cmrsubaction{zou\_he\_poiseuil}$;      </ccode>
@@ -159,8 +159,7 @@
 			</cellaction>
 			<cellaction name='Collision'  loop='CMRMeshOperationSimpleLoop' doc='Applique les équation de collision pour re-répartir les densités microscopiques.'>
 				<foreach iterator='k'>
-					<mathstep>f_{i,j,k} = f_{i,j,k}</mathstep>
-<!-- 					 - r * (f_{i,j,k} - f_{eq,i,j,k}) -->
+					<mathstep>f_{i,j,k} = f_{i,j,k} - r * (f_{i,j,k} - f_{eq,i,j,k})</mathstep>
 				</foreach>
 			</cellaction>
 			<cellaction name='InitCellType' loop='CMRMeshOperationSimpleLoopInPlace' doc='Initialise le contenue des types de cellule.'>
@@ -195,6 +194,10 @@
 		<init>
 			<callaction name="InitStatePoiseuil">
 				<zone>local.expend(1)</zone>
+			</callaction>
+			<callaction name="InitCellType">
+				<parameter mathname='cellType'>CELL_FLUID</parameter>
+				<zone>global.expended(1)</zone>
 			</callaction>
 			<callaction name="InitCellType">
 				<parameter mathname='cellType'>CELL_LEFT_IN</parameter>

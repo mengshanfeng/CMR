@@ -140,16 +140,20 @@ void CMRBasicSeqRunner<TVarSystem>::run ( int iterations )
 		
 		for (CMRMeshOperationNodeVector::iterator it = loopActions.begin() ; it != loopActions.end() ; ++it)
 		{
-			it->op->run(system,it->rect);
-			if (it+1 != loopActions.end())
+			if (it->op->checkNeedPermut())
 				system->permutVar(CMR_ALL);
+			it->op->run(system,it->rect);
 		}
 		
 		//save step
 		if ( i % writeInterval == 0 && outputer != NULL)
 		{
 			for (CMRMeshOperationNodeVector::iterator it = writeActions.begin() ; it != writeActions.end() ; ++it)
+			{
+				if (it->op->checkNeedPermut())
+					fatal("Hum, check if there is no issue if permut here.");
 				it->op->run(system,it->rect);
+			}
 			outputer->write(system,globalRect,localRect);
 		}
 	}

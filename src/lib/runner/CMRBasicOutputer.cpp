@@ -61,9 +61,9 @@ void CMRBasicOutputer::writeFileHeader ( const CMRAbstractSpaceSplitter & splitt
 void CMRBasicOutputer::write ( CMRVarSystem* system, const CMRRect& global, const CMRRect& local )
 {
 	assert(fp != NULL);
-	assert(system->getDomain(2,CMR_PREV_STEP)->isContiguousGhost(local));
-	size_t size = system->getDomain(2,CMR_PREV_STEP)->getGhostSize(local);
-	void * buffer = system->getDomain(2,CMR_PREV_STEP)->getContiguousGhost(local);
+	assert(system->getDomain(2,CMR_CURRENT_STEP)->isContiguousGhost(local));
+	size_t size = system->getDomain(2,CMR_CURRENT_STEP)->getGhostSize(local);
+	void * buffer = system->getDomain(2,CMR_CURRENT_STEP)->getContiguousGhost(local);
 	assert(buffer != NULL);
 	debug("Write size = %lu",size);
 	fwrite(buffer,1,size,fp);

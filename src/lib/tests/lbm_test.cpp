@@ -1,3 +1,5 @@
+#define LBM
+
 #include <runner/CMRBasicSeqRunner.h>
 #include <runner/CMRBasicOutputer.h>
 
@@ -378,6 +380,10 @@ struct ActionSpecialCells
 		switch (*in.cellType(x,y))
 		{
 			case CELL_FUILD:
+				for (int k = 0 ; k < 9 ; k++)
+				{
+					(*out.directions(x,y))[k] = (*in.directions(x,y))[k];
+				}
 				break;
 			case CELL_BOUNCE_BACK:
 				compute_bounce_back(in,out,x,y);
@@ -388,6 +394,8 @@ struct ActionSpecialCells
 			case CELL_RIGHT_OUT:
 				compute_outflow_zou_he_const_density(in,out,x,y);
 				break;
+			default:
+				fatal("euuuuu");
 		}
 	}
 	//select the type of loop
@@ -701,6 +709,8 @@ int mainRunner(int argc, char * argv[])
 	//setup init actions
 	app.addInitAction(new ActionInitStatePoiseuil::LoopType(),
 					  app.getLocalRect().expended(1));
+	app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_FUILD)),
+					  app.getLocalRect().expended(1).getBorder(CMR_LEFT));
 	app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_LEFT_IN)),
 					  app.getLocalRect().expended(1).getBorder(CMR_LEFT));
 	app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_RIGHT_OUT)),
@@ -713,7 +723,7 @@ int mainRunner(int argc, char * argv[])
 					  app.getGlobalRect());
 	
 	//setup compute actions
-	app.addLoopAction(new ActionSpecialCells::LoopType(),app.getLocalRect().expended(1));
+	app.addLoopAction(new ActionSpecialCells::LoopType(),app.getLocalRect());
 	app.addLoopAction(new ActionCollision::LoopType(),app.getLocalRect());
 	app.addLoopAction(new ActionPropagation::LoopType(),app.getLocalRect());
 	
