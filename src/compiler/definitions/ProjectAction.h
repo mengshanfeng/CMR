@@ -71,6 +71,8 @@ class ProjectAction
 		ProjectContext & getContext(void);
 		CMRProjectCodeEntry * insert(CMRProjectCodeEntry * entry,ProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
 		ProjectActionParameter & addParameter(const std::string & latexName, const std::string & longName,const std::string &type);
+		//TODO remove
+		virtual void setCaptureSize(const std::string & name, const std::string & type,int size){};
 	private:
 		CMRProjectCodeRootNode ops;
 		std::string name;

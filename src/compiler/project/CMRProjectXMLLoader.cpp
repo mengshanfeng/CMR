@@ -350,6 +350,9 @@ bool CMRProjectXMLLoader::loadCodeNode ( CMRProject2& project, T& parent, CMRXml
 		string paramMathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
 		string paramLongName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
 		string type = node.getNonEmptyProperty("type");
+		string vector = node.getProperty("vector");
+		if (vector.empty() == false || type.empty() == false)
+			parent.setCaptureSize(paramMathName,type,atoi(vector.c_str()));
 		cmrDebug("   -> param : %s",paramMathName.c_str());
 		parent.changeCaptureType(paramMathName,CAPTURE_REQUIRED);
 	} else if (node.isNamed(CMR_NODE_DECL_VAR)) {
@@ -357,8 +360,11 @@ bool CMRProjectXMLLoader::loadCodeNode ( CMRProject2& project, T& parent, CMRXml
 		string declVarLongName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
 		string declVarDefault = node.getProperty("default");
 		string declVarType = node.getNonEmptyProperty("type");
+		string vectorSize = node.getProperty("vector");
 		cmrDebug("   -> declarvar : %s",declVarMathName.c_str());
-		parent.addLocalVariable(declVarMathName,declVarLongName,declVarType,declVarDefault);
+		CMRProjectLocalVariable & var = parent.addLocalVariable(declVarMathName,declVarLongName,declVarType,declVarDefault);
+		if (vectorSize.empty() == false)
+			var.addDim(atoi(vectorSize.c_str()));
 	} else if (node.isNamed(CMR_NODE_FOREACH)) {
 		string loopIterator = node.getNonEmptyProperty("iterator");
 		CMRProjectCodeIteratorLoop & loop = parent.addIteratorLoop(loopIterator);
@@ -410,6 +416,7 @@ void CMRProjectXMLLoader::loadDefinition ( CMRProject2& project, CMRXmlNode& nod
 	//extract info
 	string mathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
 	string longName = node.getNonEmptyProperty(CMR_PROP_LONGNAME);
+	string vector = node.getProperty("vector");
 
 	//create the definition
 	ProjectDefinition & def = project.addDefinition(mathName,longName);

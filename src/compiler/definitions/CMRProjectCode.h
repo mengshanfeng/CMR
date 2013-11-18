@@ -55,6 +55,7 @@ struct ExtractionLocus
 
 /*********************  TYPES  **********************/
 typedef std::list<ExtractionLocus> ExtractionLocusList;
+typedef std::vector<int> DimVector;
 
 /*********************  CLASS  **********************/
 class CMRProjectLocalVariable : public ProjectEntity
@@ -63,9 +64,11 @@ class CMRProjectLocalVariable : public ProjectEntity
 		CMRProjectLocalVariable( const std::string& latexName, const std::string& longName, const std::string& type, const std::string& defaultValue = "0");
 		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding = 0 ) const;
 		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
+		void addDim(int size);
 	private:
 		std::string type;
 		CMRCompiler::LatexFormulas defaultValue;
+		DimVector dims;
 };
 
 /*********************  TYPES  **********************/
@@ -87,6 +90,8 @@ class CMRProjectCodeEntry : public ProjectCodeTree<CMRProjectCodeEntry>
 		virtual void genChildCCode(std::ostream & out,int padding = 0) const;
 		std::ostream & doIndent(std::ostream & out,int baseOffset = 0) const;
 		void changeCaptureType(const std::string & name, CaptureType captureType) { assert(false);};
+		//TODO remove
+		virtual void setCaptureSize(const std::string & name, const std::string & type,int size){};
 	protected:
 		virtual void onParentChange ( CMRProjectCodeEntry * newParent );
 	protected:

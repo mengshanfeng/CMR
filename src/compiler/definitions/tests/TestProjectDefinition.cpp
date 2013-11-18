@@ -181,3 +181,18 @@ TEST(TestProjectDefinition,testGenUsageCCodeParamsRead)
 	
 	EXPECT_EQ("compute_energy(in,out,x,y, (3))",out.str());
 }
+
+/*******************  FUNCTION  *********************/
+TEST(TestProjectDefinition,testVectorParameter)
+{
+	ProjectDefinition def("E_{i,j,h}","energy");
+	def.setCaptureSize("h","double",4);
+	def.changeCaptureType("h",CAPTURE_REQUIRED);
+	def.addEquation("E_{i,j,h} = h_* + h_4");
+	ProjectContext context;
+	
+	stringstream out;
+	def.genDefinitionCCode(out,&context);
+	
+	EXPECT_EQ("",out.str());
+}

@@ -12,6 +12,7 @@
 #include "common/Common.h"
 #include "common/Debug.h"
 #include "ProjectDefinition.h"
+#include "GenCode.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -61,21 +62,35 @@ void ProjectDefinition::genParameterListForDef ( ostream& out, const ProjectCapt
 		assert(it->captureType != CAPTURE_OPTIONS);
 		if (it->captureType == CAPTURE_REQUIRED)
 		{
-			const ProjectEntity * entity = parametersContext.find(it->name);
+			//TODO remove this hack
+			string name = it->name;
+			if (sizes.find(name) != sizes.end())
+				name += "_*";
+			const ProjectEntity * entity = parametersContext.find(name);
 			assert(entity != NULL);
-			out << ", int " << entity->getLongName();
+			if (types.find(it->name) == types.end())
+				out << ", int " << entity->getLongName();
+			else
+				out << ", "<< types.find(it->name)->second << " " << entity->getLongName();
+			if (sizes.find(it->name) != sizes.end())
+				out << "[" << sizes.find(it->name)->second << "]";
 		}
 	}
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectDefinition::genParameterListForUsage ( ostream& out, const ProjectCaptureDefMap& map,ProjectCaptureMap & capture ) const
+void ProjectDefinition::genParameterListForUsage ( ostream& out, const ProjectCaptureDefMap& map,ProjectCaptureMap & capture,const ProjectContext & context) const
 {
 	for (ProjectCaptureDefMap::const_iterator it = map.begin() ; it != map.end() ; ++it)
 	{
 		assert(it->captureType != CAPTURE_OPTIONS);
 		if (it->captureType == CAPTURE_REQUIRED)
-			out << ", (" << *capture[it->name] << ")";
+		{
+			out << ", (";
+			LatexFormulas f(*capture[it->name]);
+			cmrGenEqCCode(out,context,f);
+			out << ")";
+		}
 	}
 }
 
@@ -100,9 +115,9 @@ void ProjectDefinition::genUsageCCode ( ostream& out, const ProjectContext& cont
 	}
 	
 	out << ",x,y";
-	genParameterListForUsage(out,getIndices(),capture);
-	genParameterListForUsage(out,getExponents(),capture);
-	genParameterListForUsage(out,getParameters(),capture);
+	genParameterListForUsage(out,getIndices(),capture,context);
+	genParameterListForUsage(out,getExponents(),capture,context);
+	genParameterListForUsage(out,getParameters(),capture,context);
 	out << ")";
 }
 
@@ -166,7 +181,10 @@ void ProjectDefinition::onUpdateCaptureType ( const string& name, CaptureType ca
 	{
 		//TODO : create a parameter entity
 		string longName = parametersContext.genTempName("param").longName;
-		this->parametersContext.addEntry(new CMRProjectLocalVariable(name,longName,"int"));
+		CMRProjectLocalVariable * var = new CMRProjectLocalVariable(name,longName,"int");
+		this->parametersContext.addEntry(var);
+		if (sizes.find(name) != sizes.end())
+			var->addDim(sizes[name]);
 	}
 }
 
@@ -180,6 +198,17 @@ ProjectContext& ProjectDefinition::getContext ( void )
 CMRProjectCodeEntry* ProjectDefinition::insert ( CMRProjectCodeEntry* entry, ProjectCodeTreeInsert location )
 {
 	return ops.insert(entry,location);
+}
+
+/*******************  FUNCTION  *********************/
+void ProjectDefinition::setCaptureSize ( const string& name, const string& type, int size )
+{
+	if (size > 0)
+		sizes[name] = size;
+	if (type.empty())
+		types[name] = "int";
+	else
+		types[name] = type;
 }
 
 }

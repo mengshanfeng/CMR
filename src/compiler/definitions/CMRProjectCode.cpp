@@ -35,6 +35,8 @@ CMRProjectLocalVariable::CMRProjectLocalVariable ( const std::string& latexName,
 void CMRProjectLocalVariable::genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding ) const
 {
 	doIndent(out,padding) << type << " " << getLongName();
+	for (int i = 0 ; i < dims.size() ; i++)
+		out << "[" << dims[i] << "]";
 	if (defaultValue.empty() == false)
 	{
 		out << " = ";
@@ -47,6 +49,27 @@ void CMRProjectLocalVariable::genDefinitionCCode ( std::ostream& out, const Proj
 void CMRProjectLocalVariable::genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
 	out << getLongName();
+	if (dims.empty() == false)
+	{
+		ProjectCaptureMap capture;
+		this->capture(entity,capture);
+		if (capture["k"]->getString() != "*")
+		{
+			out << "[" << capture["k"]->getString() << "]";
+		} else {
+			assert(dims.size() <= 1);
+			assert(write == false);
+		}
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectLocalVariable::addDim ( int size )
+{
+	//need to manage indice names
+	assert(dims.size() == 0);
+	this->dims.push_back(size);
+	this->addIndice("k",CAPTURE_REQUIRED);
 }
 
 /*******************  FUNCTION  *********************/

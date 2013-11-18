@@ -73,19 +73,23 @@
 			<!--<def mathname='p' longname='p' doc='Norme de la quantité de mouvement macroscopique de la maille.'>
 				<mathstep>p = \sum_s{M^{dir}_{k,s} * v_{i,j,s}}</mathstep>
 			</def>-->
-			<def mathname='f_{eq,i,j,k}' longname='pdf_eq' doc="Distribution des probabilité de présence à l'équilibre locale suivant la direction $k$.">
+			<def mathname='f_{eq,i,j,V,D,k}' longname='pdf_eq' doc="Distribution des probabilité de présence à l'équilibre locale suivant la direction $k$.">
+				<defparameter mathname='V' longname='V' type='double' doc='Vitesse macroscopique.' vector='2'/>
+				<defparameter mathname='D' longname='D' type='double' doc='Densité macroscopique.'/>
 				<defparameter mathname='k' longname='k' type='int' doc='Direction considérée (1 à 9).'/>
 				<declvar mathname='p' longname='p' type='double' default='0'/>
-				<mathstep>p = \sum_s{M^{dir}_{k,s} * v_{i,j,s}}</mathstep>
- 				<mathstep>f_{eq,i,j,k} = 1.0 + 3.0p + \frac{9.0}{2.0}p^2 - \frac{3.0}{2.0}v^2</mathstep> 
+				<declvar mathname='W' longname='W' type='double' default='0'/>
+				<mathstep>W = ((V_0)^2+(V_1)^2)</mathstep>
+				<mathstep>p = \sum_s{M^{dir}_{k,s} * V_{s}}</mathstep>
+ 				<mathstep>f_{eq,i,j,V,D,k} = W_k * D * (1.0 + 3.0p + \frac{9.0}{2.0}p^2 - \frac{3.0}{2.0}W)</mathstep> 
 			</def>
 			<def mathname='v_{pois,j}' longname='poiseuil' doc='Fonction de poiseuil pour une hauteur de fluide donnée.'>
-<!-- 				<declvar mathname='y' longname='Y' type='int'/> -->
+				<declvar mathname='y' longname='Y' type='int'/>
 				<declvar mathname='L' longname='L' type='double'/>
 				<declvar mathname='H' longname='H' type='double' default='100'/>
-<!-- 				<mathstep>y = j - 1</mathstep> -->
+				<mathstep>y = j - 1</mathstep>
 				<mathstep>L = H - 1</mathstep>
-				<mathstep>v_{pois,j} = \frac{4V}{L^2} (Lj - j^2)</mathstep>
+				<mathstep>v_{pois,j} = \frac{4V}{L^2} (Ly - y^2)</mathstep>
 			</def>
 			<def mathname='v_{i,j}' longname='vmacro' doc="Norme de la vitesse macroscopique de la cellule.">
 				<mathstep>v_{i,j} = \sqrt{v^2}</mathstep>
@@ -138,6 +142,9 @@
 				<ccode>	case CELL_RIGHT_OUT:                         </ccode>
 				<ccode>		$\cmrsubaction{zou\_he\_const_dentity}$; </ccode>
 				<ccode>		break;                                   </ccode>
+				<ccode>	default:                                     </ccode>
+				<ccode>		warning("Bad cell type, ignore");        </ccode>
+				<ccode>		break;                                   </ccode>
 				<ccode>}                                             </ccode>
 				<!--<switch select='T_{i,j}'>
 					<case select='CELL_FLUID'></case>
@@ -158,8 +165,11 @@
 				</foreach>
 			</cellaction>
 			<cellaction name='Collision'  loop='CMRMeshOperationSimpleLoop' doc='Applique les équation de collision pour re-répartir les densités microscopiques.'>
+				<declvar mathname='V' longname='V' type='double' vector='2'/>
+				<mathstep>V_0 = v_{i,j,0}</mathstep>
+				<mathstep>V_1 = v_{i,j,1}</mathstep>
 				<foreach iterator='k'>
-					<mathstep>f_{i,j,k} = f_{i,j,k} - r * (f_{i,j,k} - f_{eq,i,j,k})</mathstep>
+					<mathstep>f_{i,j,k} = f_{i,j,k} - r * (f_{i,j,k} - f_{eq,i,j,V_*,d_{i,j},k})</mathstep>
 				</foreach>
 			</cellaction>
 			<cellaction name='InitCellType' loop='CMRMeshOperationSimpleLoopInPlace' doc='Initialise le contenue des types de cellule.'>
@@ -167,26 +177,26 @@
 				<mathstep>T_{i,j} = t</mathstep>
 			</cellaction>
 			<cellaction name='InitStatePoiseuil' loop='CMRMeshOperationSimpleLoopInPlace' doc="Initialise le contenu des cellules avec un profile de poinseuil à l'équilibre allant vers la droite.">
-				<declvar mathname='p' longname='p' type='double' default='0'/>
+				<declvar mathname='V' longname='V' type='double' vector='2'/>
+				<mathstep>V_0 = v_{pois,j}</mathstep>
+				<mathstep>V_1 = 0.0</mathstep>
 				<foreach iterator='k'>
-					<mathstep>p = M^{dir}_{k,0} * v_{pois,j}</mathstep>
-					<mathstep>f_{i,j,k} = 1.0 + 3.0p + \frac{9.0}{2.0}p^2 - \frac{3.0}{2.0}v_{pois,j}^2</mathstep> 
+					<mathstep>f_{i,j,k} = f_{eq,i,j,V_*,1.0,k}</mathstep>
 				</foreach>
 <!-- 				<ccode>printf("\%d , \%d ; \%g == \%g ; \%g , \%g\n",$i$,$j$,$v_{pois,j}$,$v_{i,j}$,$p$,$f_{i,j,8}$);</ccode> -->
 			</cellaction>
 			<cellaction name='SetupObstable' loop='CMRMeshOperationSimpleLoopInPlaceWithPos' doc="Configure les cellules de l'obstable.">
 				<defparameter mathname="O_x" longname="obstacle_x" type='double'/>
 				<defparameter mathname="O_y" longname="obstacle_y" type='double'/>
+				<declvar mathname='V' longname='V' type='double' vector='2'/>
+				<mathstep>V_0 = 0.0</mathstep>
+				<mathstep>V_1 = 0.0</mathstep>
+				
 				<ccode>if ( ( $(x-O_x)*(x-O_x)$ + $(j-O_y)*(j-O_y)$ ) &lt;= $(O_R)*(O_R)$ ) {</ccode>
 				<ccode>	*cell.cell_type(x,y) = CELL_BOUNCE_BACK;</ccode><!-- TODO : work on this -->
-				<ccode>	*cell.pdf(x,y)[0] = 1.0;</ccode>
-				<ccode>	*cell.pdf(x,y)[1] = 1.0;</ccode>
-				<ccode>	*cell.pdf(x,y)[2] = 1.0;</ccode>
-				<ccode>	*cell.pdf(x,y)[3] = 1.0;</ccode>
-				<ccode>	*cell.pdf(x,y)[4] = 1.0;</ccode>
-				<ccode>	*cell.pdf(x,y)[5] = 1.0;</ccode>
-				<ccode>	*cell.pdf(x,y)[6] = 1.0;</ccode>
-				<ccode>	*cell.pdf(x,y)[7] = 1.0;</ccode>
+				<foreach iterator='k'>
+					<mathstep>f_{i,j,k} = f_{eq,i,j,V_*,1.,k}</mathstep>
+				</foreach>
 				<ccode>printf("ok\n");</ccode>
 				<ccode>}</ccode>
 			</cellaction>
@@ -221,7 +231,7 @@
 		<mainloop>
 			<!-- ************* -->
 			<callaction name="SpecialCells">
-				<zone>local.expended(1)</zone>
+				<zone>global.expended(1)</zone>
 			</callaction>
 			<!-- ************* -->
 			<callaction name="Collision">
@@ -230,7 +240,7 @@
 			
 			<!-- ************* -->
 			<callaction name="Propagation">
-				<zone>local.expended(-1)</zone>
+				<zone>global.expended(-1)</zone>
 			</callaction>
 		</mainloop>
 		<output>

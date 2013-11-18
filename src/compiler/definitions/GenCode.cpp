@@ -93,6 +93,10 @@ std::ostream&  cmrGenEqCCode(ostream& out, const ProjectContext& context, const 
 		out << "((Action" << *entity.getParameter(0) << "*)NULL)->cellAction(in,out,pos,x,y)";
 	} else if (entity.name == "\\mathrm") {
 		out << entity.getParameter(0)->front()->getName();
+	} else if (entity.name == "\\sqrt") {
+		out << "sqrt(";
+		cmrGenEqCCode(out,context,*entity.getParameter(0));
+		out << ")";
 	} else {
 		//search matching in context
 		const ProjectEntity * def = context.find(entity);

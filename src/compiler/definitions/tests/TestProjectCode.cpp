@@ -74,9 +74,33 @@ TEST(TestProjectCodeNode,testIteratorLoop_error)
 	EXPECT_THROW(loop.getIterator(),LatexException);
 }
 
+/*******************  FUNCTION  *********************/
 TEST(TestProjectCodeNode,testAddLocalVariable)
 {
 	CMRProjectCodeNode root;
 	
 	root.addLocalVariable("k","testK","int","1");
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestProjectCodeNode,testAddLocalVariableDims)
+{
+	CMRProjectCodeNode root;
+	
+	CMRProjectLocalVariable & var = root.addLocalVariable("k","testK","int","1");
+	var.addDim(2);
+	
+	stringstream out1;
+	var.genDefinitionCCode(out1,root.getContext());
+	EXPECT_EQ("int testK[2] = 1 ;\n",out1.str());
+	
+	LatexEntity e("k_1");
+	stringstream out2;
+	var.genUsageCCode(out2,root.getContext(),e);
+	EXPECT_EQ("testK[1]",out2.str());
+	
+	LatexEntity e2("k_*");
+	stringstream out3;
+	var.genUsageCCode(out3,root.getContext(),e2);
+	EXPECT_EQ("testK",out3.str());
 }

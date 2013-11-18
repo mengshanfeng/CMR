@@ -39,9 +39,10 @@ class ProjectDefinition : public ProjectEntity
 		ProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start, int end);
 		ProjectContext & getContext(void);
 		CMRProjectCodeEntry * insert(CMRProjectCodeEntry * entry,ProjectCodeTreeInsert location = CMR_INSERT_LAST_CHILD);
+		void setCaptureSize(const std::string & name,const std::string & type,int size = 0);
 	protected:
 		void genParameterListForDef(std::ostream& out,const ProjectCaptureDefMap & map) const;
-		void genParameterListForUsage( std::ostream& out, const ProjectCaptureDefMap& map, ProjectCaptureMap& capture ) const;
+		void genParameterListForUsage( std::ostream& out, const ProjectCaptureDefMap& map, ProjectCaptureMap& capture,const ProjectContext & context ) const;
 		virtual void onUpdateCaptureType ( const std::string& name, CaptureType captureType );
 		/*virtual void addIndice ( const std::string& name, CMRCaptureType capture = CMR_CAPTURE_NONE );
 		virtual void madeCaptureIndice ( const std::string name, CMRCaptureType capture );
@@ -52,6 +53,8 @@ class ProjectDefinition : public ProjectEntity
 	private:
 		ProjectContext parametersContext;
 		CMRProjectCodeRootNode ops;
+		std::map<std::string,int> sizes;
+		std::map<std::string,std::string> types;
 };
 
 }
