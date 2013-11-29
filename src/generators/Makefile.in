@@ -45,6 +45,10 @@ OBJ_DEBUG=$(SRC_CXX:.cpp=-debug.cpp.o)
 OBJ_RELEASE=$(SRC_CXX:.cpp=-release.cpp.o)
 
 ######################################################
+#optionaly include config file to override options if exists
+-include config.mk
+
+######################################################
 all: $(TARGETS)
 
 ######################################################
