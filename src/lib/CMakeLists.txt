@@ -30,6 +30,8 @@ set(cmr_SRCS common/CMRSpaceSplitter.cpp
              mpi/CMRMPIComm.cpp
              mpi/CMRMPICommFactory.cpp
              mpi/CMRMPIReduction.cpp
+             runner/CMRRunner.cpp
+             runner/CMRRunnerSeq.cpp
              runner/CMRBasicOutputer.cpp)
 
 ######################################################

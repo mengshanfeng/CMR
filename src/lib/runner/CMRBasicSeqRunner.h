@@ -34,60 +34,29 @@
 #include <math.h>
 #include <cstdio>
 #include <stdint.h>
+#include "CMROutputer.h"
+#include "CMRRunner.h"
+#include "CMRRunnerSeq.h"
+#include "CMRRunnerInitFactory.h"
 
 /*********************  TYPES  **********************/
 class CMRMeshOperation;
 class CMRVarSystem;
 
-/*********************  STRUCT  *********************/
-struct CMRMeshOperationNode
-{
-	CMRMeshOperationNode(CMRMeshOperation *op,const CMRRect & rect) {this->op = op; this->rect = rect;};
-	CMRMeshOperation * op;
-	CMRRect rect;
-};
-
-/*********************  TYPES  **********************/
-typedef std::vector<CMRMeshOperationNode> CMRMeshOperationNodeVector;
-
-/*********************  CLASS  **********************/
-class CMROutputer
-{
-	public:
-		virtual ~CMROutputer(void) {};
-		virtual void write(CMRVarSystem * system,const CMRRect & global,const CMRRect & local) = 0;
-};
-
 /*********************  CLASS  **********************/
 template <class TVarSystem>
-class CMRBasicSeqRunner
+class CMRBasicSeqRunner : public CMRRunnerSeq
 {
 	public:
-		CMRBasicSeqRunner( int& argc, char**& argv, const CMRRect & globalDomainSize );
-		~CMRBasicSeqRunner(void);
-		void addInitAction(CMRMeshOperation * op,CMRRect rect);
-		void addLoopAction(CMRMeshOperation * op,CMRRect rect);
-		void addPrepareWriteAction(CMRMeshOperation * op,CMRRect rect);
-		void setWriter( CMROutputer* outputer, int stepGap );
-		void run(int iterations);
-		CMRRect getLocalRect(void) const;
-		CMRRect getGlobalRect(void) const;
-		const CMRAbstractSpaceSplitter & getSplitter(void) const;
-	protected:
-		void initMPI( int& argc, char**& argv );
-		void initDomain(const CMRRect & globalDomainSize);
-	private:
-		CMRRect globalRect;
-		CMRRect localRect;
-		CMRMeshOperationNodeVector initActions;
-		CMRMeshOperationNodeVector loopActions;
-		CMRMeshOperationNodeVector writeActions;
-		CMRVarSystem * system;
-		CMROutputer * outputer;
-		int writeInterval;
-		CMRAbstractSpaceSplitter * splitter;
+		CMRBasicSeqRunner( int& argc, char**& argv,const CMRRect & globalDomainSize);
 };
 
-#include "CMRBasicSeqRunner_impl.h"
+/*******************  FUNCTION  *********************/
+template <class TVarSystem>
+CMRBasicSeqRunner<TVarSystem>::CMRBasicSeqRunner ( int& argc, char**& argv, const CMRRect& globalDomainSize ) 
+	: CMRRunnerSeq ( argc, argv, globalDomainSize, new CMRRunnerInitFactorySeqGeneric<CMRBasicSpaceSplitter,CMRMPIDomainBuilder,TVarSystem>())
+{
+
+}
 
 #endif //CMR_BASIC_SEQ_RUNNER_H
