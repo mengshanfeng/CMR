@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "runner/FileHeader.h"
+#include "outputer/FileHeader.h"
 #include "CMRRawReader.h"
 
 /**********************  USING  *********************/

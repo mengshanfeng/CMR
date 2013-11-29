@@ -12,7 +12,7 @@
 /********************  HEADERS  *********************/
 #include <cstdio>
 #include <string>
-#include "CMRBasicSeqRunner.h"
+#include "CMROutputer.h"
 
 /*********************  TYPES  **********************/
 class CMRAbstractSpaceSplitter;

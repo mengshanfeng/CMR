@@ -1,7 +1,7 @@
 #define LBM
 
 #include <runner/CMRBasicSeqRunner.h>
-#include <runner/CMRBasicOutputer.h>
+#include <outputer/CMRBasicOutputer.h>
 #include <CMR.h>
 
 using namespace std;

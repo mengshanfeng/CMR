@@ -10,7 +10,7 @@
 #include "operations/CMRMeshOperation.h"
 #include "domain/CMRVarSystem.h"
 #include "CMRRunnerSeq.h"
-#include "CMROutputer.h"
+#include "outputer/CMROutputer.h"
 
 /*******************  FUNCTION  *********************/
 CMRRunnerSeq::CMRRunnerSeq ( int& argc, char**& argv, const CMRRect& globalDomainSize, CMRRunnerInitFactory* factory )

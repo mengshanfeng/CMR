@@ -34,7 +34,7 @@
 #include <math.h>
 #include <cstdio>
 #include <stdint.h>
-#include "CMROutputer.h"
+#include "outputer/CMROutputer.h"
 #include "CMRRunner.h"
 #include "CMRRunnerSeq.h"
 #include "CMRRunnerInitFactory.h"

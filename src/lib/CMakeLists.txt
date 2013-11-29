@@ -32,7 +32,7 @@ set(cmr_SRCS common/CMRSpaceSplitter.cpp
              mpi/CMRMPIReduction.cpp
              runner/CMRRunner.cpp
              runner/CMRRunnerSeq.cpp
-             runner/CMRBasicOutputer.cpp)
+             outputer/CMRBasicOutputer.cpp)
 
 ######################################################
 add_library(cmr ${cmr_SRCS})
@@ -49,6 +49,7 @@ install(DIRECTORY "mpi" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY "runner" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY "communication" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY "operations" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY "outputer" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
 INSTALL(FILES CMR.h DESTINATION include/cmr)
 
 ######################################################
