@@ -1,0 +1,44 @@
+/********************  HEADERS  *********************/
+#include <cassert>
+#include <reader/CMRRawReader.h>
+#include "{{FILE_PREFIX}}-cmr-raw-output.h"
+
+/*********************  CLASS  **********************/
+class SpecializedRawReader : public CMRReader::CMRRawReader
+{
+	public:
+		SpecializedRawReader();
+		virtual void printValue(std::ostream & out, const void * data,int entryId);
+};
+
+/*******************  FUNCTION  *********************/
+SpecializedRawReader::SpecializedRawReader(void)
+	: CMRReader::CMRRawReader(sizeof(CMRRawOutputStruct))
+{
+	int id = 0;
+	//XSL-FOREACH /cmr/elements/output/entry
+	registerEntryName("$XSL{{@name}}",id++);
+	//XSL-END-FOREACH
+}
+
+/*******************  FUNCTION  *********************/
+void SpecializedRawReader::printValue(std::ostream & out, const void * data,int entryId)
+{
+	CMRRawOutputStruct * value = (CMRRawOutputStruct * )data;
+	int id = 0;
+	if (false)
+		assert(false);
+	//XSL-FOREACH /cmr/elements/output/entry
+	else if (entryId == (id++))
+		out << value->$XSL{{@name}};
+	//XSL-END-FOREACH
+	else 
+		assert(false);
+}
+
+/*******************  FUNCTION  *********************/
+int main(int argc, char ** argv)
+{
+	SpecializedRawReader reader;
+	return reader.run(argc,argv);
+}

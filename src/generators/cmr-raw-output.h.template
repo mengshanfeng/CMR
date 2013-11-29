@@ -1,0 +1,19 @@
+/*************** GENERATED FILE *****************/
+
+#ifndef CMR_RAW_OUTPUT_STRUCT_H
+#define CMR_RAW_OUTPUT_STRUCT_H
+
+/********************  HEADERS  *********************/
+//XSL-FOREACH /cmr/project/headers/include
+#include <$XSL{{.}}>
+//XSL-END-FOREACH
+
+/*********************  STRUCT  *********************/
+struct CMRRawOutputStruct
+{
+	//XSL-FOREACH /cmr/elements/output/entry
+	$XSL{{@type}} $XSL{{@name}};
+	//XSL-END-FOREACH
+};
+
+#endif //CMR_RAW_OUTPUT_STRUCT_H

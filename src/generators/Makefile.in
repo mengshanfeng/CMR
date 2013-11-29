@@ -7,12 +7,14 @@
 ######################################################
 
 ######################################################
-CXX:=mpicxx
-CC:=mpicc
+MPICXX=mpicxx
+MPICC=mpicc
+CXX:=g++
+CC:=gcc
 CFLAGS:=-Wall
 LDFLAGS:=
-DEBUG_CFLAGS:=-g -O0
-RELEASE_CFLAGS:=-O3
+CFLAGS_DEBUG:=-g -O0
+CFLAGS_RELEASE:=-O3 -DNDEBUG
 
 ######################################################
 CMR_PREFIX:={{CMR_PREFIX}}
@@ -27,13 +29,15 @@ PROJECT_FILE:={{PROJECT_FILE}}
 
 ######################################################
 CMR_CFLAGS=-I$(CMR_INCLUDE_DIR) -I.
-CMR_LDFLAGS=-L$(CMR_LIBDIR) -Wl,-rpath=$(CMR_LIBDIR) -lcmr
+CMR_LDFLAGS=-L$(CMR_LIBDIR) -Wl,-rpath=$(CMR_LIBDIR)
+CMR_RT_LDFLAGS=$(CMR_LDFLAGS) -lcmr
+CMR_READER_LDFLAGS=$(CMR_LDFLAGS) -lcmrrawreader
 
 ######################################################
 RM=rm -f
 
 ######################################################
-TARGETS=$(FILE_PREFIX)-release $(FILE_PREFIX)-debug
+TARGETS=$(FILE_PREFIX)-release $(FILE_PREFIX)-debug $(FILE_PREFIX)-raw-reader
 
 ######################################################
 SRC_CXX=$(FILE_PREFIX).cpp
@@ -49,19 +53,23 @@ Makefile: $(PROJECT_FILE) $(CMR_BIN)/cmr-generate $(CMR_TEMPLATES)/Makefile.in
 
 ######################################################
 %-release.cpp.o: %.cpp Makefile
-	$(CXX) -c $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_RELEASE) $< -o $@
+	$(MPICXX) -c $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_RELEASE) $< -o $@
 
 ######################################################
 %-debug.cpp.o: %.cpp Makefile
-	$(CXX) -c $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_DEBUG) $< -o $@
+	$(MPICXX) -c $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_DEBUG) $< -o $@
 
 ######################################################
 $(FILE_PREFIX)-debug: $(OBJ_DEBUG)
-	$(CXX) $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_DEBUG) $< $(CMR_LDFLAGS) $(LDFLAGS) -o $@
+	$(MPICXX) $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_DEBUG) $< $(CMR_RT_LDFLAGS) $(LDFLAGS) -o $@
 
 ######################################################
 $(FILE_PREFIX)-release: $(OBJ_RELEASE)
-	$(CXX) $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_RELEASE) $< $(CMR_LDFLAGS) $(LDFLAGS) -o $@
+	$(MPICXX) $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_RELEASE) $< $(CMR_RT_LDFLAGS) $(LDFLAGS) -o $@
+
+######################################################
+$(FILE_PREFIX)-raw-reader: $(FILE_PREFIX)-cmr-raw-reader-release.cpp.o Makefile
+	$(CXX) $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_RELEASE) $(FILE_PREFIX)-cmr-raw-reader.cpp $(CMR_READER_LDFLAGS) $(LDFLAGS) -o $@
 
 ######################################################
 distclean: clean
@@ -70,7 +78,7 @@ distclean: clean
 ######################################################
 clean:
 	$(RM) $(TARGETS)
-	$(RM) $(OBJ_DEBUG) $(OBJ_RELEASE)
+	$(RM) $(OBJ_DEBUG) $(OBJ_RELEASE) $(FILE_PREFIX)-cmr-raw-reader-release.cpp.o
 
 ######################################################
 .PHONY: clean all distclean
