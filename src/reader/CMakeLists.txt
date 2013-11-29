@@ -1,5 +1,4 @@
 include_directories(../lib/)
-add_executable(display display.c)
 add_library(cmrrawreader CMRRawReader.cpp)
 
 ######################################################
