@@ -1,0 +1,76 @@
+######################################################
+#            PROJECT  : CartesianMeshRuntime         #
+#            VERSION  : 0.0.0                        #
+#            DATE     : 02/2013                      #
+#            AUTHOR   : Valat Sébastien              #
+#            LICENSE  : CeCILL-C                     #
+######################################################
+
+######################################################
+CXX:=mpicxx
+CC:=mpicc
+CFLAGS:=-Wall
+LDFLAGS:=
+DEBUG_CFLAGS:=-g -O0
+RELEASE_CFLAGS:=-O3
+
+######################################################
+CMR_PREFIX:={{CMR_PREFIX}}
+CMR_INCLUDE_DIR:=$(CMR_PREFIX)/include/cmr
+CMR_LIBDIR:=$(CMR_PREFIX)/lib
+CMR_TEMPLATES:=$(CMR_PREFIX)/share/cmr/templates
+CMR_BIN:=$(CMR_PREFIX)/bin
+
+######################################################
+FILE_PREFIX:={{FILE_PREFIX}}
+PROJECT_FILE:={{PROJECT_FILE}}
+
+######################################################
+CMR_CFLAGS=-I$(CMR_INCLUDE_DIR) -I.
+CMR_LDFLAGS=-L$(CMR_LIBDIR) -Wl,-rpath=$(CMR_LIBDIR) -lcmr
+
+######################################################
+RM=rm -f
+
+######################################################
+TARGETS=$(FILE_PREFIX)-release $(FILE_PREFIX)-debug
+
+######################################################
+SRC_CXX=$(FILE_PREFIX).cpp
+OBJ_DEBUG=$(SRC_CXX:.cpp=-debug.cpp.o)
+OBJ_RELEASE=$(SRC_CXX:.cpp=-release.cpp.o)
+
+######################################################
+all: $(TARGETS)
+
+######################################################
+Makefile: $(PROJECT_FILE) $(CMR_BIN)/cmr-generate $(CMR_TEMPLATES)/Makefile.in
+	$(CMR_BIN)/cmr-generate $<
+
+######################################################
+%-release.cpp.o: %.cpp Makefile
+	$(CXX) -c $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_RELEASE) $< -o $@
+
+######################################################
+%-debug.cpp.o: %.cpp Makefile
+	$(CXX) -c $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_DEBUG) $< -o $@
+
+######################################################
+$(FILE_PREFIX)-debug: $(OBJ_DEBUG)
+	$(CXX) $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_DEBUG) $< $(CMR_LDFLAGS) $(LDFLAGS) -o $@
+
+######################################################
+$(FILE_PREFIX)-release: $(OBJ_RELEASE)
+	$(CXX) $(CMR_CFLAGS) $(CFLAGS) $(CFLAGS_RELEASE) $< $(CMR_LDFLAGS) $(LDFLAGS) -o $@
+
+######################################################
+distclean: clean
+	$(RM) `cat ./manifest-generated.txt`
+
+######################################################
+clean:
+	$(RM) $(TARGETS)
+	$(RM) $(OBJ_DEBUG) $(OBJ_RELEASE)
+
+######################################################
+.PHONY: clean all distclean

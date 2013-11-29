@@ -1,0 +1,51 @@
+<!ELEMENT cmr (project,elements)>
+
+<!-- project def -->
+<!ELEMENT project (name,authors,version,headers,doc,screen?)>
+	<!ELEMENT name (#PCDATA)>
+	<!ELEMENT authors (author+)>
+		<!ELEMENT author (#PCDATA)>
+			<!ATTLIST author mail CDATA #REQUIRED>
+	<!ELEMENT version (#PCDATA)>
+	<!ELEMENT headers (include)>
+		<!ELEMENT include (#PCDATA)>
+	<!ELEMENT doc (#PCDATA)>
+	<!ELEMENT screen (#PCDATA)>
+
+<!-- elements -->
+<!ELEMENT elements (consts,mesh,iterators,defs,cellactions,init,mainloop,output)>
+	<!ELEMENT consts (const+)>
+		<!ELEMENT const (#PCDATA)>
+			<!ATTLIST const mathname CDATA #REQUIRED>
+			<!ATTLIST const longname CDATA #REQUIRED>
+			<!ATTLIST const type CDATA #REQUIRED>
+			<!ATTLIST const dims CDATA #IMPLIED>
+			<!ATTLIST const doc CDATA #REQUIRED>
+	<!ELEMENT mesh (var+)>
+		<!ELEMENT var (extradims?)>
+			<!ATTLIST var mathname CDATA #REQUIRED>
+			<!ATTLIST var longname CDATA #REQUIRED>
+			<!ATTLIST var type CDATA #REQUIRED>
+			<!ATTLIST var ghost CDATA #IMPLIED>
+			<!ATTLIST var memory CDATA #REQUIRED>
+			<!ATTLIST var doc CDATA #REQUIRED>
+				<!ELEMENT extradims (extradim+)>
+					<!ELEMENT extradim EMPTY>
+						<!ATTLIST extradim mathname CDATA #REQUIRED>
+						<!ATTLIST extradim longname CDATA #REQUIRED>
+						<!ATTLIST extradim size CDATA #REQUIRED>
+						<!ATTLIST extradim start CDATA #REQUIRED>
+						<!ATTLIST extradim doc CDATA #REQUIRED>
+	<!ELEMENT iterators (iterator+)>
+		<!ELEMENT iterator EMPTY>
+			<!ATTLIST iterator mathname CDATA #REQUIRED>
+			<!ATTLIST iterator longname CDATA #REQUIRED>
+			<!ATTLIST iterator start CDATA #REQUIRED>
+			<!ATTLIST iterator end CDATA #REQUIRED>
+			<!ATTLIST iterator doc CDATA #REQUIRED>
+	<!ELEMENT defs (def+)>
+		<!ELEMENT def (mathstep|declvar|defparameter|ccode|foreach|alias)>
+			<!ATTLIST def mathname CDATA #REQUIRED>
+			<!ATTLIST def longname CDATA #REQUIRED>
+			<!ATTLIST def doc CDATA #REQUIRED>
+			<!ELEMENT mathstep (#PCDATA)>

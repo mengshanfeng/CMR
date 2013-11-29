@@ -14,11 +14,39 @@ include_directories(${CMR_MPI_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 ######################################################
-add_library(cmr common/CMRSpaceSplitter.cpp common/CMRGeometry.cpp common/CMRDebug.cpp common/CMRCommon.cpp
-	domain/CMRAbstractDomain.cpp domain/CMRComposedDomain.cpp domain/CMRDomainStorage.cpp domain/CMRVarSystem.cpp 
-	communication/CMRBufferedComm.cpp communication/CMRComm.cpp communication/CMRCommSchem.cpp communication/CMRCommFactory.cpp 
-	mpi/CMRMPIDomainBuilder.cpp mpi/CMRMPIComm.cpp mpi/CMRMPICommFactory.cpp mpi/CMRMPIReduction.cpp runner/CMRBasicOutputer.cpp)
+set(cmr_SRCS common/CMRSpaceSplitter.cpp 
+             common/CMRGeometry.cpp 
+             common/CMRDebug.cpp 
+             common/CMRCommon.cpp
+             domain/CMRAbstractDomain.cpp
+             domain/CMRComposedDomain.cpp
+             domain/CMRDomainStorage.cpp
+             domain/CMRVarSystem.cpp
+             communication/CMRBufferedComm.cpp
+             communication/CMRComm.cpp
+             communication/CMRCommSchem.cpp
+             communication/CMRCommFactory.cpp 
+             mpi/CMRMPIDomainBuilder.cpp
+             mpi/CMRMPIComm.cpp
+             mpi/CMRMPICommFactory.cpp
+             mpi/CMRMPIReduction.cpp
+             runner/CMRBasicOutputer.cpp)
+
+######################################################
+add_library(cmr ${cmr_SRCS})
 target_link_libraries(cmr ${CMR_MPI_CXX_LIBRARIES})
+
+######################################################
+#install procedure
+INSTALL(TARGETS cmr
+        ARCHIVE DESTINATION lib${LIB_SUFFIX}
+        LIBRARY DESTINATION lib${LIB_SUFFIX})
+install(DIRECTORY "common" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY "domain" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY "mpi" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY "runner" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY "communication" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
+INSTALL(FILES CMROperation.h DESTINATION include/cmr)
 
 ######################################################
 if (NOT DISABLE_TESTS)

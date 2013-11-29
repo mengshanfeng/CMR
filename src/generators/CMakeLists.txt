@@ -7,7 +7,9 @@
 ######################################################
 
 ######################################################
-add_subdirectory(lib)
-add_subdirectory(reader)
-add_subdirectory(compiler)
-add_subdirectory(generators)
+INSTALL(PROGRAMS cmr-generate.sh
+        DESTINATION bin RENAME cmr-generate)
+
+######################################################
+INSTALL(FILES Makefile.in cmr2html.xsl cmr.dtd
+		DESTINATION share/cmr/templates/)

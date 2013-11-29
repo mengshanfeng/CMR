@@ -37,11 +37,11 @@
 				0 &amp; 3 &amp; 4 &amp; 1 &amp; 2 &amp; 7 &amp; 8 &amp; 5 &amp; 6
 			</const>
 			<!-- ***** -->
-			<const mathname='O_R' longname='OBSTACLE_R' type="double">\mathrm{HEIGHT}/8.0</const>
-			<const mathname='R' longname='REYNOLDS' type="double">300</const>
-			<const mathname='V' longname='INFLOW_MAX_VELOCITY' type="double">0.1</const>
-			<const mathname='K' longname='KINETIC_VISCOSITY' type='double'>\mathrm{(INFLOW_MAX_VELOCITY * 2.0 * OBSTACLE_R / REYNOLDS)}</const>
-			<const mathname='r' longname='RELAX_PARAMETER' type="double">\mathrm{(1.0 / (3.0 * KINETIC_VISCOSITY + 1.0/2.0))}</const>
+			<const mathname='O_R' longname='OBSTACLE_R' type="double" doc="Rayon de l'obstacle.">\mathrm{HEIGHT}/8.0</const>
+			<const mathname='R' longname='REYNOLDS' type="double" doc="Nombre de raynolds donnant les rapports d'échelle de la simulation.">300</const>
+			<const mathname='V' longname='INFLOW_MAX_VELOCITY' type="double" doc="Vitesse du fluide à l'interface d'entrée.">0.1</const>
+			<const mathname='K' longname='KINETIC_VISCOSITY' type='double' doc="Viscosité du fluide.">\mathrm{(INFLOW_MAX_VELOCITY * 2.0 * OBSTACLE_R / REYNOLDS)}</const>
+			<const mathname='r' longname='RELAX_PARAMETER' type="double" doc="Paramètre de relaxation temporelle (controle la convergence vers l'état d'équilibre).">\mathrm{(1.0 / (3.0 * KINETIC_VISCOSITY + 1.0/2.0))}</const>
 		</consts>
 		<!-- ********************* MESH ****************** -->
 		<mesh>
