@@ -25,7 +25,7 @@
 #include <communication/CMRCommSchem.h>
 #include <domain/CMRDomainStorage.h>
 #include <common/CMRSpaceSplitter.h>
-#include <CMROperation.h>
+#include <operations/CMRMeshOperation.h>
 #include <domain/CMRMemoryModels.h>
 #include <domain/CMRCellAccessor.h>
 #include <domain/CMRVarSystem.h>

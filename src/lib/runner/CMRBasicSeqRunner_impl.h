@@ -15,7 +15,6 @@
 #include "common/CMRDebug.h"
 #include <common/CMRCommon.h>
 #include "CMRBasicSeqRunner.h"
-#include "CMROperation.h"
 #include <mpi/CMRMPIDomainBuilder.h>
 
 /*******************  FUNCTION  *********************/

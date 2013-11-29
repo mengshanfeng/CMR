@@ -91,6 +91,7 @@ void CMRProject2::genCCode ( std::ostream& out )
 {
 	out << "#include <runner/CMRBasicSeqRunner.h>" << endl;
 	out << "#include <runner/CMRBasicOutputer.h>" << endl;
+	out << "#include <CMR.h>" << endl;
 	out << "//user headers" << endl;
 	for (StringVector::const_iterator it = userHeaders.begin() ; it != userHeaders.end() ; ++it)
 		out << "#include <" << *it << ">" << endl;

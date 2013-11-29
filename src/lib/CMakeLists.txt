@@ -46,7 +46,8 @@ install(DIRECTORY "domain" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h
 install(DIRECTORY "mpi" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY "runner" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY "communication" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
-INSTALL(FILES CMROperation.h DESTINATION include/cmr)
+install(DIRECTORY "operations" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
+INSTALL(FILES CMR.h DESTINATION include/cmr)
 
 ######################################################
 if (NOT DISABLE_TESTS)

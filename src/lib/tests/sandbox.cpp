@@ -16,7 +16,7 @@
 #include <domain/CMRVarSystem.h>
 #include <mpi/CMRMPIDomainBuilder.h>
 #include <common/CMRSpaceSplitter.h>
-#include <CMROperation.h>
+#include <CMR.h>
 #include <cycle.h>
 
 using namespace std;

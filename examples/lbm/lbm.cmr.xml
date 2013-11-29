@@ -197,7 +197,6 @@
 				<foreach iterator='k'>
 					<mathstep>f_{i,j,k} = f_{eq,i,j,V_*,1.,k}</mathstep>
 				</foreach>
-				<ccode>printf("ok\n");</ccode>
 				<ccode>}</ccode>
 			</cellaction>
 		</cellactions>
