@@ -89,8 +89,7 @@ void CMRProject2::runTransformation ( CMRTransformation& transf )
 /*******************  FUNCTION  *********************/
 void CMRProject2::genCCode ( std::ostream& out )
 {
-	out << "#include <runner/CMRBasicSeqRunner.h>" << endl;
-	out << "#include <runner/CMRBasicOutputer.h>" << endl;
+	out << "#include <application/CMRApplicationSeq.h>" << endl;
 	out << "#include <CMR.h>" << endl;
 	out << "//user headers" << endl;
 	for (StringVector::const_iterator it = userHeaders.begin() ; it != userHeaders.end() ; ++it)
@@ -146,7 +145,7 @@ void CMRProject2::genCCodeOfVariables ( ostream& out )
 
 	out << "\t\t};" << endl;
 	out << "\tpublic:" << endl;
-	out << "\t\tVarSystem(CMRDomainBuilder * builder);" << endl;
+	out << "\t\tVarSystem(CMRDomainBuilder * builder = NULL);" << endl;
 	out << "};" << endl;
 	out << endl;
 
@@ -236,14 +235,12 @@ void CMRProject2::genCCodeOfMain ( ostream& out, LangDef& lang )
 {
 	out << "int main(int argc, char ** argv)" << endl;
 	out << "{" << endl;
-	out << "\tCMRRect domainSize(0,0,WIDTH,HEIGHT);" << endl;
-	out << "\tCMRBasicSeqRunner<VarSystem> app(argc,argv,domainSize);" << endl;
+	out << "\tCMRApplicationSeq app(argc,argv,new VarSystem,WIDTH,HEIGHT,WRITE_STEP_INTERVAL);" << endl;
 	out << endl;
 	out << "\tCMRRect local = app.getLocalRect();" << endl;
 	out << "\tCMRRect global = app.getGlobalRect();" << endl;
 	out << endl;
 	out << "\t//setup write system" << endl;
-	out << "\tapp.setWriter(new CMRBasicOutputer(\"output-runner.raw\",app.getSplitter()),WRITE_STEP_INTERVAL);" << endl;
 	out << "\tapp.addPrepareWriteAction(new ActionUpdateFileout::LoopType(),app.getLocalRect());" << endl;
 	out << endl;
 

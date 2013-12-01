@@ -12,18 +12,21 @@
 /********************  HEADERS  *********************/
 #include "CMRApplication.h"
 
+/*********************  TYPES  **********************/
+class CMRVarSystem;
+
 /*********************  CLASS  **********************/
 class CMRApplicationSeq : public CMRApplication
 {
 	public:
-		CMRApplicationSeq(void);
+		CMRApplicationSeq(int& argc, char**& argv,CMRVarSystem * varSystem,int width,int height,int writeInterval);
 		virtual ~CMRApplicationSeq(void);
+		virtual void run(int iterations);
+	protected:
 		virtual void initLibs(int& argc, char**& argv);
 		virtual void finishLibs(void);
 		virtual void init( CMRVarSystem* varSystem, int width, int height, int writeInternval );
 		virtual void finish(void);
-		virtual void run(int iterations);
-	protected:
 		void initMPI( int& argc, char**& argv );
 		void finishMPI(void);
 };

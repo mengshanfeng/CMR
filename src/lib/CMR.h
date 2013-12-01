@@ -10,6 +10,7 @@
 #define CMR_H
 
 /********************  HEADERS  *********************/
+#include <math.h>
 #include <cassert>
 #include <stdint.h>
 #include "domain/CMRCellAccessor.h"

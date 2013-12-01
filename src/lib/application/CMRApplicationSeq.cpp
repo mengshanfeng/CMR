@@ -9,31 +9,32 @@
 /********************  HEADERS  *********************/
 #include <mpi.h>
 #include "common/CMRDebug.h"
-#include <common/CMRGeometry.h>
-#include <common/CMRSpaceSplitter.h>
+#include "common/CMRGeometry.h"
+#include "domain/CMRVarSystem.h"
+#include "runner/CMRRunnerSeq.h"
+#include "common/CMRSpaceSplitter.h"
+#include "mpi/CMRMPIDomainBuilder.h"
+#include "outputer/CMRBasicOutputer.h"
 #include "CMRApplicationSeq.h"
-#include <mpi/CMRMPIDomainBuilder.h>
-#include <domain/CMRVarSystem.h>
-#include <runner/CMRRunnerSeq.h>
-#include <outputer/CMRBasicOutputer.h>
 
 /*******************  FUNCTION  *********************/
-CMRApplicationSeq::CMRApplicationSeq ( void )
+CMRApplicationSeq::CMRApplicationSeq ( int& argc, char**& argv,CMRVarSystem * varSystem,int width,int height,int writeInterval )
 {
-
+	this->initLibs(argc,argv);
+	this->init(varSystem,width,height,writeInterval);
 }
 
 /*******************  FUNCTION  *********************/
 CMRApplicationSeq::~CMRApplicationSeq ( void )
 {
-
+	this->finish();
+	this->finishLibs();
 }
 
 /*******************  FUNCTION  *********************/
 void CMRApplicationSeq::initLibs ( int& argc, char**& argv )
 {
 	initMPI(argc,argv);
-	this->markStep(CMR_INIT_STATE_INIT_DEPS);
 }
 
 /*******************  FUNCTION  *********************/
@@ -56,7 +57,6 @@ void CMRApplicationSeq::initMPI ( int& argc, char**& argv )
 void CMRApplicationSeq::finishLibs ( void )
 {
 	finishMPI();
-	this->markStep(CMR_INIT_STATE_FINISH_DEPS);
 }
 
 /*******************  FUNCTION  *********************/
@@ -88,7 +88,7 @@ void CMRApplicationSeq::init ( CMRVarSystem * varSystem,int width,int height, in
 	//setup write system
 	runner->setWriter(new CMRBasicOutputer("output-runner.raw",*splitter),writeInternval);
 	
-	this->markInitStep(runner);
+	this->setRunner(runner);
 }
 
 /*******************  FUNCTION  *********************/

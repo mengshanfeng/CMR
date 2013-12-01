@@ -704,9 +704,7 @@ int mainManual(int argc, char * argv[])
 /*******************  FUNCTION  *********************/
 int mainRunner(int argc, char * argv[])
 {
-	CMRApplicationSeq app;
-	app.initLibs(argc,argv);
-	app.init(new VarSystem,WIDTH,HEIGHT,WRITE_STEP_INTERVAL);
+	CMRApplicationSeq app(argc,argv,new VarSystem,WIDTH,HEIGHT,WRITE_STEP_INTERVAL);
 	
 	//setup write system
 	app.addPrepareWriteAction(new ActionUpdateFileout::LoopType(),app.getLocalRect());
@@ -734,9 +732,6 @@ int mainRunner(int argc, char * argv[])
 	
 	//runner
 	app.run(ITERATIONS);
-	
-	app.finish();
-	app.finishLibs();
 	
 	return EXIT_SUCCESS;
 }

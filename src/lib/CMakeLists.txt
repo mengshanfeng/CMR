@@ -52,6 +52,7 @@ install(DIRECTORY "runner" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h
 install(DIRECTORY "communication" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY "operations" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY "outputer" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY "application" DESTINATION "include/cmr" FILES_MATCHING PATTERN "*.h")
 INSTALL(FILES CMR.h DESTINATION include/cmr)
 
 ######################################################
