@@ -23,7 +23,7 @@ class CMRApplication
 	public:
 		CMRApplication(void);
 		virtual ~CMRApplication(void);
-		virtual void run(int iterations) = 0;
+		virtual void run(int iterations = -1) = 0;
 		CMRRect getLocalRect(void);
 		CMRRect getGlobalRect(void);
 		void addInitAction(CMRMeshOperation * op,CMRRect rect);

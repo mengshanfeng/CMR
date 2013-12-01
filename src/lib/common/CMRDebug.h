@@ -36,6 +36,7 @@ enum CMRDebugMessageLevel
 /** @TODO rename this with cmr.... prefix **/
 #define assume(test,...) if (!(test)) cmrDebugMessage(CMR_DEBUG_ERROR,"ERROR",#test,__FILE__,__LINE__,__VA_ARGS__)
 #define cmrNotImplemented(...) cmrDebugMessage(CMR_DEBUG_ERROR,"NOIMPL",NULL,__FILE__,__LINE__,__VA_ARGS__)
+#define cmrPrint(...) cmrDebugMessage(CMR_DEBUG_NORMAL,"NORMAL",NULL,__FILE__,__LINE__,__VA_ARGS__)
 
 /********************  MACRO  ***********************/
 #ifndef NDEBUG

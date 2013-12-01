@@ -731,7 +731,7 @@ int mainRunner(int argc, char * argv[])
 	app.addLoopAction(new ActionPropagation::LoopType(),app.getLocalRect());
 	
 	//runner
-	app.run(ITERATIONS);
+	app.run();
 	
 	return EXIT_SUCCESS;
 }

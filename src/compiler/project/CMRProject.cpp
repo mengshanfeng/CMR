@@ -258,7 +258,7 @@ void CMRProject2::genCCodeOfMain ( ostream& out, LangDef& lang )
 
 	//runner
 	out << "\t//run" << endl;
-	out << "\tapp.run(8000);" << endl;
+	out << "\tapp.run();" << endl;
 	out << endl;
 	out << "\treturn EXIT_SUCCESS;" << endl;
 	out << "}" << endl << endl;

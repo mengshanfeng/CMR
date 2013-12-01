@@ -12,6 +12,7 @@ cmr_setup_mpi()
 ######################################################
 include_directories(${CMR_MPI_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/extern-deps/iniparser/src)
 
 ######################################################
 set(cmr_SRCS common/CMRSpaceSplitter.cpp 
@@ -37,9 +38,11 @@ set(cmr_SRCS common/CMRSpaceSplitter.cpp
              application/CMRApplicationSeq.cpp
              application/svutArgp.cpp
              application/CMRCmdOptions.cpp)
+set(iniparser_SRCS ${CMAKE_SOURCE_DIR}/extern-deps/iniparser/src/iniparser.c 
+             ${CMAKE_SOURCE_DIR}/extern-deps/iniparser/src/dictionary.c)
 
 ######################################################
-add_library(cmr ${cmr_SRCS})
+add_library(cmr SHARED ${cmr_SRCS} ${iniparser_SRCS})
 target_link_libraries(cmr ${CMR_MPI_CXX_LIBRARIES})
 
 ######################################################

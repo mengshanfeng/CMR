@@ -8,13 +8,16 @@
 
 /********************  HEADERS  *********************/
 #include <cstdlib>
+#include <cassert>
 #include <sstream>
+#include <iniparser.h>
 #include "CMRCmdOptions.h"
 
 /*******************  FUNCTION  *********************/
 CMRCmdOptions::CMRCmdOptions ( int width, int height, int iterations )
 {
 	//default values
+	this->iniDic = NULL;
 	this->width = width;
 	this->height = height;
 	this->iterations = iterations;
@@ -34,11 +37,19 @@ CMRCmdOptions::CMRCmdOptions ( int width, int height, int iterations )
 }
 
 /*******************  FUNCTION  *********************/
+CMRCmdOptions::~CMRCmdOptions ( void )
+{
+	//remove the old config file and load the new one
+	if (iniDic != NULL)
+	{
+		iniparser_freedict(iniDic);
+		iniDic = NULL;
+	}
+}
+
+/*******************  FUNCTION  *********************/
 void CMRCmdOptions::parseInit ( void ) throw (svUnitTest::svutExArgpError) 
 {
-	this->width = 800;
-	this->height = 600;
-	this->iterations = 8000;
 }
 
 /*******************  FUNCTION  *********************/
@@ -49,21 +60,31 @@ void CMRCmdOptions::parseOption ( char key, std::string arg, std::string value )
 	{
 		case 'w':
 			this->width = atoi(value.c_str());
-			err << "Invalid width on -w/--width : " << value << std::endl;
-			  throw svUnitTest::svutExArgpError(err.str());
+			if (width <= 0)
+			{
+				err << "Invalid width on -w/--width : " << value << std::endl;
+				throw svUnitTest::svutExArgpError(err.str());
+			}
 			break;
 		case 'h':
 			this->height = atoi(value.c_str());
-			err << "Invalid height on -h/--height : " << value << std::endl;
-			  throw svUnitTest::svutExArgpError(err.str());
+			if (width <= 0)
+			{
+				err << "Invalid height on -h/--height : " << value << std::endl;
+				throw svUnitTest::svutExArgpError(err.str());
+			}
 			break;
 		case 'i':
 			this->iterations = atoi(value.c_str());
-			err << "Invalid number of iterations on -i/--iterations : " << value << std::endl;
-			  throw svUnitTest::svutExArgpError(err.str());
+			if (width <= 0)
+			{
+				err << "Invalid number of iterations on -i/--iterations : " << value << std::endl;
+				throw svUnitTest::svutExArgpError(err.str());
+			}
 			break;
 		case 'c':
 			this->configFile = value;
+			loadConfigFile(configFile);
 			break;
 		default:
 			err << "Unknown argument : " << arg << std::endl;
@@ -102,4 +123,39 @@ int CMRCmdOptions::getIterations ( void ) const
 	return iterations;
 }
 
+/*******************  FUNCTION  *********************/
+void CMRCmdOptions::loadConfigFile ( const std::string& filename )
+{
+	//errors
+	assert(filename.empty() == false);
+	
+	//remove the old config file and load the new one
+	if (iniDic != NULL)
+		iniparser_freedict(iniDic);
+	
+	//load
+	iniDic = iniparser_load(filename.c_str());
+	if (iniDic == NULL)
+	{
+		std::stringstream err;
+		err << "Failed to load config file " << filename << std::endl;
+		throw svUnitTest::svutExArgpError(err.str());
+	}
+	
+	//extract local values
+	this->width = getConfigInteger("mesh:width",width);
+	this->height = getConfigInteger("mesh:height",height);
+	this->iterations = getConfigInteger("mesh:iterations",iterations);
+}
 
+/*******************  FUNCTION  *********************/
+int CMRCmdOptions::getConfigInteger ( const std::string& key, int defaultValue )
+{
+	return iniparser_getint(iniDic,key.c_str(),defaultValue);
+}
+
+/*******************  FUNCTION  *********************/
+bool CMRCmdOptions::getConfigBoolean ( const std::string& key, bool defaultValue )
+{
+	return iniparser_getboolean(iniDic,key.c_str(),defaultValue);
+}

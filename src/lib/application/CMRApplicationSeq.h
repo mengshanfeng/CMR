@@ -22,7 +22,7 @@ class CMRApplicationSeq : public CMRApplication
 	public:
 		CMRApplicationSeq(int& argc, char**& argv,CMRVarSystem * varSystem,int width,int height,int writeInterval);
 		virtual ~CMRApplicationSeq(void);
-		virtual void run(int iterations);
+		virtual void run(int iterations = -1);
 	protected:
 		virtual void initLibs(int& argc, char**& argv);
 		virtual void finishLibs(void);

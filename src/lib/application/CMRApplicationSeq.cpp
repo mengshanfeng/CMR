@@ -81,12 +81,18 @@ void CMRApplicationSeq::finishMPI ( void )
 /*******************  FUNCTION  *********************/
 void CMRApplicationSeq::init ( CMRVarSystem * varSystem,int width,int height, int writeInternval )
 {
+	info_on_master("Create global mesh ( %d x %d )",width,height);
+	
 	CMRRect domainSize(0,0,width,height);
 	CMRBasicSpaceSplitter * splitter = new CMRBasicSpaceSplitter(domainSize,1,0);
 	CMRMPIDomainBuilder * domainBuilder = new CMRMPIDomainBuilder(splitter);
 	varSystem->setDomainBuilder(domainBuilder);
 	CMRRunnerSeq * runner = new CMRRunnerSeq();
 	runner->init(varSystem,domainSize,splitter->getLocalDomain(domainBuilder->getLocalId()));
+	
+	//print local splitting
+	if (options.getConfigBoolean("debug:mpi_domains",false))
+		cmrPrint("MPI local domain of process %d is ( %d x %d )",cmrGetMPIRank(),width,height);
 	
 	//setup write system
 	runner->setWriter(new CMRBasicOutputer("output-runner.raw",*splitter),writeInternval);
@@ -97,6 +103,8 @@ void CMRApplicationSeq::init ( CMRVarSystem * varSystem,int width,int height, in
 /*******************  FUNCTION  *********************/
 void CMRApplicationSeq::run ( int iterations )
 {
+	if (iterations == -1)
+		iterations = options.getIterations();
 	getRunner().run(iterations);
 }
 

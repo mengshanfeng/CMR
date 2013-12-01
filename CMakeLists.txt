@@ -38,6 +38,7 @@ include_directories(extern-deps/from-fftw/)
 ######################################################
 #manage subdirs
 add_subdirectory(src)
+add_subdirectory(extern-deps)
 
 ######################################################
 #build cmr exe (for tests)
