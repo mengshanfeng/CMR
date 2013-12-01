@@ -13,72 +13,45 @@
 #include <common/CMRCommon.h>
 #include <common/CMRSpaceSplitter.h>
 #include "CMRRunner.h"
-#include "CMRRunnerInitFactory.h"
+#include <domain/CMRVarSystem.h>
 
 /*******************  FUNCTION  *********************/
-CMRRunner::CMRRunner ( int& argc, char**& argv,const CMRRect & globalDomainSize,CMRRunnerInitFactory * factory)
+CMRRunner::CMRRunner ( )
 {
-	//init
-	initMPI(argc,argv);
-	this->splitter = NULL;
+	//setup default values
 	this->system = NULL;
-	//setup some vars
-	this->globalRect = globalDomainSize;
-	assert(globalDomainSize.x == 0);
-	assert(globalDomainSize.y == 0);
-	this->localId = -1;
-	//if not null factory, setup domain)
-	if (factory != NULL)
-		initDomain(factory);
 }
 
 /*******************  FUNCTION  *********************/
 CMRRunner::~CMRRunner(void)
 {
-	//check MPI status
-	int res;
-	MPI_Finalized(&res);
-	
-	//Finish
-	if (res == 0)
-	{	
-		MPI_Barrier(MPI_COMM_WORLD);
-		info_on_master("Finish");	
-		MPI_Finalize();
-	}
 }
 
 /*******************  FUNCTION  *********************/
-void CMRRunner::initMPI ( int & argc, char **& argv )
+void CMRRunner::initLibs ( int& argc, char**& argv )
 {
-	//check MPI status
-	int res;
-	MPI_Initialized(&res);
-	
-	//init MPI
-	if (res == 0)
-	{
-		MPI_Init(&argc,&argv);
-		info_on_master("Start with np = %d",cmrGetMPISize());
-		MPI_Barrier(MPI_COMM_WORLD);
-	}
 }
 
 /*******************  FUNCTION  *********************/
-void CMRRunner::initDomain ( CMRRunnerInitFactory* factory )
+void CMRRunner::finishLibs ( void )
 {
-	//try space splitter
-	splitter = factory->createSplitter(globalRect);
-	splitter->printDebug(CMR_MPI_MASTER);
-	
-	//try system computation
-	CMRDomainBuilder * builder = factory->createDomainBuilder(splitter);
-	this->system = factory->createVarSystem(builder);
-	
-	//get local domaine
-	this->localId = factory->getLocalId();
-	this->localRect = splitter->getLocalDomain(localId);
 }
+
+/*******************  FUNCTION  *********************/
+// void CMRRunner::initDomain ( CMRRunnerInitFactory* factory )
+// {
+// 	//try space splitter
+// 	splitter = factory->createSplitter(globalRect);
+// 	splitter->printDebug(CMR_MPI_MASTER);
+// 	
+// 	//try system computation
+// 	CMRDomainBuilder * builder = factory->createDomainBuilder(splitter);
+// 	this->system = factory->createVarSystem(builder);
+// 	
+// 	//get local domaine
+// 	this->localId = this->getLocalId();
+// 	this->localRect = splitter->getLocalDomain(localId);
+// }
 
 /*******************  FUNCTION  *********************/
 void CMRRunner::addInitAction ( CMRMeshOperation* op, CMRRect rect )
@@ -121,7 +94,9 @@ CMRRect CMRRunner::getGlobalRect(void) const
 }
 
 /*******************  FUNCTION  *********************/
-const CMRAbstractSpaceSplitter & CMRRunner::getSplitter(void) const
+void CMRRunner::init ( CMRVarSystem* varSystem, const CMRRect & globalRect,const CMRRect & localRect )
 {
-	return *splitter;
+	this->system = varSystem;
+	this->globalRect = globalRect;
+	this->localRect = localRect;
 }

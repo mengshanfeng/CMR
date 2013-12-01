@@ -32,10 +32,16 @@ int CMRMPIDomainBuilder::hashName ( const std::string& name ) const
 }
 
 /*******************  FUNCTION  *********************/
+int CMRMPIDomainBuilder::getLocalId ( void )
+{
+	return cmrGetMPIRank();
+}
+
+/*******************  FUNCTION  *********************/
 CMRDomainStorage* CMRMPIDomainBuilder::buildDomain ( const CMRVariable& variable )
 {
 	//get local id
-	int localId = cmrGetMPIRank();
+	int localId = getLocalId();
 	
 	//get local domain rect
 	CMRRect rect = this->splitter->getLocalDomain(localId);

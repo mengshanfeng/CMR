@@ -26,6 +26,7 @@ class MockDomainBuilder : public CMRDomainBuilder
 {
 	public:
 		virtual CMRDomainStorage* buildDomain ( const CMRVariable& variable );
+		virtual int getLocalId ( void );
 		int cnt;
 };
 
@@ -42,6 +43,12 @@ CMRDomainStorage* MockDomainBuilder::buildDomain ( const CMRVariable& variable )
 	MockDomainStorage * res = new MockDomainStorage(sizeof(float),CMRRect(0,0,800,600),1);
 	res->id = cnt++;
 	return res;
+}
+
+/*******************  FUNCTION  *********************/
+int MockDomainBuilder::getLocalId ( void )
+{
+	return 0;
 }
 
 #endif // MOCKCOMMUNICATOR_H

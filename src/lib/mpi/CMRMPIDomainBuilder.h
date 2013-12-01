@@ -23,6 +23,7 @@ class CMRMPIDomainBuilder : public CMRDomainBuilder
 	public:
 		CMRMPIDomainBuilder(CMRAbstractSpaceSplitter * splitter);
 		virtual CMRDomainStorage * buildDomain(const CMRVariable & variable);
+		virtual int getLocalId ( void );
 	private:
 		int hashName(const std::string & name) const;
 		CMRAbstractSpaceSplitter * splitter;

@@ -14,3 +14,5 @@ https://code.google.com/p/pencil-code/ | http://pencil-code.nordita.org/
 Extracting Mathematical Semantics from LATEX Documents
 Efficient and Correct Stencil Computation via Pattern Matching and Static Typing
 Auto-Generation and Auto-Tuning of 3D Stencil Codes on GPU Clusters
+http://www12.informatik.uni-erlangen.de/publications/membarth/membarth2012tds.pdf : Towards Domain-speciﬁc Computing for
+Stencil Codes in HPC

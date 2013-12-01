@@ -11,7 +11,10 @@
 
 /********************  HEADERS  *********************/
 #include <cassert>
+#include <stdint.h>
+#include "domain/CMRCellAccessor.h"
 #include "domain/CMRVarSystem.h"
+#include "domain/CMRMemoryModels.h"
 #include "common/CMRDebug.h"
 #include "operations/CMRMeshOperationSimpleLoop.h"
 #include "operations/CMRMeshOperationSimpleLoopInPlace.h"

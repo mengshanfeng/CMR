@@ -67,6 +67,14 @@ CMRVarSystem::~CMRVarSystem ( void )
 }
 
 /*******************  FUNCTION  *********************/
+void CMRVarSystem::setDomainBuilder ( CMRDomainBuilder* domainBuilder )
+{
+	assume(domainBuilder != NULL,"Cannot associate NULL CMRDomainBuilder.");
+	assume(this->domainBuilder == NULL,"Cannot override an already setup CMRDomainBuilder.");
+	this->domainBuilder = domainBuilder;
+}
+
+/*******************  FUNCTION  *********************/
 CMRVariableId CMRVarSystem::addVariable ( std::string name, int typeSize, int ghostDepth )
 {
 	CMRVariable var(name,typeSize,ghostDepth);
@@ -101,6 +109,7 @@ CMRDomainStorage* CMRVarSystem::getDomain ( CMRVariableId varId, int tstep )
 	//errors
 	assert(varId >= 0 && varId < (int)variables.size());
 	assert(tstep >= 0 && tstep < CMR_MAX_TSTEPS);
+	assume(domainBuilder != NULL,"Get a NULL CMRDomainBuilder, maybe you provide a NULL one or forget to use setDomainBuilder().");
 	
 	//get domain
 	res = variables[varId].domain[tstep];

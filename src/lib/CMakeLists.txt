@@ -32,7 +32,9 @@ set(cmr_SRCS common/CMRSpaceSplitter.cpp
              mpi/CMRMPIReduction.cpp
              runner/CMRRunner.cpp
              runner/CMRRunnerSeq.cpp
-             outputer/CMRBasicOutputer.cpp)
+             outputer/CMRBasicOutputer.cpp
+             application/CMRApplication.cpp
+             application/CMRApplicationSeq.cpp)
 
 ######################################################
 add_library(cmr ${cmr_SRCS})

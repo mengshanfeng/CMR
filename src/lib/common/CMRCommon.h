@@ -36,6 +36,16 @@ enum CMRCommType
 	CMR_COMM_RECV
 };
 
+/********************  ENUM  ************************/
+enum CMRInitState
+{
+	CMR_INIT_STATE_NONE,
+	CMR_INIT_STATE_INIT_DEPS,
+	CMR_INIT_STATE_INIT,
+	CMR_INIT_STATE_FINISHED,
+	CMR_INIT_STATE_FINISH_DEPS,
+};
+
 /*******************  FUNCTION  *********************/
 bool cmrIsMPIMaster(void);
 int cmrGetMPIRank(void);

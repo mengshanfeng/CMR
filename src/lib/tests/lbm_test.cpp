@@ -1,8 +1,12 @@
 #define LBM
 
-#include <runner/CMRBasicSeqRunner.h>
-#include <outputer/CMRBasicOutputer.h>
+#include <mpi.h>
+#include <cstdio>
+#include <math.h>
 #include <CMR.h>
+#include <application/CMRApplicationSeq.h>
+#include <common/CMRSpaceSplitter.h>
+#include <mpi/CMRMPIDomainBuilder.h>
 
 using namespace std;
 
@@ -109,7 +113,7 @@ class VarSystem : public CMRVarSystem
 			CMRCellAccessor<LBMCellType,CMRMemoryModelRowMajor> cellType;
 			CMRCellAccessor<LBMFileEntry,CMRMemoryModelColMajor> fileout;
 		};
-		VarSystem(CMRDomainBuilder * builder);
+		VarSystem(CMRDomainBuilder * builder = NULL);
 };
 
 VarSystem::VarSystem ( CMRDomainBuilder * builder)
@@ -700,11 +704,11 @@ int mainManual(int argc, char * argv[])
 /*******************  FUNCTION  *********************/
 int mainRunner(int argc, char * argv[])
 {
-	CMRRect domainSize(0,0,WIDTH,HEIGHT);
-	CMRBasicSeqRunner<VarSystem> app(argc,argv,domainSize);
+	CMRApplicationSeq app;
+	app.initLibs(argc,argv);
+	app.init(new VarSystem,WIDTH,HEIGHT,WRITE_STEP_INTERVAL);
 	
 	//setup write system
-	app.setWriter(new CMRBasicOutputer("output-runner.raw",app.getSplitter()),WRITE_STEP_INTERVAL);
 	app.addPrepareWriteAction(new ActionUpdateFileout::LoopType(),app.getLocalRect());
 	
 	//setup init actions
@@ -730,6 +734,9 @@ int mainRunner(int argc, char * argv[])
 	
 	//runner
 	app.run(ITERATIONS);
+	
+	app.finish();
+	app.finishLibs();
 	
 	return EXIT_SUCCESS;
 }

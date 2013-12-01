@@ -13,10 +13,13 @@
 #include "outputer/CMROutputer.h"
 
 /*******************  FUNCTION  *********************/
-CMRRunnerSeq::CMRRunnerSeq ( int& argc, char**& argv, const CMRRect& globalDomainSize, CMRRunnerInitFactory* factory )
-	:CMRRunner(argc,argv,globalDomainSize,factory)
+CMRRunnerSeq::CMRRunnerSeq ( void )
 {
+}
 
+/*******************  FUNCTION  *********************/
+CMRRunnerSeq::~CMRRunnerSeq ( void )
+{
 }
 
 /*******************  FUNCTION  *********************/

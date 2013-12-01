@@ -53,6 +53,7 @@ class CMRVarSystem
 		CMRDomainStorage * getDomain(CMRVariableId varId,int tstep);
 		void freeDomain(CMRVariableId varId,int tstep);
 		void printDebug(void) const;
+		void setDomainBuilder(CMRDomainBuilder * domainBuilder);
 	private:
 		//never copy such objects
 		CMRVarSystem(const CMRVarSystem & sys);

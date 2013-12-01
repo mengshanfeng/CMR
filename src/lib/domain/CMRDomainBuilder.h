@@ -20,6 +20,7 @@ class CMRDomainBuilder
 	public:
 		virtual ~CMRDomainBuilder(void) {};
 		virtual CMRDomainStorage * buildDomain(const CMRVariable & variable) = 0;
+		virtual int getLocalId(void) = 0;
 };
 
 #endif // CMR_DOMAIN_BUILDER_H

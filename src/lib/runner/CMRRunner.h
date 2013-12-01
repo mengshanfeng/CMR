@@ -16,9 +16,7 @@
 /*********************  TYPES  **********************/
 class CMRVarSystem;
 struct CMRRect;
-class CMRAbstractSpaceSplitter;
 class CMROutputer;
-class CMRRunnerInitFactory;
 
 /*********************  TYPES  **********************/
 typedef std::vector<CMRMeshOperationNode> CMRMeshOperationNodeVector;
@@ -27,19 +25,18 @@ typedef std::vector<CMRMeshOperationNode> CMRMeshOperationNodeVector;
 class CMRRunner
 {
 	public:
-		CMRRunner( int& argc, char**& argv ,const CMRRect & globalDomainSize,CMRRunnerInitFactory * factory);
-		~CMRRunner(void);
+		CMRRunner(void);
+		virtual ~CMRRunner(void);
 		void addInitAction(CMRMeshOperation * op,CMRRect rect);
 		void addLoopAction(CMRMeshOperation * op,CMRRect rect);
 		void addPrepareWriteAction(CMRMeshOperation * op,CMRRect rect);
 		void setWriter( CMROutputer* outputer, int stepGap );
 		CMRRect getLocalRect(void) const;
 		CMRRect getGlobalRect(void) const;
-		const CMRAbstractSpaceSplitter & getSplitter(void) const;
+		virtual void initLibs(int& argc, char**& argv);
+		virtual void finishLibs(void);
 		virtual void run(int iterations) = 0;
-	protected:
-		void initMPI( int& argc, char**& argv );
-		virtual void initDomain(CMRRunnerInitFactory * factory);
+		virtual void init(CMRVarSystem * varSystem,const CMRRect & globalRect,const CMRRect & localRect );
 	protected:
 		CMRRect globalRect;
 		CMRRect localRect;
@@ -49,8 +46,6 @@ class CMRRunner
 		CMRVarSystem * system;
 		CMROutputer * outputer;
 		int writeInterval;
-		CMRAbstractSpaceSplitter * splitter;
-		int localId;
 };
 
 #endif //CMR_RUNNER_H

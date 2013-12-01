@@ -16,7 +16,8 @@
 class CMRRunnerSeq : public CMRRunner
 {
 	public:
-		CMRRunnerSeq( int& argc, char**& argv ,const CMRRect & globalDomainSize,CMRRunnerInitFactory * factory);
+		CMRRunnerSeq(void);
+		~CMRRunnerSeq(void);
 		virtual void run(int iterations);
 	protected:
 		virtual void runInitStep(CMRMeshOperationNodeVector & actions);
