@@ -12,6 +12,7 @@
 /********************  HEADERS  *********************/
 #include <common/CMRCommon.h>
 #include <common/CMRGeometry.h>
+#include <common/CMRFactoryRegistry.h>
 
 /*********************  TYPES  **********************/
 class CMRRunner;
@@ -32,6 +33,7 @@ class CMRApplication
 		CMRRunner & getRunner(void);
 	protected:
 		void setRunner(CMRRunner * runner);
+		CMRFactoryRegistry factoryRegistry;
 	private:
 		CMRRunner * runner;
 };

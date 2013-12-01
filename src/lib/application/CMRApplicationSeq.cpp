@@ -25,6 +25,7 @@ CMRApplicationSeq::CMRApplicationSeq ( int& argc, char**& argv,CMRVarSystem * va
 {
 	this->initLibs(argc,argv);
 	options.parse(argc,(const char**)argv);
+	this->registerSomeObjects();
 	this->init(varSystem,options.getWidth(),options.getHeight(),writeInterval);
 }
 
@@ -89,8 +90,11 @@ void CMRApplicationSeq::init ( CMRVarSystem * varSystem,int width,int height, in
 	CMRBasicSpaceSplitter * splitter = new CMRBasicSpaceSplitter(domainSize,1,0);
 	CMRMPIDomainBuilder * domainBuilder = new CMRMPIDomainBuilder(splitter);
 	varSystem->setDomainBuilder(domainBuilder);
-// 	CMRRunnerSeq * runner = new CMRRunnerSeq();
-	CMRRunnerSeq * runner = new CMRRunnerOMPForRect(options);
+// 	CMRRunnerSeq * runner = new CMRRunnerSeq(options);
+	
+	//create runner
+	std::string runnerName = options.getConfigString("app:runner","CMRRunnerSeq");
+	CMRRunnerSeq * runner = factoryRegistry.createObject<CMRRunnerSeq>(runnerName,options);
 	runner->init(varSystem,domainSize,splitter->getLocalDomain(domainBuilder->getLocalId()));
 	
 	//print local splitting
@@ -119,4 +123,11 @@ void CMRApplicationSeq::run ( int iterations )
 void CMRApplicationSeq::finish ( void )
 {
 	//TODO
+}
+
+/*******************  FUNCTION  *********************/
+void CMRApplicationSeq::registerSomeObjects ( void )
+{
+	factoryRegistry.registerGenericFactory<CMRRunnerSeq>("CMRRunnerSeq");
+	factoryRegistry.registerGenericFactory<CMRRunnerOMPForRect>("CMRRunnerOMPForRect");
 }

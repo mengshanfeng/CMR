@@ -28,6 +28,7 @@ class CMRApplicationSeq : public CMRApplication
 		virtual void finishLibs(void);
 		virtual void init( CMRVarSystem* varSystem, int width, int height, int writeInternval );
 		virtual void finish(void);
+		virtual void registerSomeObjects(void);
 		void initMPI( int& argc, char**& argv );
 		void finishMPI(void);
 	private:

@@ -163,7 +163,6 @@ void CMRCmdOptions::loadConfigFile ( const std::string& filename )
 /*******************  FUNCTION  *********************/
 void CMRCmdOptions::overrideByConfigFile ( void )
 {
-	assert(iniDic != NULL);
 	this->width = getConfigInteger("mesh:width",width);
 	this->height = getConfigInteger("mesh:height",height);
 	this->iterations = getConfigInteger("mesh:iterations",iterations);
@@ -172,32 +171,53 @@ void CMRCmdOptions::overrideByConfigFile ( void )
 /*******************  FUNCTION  *********************/
 int CMRCmdOptions::getConfigInteger ( const std::string& key, int defaultValue )
 {
+	int res = defaultValue;
+
+	if (iniDic != NULL)
+		res = iniparser_getint(iniDic,key.c_str(),defaultValue);
+	
 	if (dumpUsedDic != NULL)
 	{
 		char buffer[64];
-		sprintf(buffer,"%d",defaultValue);
+		sprintf(buffer,"%d",res);
 		setupDumpEntry(key,buffer);
 	}
-	return iniparser_getint(iniDic,key.c_str(),defaultValue);
+	
+	return res;
 }
 
 /*******************  FUNCTION  *********************/
 std::string CMRCmdOptions::getConfigString ( const std::string& key, const std::string& defaultValue )
 {
+	std::string res;
+
+	if (iniDic == NULL)
+	{
+		res = defaultValue;
+	} else {
+		char * tmp = iniparser_getstring(iniDic,key.c_str(),strdup(defaultValue.c_str()));
+		res = tmp;
+		free(tmp);
+	}
+	
 	if (dumpUsedDic)
-		setupDumpEntry(key,defaultValue.c_str());
-	char * tmp = iniparser_getstring(iniDic,key.c_str(),strdup(defaultValue.c_str()));
-	std::string res = tmp;
-	free(tmp);
+		setupDumpEntry(key,res.c_str());
+	
 	return res;
 }
 
 /*******************  FUNCTION  *********************/
 bool CMRCmdOptions::getConfigBoolean ( const std::string& key, bool defaultValue )
 {
+	bool res = defaultValue;
+
+	if (iniDic != NULL)
+		return iniparser_getboolean(iniDic,key.c_str(),defaultValue);
+	
 	if (dumpUsedDic != NULL)
 		setupDumpEntry(key,defaultValue?"true":"false");
-	return iniparser_getboolean(iniDic,key.c_str(),defaultValue);
+	
+	return res;
 }
 
 /*******************  FUNCTION  *********************/

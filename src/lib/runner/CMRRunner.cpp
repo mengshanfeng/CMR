@@ -16,7 +16,7 @@
 #include <domain/CMRVarSystem.h>
 
 /*******************  FUNCTION  *********************/
-CMRRunner::CMRRunner ( )
+CMRRunner::CMRRunner ( CMRCmdOptions & options )
 {
 	//setup default values
 	this->system = NULL;

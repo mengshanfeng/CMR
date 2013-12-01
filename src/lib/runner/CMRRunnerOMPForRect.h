@@ -12,9 +12,6 @@
 /********************  HEADERS  *********************/
 #include "CMRRunnerSeq.h"
 
-/*********************  TYPES  **********************/
-class CMRCmdOptions;
-
 /*********************  CLASS  **********************/
 class CMRRunnerOMPForRect : public CMRRunnerSeq
 {
@@ -25,7 +22,6 @@ class CMRRunnerOMPForRect : public CMRRunnerSeq
 		int nbThreads;
 		int multiplier;
 		int minCells;
-		bool firstStep;
 };
 
 #endif //CMR_RUNNER_OMP_FOR_RECT_H

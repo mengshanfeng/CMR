@@ -225,7 +225,6 @@ void iniparser_dump_ini(dictionary * d, FILE * f)
         secname = iniparser_getsecname(d, i) ;
         iniparser_dumpsection_ini(d, secname, f) ;
     }
-    fprintf(f, "\n");
     return ;
 }
 
@@ -251,7 +250,7 @@ void iniparser_dumpsection_ini(dictionary * d, char * s, FILE * f)
     if (! iniparser_find_entry(d, s)) return ;
 
     seclen  = (int)strlen(s);
-    fprintf(f, "\n[%s]\n", s);
+    fprintf(f, "[%s]\n", s);
     sprintf(keym, "%s:", s);
     for (j=0 ; j<d->size ; j++) {
         if (d->key[j]==NULL)

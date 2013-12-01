@@ -24,10 +24,11 @@
 
 /*******************  FUNCTION  *********************/
 CMRRunnerOMPForRect::CMRRunnerOMPForRect ( CMRCmdOptions & options )
+ : CMRRunnerSeq(options)
 {
 	nbThreads = omp_get_num_threads();
-	multiplier = options.getConfigInteger("RunnerOMPForRect:multiplier",4);
-	minCells = options.getConfigInteger("RunnerOMPForRect:min_cells",1000);
+	multiplier = options.getConfigInteger("runner_omp_for_rect:multiplier",4);
+	minCells = options.getConfigInteger("runner_omp_for_rect:min_cells",1000);
 }
 
 /*******************  FUNCTION  *********************/

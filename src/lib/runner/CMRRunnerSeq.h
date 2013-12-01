@@ -16,7 +16,7 @@
 class CMRRunnerSeq : public CMRRunner
 {
 	public:
-		CMRRunnerSeq(void);
+		CMRRunnerSeq(CMRCmdOptions & options);
 		~CMRRunnerSeq(void);
 		virtual void run(int iterations);
 	protected:

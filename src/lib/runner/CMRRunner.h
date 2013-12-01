@@ -17,6 +17,7 @@
 class CMRVarSystem;
 struct CMRRect;
 class CMROutputer;
+class CMRCmdOptions;
 
 /*********************  TYPES  **********************/
 typedef std::vector<CMRMeshOperationNode> CMRMeshOperationNodeVector;
@@ -25,7 +26,7 @@ typedef std::vector<CMRMeshOperationNode> CMRMeshOperationNodeVector;
 class CMRRunner
 {
 	public:
-		CMRRunner(void);
+		CMRRunner(CMRCmdOptions & options);
 		virtual ~CMRRunner(void);
 		void addInitAction(CMRMeshOperation * op,CMRRect rect);
 		void addLoopAction(CMRMeshOperation * op,CMRRect rect);

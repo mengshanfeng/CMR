@@ -13,7 +13,8 @@
 #include "outputer/CMROutputer.h"
 
 /*******************  FUNCTION  *********************/
-CMRRunnerSeq::CMRRunnerSeq ( void )
+CMRRunnerSeq::CMRRunnerSeq ( CMRCmdOptions& options )
+ : CMRRunner(options)
 {
 }
 
