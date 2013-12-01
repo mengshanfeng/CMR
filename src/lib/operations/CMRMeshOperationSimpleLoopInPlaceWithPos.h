@@ -10,8 +10,10 @@
 #define CMR_MESH_OPERATION_SIMPLE_LOOP_IN_PLACE_WITH_POS_H
 
 /********************  HEADERS  *********************/
-#include "CMRMeshOperation.h"
+#include "common/CMRGeometry.h"
 #include "operations/CMRCellPosition.h"
+#include "domain/CMRVarSystem.h"
+#include "CMRMeshOperation.h"
 
 /*********************  CLASS  **********************/
 template <class T,class U>
@@ -21,6 +23,7 @@ class CMRMeshOperationSimpleLoopInPlaceWithPos : public CMRMeshOperation
 		CMRMeshOperationSimpleLoopInPlaceWithPos(const U * action = NULL);
 		~CMRMeshOperationSimpleLoopInPlaceWithPos(void);
 		virtual void run (CMRVarSystem * sys,const CMRRect& zone);
+		virtual void forceMeshAllocation ( CMRVarSystem* sys, const CMRRect& zone );
 	private:
 		const U * action;
 };
@@ -75,6 +78,18 @@ void CMRMeshOperationSimpleLoopInPlaceWithPos<T,U>::run ( CMRVarSystem * sys, co
 	for(int y = 0 ; y < localZone.height ; y++)
 		for(int x = 0 ; x < localZone.width ; x++)
 			loacalAction->cellAction(cell,pos,x,y);
+}
+
+/*******************  FUNCTION  *********************/
+template <class T,class U>
+void CMRMeshOperationSimpleLoopInPlaceWithPos<T,U>::forceMeshAllocation ( CMRVarSystem * sys, const CMRRect& zone )
+{
+	CMRRect memoryRect(sys->getDomain(0,0)->getMemoryRect());
+	CMRRect localZone(memoryRect.intersect(zone));
+	if (localZone.surface() > 0)
+	{
+		typename T::CellAccessor cell(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y,true);
+	}
 }
 
 #endif //CMR_MESH_OPERATION_SIMPLE_LOOP_IN_PLACE_WITH_POS_H

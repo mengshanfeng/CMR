@@ -20,6 +20,8 @@ CMRRunner::CMRRunner ( )
 {
 	//setup default values
 	this->system = NULL;
+	this->outputer = NULL;
+	this->writeInterval = 1;
 }
 
 /*******************  FUNCTION  *********************/

@@ -23,6 +23,7 @@ class CMRMeshOperation
 		virtual ~CMRMeshOperation(void){}
 		virtual void run(CMRVarSystem * sys, const CMRRect & zone) = 0;
 		bool checkNeedPermut(void) const {return needPermut;};
+		virtual void forceMeshAllocation(CMRVarSystem * sys, const CMRRect & zone) = 0;
 	private:
 		bool needPermut;
 };

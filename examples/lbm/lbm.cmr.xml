@@ -83,13 +83,13 @@
 				<mathstep>p = \sum_s{M^{dir}_{k,s} * V_{s}}</mathstep>
  				<mathstep>f_{eq,i,j,V,D,k} = W_k * D * (1.0 + 3.0p + \frac{9.0}{2.0}p^2 - \frac{3.0}{2.0}W)</mathstep> 
 			</def>
-			<def mathname='v_{pois,j}' longname='poiseuil' doc='Fonction de poiseuil pour une hauteur de fluide donnée.'>
-				<declvar mathname='y' longname='Y' type='int'/>
+			<def mathname='v_{pois,Y}' longname='poiseuil' doc='Fonction de poiseuil pour une hauteur de fluide donnée.'>
+				<defparameter mathname='Y' longname='Y' type='int' doc='Position absolue en Y.'/>
 				<declvar mathname='L' longname='L' type='double'/>
 				<declvar mathname='H' longname='H' type='double' default='100'/>
-				<mathstep>y = j - 1</mathstep>
+				<mathstep>Y = Y - 1</mathstep>
 				<mathstep>L = H - 1</mathstep>
-				<mathstep>v_{pois,j} = \frac{4V}{L^2} (Ly - y^2)</mathstep>
+				<mathstep>v_{pois,Y} = \frac{4V}{L^2} (LY - Y^2)</mathstep>
 			</def>
 			<def mathname='v_{i,j}' longname='vmacro' doc="Norme de la vitesse macroscopique de la cellule.">
 				<mathstep>v_{i,j} = \sqrt{v^2}</mathstep>
@@ -106,7 +106,7 @@
 				<alias mathname="L_k">f_{i,j,k}</alias>
 				<declvar mathname='d' longname='d' type='double' default='0' doc='Densité moyenne locale.'/>
 				<declvar mathname='v' longname='v' type='double' default='0' doc='Vistesse moyenne locale.'/>
-				<mathstep>v = v_{pois,j}</mathstep>
+				<mathstep>v = v_{pois,y}</mathstep>
 				<mathstep>d = \frac{L_0 + L_2 + L_4 + 2 (L_3 + L_6 + L_7)}{1-v}</mathstep>
 				<mathstep>f_{i,j,1} = L_3</mathstep>
 				<mathstep>f_{i,j,5} = L_7-\frac{1}{2}(L_2 - L_4) + \frac{1}{6}(dv)</mathstep>
@@ -176,14 +176,14 @@
 				<defparameter mathname='t' longname='cellType' type='LBMCellType' doc="Definit le type a affecter à l'ensemble des cellules retenues."/>
 				<mathstep>T_{i,j} = t</mathstep>
 			</cellaction>
-			<cellaction name='InitStatePoiseuil' loop='CMRMeshOperationSimpleLoopInPlace' doc="Initialise le contenu des cellules avec un profile de poinseuil à l'équilibre allant vers la droite.">
+			<cellaction name='InitStatePoiseuil' loop='CMRMeshOperationSimpleLoopInPlaceWithPos' doc="Initialise le contenu des cellules avec un profile de poinseuil à l'équilibre allant vers la droite.">
 				<declvar mathname='V' longname='V' type='double' vector='2'/>
-				<mathstep>V_0 = v_{pois,j}</mathstep>
+				<mathstep>V_0 = v_{pois,y}</mathstep>
 				<mathstep>V_1 = 0.0</mathstep>
 				<foreach iterator='k'>
 					<mathstep>f_{i,j,k} = f_{eq,i,j,V_*,1.0,k}</mathstep>
 				</foreach>
-<!-- 				<ccode>printf("\%d , \%d ; \%g == \%g ; \%g , \%g\n",$i$,$j$,$v_{pois,j}$,$v_{i,j}$,$p$,$f_{i,j,8}$);</ccode> -->
+<!-- 				<ccode>printf("\%d , \%d ; \%g == \%g ; \%g , \%g\n",$i$,$j$,$v_{pois,y}$,$v_{i,j}$,$p$,$f_{i,j,8}$);</ccode> -->
 			</cellaction>
 			<cellaction name='SetupObstable' loop='CMRMeshOperationSimpleLoopInPlaceWithPos' doc="Configure les cellules de l'obstable.">
 				<defparameter mathname="O_x" longname="obstacle_x" type='double'/>
@@ -192,7 +192,7 @@
 				<mathstep>V_0 = 0.0</mathstep>
 				<mathstep>V_1 = 0.0</mathstep>
 				
-				<ccode>if ( ( $(x-O_x)*(x-O_x)$ + $(j-O_y)*(j-O_y)$ ) &lt;= $(O_R)*(O_R)$ ) {</ccode>
+				<ccode>if ( ( $(x-O_x)*(x-O_x)$ + $(y-O_y)*(y-O_y)$ ) &lt;= $(O_R)*(O_R)$ ) {</ccode>
 				<ccode>	*cell.cell_type(x,y) = CELL_BOUNCE_BACK;</ccode><!-- TODO : work on this -->
 				<foreach iterator='k'>
 					<mathstep>f_{i,j,k} = f_{eq,i,j,V_*,1.,k}</mathstep>

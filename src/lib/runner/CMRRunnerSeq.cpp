@@ -23,14 +23,20 @@ CMRRunnerSeq::~CMRRunnerSeq ( void )
 }
 
 /*******************  FUNCTION  *********************/
+void CMRRunnerSeq::runOperationNode ( CMRMeshOperationNode& opNode )
+{
+	opNode.op->run(system,opNode.rect);
+}
+
+/*******************  FUNCTION  *********************/
 void CMRRunnerSeq::runInitStep ( CMRMeshOperationNodeVector& actions )
 {
 	//init CURRENT and PREV
 	for (CMRMeshOperationNodeVector::iterator it = actions.begin() ; it != actions.end() ; ++it)
-		it->op->run(system,it->rect);
+		this->runOperationNode(*it);
 	system->permutVar(CMR_ALL);
 	for (CMRMeshOperationNodeVector::iterator it = actions.begin() ; it != actions.end() ; ++it)
-		it->op->run(system,it->rect);
+		this->runOperationNode(*it);
 }
 
 /*******************  FUNCTION  *********************/
@@ -40,7 +46,7 @@ void CMRRunnerSeq::prepareWrite ( CMRMeshOperationNodeVector& actions )
 	{
 		if (it->op->checkNeedPermut())
 			fatal("Hum, check if there is no issue if permut here.");
-		it->op->run(system,it->rect);
+		this->runOperationNode(*it);
 	}
 }
 
@@ -57,7 +63,7 @@ void CMRRunnerSeq::runCompute ( CMRMeshOperationNodeVector& actions )
 	{
 		if (it->op->checkNeedPermut())
 			system->permutVar(CMR_ALL);
-		it->op->run(system,it->rect);
+		this->runOperationNode(*it);
 	}
 }
 
@@ -82,7 +88,7 @@ void CMRRunnerSeq::run ( int iterations )
 		runCompute(loopActions);
 		
 		//save step
-		if ( i % writeInterval == 0 && outputer != NULL)
+		if ( outputer != NULL && i % writeInterval == 0 )
 		{
 			prepareWrite(writeActions);
 			doWrite(*outputer);

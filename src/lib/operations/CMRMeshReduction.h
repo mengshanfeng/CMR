@@ -10,6 +10,8 @@
 #define CMR_MESH_REDUCTION_H
 
 /********************  HEADERS  *********************/
+#include "common/CMRGeometry.h"
+#include "domain/CMRVarSystem.h"
 #include "CMRMeshOperation.h"
 
 /*******************  FUNCTION  *********************/
@@ -19,6 +21,7 @@ class CMRMeshReduction : public CMRMeshOperation
 	public:
 		CMRMeshReduction(U * reduction);
 		virtual void run (CMRVarSystem * sys ,const CMRRect& zone );
+		virtual void forceMeshAllocation ( CMRVarSystem* sys, const CMRRect& zone );
 		U * gblReduction;
 };
 
@@ -69,6 +72,18 @@ void CMRMeshReduction<T,U>::run ( CMRVarSystem * sys , const CMRRect & zone )
 			reduction.cellAction(cell,x,y);
 
 	gblReduction->doReduce(reduction);
+}
+
+/*******************  FUNCTION  *********************/
+template <class T,class U>
+void CMRMeshReduction<T,U>::forceMeshAllocation ( CMRVarSystem * sys, const CMRRect& zone )
+{
+	CMRRect memoryRect(sys->getDomain(0,0)->getMemoryRect());
+	CMRRect localZone(memoryRect.intersect(zone));
+	if (localZone.surface() > 0)
+	{
+		typename T::CellAccessor cell(*sys,CMR_CURRENT_STEP,localZone.x,localZone.y);
+	}
 }
 
 #endif //CMR_MESH_REDUCTION_H

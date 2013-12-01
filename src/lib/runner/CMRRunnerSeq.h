@@ -24,6 +24,7 @@ class CMRRunnerSeq : public CMRRunner
 		virtual void prepareWrite(CMRMeshOperationNodeVector & actions);
 		virtual void doWrite(CMROutputer & outputer);
 		virtual void runCompute(CMRMeshOperationNodeVector & actions);
+		virtual void runOperationNode(CMRMeshOperationNode & opNode);
 };
 
 #endif //CMR_RUNNER_MONO_PROCESS_H

@@ -12,6 +12,7 @@
 #include "common/CMRGeometry.h"
 #include "domain/CMRVarSystem.h"
 #include "runner/CMRRunnerSeq.h"
+#include "runner/CMRRunnerOMPForRect.h"
 #include "common/CMRSpaceSplitter.h"
 #include "mpi/CMRMPIDomainBuilder.h"
 #include "outputer/CMRBasicOutputer.h"
@@ -88,7 +89,8 @@ void CMRApplicationSeq::init ( CMRVarSystem * varSystem,int width,int height, in
 	CMRBasicSpaceSplitter * splitter = new CMRBasicSpaceSplitter(domainSize,1,0);
 	CMRMPIDomainBuilder * domainBuilder = new CMRMPIDomainBuilder(splitter);
 	varSystem->setDomainBuilder(domainBuilder);
-	CMRRunnerSeq * runner = new CMRRunnerSeq();
+// 	CMRRunnerSeq * runner = new CMRRunnerSeq();
+	CMRRunnerSeq * runner = new CMRRunnerOMPForRect(options);
 	runner->init(varSystem,domainSize,splitter->getLocalDomain(domainBuilder->getLocalId()));
 	
 	//print local splitting
@@ -96,7 +98,11 @@ void CMRApplicationSeq::init ( CMRVarSystem * varSystem,int width,int height, in
 		cmrPrint("MPI local domain of process %d is ( %d x %d )",cmrGetMPIRank(),width,height);
 	
 	//setup write system
-	runner->setWriter(new CMRBasicOutputer("output-runner.raw",*splitter),writeInternval);
+	if (options.getConfigBoolean("mesh:noout",false) == false)
+	{
+		std::string outputFile = options.getConfigString("mesh:output_file","output.raw");
+		runner->setWriter(new CMRBasicOutputer(outputFile,*splitter),writeInternval);
+	}
 	
 	this->setRunner(runner);
 }

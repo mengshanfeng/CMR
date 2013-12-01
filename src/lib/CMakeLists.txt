@@ -33,13 +33,25 @@ set(cmr_SRCS common/CMRSpaceSplitter.cpp
              mpi/CMRMPIReduction.cpp
              runner/CMRRunner.cpp
              runner/CMRRunnerSeq.cpp
+             runner/CMRRunnerOMPForRect.cpp
              outputer/CMRBasicOutputer.cpp
              application/CMRApplication.cpp
              application/CMRApplicationSeq.cpp
              application/svutArgp.cpp
              application/CMRCmdOptions.cpp)
+set(cmr_OPTIONAL_SRCS "")
 set(iniparser_SRCS ${CMAKE_SOURCE_DIR}/extern-deps/iniparser/src/iniparser.c 
              ${CMAKE_SOURCE_DIR}/extern-deps/iniparser/src/dictionary.c)
+
+######################################################
+find_package(OpenMP QUIET)
+if(OPENMP_FOUND)
+	message("OPENMP FOUND")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+	add_definitions(-DHAVE_OPENMP)
+endif()
 
 ######################################################
 add_library(cmr SHARED ${cmr_SRCS} ${iniparser_SRCS})

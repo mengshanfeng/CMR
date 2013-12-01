@@ -176,16 +176,27 @@ int CMRCmdOptions::getConfigInteger ( const std::string& key, int defaultValue )
 	{
 		char buffer[64];
 		sprintf(buffer,"%d",defaultValue);
-		setupDumpEntry(key.c_str(),buffer);
+		setupDumpEntry(key,buffer);
 	}
 	return iniparser_getint(iniDic,key.c_str(),defaultValue);
+}
+
+/*******************  FUNCTION  *********************/
+std::string CMRCmdOptions::getConfigString ( const std::string& key, const std::string& defaultValue )
+{
+	if (dumpUsedDic)
+		setupDumpEntry(key,defaultValue.c_str());
+	char * tmp = iniparser_getstring(iniDic,key.c_str(),strdup(defaultValue.c_str()));
+	std::string res = tmp;
+	free(tmp);
+	return res;
 }
 
 /*******************  FUNCTION  *********************/
 bool CMRCmdOptions::getConfigBoolean ( const std::string& key, bool defaultValue )
 {
 	if (dumpUsedDic != NULL)
-		setupDumpEntry(key.c_str(),defaultValue?"true":"false");
+		setupDumpEntry(key,defaultValue?"true":"false");
 	return iniparser_getboolean(iniDic,key.c_str(),defaultValue);
 }
 
