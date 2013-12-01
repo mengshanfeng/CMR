@@ -30,13 +30,19 @@ class CMRCmdOptions : public svUnitTest::svutArgp
 		int getIterations(void) const;
 		int getConfigInteger(const std::string & key,int defaultValue = 0);
 		bool getConfigBoolean(const std::string & key,bool defaultValue = false);
+		void dumpUsedConfigFile(void);
 	protected:
 		void loadConfigFile(const std::string & filename);
+		void overrideByConfigFile(void);
+		std::string extractSectionName(const std::string & key);
+		void setupDumpEntry(const std::string & key,const char * value);
 	protected:
 		std::string configFile;
+		std::string dumpConfigFile;
 		int width;
 		int height;
 		int iterations;
+		dictionary * dumpUsedDic;
 		dictionary * iniDic;
 };
 

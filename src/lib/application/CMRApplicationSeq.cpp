@@ -31,6 +31,7 @@ CMRApplicationSeq::CMRApplicationSeq ( int& argc, char**& argv,CMRVarSystem * va
 CMRApplicationSeq::~CMRApplicationSeq ( void )
 {
 	this->finish();
+	options.dumpUsedConfigFile();
 	this->finishLibs();
 }
 

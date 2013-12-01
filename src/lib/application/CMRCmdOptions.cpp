@@ -9,8 +9,11 @@
 /********************  HEADERS  *********************/
 #include <cstdlib>
 #include <cassert>
+#include <cstdio>
 #include <sstream>
 #include <iniparser.h>
+#include "common/CMRCommon.h"
+#include "common/CMRDebug.h"
 #include "CMRCmdOptions.h"
 
 /*******************  FUNCTION  *********************/
@@ -21,6 +24,7 @@ CMRCmdOptions::CMRCmdOptions ( int width, int height, int iterations )
 	this->width = width;
 	this->height = height;
 	this->iterations = iterations;
+	this->dumpUsedDic = NULL;
 	
 	//setup arg parsor
 	setProjectName      ("CartesinMeshRuntime");
@@ -34,6 +38,7 @@ CMRCmdOptions::CMRCmdOptions ( int width, int height, int iterations )
 	declareOption('h', "height"    , "HEIGHT"    , "Define the mesh height.");
 	declareOption('i', "iterations", "ITERATIONS", "Define the number of iterations to compute.");
 	declareOption('c', "config"    , "FILE"      , "Define the configuration file to load.");
+	declareOption('d', "dumpconfig", "FILE"      , "Dump the config in FILE at execution end.");
 }
 
 /*******************  FUNCTION  *********************/
@@ -44,6 +49,11 @@ CMRCmdOptions::~CMRCmdOptions ( void )
 	{
 		iniparser_freedict(iniDic);
 		iniDic = NULL;
+	}
+	if (dumpUsedDic != NULL)
+	{
+		iniparser_freedict(dumpUsedDic);
+		dumpUsedDic = NULL;
 	}
 }
 
@@ -85,6 +95,10 @@ void CMRCmdOptions::parseOption ( char key, std::string arg, std::string value )
 		case 'c':
 			this->configFile = value;
 			loadConfigFile(configFile);
+			break;
+		case 'd':
+			dumpUsedDic = dictionary_new(5);
+			this->dumpConfigFile = value;
 			break;
 		default:
 			err << "Unknown argument : " << arg << std::endl;
@@ -143,6 +157,13 @@ void CMRCmdOptions::loadConfigFile ( const std::string& filename )
 	}
 	
 	//extract local values
+	overrideByConfigFile();
+}
+
+/*******************  FUNCTION  *********************/
+void CMRCmdOptions::overrideByConfigFile ( void )
+{
+	assert(iniDic != NULL);
 	this->width = getConfigInteger("mesh:width",width);
 	this->height = getConfigInteger("mesh:height",height);
 	this->iterations = getConfigInteger("mesh:iterations",iterations);
@@ -151,11 +172,60 @@ void CMRCmdOptions::loadConfigFile ( const std::string& filename )
 /*******************  FUNCTION  *********************/
 int CMRCmdOptions::getConfigInteger ( const std::string& key, int defaultValue )
 {
+	if (dumpUsedDic != NULL)
+	{
+		char buffer[64];
+		sprintf(buffer,"%d",defaultValue);
+		setupDumpEntry(key.c_str(),buffer);
+	}
 	return iniparser_getint(iniDic,key.c_str(),defaultValue);
 }
 
 /*******************  FUNCTION  *********************/
 bool CMRCmdOptions::getConfigBoolean ( const std::string& key, bool defaultValue )
 {
+	if (dumpUsedDic != NULL)
+		setupDumpEntry(key.c_str(),defaultValue?"true":"false");
 	return iniparser_getboolean(iniDic,key.c_str(),defaultValue);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRCmdOptions::setupDumpEntry ( const std::string& key, const char* value )
+{
+	iniparser_set(dumpUsedDic,extractSectionName(key).c_str(),NULL);
+	iniparser_set(dumpUsedDic,key.c_str(),value);
+}
+
+/*******************  FUNCTION  *********************/
+std::string CMRCmdOptions::extractSectionName ( const std::string& key )
+{
+	std::string tmp;
+	int i = 0;
+	while (key[i] != ':' && key[i] != '\0')
+		tmp += key[i++];
+	return tmp;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRCmdOptions::dumpUsedConfigFile ( void )
+{
+	//trivial
+	if (dumpUsedDic == NULL || dumpConfigFile.empty())
+		return;
+
+	//dump only on master
+	if (cmrIsMPIMaster())
+	{
+		info("Dump used config file in '%s'.",dumpConfigFile.c_str());
+		overrideByConfigFile();
+		if (dumpConfigFile == "-")
+		{
+			iniparser_dump_ini(dumpUsedDic,stdout);
+		} else {
+			FILE * fp = fopen(dumpConfigFile.c_str(),"w");
+			assume(fp != NULL,"Fail to open file : '%s'",dumpConfigFile.c_str());
+			iniparser_dump_ini(dumpUsedDic,fp);
+			fclose(fp);
+		}
+	}
 }
