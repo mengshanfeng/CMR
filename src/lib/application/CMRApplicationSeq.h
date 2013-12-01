@@ -11,6 +11,7 @@
 
 /********************  HEADERS  *********************/
 #include "CMRApplication.h"
+#include "CMRCmdOptions.h"
 
 /*********************  TYPES  **********************/
 class CMRVarSystem;
@@ -29,6 +30,8 @@ class CMRApplicationSeq : public CMRApplication
 		virtual void finish(void);
 		void initMPI( int& argc, char**& argv );
 		void finishMPI(void);
+	private:
+		CMRCmdOptions options;
 };
 
 #endif //CMR_APPLICATION_SEQ_H

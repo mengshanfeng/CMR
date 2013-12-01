@@ -34,7 +34,9 @@ set(cmr_SRCS common/CMRSpaceSplitter.cpp
              runner/CMRRunnerSeq.cpp
              outputer/CMRBasicOutputer.cpp
              application/CMRApplication.cpp
-             application/CMRApplicationSeq.cpp)
+             application/CMRApplicationSeq.cpp
+             application/svutArgp.cpp
+             application/CMRCmdOptions.cpp)
 
 ######################################################
 add_library(cmr ${cmr_SRCS})

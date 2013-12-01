@@ -16,12 +16,15 @@
 #include "mpi/CMRMPIDomainBuilder.h"
 #include "outputer/CMRBasicOutputer.h"
 #include "CMRApplicationSeq.h"
+#include "CMRCmdOptions.h"
 
 /*******************  FUNCTION  *********************/
 CMRApplicationSeq::CMRApplicationSeq ( int& argc, char**& argv,CMRVarSystem * varSystem,int width,int height,int writeInterval )
+	:options(width,height)
 {
 	this->initLibs(argc,argv);
-	this->init(varSystem,width,height,writeInterval);
+	options.parse(argc,(const char**)argv);
+	this->init(varSystem,options.getWidth(),options.getHeight(),writeInterval);
 }
 
 /*******************  FUNCTION  *********************/
