@@ -15,7 +15,7 @@
 #include <common/CMRGeometry.h>
 
 /*********************  CLASS  **********************/
-class MockCommunication : public CMRComm
+class MockComm : public CMRComm
 {
 	public:
     virtual void run(void );
@@ -26,7 +26,7 @@ class MockCommunication : public CMRComm
 };
 
 /*********************  CLASS  **********************/
-class MockCommunicator : public CMRCommFactory
+class MockCommFactory : public CMRCommFactory
 {
 	public:
 		virtual CMRComm* createComm ( CMRAbstractDomain* domain, const CMRRect& rect, CMRCommType commType );

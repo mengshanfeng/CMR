@@ -7,49 +7,46 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
-#include <domain/CMRAbstractType.h>
+#include <gtest/gtest.h>
+#include <CMRAbstractType.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestAbstractType,testGetNameInt)
+TEST(TestAbstractType,testGetNameInt)
 {
 	CMRGenericType<int> type;
-	SVUT_ASSERT_EQUAL("i",type.getName());
+	EXPECT_EQ("i",type.getName());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestAbstractType,testGetNameFloat)
+TEST(TestAbstractType,testGetNameFloat)
 {
 	CMRGenericType<float> type;
-	SVUT_ASSERT_EQUAL("f",type.getName());
+	EXPECT_EQ("f",type.getName());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestAbstractType,testGetSizeInt)
+TEST(TestAbstractType,testGetSizeInt)
 {
 	CMRGenericType<int> type;
-	SVUT_ASSERT_EQUAL(sizeof(int),type.getSize());
+	EXPECT_EQ(sizeof(int),type.getSize());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestAbstractType,testGetSizeInt8)
+TEST(TestAbstractType,testGetSizeInt8)
 {
 	CMRGenericType<int[8]> type;
-	SVUT_ASSERT_EQUAL(sizeof(int[8]),type.getSize());
+	EXPECT_EQ(sizeof(int[8]),type.getSize());
 }
 
 /*******************  FUNCTION  *********************/
-SVUT_DECLARE_FLAT_TEST(TestAbstractType,testOperatorEqual)
+TEST(TestAbstractType,testOperatorEqual)
 {
 	CMRGenericType<int[8]> type1;
 	CMRGenericType<int[8]> type2;
 	CMRGenericType<int[9]> type3;
-	SVUT_ASSERT_TRUE(type1 == type2);
-	SVUT_ASSERT_FALSE(type1 == type3);
+	EXPECT_TRUE(type1 == type2);
+	EXPECT_FALSE(type1 == type3);
 }
-
-/********************  MACRO  ***********************/
-SVUT_USE_DEFAULT_MAIN

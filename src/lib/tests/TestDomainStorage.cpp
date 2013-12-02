@@ -10,7 +10,7 @@
 #include <svUnitTest.h>
 #include <domain/CMRDomainStorage.h>
 #include <communication/CMRCommSchem.h>
-#include <MockCommunicator.h>
+#include <MockCommFactory.h>
 #include <domain/CMRDomainStorage.h>
 #include <domain/CMRGenericMemoryAccessor.h>
 #include <domain/CMRMemoryModels.h>

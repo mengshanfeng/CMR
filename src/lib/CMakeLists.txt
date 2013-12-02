@@ -77,4 +77,6 @@ INSTALL(FILES CMR.h DESTINATION include/cmr)
 ######################################################
 if (NOT DISABLE_TESTS)
         add_subdirectory(tests)
+		add_subdirectory(common/tests)
+		add_subdirectory(domain/tests)
 endif (NOT DISABLE_TESTS)

@@ -7,12 +7,12 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include "MockCommunicator.h"
+#include "MockCommFactory.h"
 
 /*******************  FUNCTION  *********************/
-CMRComm* MockCommunicator::createComm ( CMRAbstractDomain* domain, const CMRRect& rect, CMRCommType commType )
+CMRComm* MockCommFactory::createComm ( CMRAbstractDomain* domain, const CMRRect& rect, CMRCommType commType )
 {
-	MockCommunication * comm = new MockCommunication;
+	MockComm * comm = new MockComm;
 	comm->rect = rect;
 	comm->id = id;
 	comm->dest = dest;
@@ -20,7 +20,7 @@ CMRComm* MockCommunicator::createComm ( CMRAbstractDomain* domain, const CMRRect
 }
 
 /*********************  CLASS  **********************/
-void MockCommunication::run(void )
+void MockComm::run(void )
 {
 	this->hasRun = true;
 }
