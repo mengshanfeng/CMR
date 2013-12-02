@@ -66,5 +66,7 @@ TEST(TestProjectIterator,testGenUsageCCode)
 	LatexEntity entity("k");
 	
 	stringstream out;
-	EXPECT_THROW(it.genUsageCCode(out,context,entity),LatexException);
+	it.genUsageCCode(out,context,entity);
+	EXPECT_EQ("testK",out.str());
+	//EXPECT_THROW(it.genUsageCCode(out,context,entity),LatexException);
 }

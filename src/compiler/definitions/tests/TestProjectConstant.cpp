@@ -32,13 +32,11 @@ static const char TEST_CST_1[] = "Entity :\n\
 
 /*********************  CONSTS  *********************/
 static const char TEST_CST_2[] = "//Definition of constant C\n\
-static const float TMP_VALUE_testC[3]={1,2,3,};\n\
-const CMRMathVector testC(TMP_VALUE_testC,3);\n";
+static const double testC[3]={1 ,2 ,3 ,};\n";
 
 /*********************  CONSTS  *********************/
 static const char TEST_CST_3[] = "//Definition of constant C\n\
-static const float TMP_VALUE_testC[3][2]={{1,2,3,},{4,5,6,}};\n\
-const CMRMathMatrix testC(TMP_VALUE_testC,3,2);\n";
+static const double testC[2][3]={{1 ,2 ,3 ,},{4 ,5 ,6 ,}};\n";
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testConstructor)
@@ -73,7 +71,7 @@ TEST(TestProjectConstant,testLoadValue_scalar_invalid)
 TEST(TestProjectConstant,testLoadValue_vector)
 {
 	ProjectConstant constant("C","testC","double");
-	constant.loadValues("1;2;3;4;5;6",1);
+	constant.loadValues("1 & 2 & 3 & 4 & 5 & 6",1);
 
 	stringstream out;
 	constant.printValues(out);
@@ -95,7 +93,7 @@ TEST(TestProjectConstant,testLoadValue_vector_invalid)
 TEST(TestProjectConstant,testLoadValue_matrix)
 {
 	ProjectConstant constant("C","testC","double");
-	constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2;2.3\\\\3.1;3.2;3.3\\\\4.1;4.2;4.3\\\\5.1;5.2;5.3\\\\6.1;6.2;6.3",2);
+	constant.loadValues("1.1 & 1.2 & 1.3\\\\2.1 & 2.2 & 2.3\\\\3.1 & 3.2 & 3.3\\\\4.1 & 4.2 & 4.3\\\\5.1 & 5.2 & 5.3\\\\6.1 & 6.2 & 6.3",2);
 
 	stringstream out;
 	constant.printValues(out);
@@ -110,14 +108,14 @@ TEST(TestProjectConstant,testLoadValue_scalar_matrix_invalid)
 {
 	ProjectConstant constant("C","testC","double");
 	EXPECT_THROW(constant.loadValues("",2),LatexException);
-	EXPECT_THROW(constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2\\\\3.1;3.2;3.3",2),LatexException);
+	EXPECT_THROW(constant.loadValues("1.1 & 1.2 & 1.3\\\\2.1 & 2.2\\\\3.1 & 3.2 & 3.3",2),LatexException);
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testPrintDebug)
 {
 	ProjectConstant constant("C","testC","double");
-	constant.loadValues("1.1;1.2;1.3\\\\2.1;2.2;2.3",2);
+	constant.loadValues("1.1 & 1.2 & 1.3\\\\2.1 & 2.2 & 2.3",2);
 	
 	stringstream out;
 	constant.printDebug(out);
@@ -135,14 +133,14 @@ TEST(TestProjectConstant,testGenDefinitionCCode_scalar)
 	stringstream out;
 	constant.genDefinitionCCode(out,context);
 	
-	EXPECT_EQ("const float testC = 5.5;\n",out.str());
+	EXPECT_EQ("const double testC = 5.5 ;\n",out.str());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectConstant,testGenDefinitionCCode_vector)
 {
 	ProjectConstant constant("C","testC","double");
-	constant.loadValues("1;2;3",1);
+	constant.loadValues("1 & 2 & 3",1);
 	
 	ProjectContext context;
 	stringstream out;
@@ -155,7 +153,7 @@ TEST(TestProjectConstant,testGenDefinitionCCode_vector)
 TEST(TestProjectConstant,testGenDefinitionCCode_matrix)
 {
 	ProjectConstant constant("C","testC","double");
-	constant.loadValues("1;2;3\\\\4;5;6",2);
+	constant.loadValues("1 & 2 & 3\\\\4 & 5 & 6",2);
 	
 	ProjectContext context;
 	stringstream out;
@@ -182,7 +180,7 @@ TEST(TestProjectConstant,testGenUsageCCode_scalar)
 TEST(TestProjectConstant,testGenUsageCCode_vector)
 {
 	ProjectConstant constant("C","testC","double");
-	constant.loadValues("1;10",1);
+	constant.loadValues("1 & 10",1);
 	
 	ProjectContext context;
 	MockProjectEntity var("m","testM");
@@ -198,7 +196,7 @@ TEST(TestProjectConstant,testGenUsageCCode_vector)
 TEST(TestProjectConstant,testGenUsageCCode_matrix)
 {
 	ProjectConstant constant("C","testC","double");
-	constant.loadValues("1;10\\2;5",2);
+	constant.loadValues("1 & 10\\\\2 & 5",2);
 	
 	ProjectContext context;
 	MockProjectEntity var("m","testM");
@@ -207,5 +205,5 @@ TEST(TestProjectConstant,testGenUsageCCode_matrix)
 	stringstream out;
 	constant.genUsageCCode(out,context,entity);
 	
-	EXPECT_EQ("testC[ testM * 2 ][ testM + 5 ]",out.str());
+	EXPECT_EQ("testC[ testM + 5 ][ testM * 2 ]",out.str());
 }

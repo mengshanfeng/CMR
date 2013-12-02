@@ -64,6 +64,7 @@ class CMRProjectLocalVariable : public ProjectEntity
 		CMRProjectLocalVariable( const std::string& latexName, const std::string& longName, const std::string& type, const std::string& defaultValue = "0");
 		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding = 0 ) const;
 		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
+		virtual void printDeclDebug( std::ostream & out, int padding) const;
 		void addDim(int size);
 	private:
 		std::string type;
@@ -87,7 +88,9 @@ class CMRProjectCodeEntry : public ProjectCodeTree<CMRProjectCodeEntry>
 		location = CMR_INSERT_FIRST_CHILD);
 		ProjectIterator & addIterator(const std::string & latexName, const std::string & longName, int start,int end);
 		virtual void genCCode(std::ostream & out,int padding = 0) const = 0;
+		virtual void printDebug(std::ostream & out, int padding = 0) const = 0;
 		virtual void genChildCCode(std::ostream & out,int padding = 0) const;
+		virtual void printChildDebug(std::ostream & out, int padding = 0) const;
 		std::ostream & doIndent(std::ostream & out,int baseOffset = 0) const;
 		void changeCaptureType(const std::string & name, CaptureType captureType) { assert(false);};
 		//TODO remove
@@ -104,6 +107,7 @@ class CMRCodeValueForCodeEntry : public CMRCompiler::CodeTemplateValue
 	public:
 		CMRCodeValueForCodeEntry(const CMRProjectCodeEntry * obj, int correctIndent = 0) {this->obj = obj;this->correctIndent = correctIndent;};
 		virtual void genCode(std::ostream & out ,int indent) const {obj->genCCode(out,indent+this->correctIndent);};
+		virtual void printDebug(std::ostream & out, int indent) const {obj->printDebug(out,indent+this->correctIndent);};
 	private:
 		const CMRProjectCodeEntry * obj;
 		int correctIndent;
@@ -116,6 +120,7 @@ class CMRProjectCodeNode : public CMRProjectCodeEntry
 		CMRProjectCodeNode(ProjectContext * context = NULL);
 		virtual CMRProjectCodeType getType(void ) const;
 		virtual void genCCode(std::ostream & out,int padding = 0) const;
+		virtual void printDebug ( std::ostream& out, int padding = 0 ) const;
 };
 
 /*********************  CLASS  **********************/
@@ -124,6 +129,7 @@ class CMRProjectCodeRootNode : public CMRProjectCodeNode
 	public:
 		CMRProjectCodeRootNode(ProjectContext * context = NULL);
 		virtual void genCCode(std::ostream & out,int padding = 0) const;
+		virtual void printDebug ( std::ostream& out, int padding = 0 ) const;
 };
 
 /*********************  CLASS  **********************/
@@ -137,6 +143,7 @@ class CMRProjectCodeEquation : public CMRProjectCodeEntry
 		const std::string & getOperator(void) const;
 		void setOperator(const std::string & op);
 		virtual void genCCode(std::ostream & out,int padding = 0) const;
+		virtual void printDebug ( std::ostream& out, int padding = 0 ) const;
 	private:
 		CMRCompiler::LatexEntity output;
 		CMRCompiler::LatexFormulas formula;
@@ -162,6 +169,7 @@ class CMRProjectCodeVarDecl : public CMRProjectCodeEntry
 		CMRProjectCodeVarDecl ( CMRProjectLocalVariable * variable );
 		virtual CMRProjectCodeType getType(void) const;
 		virtual void genCCode ( std::ostream& out ,int padding = 0 ) const;
+		virtual void printDebug ( std::ostream& out, int padding = 0 ) const;
 	private:
 		CMRProjectLocalVariable * variable;
 };
@@ -173,6 +181,7 @@ class CMRProjectCConstruct
 		CMRProjectCConstruct(const std::string & code);
 		CMRProjectCConstruct & arg(const std::string & value);
 		void genCCode( std::ostream& out, const ProjectContext& context, int padding = 0 ) const;
+		void printDebug(std::ostream & out, int padding = 0) const;
 	private:
 		void loadCode(const std::string & code);
 		void extractReplacementLocus( ExtractionLocusList& locusList ) const;
@@ -191,6 +200,7 @@ class CMRProjectCSimpleConstruct : public CMRProjectCodeNode
 		CMRProjectCSimpleConstruct & arg(const std::string & value);
 		virtual CMRProjectCodeType getType(void) const;
 		virtual void genCCode ( std::ostream& out ,int padding = 0 ) const;
+		virtual void printDebug ( std::ostream& out, int padding = 0 ) const;
 	private:
 		CMRProjectCConstruct construct;
 };

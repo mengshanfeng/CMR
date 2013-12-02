@@ -32,6 +32,15 @@ CMRProjectLocalVariable::CMRProjectLocalVariable ( const std::string& latexName,
 }
 
 /*******************  FUNCTION  *********************/
+void CMRProjectLocalVariable::printDeclDebug ( ostream& out, int padding ) const
+{
+	doIndent(out,padding) << type << " " << getLongName() << "(" << getLatexName() << ")";
+	if (defaultValue.empty() == false)
+		out << " = " << defaultValue;
+	out << ";" << endl;
+}
+
+/*******************  FUNCTION  *********************/
 void CMRProjectLocalVariable::genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding ) const
 {
 	doIndent(out,padding) << type << " " << getLongName();
@@ -278,11 +287,37 @@ void CMRProjectCodeEntry::genChildCCode ( ostream& out ,int padding ) const
 }
 
 /*******************  FUNCTION  *********************/
+void CMRProjectCodeEntry::printChildDebug ( ostream& out, int padding ) const
+{
+	const CMRProjectCodeEntry * cur = this->getFirstChild();
+	while (cur != NULL)
+	{
+		cur->printDebug(out,padding);
+		cur = cur->getNext();
+	}
+}
+
+/*******************  FUNCTION  *********************/
 void CMRProjectCodeNode::genCCode ( ostream& out, int padding ) const
 {
 	doIndent(out,padding) << "{" << endl;
 	genChildCCode(out,padding);
 	doIndent(out,padding) << "}" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectCodeNode::printDebug ( ostream& out, int padding ) const
+{
+	doIndent(out,padding) << "{" << endl;
+	printChildDebug(out,padding);
+	doIndent(out,padding) << "}" << endl;
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectCodeEquation::printDebug ( ostream& out, int padding ) const
+{
+	doIndent(out,padding);
+	out << output << " " << op << " " << formula << ";" << endl;
 }
 
 /*******************  FUNCTION  *********************/
@@ -335,6 +370,12 @@ void CMRProjectCodeRootNode::genCCode ( ostream& out, int padding ) const
 }
 
 /*******************  FUNCTION  *********************/
+void CMRProjectCodeRootNode::printDebug ( ostream& out, int padding ) const
+{
+	printChildDebug(out,padding);
+}
+
+/*******************  FUNCTION  *********************/
 CMRProjectCodeVarDecl::CMRProjectCodeVarDecl ( CMRProjectLocalVariable* variable )
 {
 	assert(variable != NULL);
@@ -351,6 +392,12 @@ CMRProjectCodeType CMRProjectCodeVarDecl::getType ( void ) const
 void CMRProjectCodeVarDecl::genCCode ( ostream& out ,int padding ) const
 {
 	variable->genDefinitionCCode(out,context,getDepth()+padding);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectCodeVarDecl::printDebug ( ostream& out, int padding ) const
+{
+	variable->printDeclDebug(out,getDepth()+padding);
 }
 
 /*******************  FUNCTION  *********************/
@@ -469,6 +516,12 @@ void CMRProjectCConstruct::genCCode ( ostream& out, const ProjectContext& contex
 }
 
 /*******************  FUNCTION  *********************/
+void CMRProjectCConstruct::printDebug ( ostream& out, int padding ) const
+{
+	doIndent(out,padding) << code << endl;
+}
+
+/*******************  FUNCTION  *********************/
 const LatexFormulas* CMRProjectCConstruct::getLocusValue ( const ExtractionLocus& locus ) const
 {
 	cmrAssume(locus.id > 0,"Locus ID must be greater than 0 (%d)",locus.id);
@@ -506,6 +559,12 @@ CMRProjectCodeType CMRProjectCSimpleConstruct::getType ( void ) const
 void CMRProjectCSimpleConstruct::genCCode ( ostream& out, int padding ) const
 {
 	construct.genCCode(out,context,padding);
+}
+
+/*******************  FUNCTION  *********************/
+void CMRProjectCSimpleConstruct::printDebug ( ostream& out, int padding ) const
+{
+	construct.printDebug(out,padding);
 }
 
 }

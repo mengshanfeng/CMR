@@ -22,7 +22,7 @@ using namespace CMRCompiler;
 static const char * CST_VALUE_1 = "//blablablalbl\n\
 struct Actionupdate_enery\n\
 {\n\
-	static void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y)\n\
+	void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,int x,int y) const\n\
 	{\n\
 		int tmp = 0 ;\n\
 		double enegry = 0 ;\n\
@@ -32,9 +32,9 @@ struct Actionupdate_enery\n\
 			tmp += 3 * k ;\n\
 		}\n\
 		enegry += tmp * 3 ;\n\n\
-	}\n\
+	}\n\n\
+	typedef CMRMeshOperationSimpleLoop<VarSystem,Actionupdate_enery> LoopType;\n\
 };\n\n";
-
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectAction,testConstructor)

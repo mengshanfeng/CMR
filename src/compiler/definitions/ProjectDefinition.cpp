@@ -32,8 +32,16 @@ ProjectDefinition::ProjectDefinition ( const string& latexName, const string& lo
 /*******************  FUNCTION  *********************/
 void ProjectDefinition::printDebug ( std::ostream& out ) const
 {
+	out << "/*********************** Entity info ******************************" << endl;
 	ProjectEntity::printDebug ( out );
-	out << "    - code : TODO" << endl;
+	out << "-------------------------------------------------------------------" << endl;
+	out << "Parameter context : " << endl;
+	this->parametersContext.printDebug(out);
+	out << "******************************************************************/" << endl;
+	out << this->getLongName() << "[" << this->getLatexName() << "]" << "()" << endl;
+	out << "{" << endl;
+	this->ops.printDebug(out,0);
+	out << "}" << endl;
 }
 
 /*******************  FUNCTION  *********************/

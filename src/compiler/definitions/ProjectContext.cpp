@@ -142,7 +142,7 @@ void ProjectContext::printDebug ( std::ostream & out ) const
 	//loop on entries
 	while (cur != NULL)
 	{
-		out << "   - Level : " << endl;
+		out << "    - Level : " << endl;
 		for (ProjectEntityList::const_iterator it = cur->entities.begin(); it != cur->entities.end() ; ++it)
 			out << "          + " << (*it)->getLatexName() << " : " << (*it)->getLongName() << endl;
 		cur = cur->parent;
