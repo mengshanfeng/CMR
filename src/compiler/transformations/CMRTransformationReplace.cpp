@@ -9,6 +9,7 @@
 
 /********************  HEADERS  *********************/
 #include <cassert>
+#include <iostream>
 #include "CMRTransformationReplace.h"
 #include "../parsor/LatexFormula.h"
 
@@ -74,19 +75,19 @@ void CMRTransformationReplace::replaceAll(const ProjectCaptureMap & replaceMap, 
 			entity.parameters.push_back(f);
 			entity.name = "()";
 		}
+	} else {
+		//recurse in childs
+		replaceAll(replaceMap,entity.getExponents());
+		replaceAll(replaceMap,entity.getIndices());
+		replaceAll(replaceMap,entity.getParameters());
 	}
-
-	//recurse in childs
-	replaceAll(replaceMap,entity.getExponents());
-	replaceAll(replaceMap,entity.getIndices());
-	replaceAll(replaceMap,entity.getParameters());
 }
 
 /*******************  FUNCTION  *********************/
 void CMRTransformationReplace::replaceAll(const ProjectCaptureMap& replaceMap, LatexFormulas& formula)
 {
-	for (int i = 0 ; i < formula.size() ; i++)
-		replaceAll(replaceMap,*formula[i]);
+	for (LatexFormulas::iterator it = formula.begin() ; it != formula.end() ; ++it)
+		replaceAll(replaceMap,**it);
 }
 
 }

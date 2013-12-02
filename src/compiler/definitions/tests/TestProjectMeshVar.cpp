@@ -20,10 +20,10 @@ using namespace std;
 using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
-static const char TEST_CST_1[] = "			CMRCellAccessor<int[5],CMRMemoryModelRowMajor> testA;\n";
+static const char TEST_CST_1[] = "			CMRCellAccessor<int[5],CMRMemoryModelColMajor> testA;\n";
 static const char TEST_CST_2[] = "	//define variable A_{i,j,k}\n\
-	this->addVariable(\"testA\",sizeof(int[5]),1);\n";
-static const char TEST_CST_3[] = "testA*(sys.getDomain(1,tstep)),x,y,absolute)\n";
+	this->addVariable(\"testA\",sizeof(int[5]),0);\n";
+static const char TEST_CST_3[] = "testA(*(sys.getDomain(1,tstep)),x,y,absolute)\n";
 static const char TEST_CST_4[] = "testA(acc.testA,x,y,absolute)\n";
 
 /*******************  FUNCTION  *********************/
@@ -62,11 +62,11 @@ TEST(TestProjectMeshVar,testGenUsageCCode_1)
 	
 	stringstream outr;
 	variable.genUsageCCode(outr,context,entity);
-	EXPECT_EQ("in.testA( 2 + 1 , 2 + 1 )[ 55 ]",outr.str());
+	EXPECT_EQ("(*in.testA( 2 + 1 , 2 + 1 ))[ 55 ]",outr.str());
 
 	stringstream outw;
 	variable.genUsageCCode(outw,context,entity,true);
-	EXPECT_EQ("out.testA( 2 + 1 , 2 + 1 )[ 55 ]",outw.str());
+	EXPECT_EQ("(*out.testA( 2 + 1 , 2 + 1 ))[ 55 ]",outw.str());
 }
 
 /*******************  FUNCTION  *********************/
@@ -82,11 +82,11 @@ TEST(TestProjectMeshVar,testGenUsageCCode_2)
 
 	stringstream outr;
 	variable.genUsageCCode(outr,context,entity);
-	EXPECT_EQ("in.testA( testM + 1 , testM + 1 )[ 55 ]",outr.str());
+	EXPECT_EQ("(*in.testA( testM + 1 , testM + 1 ))[ 55 ]",outr.str());
 
 	stringstream outw;
 	variable.genUsageCCode(outw,context,entity,true);
-	EXPECT_EQ("out.testA( testM + 1 , testM + 1 )[ 55 ]",outw.str());
+	EXPECT_EQ("(*out.testA( testM + 1 , testM + 1 ))[ 55 ]",outw.str());
 }
 
 /*******************  FUNCTION  *********************/

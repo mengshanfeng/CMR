@@ -19,61 +19,45 @@
 using namespace testing;
 using namespace CMRCompiler;
 
+/*********************  STRUCT  *********************/
+struct TestImplicitMulParam
+{
+	const char * in;
+	const char * out;
+};
+
 /*********************  CONSTS  *********************/
+static const TestImplicitMulParam CST_TESTED_VALUES[] = { 
+	{ "a"                           , "a"                                  },
+	{ "ab"                          , "a*b"                                },
+	{ "ab^{ab}+8a*5e\\frac{af}{5e}" , "a*b^{a*b}+8*a*5*e*\\frac{a*f}{5*e}" },
+	{ "-abc+5"                      , "-a*b*c+5"                           },
+};
+
+/*********************  CLASS  **********************/
+class TestImplicitMulBase : public TestWithParam<TestImplicitMulParam>
+{
+};
 
 /*******************  FUNCTION  *********************/
-TEST(TestImplicitMul,testConstructor)
+TEST_P(TestImplicitMulBase,simpleTest)
 {
 	CMRTransformationImplicitMul transf;
-}
-
-/*******************  FUNCTION  *********************/
-TEST(TestImplicitMul,testRun_simple)
-{
-	CMRTransformationImplicitMul transf;
-	
 	ProjectContext context;
 	CMRProjectCodeNode root(&context);
+
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	CMRProjectCodeEquation & eq = root.addEquation("a","ab");
+	
+	const TestImplicitMulParam param = GetParam();
+	
+	CMRProjectCodeEquation & eq = root.addEquation("a",param.in);
 	
 	transf.run(root);
 	
-	EXPECT_EQ("a*b",eq.getFormulas().getString());
+	EXPECT_EQ(param.out,eq.getFormulas().getString());
 }
 
-/*******************  FUNCTION  *********************/
-TEST(TestImplicitMul,testRun_complex)
-{
-	CMRTransformationImplicitMul transf;
-	
-	ProjectContext context;
-	CMRProjectCodeNode root(&context);
-	root.addLocalVariable("a","testA","int","0");
-	root.addLocalVariable("b","testB","int","0");
-	root.addLocalVariable("c","testC","int","0");
-	CMRProjectCodeEquation & eq = root.addEquation("a","ab^{ab}+8a*5e\\frac{af}{5e}");
-
-	transf.run(root);
-	
-	EXPECT_EQ("a*b^{a*b}+8*a*5*e*\\frac{a*f}{5*e}",eq.getFormulas().getString());
-}
-
-/*******************  FUNCTION  *********************/
-TEST(TestImplicitMul,testRun_start_minus)
-{
-	CMRTransformationImplicitMul transf;
-	
-	ProjectContext context;
-	CMRProjectCodeNode root(&context);
-	root.addLocalVariable("a","testA","int","0");
-	root.addLocalVariable("b","testB","int","0");
-	root.addLocalVariable("c","testC","int","0");
-	CMRProjectCodeEquation & eq = root.addEquation("a","-abc+5");
-
-	transf.run(root);
-	
-	EXPECT_EQ("-a*b*c+5",eq.getFormulas().getString());
-}
+/********************  MACRO  ***********************/
+INSTANTIATE_TEST_CASE_P(TestImplicitMul, TestImplicitMulBase, ValuesIn(CST_TESTED_VALUES));

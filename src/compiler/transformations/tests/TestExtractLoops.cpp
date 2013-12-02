@@ -24,16 +24,31 @@ using namespace CMRCompiler;
 
 /*********************  CONSTS  *********************/
 static const char TEST_STRING_1[] = "LOOP => k\n\
-	EQ => \\CMRTMP^1{1} += b\n\
-EQ => a = 4*\\CMRTMP^1{1}\n";
+	EQ => \\CMRTMP^2{0} += b\n\
+EQ => a = 4*\\CMRTMP^2{0}\n";
 static const char TEST_STRING_2[] = "LOOP => k\n\
-	EQ => \\CMRTMP^1{1} += b+\\frac{c}{b*5}-(4+8)\n\
-EQ => a = 4*\\CMRTMP^1{1}\n";
+	EQ => \\CMRTMP^2{1} += b+\\frac{c}{b*5}-(4+8)\n\
+EQ => a = 4*\\CMRTMP^2{1}\n";
 static const char TEST_STRING_3[] = "LOOP => k\n\
 	LOOP => l\n\
-		EQ => \\CMRTMP^1{1} += b*5\n\
-	EQ => \\CMRTMP^1{1} += b+\\CMRTMP^1{1}-(4+8)\n\
-EQ => a = 4*\\CMRTMP^1{1}\n";
+		EQ => \\CMRTMP^3{3} += b*5\n\
+	EQ => \\CMRTMP^2{2} += b+\\CMRTMP^3{3}-(4+8)\n\
+EQ => a = 4*\\CMRTMP^2{2}\n";
+
+/*********************  STRUCT  *********************/
+struct TestExtractLoopsParam
+{
+	const char * in;
+	const char * out;
+};
+
+/*********************  CONSTS  *********************/
+static const TestExtractLoopsParam CST_TESTED_VALUES[] = { 
+	{"a"                                   , "EQ => a = a\n"             },
+	{"4 * \\sum_k{b}"                      , TEST_STRING_1     },
+	{"4 * \\sum_k{b+\\frac{c}{b*5}-(4+8)}" , TEST_STRING_2     },
+	{"4 * \\sum_k{b+\\sum_l{b*5}-(4+8)}"   , TEST_STRING_3     },
+};
 
 /*********************  CLASS  **********************/
 class MockTransfToPrint:  public CMRTransformationBasic
@@ -47,73 +62,37 @@ class MockTransfToPrint:  public CMRTransformationBasic
 		std::stringstream out;
 };
 
-/*******************  FUNCTION  *********************/
-TEST(TestExtractLoops,testConstructor)
+/*********************  CLASS  **********************/
+class TestExtractLoopsBase : public TestWithParam<TestExtractLoopsParam>
 {
-	CMRTransformationExtractLoops transf;
-}
+};
 
 /*******************  FUNCTION  *********************/
-TEST(TestExtractLoops,testRun_1)
+TEST_P(TestExtractLoopsBase,simpleTest)
 {
 	CMRTransformationExtractLoops transf;
 	MockTransfToPrint out;
-	
-	ProjectContext context;
-	ProjectIterator it("k","testK",0,9);
-	context.addEntry(&it);
-	CMRProjectCodeNode root(&context);
-	root.addLocalVariable("a","testA","int","0");
-	root.addLocalVariable("b","testB","int","0");
-	root.addLocalVariable("c","testC","int","0");
-	root.addEquation("a","4 * \\sum_k{b}");
-	
-	transf.run(root);
-	out.run(root);
-	
-	EXPECT_EQ(TEST_STRING_1,out.out.str());
-}
 
-/*******************  FUNCTION  *********************/
-TEST(TestExtractLoops,testRun_2)
-{
-	CMRTransformationExtractLoops transf;
-	MockTransfToPrint out;
-	
-	ProjectContext context;
-	ProjectIterator it("k","testK",0,9);
-	context.addEntry(&it);
-	CMRProjectCodeNode root(&context);
-	root.addLocalVariable("a","testA","int","0");
-	root.addLocalVariable("b","testB","int","0");
-	root.addLocalVariable("c","testC","int","0");
-	root.addEquation("a","4 * \\sum_k{b+\\frac{c}{b*5}-(4+8)}");
-	
-	transf.run(root);
-	out.run(root);
-	
-	EXPECT_EQ(TEST_STRING_2,out.out.str());
-}
-
-/*******************  FUNCTION  *********************/
-TEST(TestExtractLoops,testRun_3)
-{
-	CMRTransformationExtractLoops transf;
-	MockTransfToPrint out;
-	
 	ProjectContext context;
 	ProjectIterator it("k","testK",0,9);
 	ProjectIterator it2("l","testL",0,9);
 	context.addEntry(&it);
 	context.addEntry(&it2);
 	CMRProjectCodeNode root(&context);
+
 	root.addLocalVariable("a","testA","int","0");
 	root.addLocalVariable("b","testB","int","0");
 	root.addLocalVariable("c","testC","int","0");
-	root.addEquation("a","4 * \\sum_k{b+\\sum_l{b*5}-(4+8)}");
+	
+	const TestExtractLoopsParam param = GetParam();
+	
+	root.addEquation("a",param.in);
 	
 	transf.run(root);
 	out.run(root);
 	
-	EXPECT_EQ(TEST_STRING_3,out.out.str());
+	EXPECT_EQ(param.out,out.out.str());
 }
+
+/********************  MACRO  ***********************/
+INSTANTIATE_TEST_CASE_P(TestExtractLoops, TestExtractLoopsBase, ValuesIn(CST_TESTED_VALUES));

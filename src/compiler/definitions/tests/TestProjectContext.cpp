@@ -173,11 +173,11 @@ TEST(TestProjectContext,testGenTempNameLongName)
 	EXPECT_EQ("temp_0_1",context.genTempName().longName);
 	EXPECT_EQ("temp_0_2",context.genTempName().longName);
 	
-	EXPECT_EQ("temp_1_0",context2.genTempName().longName);
-	EXPECT_EQ("temp_1_1",context2.genTempName().longName);
-	EXPECT_EQ("temp_1_2",context2.genTempName().longName);
+	EXPECT_EQ("temp_1_3",context2.genTempName().longName);
+	EXPECT_EQ("temp_1_4",context2.genTempName().longName);
+	EXPECT_EQ("temp_1_5",context2.genTempName().longName);
 	
-	EXPECT_EQ("temp_1_0",context3.genTempName().longName);
-	EXPECT_EQ("temp_1_1",context3.genTempName().longName);
-	EXPECT_EQ("temp_1_2",context3.genTempName().longName);
+	EXPECT_EQ("temp_1_6",context3.genTempName().longName);
+	EXPECT_EQ("temp_1_7",context3.genTempName().longName);
+	EXPECT_EQ("temp_1_8",context3.genTempName().longName);
 }

@@ -34,7 +34,7 @@ TEST(TestCConstruct,testSimpleGenCode)
 	construct.genCCode(out,context);
 	
 	//check
-	EXPECT_EQ("abort();",out.str());
+	EXPECT_EQ("abort();\n",out.str());
 }
 
 /*******************  FUNCTION  *********************/
@@ -56,7 +56,7 @@ TEST(TestCConstruct,testUserArgs1)
 	construct.genCCode(out,context);
 	
 	//check
-	EXPECT_EQ("pow(in.var( x , y ) ,2);",out.str());
+	EXPECT_EQ("pow((*in.var( x , y )) ,2);\n",out.str());
 }
 
 /*******************  FUNCTION  *********************/
@@ -79,7 +79,7 @@ TEST(TestCConstruct,testUserArgs2)
 	construct.genCCode(out,context);
 	
 	//check
-	EXPECT_EQ("pow(in.var( x , y ) ,2 );",out.str());
+	EXPECT_EQ("pow((*in.var( x , y )) ,2 );\n",out.str());
 }
 
 /*******************  FUNCTION  *********************/
@@ -102,7 +102,7 @@ TEST(TestCConstruct,testUserArgs3)
 	construct.genCCode(out,context);
 	
 	//check
-	EXPECT_EQ("pow(2 ,in.var( x , y ) );",out.str());
+	EXPECT_EQ("pow(2 ,(*in.var( x , y )) );\n",out.str());
 }
 
 /*******************  FUNCTION  *********************/
@@ -123,7 +123,7 @@ TEST(TestCConstruct,testAutoArgs1)
 	construct.genCCode(out,context);
 	
 	//check
-	EXPECT_EQ("pow(in.var( x , y ) ,in.var( x + 1 , y + 1 ) );",out.str());
+	EXPECT_EQ("pow((*in.var( x , y )) ,(*in.var( x + 1 , y + 1 )) );\n",out.str());
 }
 
 /*******************  FUNCTION  *********************/
@@ -145,7 +145,7 @@ TEST(TestCConstruct,testMixArgs)
 	construct.genCCode(out,context);
 	
 	//check
-	EXPECT_EQ("pow(in.var( x , y ) ,in.var( x + 1 , y + 1 ) );",out.str());
+	EXPECT_EQ("pow((*in.var( x , y )) ,(*in.var( x + 1 , y + 1 )) );\n",out.str());
 }
 
 /*******************  FUNCTION  *********************/
@@ -162,5 +162,5 @@ TEST(TestCConstruct,testEscape)
 	construct.genCCode(out,context);
 	
 	//check
-	EXPECT_EQ("pow(\\$1,\\%1,\\%a1);",out.str());
+	EXPECT_EQ("pow(\\$1,\\%1,\\%a1);\n",out.str());
 }
