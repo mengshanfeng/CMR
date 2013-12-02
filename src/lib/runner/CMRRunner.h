@@ -12,6 +12,7 @@
 /********************  HEADERS  *********************/
 #include <vector>
 #include "CMRMeshOperationNode.h"
+#include <common/CMRObjectFactory.h>
 
 /*********************  TYPES  **********************/
 class CMRVarSystem;
@@ -23,7 +24,7 @@ class CMRCmdOptions;
 typedef std::vector<CMRMeshOperationNode> CMRMeshOperationNodeVector;
 
 /*********************  CLASS  **********************/
-class CMRRunner
+class CMRRunner : public CMRDynamicObject
 {
 	public:
 		CMRRunner(CMRCmdOptions & options);

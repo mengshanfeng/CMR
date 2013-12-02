@@ -10,6 +10,7 @@
 #define CMR_FACTORY_REGISTRY_IMPL_H
 
 /********************  HEADERS  *********************/
+#include <typeinfo>
 #include <cassert>
 #include "CMRDebug.h"
 #include "CMRFactoryRegistry.h"
@@ -68,13 +69,12 @@ T* CMRFactoryRegistry::createObject ( const std::string& name , CMRCmdOptions & 
 	assert(it->second != NULL);
 
 	//create
-	void * tmp = it->second->create(options);
+	CMRDynamicObject * tmp = it->second->create(options);
 	assume(tmp != NULL,"Factory of '%s' failed to allocate object, get NULL.",name.c_str());
 	
 	//cehck type
-	T * res = (T*)tmp;
-// 	T * res = dynamic_cast<T*>(tmp);
-// 	assume(res != NULL,"Factory of %s provide an incompatible type rejected by dynamic_cast().",name.c_str());
+	T * res = dynamic_cast<T*>(tmp);
+	assume(res != NULL,"Factory of %s provide an incompatible type rejected by dynamic_cast(), excpect '%s'.",name.c_str(),typeid(T).name());
 	
 	return res;
 }

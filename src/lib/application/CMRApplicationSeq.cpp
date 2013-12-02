@@ -14,6 +14,7 @@
 #include "runner/CMRRunnerSeq.h"
 #include "runner/CMRRunnerOMPForRect.h"
 #include "runner/CMRRunnerOMPTask.h"
+#include <runner/CMRRunnerOMPLoops.h>
 #include "common/CMRSpaceSplitter.h"
 #include "mpi/CMRMPIDomainBuilder.h"
 #include "outputer/CMRBasicOutputer.h"
@@ -132,4 +133,5 @@ void CMRApplicationSeq::registerSomeObjects ( void )
 	factoryRegistry.registerGenericFactory<CMRRunnerSeq>("CMRRunnerSeq");
 	factoryRegistry.registerGenericFactory<CMRRunnerOMPForRect>("CMRRunnerOMPForRect");
 	factoryRegistry.registerGenericFactory<CMRRunnerOMPTask>("CMRRunnerOMPTask");
+	factoryRegistry.registerGenericFactory<CMRRunnerOMPLoops>("CMRRunnerOMPLoops");
 }

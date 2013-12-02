@@ -21,6 +21,7 @@ class CMRMeshReduction : public CMRMeshOperation
 	public:
 		CMRMeshReduction(U * reduction);
 		virtual void run (CMRVarSystem * sys ,const CMRRect& zone );
+		virtual void runOmpLoops ( CMRVarSystem* sys, const CMRRect& zone );
 		virtual void forceMeshAllocation ( CMRVarSystem* sys, const CMRRect& zone );
 		U * gblReduction;
 };
@@ -72,6 +73,14 @@ void CMRMeshReduction<T,U>::run ( CMRVarSystem * sys , const CMRRect & zone )
 			reduction.cellAction(cell,x,y);
 
 	gblReduction->doReduce(reduction);
+}
+
+/*******************  FUNCTION  *********************/
+template <class T,class U>
+void CMRMeshReduction<T,U>::runOmpLoops ( CMRVarSystem * sys , const CMRRect & zone )
+{
+	warning("RunOmpLoops not implemented in CMRMeshReduction, fallback on sequential run() method.");
+	run(sys,zone);
 }
 
 /*******************  FUNCTION  *********************/

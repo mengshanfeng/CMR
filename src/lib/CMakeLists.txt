@@ -35,6 +35,7 @@ set(cmr_SRCS common/CMRSpaceSplitter.cpp
              runner/CMRRunnerSeq.cpp
              runner/CMRRunnerOMPForRect.cpp
              runner/CMRRunnerOMPTask.cpp
+             runner/CMRRunnerOMPLoops.cpp
              outputer/CMRBasicOutputer.cpp
              application/CMRApplication.cpp
              application/CMRApplicationSeq.cpp

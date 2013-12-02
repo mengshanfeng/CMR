@@ -13,11 +13,18 @@
 class CMRCmdOptions;
 
 /*********************  CLASS  **********************/
+class CMRDynamicObject
+{
+	public:
+		virtual ~CMRDynamicObject(void) {};
+};
+
+/*********************  CLASS  **********************/
 class CMRObjectFactory
 {
 	public:
 		virtual ~CMRObjectFactory(void) {};
-		virtual void * create(CMRCmdOptions & options) = 0;
+		virtual CMRDynamicObject * create(CMRCmdOptions & options) = 0;
 };
 
 /*********************  CLASS  **********************/
@@ -25,7 +32,7 @@ template <class T>
 class CMRObjectFactoryGeneric : public CMRObjectFactory
 {
 	public:
-		virtual void * create(CMRCmdOptions & options) { return new T(options);};
+		virtual CMRDynamicObject * create(CMRCmdOptions & options) { return new T(options);};
 };
 
 #endif //CMR_OBJECT_FACTORY_H

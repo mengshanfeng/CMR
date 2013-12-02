@@ -27,7 +27,7 @@ CMRRunnerOMPTask::CMRRunnerOMPTask ( CMRCmdOptions & options )
  : CMRRunnerSeq(options)
 {
 	nbThreads = omp_get_num_threads();
-	multiplier = options.getConfigInteger("runner_omp_for_rect:multiplier",4);
+	multiplier = options.getConfigInteger("runner_omp_for_rect:multiplier",16);
 	minCells = options.getConfigInteger("runner_omp_for_rect:min_cells",1000);
 }
 
@@ -49,7 +49,7 @@ void CMRRunnerOMPTask::runOperationNode ( CMRMeshOperationNode& opNode )
 		//splitter.printDebug(0);
 		#pragma omp parallel
 		{
-			#pragma omp single
+			#pragma omp for
 			for (int i = 0 ; i < jobs ; i++)
 			{
 				#pragma omp task shared(opNode)
