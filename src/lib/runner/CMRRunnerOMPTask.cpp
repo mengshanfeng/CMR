@@ -26,6 +26,10 @@
 CMRRunnerOMPTask::CMRRunnerOMPTask ( CMRCmdOptions & options )
  : CMRRunnerSeq(options)
 {
+	#ifndef HAVE_OPENMP
+	warning("Caution, you are using 'CMRRunnerOMPForRect' but CMR wasn't compile with OpenMP support, it will run sequentialy !");
+	#endif//HAVE_OPENMP
+
 	nbThreads = omp_get_num_threads();
 	multiplier = options.getConfigInteger("runner_omp_for_rect:multiplier",16);
 	minCells = options.getConfigInteger("runner_omp_for_rect:min_cells",1000);
