@@ -24,12 +24,12 @@ include_directories(../)
 
 ######################################################
 #test list
-set(ALLOC_GTEST_LIST TestMemoryModels TestCellAccessor TestGenericMemoryAccessor TestAbstractType TestAbstractDomain)
+set(ALLOC_GTEST_LIST TestMemoryModels TestCellAccessor TestGenericMemoryAccessor TestAbstractType TestAbstractDomain TestDomainStorage TestVarSystem)
 
 ######################################################
 #Now you can build your tests
 foreach(i ${ALLOC_GTEST_LIST})
 	add_executable(${i} ${i}.cpp)
-	target_link_libraries(${i} ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES} cmr)
+	target_link_libraries(${i} ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES} cmr cmr_skip_mpi_init)
 	cmr_add_gtest(${i})
 endforeach(i)

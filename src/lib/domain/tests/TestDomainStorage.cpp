@@ -7,91 +7,80 @@
 *****************************************************/
 
 /********************  HEADERS  *********************/
-#include <svUnitTest.h>
+#include <gtest/gtest.h>
+
+/********************  MACRO  ***********************/
+#define UNIT_TEST_USER_FRIENDS \
+	FRIEND_TEST(TestDomainStorage,testIsContiguousGhost_false);\
+	FRIEND_TEST(TestDomainStorage,testGetContiguousGhost);\
+	FRIEND_TEST(TestDomainStorage,testGetCell);
+
+/********************  HEADERS  *********************/
 #include <domain/CMRDomainStorage.h>
 #include <communication/CMRCommSchem.h>
-#include <MockCommFactory.h>
-#include <domain/CMRDomainStorage.h>
-#include <domain/CMRGenericMemoryAccessor.h>
-#include <domain/CMRMemoryModels.h>
+#include "MockCommFactory.h"
+#include <CMRDomainStorage.h>
+#include <CMRGenericMemoryAccessor.h>
+#include <CMRMemoryModels.h>
 #include <mpi.h>
 
 /**********************  USING  *********************/
-using namespace svUnitTest;
+using namespace testing;
 
 /*********************  CLASS  **********************/
-class TestDomainStorage : public svutTestCase
+class TestDomainStorage : public Test
 {
 	public:
-		virtual void testMethodsRegistration ( void );
-		virtual void setUp ( void );
-		virtual void tearDown ( void );
+		virtual void SetUp ( void );
+		virtual void TearDown ( void );
 	protected:
-		void testIsContiguousGhost_true(void);
-		void testIsContiguousGhost_false(void);
-		void testGetContiguousGhost(void);
-		void testGetCell(void);
-		void testCopyGhostFromBuffer(void);
-		void testCopyGhostToBuffer(void);
-
 		CMRDomainStorage * domain;
 };
 
 /*******************  FUNCTION  *********************/
-void TestDomainStorage::setUp ( void )
+void TestDomainStorage::SetUp ( void )
 {
 	domain = new CMRDomainStorage(8,CMRRect(0,0,800,600),2);
 	domain->setMemoryAccessor(new CMRGenericMemoryAccessor<unsigned long,CMRMemoryModelRowMajor>());
 }
 
 /*******************  FUNCTION  *********************/
-void TestDomainStorage::tearDown ( void )
+void TestDomainStorage::TearDown ( void )
 {
 	delete domain;
 }
 
 /*******************  FUNCTION  *********************/
-void TestDomainStorage::testMethodsRegistration ( void )
-{
-	SVUT_REG_TEST_METHOD(testIsContiguousGhost_true);
-	SVUT_REG_TEST_METHOD(testIsContiguousGhost_false);
-	SVUT_REG_TEST_METHOD(testGetContiguousGhost);
-	SVUT_REG_TEST_METHOD(testGetCell);
-	SVUT_REG_TEST_METHOD(testCopyGhostFromBuffer);
-	SVUT_REG_TEST_METHOD(testCopyGhostToBuffer);
-}
-
-/*******************  FUNCTION  *********************/
-void TestDomainStorage::testIsContiguousGhost_true ( void )
+TEST_F(TestDomainStorage,testIsContiguousGhost_true)
 {
 	CMRRect rect(0,0,800,1);
-	SVUT_ASSERT_TRUE(domain->isContiguousGhost(rect));
+	EXPECT_TRUE(domain->isContiguousGhost(rect));
 }
 
 /*******************  FUNCTION  *********************/
-void TestDomainStorage::testIsContiguousGhost_false ( void )
+TEST_F(TestDomainStorage,testIsContiguousGhost_false)
 {
 	CMRRect rect1(0,0,800,2);
 	CMRRect rect2(0,0,1,600);
-	SVUT_ASSERT_FALSE(domain->isContiguousGhost(rect1));
-	SVUT_ASSERT_FALSE(domain->isContiguousGhost(rect2));
+	EXPECT_FALSE(domain->isContiguousGhost(rect1));
+	EXPECT_FALSE(domain->isContiguousGhost(rect2));
 }
 
 /*******************  FUNCTION  *********************/
-void TestDomainStorage::testGetCell ( void )
+TEST_F(TestDomainStorage,testGetCell)
 {
-	SVUT_ASSERT_SAME(domain->data,domain->getCell(-2,-2));
+	EXPECT_EQ(domain->data,domain->getCell(-2,-2));
 }
 
 /*******************  FUNCTION  *********************/
-void TestDomainStorage::testGetContiguousGhost ( void )
+TEST_F(TestDomainStorage,testGetContiguousGhost)
 {
 	CMRRect rect(-2,-2,802,1);
-	SVUT_ASSERT_SAME(domain->data,domain->getContiguousGhost(rect));
+	EXPECT_EQ(domain->data,domain->getContiguousGhost(rect));
 }
 
 /*******************  FUNCTION  *********************/
-void TestDomainStorage::testCopyGhostFromBuffer ( void )
+TEST_F(TestDomainStorage,testCopyGhostFromBuffer)
 {
 	//decl buffer
 	unsigned char buffer[2*8*10];
@@ -116,16 +105,16 @@ void TestDomainStorage::testCopyGhostFromBuffer ( void )
 		{
 			((unsigned char*)domain->getCell(i,0))[k] = i;
 			((unsigned char*)domain->getCell(i,1))[k] = 2*i;
-			SVUT_SET_CONTEXT("i",i);
-			SVUT_SET_CONTEXT("k",k);
-			SVUT_ASSERT_EQUAL(i,(int)(((unsigned char*)domain->getCell(i,0))[k]));
-			SVUT_ASSERT_EQUAL(2*i,(int)(((unsigned char*)domain->getCell(i,1))[k]));
+			RecordProperty("i",i);
+			RecordProperty("k",k);
+			EXPECT_EQ(i,(int)(((unsigned char*)domain->getCell(i,0))[k]));
+			EXPECT_EQ(2*i,(int)(((unsigned char*)domain->getCell(i,1))[k]));
 		}
 	}
 }
 
 /*******************  FUNCTION  *********************/
-void TestDomainStorage::testCopyGhostToBuffer ( void )
+TEST_F(TestDomainStorage,testCopyGhostToBuffer)
 {
 	//setup default values
 	for (int i = 0 ; i < 10 ; i++)
@@ -147,13 +136,10 @@ void TestDomainStorage::testCopyGhostToBuffer ( void )
 	{
 		for (int k = 0 ; k < 8 ; k++)
 		{
-			SVUT_SET_CONTEXT("i",i);
-			SVUT_SET_CONTEXT("k",k);
-			SVUT_ASSERT_EQUAL(i,(int)(buffer[i*8 + k]));
-			SVUT_ASSERT_EQUAL(2*i,(int)(buffer[10 * 8 + i * 8 + k]));
+			RecordProperty("i",i);
+			RecordProperty("k",k);
+			EXPECT_EQ(i,(int)(buffer[i*8 + k]));
+			EXPECT_EQ(2*i,(int)(buffer[10 * 8 + i * 8 + k]));
 		}
 	}
 }
-
-/********************  MACRO  ***********************/
-SVUT_REGISTER_STANDELONE(TestDomainStorage)

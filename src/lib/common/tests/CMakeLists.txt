@@ -33,3 +33,6 @@ foreach(i ${ALLOC_GTEST_LIST})
 	target_link_libraries(${i} ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES} cmr)
 	cmr_add_gtest(${i})
 endforeach(i)
+
+######################################################
+add_library(cmr_skip_mpi_init MockMpiInit.cpp) 

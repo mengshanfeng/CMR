@@ -4,7 +4,6 @@
 #include <cassert>
 #include <common/CMRDebug.h>
 #include <mpi/CMRMPIComm.h>
-#include <MockAbstractDomain.h>
 #include <mpi/CMRMPICommFactory.h>
 #include <communication/CMRCommSchem.h>
 #include <mpi/CMRMPIReduction.h>
