@@ -536,6 +536,24 @@ LatexFormulasVector& LatexEntity::getParameters ( void )
 }
 
 /*******************  FUNCTION  *********************/
+const LatexFormulasVector& LatexEntity::getExponents ( void ) const
+{
+	return exponents;
+}
+
+/*******************  FUNCTION  *********************/
+const LatexFormulasVector& LatexEntity::getIndices ( void ) const
+{
+	return indices;
+}
+
+/*******************  FUNCTION  *********************/
+const LatexFormulasVector& LatexEntity::getParameters ( void ) const
+{
+	return parameters;
+}
+
+/*******************  FUNCTION  *********************/
 void LatexEntity::setExtraInfo(const string& key, void* value, bool allowOverride)
 {
 	//errors
@@ -560,7 +578,7 @@ void LatexEntity::deleteInfo(const string& key, bool throwOnError)
 }
 
 /*******************  FUNCTION  *********************/
-void* LatexEntity::getExtraInfo(const string& key, bool throwOnError)
+void* LatexEntity::getExtraInfo( const string& key, bool throwOnError )
 {
 	bool status = hasInfo(key);
 
@@ -571,6 +589,20 @@ void* LatexEntity::getExtraInfo(const string& key, bool throwOnError)
 		return NULL;
 	
 	return extraInfos[key];
+}
+
+/*******************  FUNCTION  *********************/
+const void* LatexEntity::getExtraInfo( const string& key, bool throwOnError ) const
+{
+	bool status = hasInfo(key);
+
+	//errors
+	if (throwOnError && status == false)
+		throw LatexException("Invalid read of information key on LatexEntity.");
+	else if (status == false)
+		return NULL;
+	
+	return extraInfos.at(key);
 }
 
 /*******************  FUNCTION  *********************/

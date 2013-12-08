@@ -48,6 +48,9 @@ class LatexEntity
 		LatexFormulasVector & getIndices(void);
 		LatexFormulasVector & getExponents(void);
 		LatexFormulasVector & getParameters(void);
+		const LatexFormulasVector & getIndices(void) const ;
+		const LatexFormulasVector & getExponents(void) const ;
+		const LatexFormulasVector & getParameters(void) const ;
 		void parse( const std::string& value ) throw(LatexException);
 		void parse( LatexParsorContext & context);
 		void clear(void);
@@ -57,6 +60,7 @@ class LatexEntity
 		void setExtraInfo(const std::string & key,void * value,bool allowOverride = false);
 		void deleteInfo(const std::string & key, bool throwOnError = true);
 		void * getExtraInfo(const std::string & key,bool throwOnError = true);
+		const void * getExtraInfo(const std::string & key,bool throwOnError = true) const;
 		bool hasInfo(const std::string & key) const;
 		LatexEntity & operator=(const LatexEntity & value);
 	protected:

@@ -7,7 +7,7 @@
 ######################################################
 
 ######################################################
-add_library(cmr_tex_parsor LatexFormula.cpp LatexException.cpp LatexParsorContext.cpp EntityMatching.cpp EqDepMatrix.cpp TexParsor.cpp LatexEntityOld.cpp ParsorBasics.cpp LatexEntity.cpp)
+add_library(cmr_tex_parsor LatexFormula.cpp LatexException.cpp LatexParsorContext.cpp EntityMatching.cpp EqDepMatrix.cpp TexParsor.cpp LatexEntityOld.cpp ParsorBasics.cpp LatexEntity.cpp FormulaMatcher.cpp)
 
 ######################################################
 if (NOT DISABLE_TESTS)

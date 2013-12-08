@@ -23,7 +23,7 @@ include_directories(${UNITTEST_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 ######################################################
 #test list
-set(ALLOC_GTEST_LIST TestLatexParsorContext TestLatexEntity TestLatexFormula)
+set(ALLOC_GTEST_LIST TestLatexParsorContext TestLatexEntity TestLatexFormula TestFormulaMatcher)
 
 ######################################################
 #Now you can build your tests
