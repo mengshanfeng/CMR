@@ -319,3 +319,52 @@ TEST(TestFormulaMatcher,testExtractValue_1)
 	EXPECT_EQ(1,res1.cntExactMatch);
 	EXPECT_EQ(2,res1.cntCompared);
 }
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testMiddleMatch_1)
+{
+	FormulaMatcher matcher("a^b");
+	matcher.markForCapture("b");
+	
+	LatexFormulas test1("a^3");
+	
+	LatexFormulas::const_iterator it = test1.begin();
+	EXPECT_TRUE(matcher.match(test1,it));
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testMiddleMatch_2)
+{
+	FormulaMatcher matcher("a^b");
+	matcher.markForCapture("b");
+	
+	LatexFormulas test2("cc+a^3");
+	LatexFormulas test3("dd+a^(3+2)+rerer");
+	
+	LatexFormulas::const_iterator it;
+	it = test2.begin();
+	EXPECT_FALSE(matcher.match(test2,it));
+	EXPECT_EQ(0,it - test2.begin());
+	it = test2.begin() + 3;
+	EXPECT_TRUE(matcher.match(test2,it));
+	EXPECT_EQ(4,it - test2.begin());
+	EXPECT_EQ(test2.end(),it);
+
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testMiddleMatch_3)
+{
+	FormulaMatcher matcher("a^b");
+	matcher.markForCapture("b");
+
+	LatexFormulas test3("dd+a^(3+2)+rerer");
+	
+	LatexFormulas::const_iterator it;
+	it = test3.begin();
+	EXPECT_FALSE(matcher.match(test3,it,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_ROOT_PARTIAL));
+	EXPECT_EQ(0,it - test3.begin());
+	it = test3.begin() + 3;
+	EXPECT_TRUE(matcher.match(test3,it,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_ROOT_PARTIAL));
+	EXPECT_EQ(4,it - test3.begin());
+}

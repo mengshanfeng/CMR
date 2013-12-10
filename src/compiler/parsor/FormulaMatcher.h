@@ -83,12 +83,14 @@ class FormulaMatcher
 		void dumpAsTree ( std::ostream& buffer, int indent = 0 ) const;
 		void dumpAsXml(std::ostream & out, int depth = 0) const;
 		bool match(const LatexFormulas & f,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
+		bool match(const LatexFormulas & f,LatexFormulas::const_iterator & startIt,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
 		bool match(const LatexFormulas & f,FormulaMatcherResult & result,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
+		bool match(const LatexFormulas & f,LatexFormulas::const_iterator & startIt,FormulaMatcherResult & result,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
 	protected:
 		void setupCaptureFlag( LatexEntity& entity, const LatexEntity& what, const FormulaMatcherFilter* filter );
 		void setupCaptureFlag( LatexFormulas& formula, const LatexEntity& what, const FormulaMatcherFilter* filter );
 		void setupCaptureFlag( LatexFormulasVector& formula, const LatexEntity& what, const FormulaMatcherFilter* filter );
-		bool internalMatch( const LatexFormulas& ref, const LatexFormulas& f, FormulaMatcherResult& result, unsigned int mode ) const;
+		bool internalMatch( const LatexFormulas& ref, const LatexFormulas& f, LatexFormulas::const_iterator & startIt, FormulaMatcherResult& result, unsigned int mode ) const;
 		bool internalMatch( const LatexEntity& ref, const LatexEntity& f, FormulaMatcherResult& result, unsigned int mode ) const;
 		bool internalMatch(const LatexFormulasVector & ref,const LatexFormulasVector & f,FormulaMatcherResult & result,unsigned int mode) const;
 	protected:

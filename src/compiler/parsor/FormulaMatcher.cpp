@@ -103,21 +103,36 @@ bool FormulaMatcher::match ( const LatexFormulas& f, unsigned int mode ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool FormulaMatcher::match ( const LatexFormulas& f, FormulaMatcherResult& result, unsigned int mode ) const
+bool FormulaMatcher::match ( const LatexFormulas& f, LatexFormulas::const_iterator& startIt, unsigned int mode ) const
 {
-	return internalMatch(formula,f,result,mode);
+	FormulaMatcherResult result;
+	return match(f,startIt,result,mode);
 }
 
 /*******************  FUNCTION  *********************/
-bool FormulaMatcher::internalMatch ( const LatexFormulas& ref, const LatexFormulas& f, FormulaMatcherResult& result, unsigned int mode ) const
+bool FormulaMatcher::match ( const LatexFormulas& f, FormulaMatcherResult& result, unsigned int mode ) const
+{
+	LatexFormulas::const_iterator it = f.begin();
+	return match(f,it,result,mode);
+}
+
+/*******************  FUNCTION  *********************/
+bool FormulaMatcher::match ( const LatexFormulas& f, LatexFormulas::const_iterator& startIt, FormulaMatcherResult& result, unsigned int mode ) const
+{
+	return internalMatch(formula,f,startIt,result,mode);
+}
+
+/*******************  FUNCTION  *********************/
+bool FormulaMatcher::internalMatch ( const LatexFormulas& ref, const LatexFormulas& f, LatexFormulas::const_iterator & startIt, FormulaMatcherResult& result, unsigned int mode ) const
 {
 	//check for root partial
 	bool rootPartial = mode & FORMULA_MATCHER_ROOT_PARTIAL;
 	mode &= ~FORMULA_MATCHER_ROOT_PARTIAL;
+	bool res;
 
 	//loop and copare all elemnts
 	LatexFormulas::const_iterator itRef = ref.begin();
-	LatexFormulas::const_iterator itF = f.begin();
+	LatexFormulas::const_iterator itF = startIt;
 	while (itRef != ref.end() && itF != f.end())
 	{
 		//compare current entity, otherwise fail
@@ -130,11 +145,17 @@ bool FormulaMatcher::internalMatch ( const LatexFormulas& ref, const LatexFormul
 
 	//check final status
 	if (itRef == ref.end() && itF == f.end())
-		return true;
+		res = true;
 	else if (itRef == ref.end())
-		return ((result.cntExactMatch + result.cntCaptureMatch) > 0 && rootPartial);
+		res = ((result.cntExactMatch + result.cntCaptureMatch) > 0 && rootPartial);
 	else 
-		return false;
+		res = false;
+	
+	//update startit
+	if (res)
+		startIt = itF;
+
+	return res;
 }
 
 /*******************  FUNCTION  *********************/
@@ -206,7 +227,8 @@ bool FormulaMatcher::internalMatch ( const LatexFormulasVector& ref, const Latex
 	while (itRef != ref.end() && itF != f.end())
 	{
 		//compare current entity, otherwise fail
-		if ( ! internalMatch(**itRef,**itF,result,mode))
+		LatexFormulas::const_iterator it = (*itF)->begin();
+		if ( ! internalMatch(**itRef,**itF,it,result,mode))
 			return false;
 		//move
 		++itRef;
