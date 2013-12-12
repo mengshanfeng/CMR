@@ -9,7 +9,7 @@
 /********************  HEADERS  *********************/
 #include <gtest/gtest.h>
 #include <ProjectEntity.h>
-#include <../parsor/LatexFormula.h>
+#include <parsor/LatexFormula.h>
 #include <sstream>
 #include "MockProjectEntity.h"
 

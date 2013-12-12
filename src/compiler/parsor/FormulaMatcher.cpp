@@ -9,9 +9,13 @@
 
 /********************  HEADERS  *********************/
 #include <cassert>
+#include <sstream>
 #include "common/Debug.h"
 #include "FormulaMatcher.h"
 #include "ParsorBasics.h"
+
+/**********************  USING  *********************/
+using namespace std;
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -26,6 +30,11 @@ FormulaMatcherResult::FormulaMatcherResult ( void )
 	this->cntCaptureMatch = 0;
 	this->cntExactMatch = 0;
 	this->cntCompared = 0;
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcher::~FormulaMatcher ( void )
+{
 }
 
 /*******************  FUNCTION  *********************/
@@ -52,35 +61,44 @@ void FormulaMatcher::markForCapture ( const std::string& value,const FormulaMatc
 	cmrAssume(entity.isOnlyOneName(),"Caution, you provide a complex entity (with exponent, indices...) for capture. Not supported up to now. ('%s')",value.c_str());
 	
 	//put capture flags on formula childs
-	setupCaptureFlag(formula,entity,filter);
+	if ( ! setupCaptureFlag(formula,entity,filter) )
+		throw LatexException(string("Invalid name to change capture type (") + value + string(") in : ") + this->toString());
 }
 
 /*******************  FUNCTION  *********************/
-void FormulaMatcher::setupCaptureFlag ( LatexEntity& entity, const LatexEntity& what,const FormulaMatcherFilter * filter )
+bool FormulaMatcher::setupCaptureFlag ( LatexEntity& entity, const LatexEntity& what,const FormulaMatcherFilter * filter )
 {
+	bool res = false;
 	//check if entity is equal
 	if (entity.getName() == what.getName())
 	{
 		entity.setExtraInfo(CAPTURE_TAG,(void*)filter);
+		res = true;
 	}
 	//loop on childs
-	setupCaptureFlag(entity.getIndices(),what,filter);
-	setupCaptureFlag(entity.getExponents(),what,filter);
-	setupCaptureFlag(entity.getParameters(),what,filter);
+	res = setupCaptureFlag(entity.getIndices(),what,filter) || res;
+	res = setupCaptureFlag(entity.getExponents(),what,filter) || res;
+	res = setupCaptureFlag(entity.getParameters(),what,filter) || res;
+	return res;
 }
 
 /*******************  FUNCTION  *********************/
-void FormulaMatcher::setupCaptureFlag ( LatexFormulasVector& formula, const LatexEntity& what,const FormulaMatcherFilter * filter )
+bool FormulaMatcher::setupCaptureFlag ( LatexFormulasVector& formula, const LatexEntity& what,const FormulaMatcherFilter * filter )
 {
+	bool res = false;
 	for (LatexFormulasVector::iterator it = formula.begin() ; it != formula.end() ; ++it)
-		setupCaptureFlag(**it,what,filter);
+		res = setupCaptureFlag(**it,what,filter) || res;
+	return res;
 }
 
 /*******************  FUNCTION  *********************/
-void FormulaMatcher::setupCaptureFlag ( LatexFormulas& formula, const LatexEntity& what,const FormulaMatcherFilter * filter )
+bool FormulaMatcher::setupCaptureFlag ( LatexFormulas& formula, const LatexEntity& what,const FormulaMatcherFilter * filter )
 {
+	bool res = false;
 	for (LatexFormulas::iterator it = formula.begin() ; it != formula.end() ; ++it)
-		setupCaptureFlag(**it,what,filter);
+		res = setupCaptureFlag(**it,what,filter) || res;
+
+	return res;
 }
 
 /*******************  FUNCTION  *********************/
@@ -270,5 +288,113 @@ EntityCategory FormulaMatcherFilterDefault::getCategory ( const LatexEntity& ent
 		return ENTITY_CAT_MEMBER;
 	}
 }
+
+/*******************  FUNCTION  *********************/
+std::ostream& operator<< ( std::ostream & out,const FormulaMatcher& value )
+{
+	out << value.formula;
+	return out;
+}
+
+/*******************  FUNCTION  *********************/
+void FormulaMatcher::printDebug ( std::ostream& out ) const
+{
+	this->printDebug(out,this->formula);
+}
+
+/*******************  FUNCTION  *********************/
+void FormulaMatcher::printDebug ( std::ostream& out, const LatexFormulas& f ) const
+{
+	for(LatexFormulas::const_iterator it = f.begin() ; it != f.end() ; ++it)
+		printDebug(out,**it);
+}
+
+/*******************  FUNCTION  *********************/
+void FormulaMatcher::printDebug ( std::ostream& out, const LatexEntity& entity ) const
+{
+	if (entity.hasInfo(CAPTURE_TAG))
+	{
+		out << "[";
+		out << entity.getName();
+		out << "]";
+		this->printDebug(out,entity.getIndices(),"_");
+		this->printDebug(out,entity.getExponents(),"^");
+		this->printDebug(out,entity.getParameters(),"");
+	} else if (entity.getName() == "()") {
+		out << "(";
+		for (LatexFormulas::const_iterator it = entity.getParameter(0)->begin() ; it != entity.getParameter(0)->end() ; ++it)
+			printDebug(out,**it);
+		out << ")";
+	} else {
+		out << entity.getName();
+		this->printDebug(out,entity.getIndices(),"_");
+		this->printDebug(out,entity.getExponents(),"^");
+		this->printDebug(out,entity.getParameters(),"");
+	}
+}
+
+/*******************  FUNCTION  *********************/
+void FormulaMatcher::printDebug ( std::ostream& out, const CMRCompiler::LatexFormulasVector& childs, const std::string& sep ) const
+{
+	//trivial
+	if (childs.empty())
+		return;
+	
+	//setparator
+	out << sep;
+	
+	//only one
+	if ((sep == "_" || sep == "^") && childs.size() == 1)
+	{
+		printDebug(out,*childs[0]);
+	} else if (sep == "_" || sep == "^") {
+		out << "{";
+		for (LatexFormulasVector::const_iterator it = childs.begin() ; it !=childs.end() ; ++it)
+		{
+			if (it != childs.begin())
+				out << ",";
+			printDebug(out,**it);
+		}
+		out << "}";
+	} else {
+		for (LatexFormulasVector::const_iterator it = childs.begin() ; it !=childs.end() ; ++it)
+		{
+			out << "{";
+			printDebug(out,**it);
+			out << "}";
+		}
+	}
+}
+
+/*******************  FUNCTION  *********************/
+std::string FormulaMatcher::toString ( void ) const
+{
+	stringstream out;
+	out << *this;
+	return out.str();
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcher::operator std::string() const
+{
+	return toString();
+}
+
+/*******************  FUNCTION  *********************/
+void FormulaMatcher::capture ( const LatexFormulas& f, FormulaMatcherResult& result, unsigned int mode ) const
+{
+	bool res = match(f,result,mode);
+	if (res == false)
+		throw LatexException(string("Try to capture values in non mathing entities : ")+this->toString()+ string(" != ")+f.getString());
+}
+
+/*******************  FUNCTION  *********************/
+void FormulaMatcher::capture ( const LatexFormulas& f, LatexFormulas::const_iterator& startIt, FormulaMatcherResult& result, unsigned int mode ) const
+{
+	bool res = match(f,startIt,result,mode);
+	if (res == false)
+		throw LatexException(string("Try to capture values in non mathing entities : ")+this->toString()+ string(" != ")+f.getString());
+}
+
 
 };

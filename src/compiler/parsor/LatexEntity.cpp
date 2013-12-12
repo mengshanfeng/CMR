@@ -648,4 +648,12 @@ void LatexEntity::copy(LatexFormulasVector& vectorOut, const LatexFormulasVector
 		vectorOut.push_back(new LatexFormulas(*vectorOrig[i]));
 }
 
+/*******************  FUNCTION  *********************/
+LatexEntity::operator LatexFormulas() const
+{
+	LatexFormulas f;
+	f.push_back(new LatexEntity(this->getString()));
+	return f;
+}
+
 }

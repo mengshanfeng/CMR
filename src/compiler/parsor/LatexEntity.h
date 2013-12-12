@@ -63,6 +63,7 @@ class LatexEntity
 		const void * getExtraInfo(const std::string & key,bool throwOnError = true) const;
 		bool hasInfo(const std::string & key) const;
 		LatexEntity & operator=(const LatexEntity & value);
+		operator LatexFormulas() const;
 	protected:
 		void extractMathRmParameter(LatexParsorContext & context);
 		void copy(const LatexEntity & value);

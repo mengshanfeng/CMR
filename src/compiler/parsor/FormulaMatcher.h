@@ -19,6 +19,9 @@
 namespace CMRCompiler
 {
 
+/********************  MACRO  ***********************/
+#define CMR_FORMULA_MATCHER_FILTER_DEFAULT (new FormulaMatcherFilterDefault(ENTITY_CAT_STD))
+
 /*********************  TYPES  **********************/
 typedef std::map<std::string,LatexFormulas*> FormulaMatcherCaptureMap;
 
@@ -79,20 +82,34 @@ class FormulaMatcher
 	ASSIST_UNIT_TEST( ForTestFormulaMatcher );
 	public:
 		FormulaMatcher(const std::string & model);
-		void markForCapture( const std::string& value, const FormulaMatcherFilter* filter = new FormulaMatcherFilterDefault(ENTITY_CAT_STD) );
+		virtual ~FormulaMatcher(void);
+		void markForCapture( const std::string& value, const FormulaMatcherFilter* filter = CMR_FORMULA_MATCHER_FILTER_DEFAULT );
 		void dumpAsTree ( std::ostream& buffer, int indent = 0 ) const;
 		void dumpAsXml(std::ostream & out, int depth = 0) const;
 		bool match(const LatexFormulas & f,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
 		bool match(const LatexFormulas & f,LatexFormulas::const_iterator & startIt,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
 		bool match(const LatexFormulas & f,FormulaMatcherResult & result,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
 		bool match(const LatexFormulas & f,LatexFormulas::const_iterator & startIt,FormulaMatcherResult & result,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
+		void capture(const LatexFormulas & f,FormulaMatcherResult & result,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
+		void capture(const LatexFormulas & f,LatexFormulas::const_iterator & startIt,FormulaMatcherResult & result,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
+		void printDebug(std::ostream & out) const;
+		std::string toString(void) const;
+		
+		//some internal ops
+		operator std::string() const;
+		
+		//friend ops
+		friend std::ostream & operator << (std::ostream & out,const FormulaMatcher & value);
 	protected:
-		void setupCaptureFlag( LatexEntity& entity, const LatexEntity& what, const FormulaMatcherFilter* filter );
-		void setupCaptureFlag( LatexFormulas& formula, const LatexEntity& what, const FormulaMatcherFilter* filter );
-		void setupCaptureFlag( LatexFormulasVector& formula, const LatexEntity& what, const FormulaMatcherFilter* filter );
+		bool setupCaptureFlag( CMRCompiler::LatexEntity& entity, const CMRCompiler::LatexEntity& what, const CMRCompiler::FormulaMatcherFilter* filter );
+		bool setupCaptureFlag( CMRCompiler::LatexFormulas& formula, const CMRCompiler::LatexEntity& what, const CMRCompiler::FormulaMatcherFilter* filter );
+		bool setupCaptureFlag( CMRCompiler::LatexFormulasVector& formula, const CMRCompiler::LatexEntity& what, const CMRCompiler::FormulaMatcherFilter* filter );
 		bool internalMatch( const LatexFormulas& ref, const LatexFormulas& f, LatexFormulas::const_iterator & startIt, FormulaMatcherResult& result, unsigned int mode ) const;
 		bool internalMatch( const LatexEntity& ref, const LatexEntity& f, FormulaMatcherResult& result, unsigned int mode ) const;
 		bool internalMatch(const LatexFormulasVector & ref,const LatexFormulasVector & f,FormulaMatcherResult & result,unsigned int mode) const;
+		void printDebug(std::ostream & out,const LatexFormulas & f) const;
+		void printDebug(std::ostream & out,const LatexEntity & entity) const;
+		void printDebug(std::ostream & out,const LatexFormulasVector & childs,const std::string & sep) const;
 	protected:
 		LatexFormulas formula;
 };

@@ -34,7 +34,8 @@ set(ALLOC_GTEST_LIST TestProjectDefinition
                      TestProjectIterator
                      TestProjectMeshVar
                      TestProjectCConstruct
-                     TestProjectLocalVariable)
+                     TestProjectLocalVariable
+                     TestProjectEntityNew)
 
 ######################################################
 #Now you can build your tests

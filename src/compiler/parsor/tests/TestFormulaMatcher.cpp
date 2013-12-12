@@ -368,3 +368,32 @@ TEST(TestFormulaMatcher,testMiddleMatch_3)
 	EXPECT_TRUE(matcher.match(test3,it,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_ROOT_PARTIAL));
 	EXPECT_EQ(4,it - test3.begin());
 }
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testOperatorOstream)
+{
+	FormulaMatcher matcher("d d + a^( 3 + 2 ) + r ");
+	stringstream out;
+	out << matcher;
+	EXPECT_EQ("dd+a^(3+2)+r",out.str());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testPrintDebug1)
+{
+	FormulaMatcher matcher("d d + a^( 3 + 2 ) + r + \\frac{1+3}{2+a^e}");
+	stringstream out;
+	matcher.printDebug(out);
+	EXPECT_EQ("dd+a^(3+2)+r+\\frac{1+3}{2+a^e}",out.str());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testPrintDebug2)
+{
+	FormulaMatcher matcher("d d + a^( 3 + 2 ) + r + \\frac{1+3}{2+b^e}");
+	matcher.markForCapture("a");
+	matcher.markForCapture("e");
+	stringstream out;
+	matcher.printDebug(out);
+	EXPECT_EQ("dd+[a]^(3+2)+r+\\frac{1+3}{2+b^[e]}",out.str());
+}
