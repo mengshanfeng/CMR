@@ -196,6 +196,8 @@ int cmrRequireParameters(const string & name,LatexParsorContext & context)
 		return 0;
 	} else if (name == "\\partial") {
 		return 0;
+	} else if (name == "\\cmropexp") {
+		return 0;
 	} else {
 		context.fatal("Invalid latex command.");
 		return -1;

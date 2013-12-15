@@ -656,4 +656,11 @@ LatexEntity::operator LatexFormulas() const
 	return f;
 }
 
+/*******************  FUNCTION  *********************/
+void LatexEntity::addExponent ( const string& value )
+{
+	LatexFormulas * f = new LatexFormulas(value);
+	this->exponents.push_back(f);
+}
+
 }

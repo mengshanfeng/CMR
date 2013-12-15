@@ -16,9 +16,9 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 ProjectEntityNew::ProjectEntityNew ( const std::string& latexName, const std::string& longName )
-	:FormulaMatcher(latexName),longName(longName)
+	:FormulaMatcher(latexName,false),longName(longName)
 {
-
+	this->setOptionalExponent(false);
 }
 
 /*******************  FUNCTION  *********************/

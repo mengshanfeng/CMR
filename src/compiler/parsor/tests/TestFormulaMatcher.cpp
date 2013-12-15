@@ -397,3 +397,100 @@ TEST(TestFormulaMatcher,testPrintDebug2)
 	matcher.printDebug(out);
 	EXPECT_EQ("dd+[a]^(3+2)+r+\\frac{1+3}{2+b^[e]}",out.str());
 }
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testSetOptionalExponent1)
+{
+	FormulaMatcher matcher("a");
+	matcher.setOptionalExponent();
+	EXPECT_EQ("a",matcher.toString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testSetOptionalExponent2)
+{
+	FormulaMatcher matcher("a^{1,2,3}");
+	matcher.setOptionalExponent();
+	EXPECT_EQ("a^{1,2,3}",matcher.toString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testSetOptionalExponent3)
+{
+	FormulaMatcher matcher("(ab)");
+	matcher.setOptionalExponent();
+	EXPECT_EQ("(ab)",matcher.toString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testSetOptionalExponent4)
+{
+	FormulaMatcher matcher("ab");
+	EXPECT_THROW(matcher.setOptionalExponent(),LatexException);
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureOptionalExponent1)
+{
+	FormulaMatcher matcher("a");
+	matcher.setOptionalExponent();
+	
+	//check matching
+	LatexFormulas test("a");
+	FormulaMatcherResult res;
+	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+	EXPECT_FALSE(res.hasExtract("e"));
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureOptionalExponent2)
+{
+	FormulaMatcher matcher("a");
+	matcher.setOptionalExponent();
+	
+	//check matching
+	LatexFormulas test("a^3");
+	FormulaMatcherResult res;
+	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+	ASSERT_TRUE(res.hasExponent());
+	EXPECT_EQ("3",res.exponent->getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureOptionalCapture1)
+{
+	FormulaMatcher matcher("a^e");
+	matcher.markForCapture("e",CMR_FORMULA_MATCHER_FILTER_DEFAULT,true);
+	
+	//check matching
+	LatexFormulas test("a^3");
+	FormulaMatcherResult res;
+	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+	ASSERT_TRUE(res.hasExtract("e"));
+	EXPECT_EQ("3",res.captures["e"]->getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureOptionalCapture2)
+{
+	FormulaMatcher matcher("a^e");
+	matcher.markForCapture("e",CMR_FORMULA_MATCHER_FILTER_DEFAULT,true);
+	
+	//check matching
+	LatexFormulas test("a");
+	FormulaMatcherResult res;
+	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+	ASSERT_FALSE(res.hasExtract("e"));
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureOptionalExponent3)
+{
+	FormulaMatcher matcher("a");
+	matcher.setOptionalExponent();
+	
+	//check matching
+	LatexFormulas test("a^{3,2}");
+	FormulaMatcherResult res;
+	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+}

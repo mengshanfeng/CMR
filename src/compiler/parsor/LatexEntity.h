@@ -51,6 +51,7 @@ class LatexEntity
 		const LatexFormulasVector & getIndices(void) const ;
 		const LatexFormulasVector & getExponents(void) const ;
 		const LatexFormulasVector & getParameters(void) const ;
+		void addExponent( const std::string& value );
 		void parse( const std::string& value ) throw(LatexException);
 		void parse( LatexParsorContext & context);
 		void clear(void);

@@ -18,15 +18,6 @@ using namespace testing;
 using namespace std;
 using namespace CMRCompiler;
 
-/*********************  CONSTS  *********************/
-static const char TEST_CST_1[] = "Entity :\n\
-    - latexName  : A_{i,j}^{5,k}\n\
-    - shortName  : A\n\
-    - longName   : test\n\
-    - exponent   : 5, k\n\
-    - indices    : i, [j]\n\
-    - parameters : \n";
-
 /*******************  FUNCTION  *********************/
 TEST(TestProjectEntityNew,testConstructor)
 {
@@ -178,7 +169,8 @@ TEST(TestProjectEntityNew,testCapture_4)
 	entity.capture(le,capture);
 	
 	EXPECT_EQ(2,capture.cntCaptureMatch);
-	EXPECT_EQ("2",capture.captures["cmrExponent"]->getString());
+	ASSERT_TRUE(capture.hasExponent());
+	EXPECT_EQ("2",capture.exponent->getString());
 }
 
 /*******************  FUNCTION  *********************/
@@ -193,7 +185,8 @@ TEST(TestProjectEntityNew,testCapture_wildcard_1)
 	entity.capture(le,capture);
 	
 	EXPECT_EQ(3,capture.cntCaptureMatch);
-	EXPECT_EQ("2",capture.captures["cmrExponent"]->getString());
+	ASSERT_TRUE(capture.hasExponent());
+	EXPECT_EQ("2",capture.exponent->getString());
 	EXPECT_EQ("A",capture.captures["x"]->getString());
 }
 
@@ -268,5 +261,5 @@ TEST(TestProjectEntityNew,testPrintDebug)
 	stringstream out;
 	entity.printDebug(out);
 	
-	EXPECT_EQ(TEST_CST_1,out.str());
+	EXPECT_EQ("A_{i,[j]}^{5,k}",out.str());
 }
