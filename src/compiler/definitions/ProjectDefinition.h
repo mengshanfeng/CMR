@@ -30,7 +30,7 @@ class ProjectDefinition : public ProjectEntity
 		ProjectDefinition ( const std::string& latexName, const std::string& longName,ProjectContext * parentContext = NULL);
 		virtual void printDebug(std::ostream & out) const;
 		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false ) const;
 		void runTransformation(CMRTransformation & transf);
 		CMRProjectCodeEquation & addEquation(const std::string& latexName, const std::string& compute,const std::string & op = "=");
 		CMRProjectCodeEquation & addEquation(const std::string& eq);

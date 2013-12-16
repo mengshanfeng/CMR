@@ -136,7 +136,7 @@ T * ProjectCodeTree<T>::insert ( T* entry, ProjectCodeTreeInsert location )
 	
 	//errors if already has parent
 	if (entry->parent != NULL)
-		throw CMRCompiler::LatexException("Invalid insertion of entry which already has parent !");
+		throw LatexException("Invalid insertion of entry which already has parent !");
 	
 	//setup old parents
 	localParent = this->parent;

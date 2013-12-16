@@ -32,7 +32,7 @@ class ProjectEntityNew : public FormulaMatcher
 		
 		//to overload
 		virtual void genDefinitionCCode(std::ostream& out, const ProjectContext& context, int padding = 0) const = 0;
-		virtual void genUsageCCode(std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false) const = 0;
+		virtual void genUsageCCode(std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false) const = 0;
 		virtual void printDebug(std::ostream & out) const;
 	private:
 		std::string longName;

@@ -22,7 +22,7 @@ class MockProjectEntityNew : public ProjectEntityNew
 	public:
 		MockProjectEntityNew ( const std::string& latexName, const std::string& longName ) : ProjectEntityNew(latexName,longName) {};
 		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int indent ) const {out << "double " << getLongName()<< ";" << std::endl;};
-		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const {out << getLongName() ;};
+		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false ) const {out << getLongName() ;};
 };
 
 #endif //MOCK_PROJECT_ENTITY_NEW_H

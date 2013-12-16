@@ -39,7 +39,7 @@ ProjectCallAction& ProjectCallAction::addZone ( const std::string& zone )
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectCallAction::genCode ( ostream& out, CMRCompiler::LangDef& lang, const std::string & addFName , int id, int indent ) const
+void ProjectCallAction::genCode ( ostream& out, LangDef& lang, const std::string & addFName , int id, int indent ) const
 {
 	//ideally we may generate :
 	//app.addInitAction(new ActionInitCellType::LoopType(new ActionInitCellType(CELL_LEFT_IN)),

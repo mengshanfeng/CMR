@@ -41,7 +41,7 @@ class ProjectContext;
 typedef std::vector<int> ConstantDimensionsVector;
 typedef std::vector<std::string> ConstantValueVector;
 typedef std::vector<std::string> StringVector;
-typedef std::map<std::string,const CMRCompiler::LatexFormulas *> ProjectCaptureMap;
+typedef std::map<std::string,const LatexFormulas *> ProjectCaptureMap;
 typedef std::vector<CaptureDef> ProjectCaptureDefMap;
 
 /*********************  CLASS  **********************/
@@ -54,9 +54,9 @@ class ProjectEntity
 		void addExponent(const std::string & name,CaptureType captureType = CAPTURE_NONE);
 		void addParameter(const std::string & name,CaptureType captureType = CAPTURE_NONE);
 		void changeCaptureType(const std::string & name,CaptureType captureType);
-		bool match(const CMRCompiler::LatexEntity & entity) const;
+		bool match(const LatexEntity & entity) const;
 		bool match(const std::string & value) const;
-		void capture( const CMRCompiler::LatexEntity& entity, ProjectCaptureMap& capture ) const;
+		void capture( const LatexEntity& entity, ProjectCaptureMap& capture ) const;
 		std::string getLatexName(void) const;
 		const std::string & getShortName(void) const;
 		const std::string & getLongName(void) const;
@@ -71,23 +71,23 @@ class ProjectEntity
 		
 		//to overload
 		virtual void genDefinitionCCode(std::ostream& out, const ProjectContext& context, int padding = 0) const = 0;
-		virtual void genUsageCCode(std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false) const = 0;
+		virtual void genUsageCCode(std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false) const = 0;
 		virtual void printDebug(std::ostream & out) const;
 	public:
 		friend std::ostream & operator << (std::ostream & out,const ProjectEntity & value);
 	protected:
 		virtual void onUpdateCaptureType(const std::string & name,CaptureType captureType);
-		bool internalMatch(const CMRCompiler::LatexEntity & entity,ProjectCaptureMap * capture) const;
-		bool internalMatch( const CMRCompiler::LatexFormulasVector& formulaList, const ProjectCaptureDefMap& captureDef, ProjectCaptureMap* captureOut ) const;
+		bool internalMatch(const LatexEntity & entity,ProjectCaptureMap * capture) const;
+		bool internalMatch( const LatexFormulasVector& formulaList, const ProjectCaptureDefMap& captureDef, ProjectCaptureMap* captureOut ) const;
 		void applyLatexName(const std::string & latexName);
-		void fillCapture(ProjectCaptureDefMap & capture,CMRCompiler::LatexFormulasVector & formulaList);
+		void fillCapture(ProjectCaptureDefMap & capture,LatexFormulasVector & formulaList);
 		void addCapture(ProjectCaptureDefMap & capture,const std::string & value,CaptureType captureType);
-		void addCapture( ProjectCaptureDefMap& capture, const CMRCompiler::LatexFormulas& formula, CaptureType captureType );
+		void addCapture( ProjectCaptureDefMap& capture, const LatexFormulas& formula, CaptureType captureType );
 		bool changeCaptureType(ProjectCaptureDefMap & capture, const std::string & name, CaptureType captureType);
 		static std::string formatCaptureList ( const ProjectCaptureDefMap& value, const std::string& sep, const std::string& open, const std::string& close, bool forceOpenClose);
 		CaptureDef * findCaptureDef( ProjectCaptureDefMap& value, const std::string& name, bool beCaptured = false );
 		CaptureDef * findCaptureDef( const std::string& name, bool beCaptured = false );
-		void ensureUniqCapture( const CMRCompiler::LatexFormulas& f );
+		void ensureUniqCapture( const LatexFormulas& f );
 		static void printDebug( std::ostream& out, const std::string& name, const ProjectCaptureDefMap& map );
 		static void markAllCaptureAs(ProjectCaptureDefMap & map,CaptureType capture);
 	private:

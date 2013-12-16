@@ -21,7 +21,7 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-ProjectAction::ProjectAction ( const string& name, const string& descr, const string& loopType, CMRCompiler::ProjectContext* parentContext )
+ProjectAction::ProjectAction ( const string& name, const string& descr, const string& loopType, ProjectContext* parentContext )
 	:ops(parentContext)
 {
 	this->name = name;
@@ -84,9 +84,9 @@ CMRProjectCodeEquation& ProjectAction::addEquation ( const string& eq )
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectAction::genDefinitionCCode ( ostream& out, const CMRCompiler::LangDef & lang,const ProjectContext& context, int padding ) const
+void ProjectAction::genDefinitionCCode ( ostream& out, const LangDef & lang,const ProjectContext& context, int padding ) const
 {
-	CMRCompiler::CodeTemplateValueDic dic;
+	CodeTemplateValueDic dic;
 	dic.set("descr",this->descr);
 	dic.set("name",this->name);
 	dic.set("looptype",this->loopType);
@@ -180,7 +180,7 @@ void CodeTemplateValueActionParameters::genCode ( ostream& out, int indent ) con
 		{
 			if (it != list->begin())
 				out << endl;
-			CMRCompiler::doIndent(out,indent);
+			doIndent(out,indent);
 		}
 		out << (*it)->getType() << " " << (*it)->getLongName();
 	}

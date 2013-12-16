@@ -63,12 +63,12 @@ class CMRProjectLocalVariable : public ProjectEntity
 	public:
 		CMRProjectLocalVariable( const std::string& latexName, const std::string& longName, const std::string& type, const std::string& defaultValue = "0");
 		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int padding = 0 ) const;
-		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const CMRCompiler::LatexEntity& entity, bool write = false ) const;
+		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false ) const;
 		virtual void printDeclDebug( std::ostream & out, int padding) const;
 		void addDim(int size);
 	private:
 		std::string type;
-		CMRCompiler::LatexFormulas defaultValue;
+		LatexFormulas defaultValue;
 		DimVector dims;
 };
 
@@ -102,7 +102,7 @@ class CMRProjectCodeEntry : public ProjectCodeTree<CMRProjectCodeEntry>
 };
 
 /*********************  CLASS  **********************/
-class CMRCodeValueForCodeEntry : public CMRCompiler::CodeTemplateValue
+class CMRCodeValueForCodeEntry : public CodeTemplateValue
 {
 	public:
 		CMRCodeValueForCodeEntry(const CMRProjectCodeEntry * obj, int correctIndent = 0) {this->obj = obj;this->correctIndent = correctIndent;};
@@ -138,15 +138,15 @@ class CMRProjectCodeEquation : public CMRProjectCodeEntry
 	public:
 		CMRProjectCodeEquation( const std::string& latexName, const std::string& compute ,const std::string & op = "=");
 		virtual CMRProjectCodeType getType ( void ) const;
-		CMRCompiler::LatexFormulas & getFormulas(void);
-		CMRCompiler::LatexEntity & getOutput(void);
+		LatexFormulas & getFormulas(void);
+		LatexEntity & getOutput(void);
 		const std::string & getOperator(void) const;
 		void setOperator(const std::string & op);
 		virtual void genCCode(std::ostream & out,int padding = 0) const;
 		virtual void printDebug ( std::ostream& out, int padding = 0 ) const;
 	private:
-		CMRCompiler::LatexEntity output;
-		CMRCompiler::LatexFormulas formula;
+		LatexEntity output;
+		LatexFormulas formula;
 		std::string op;
 };
 
@@ -185,10 +185,10 @@ class CMRProjectCConstruct
 	private:
 		void loadCode(const std::string & code);
 		void extractReplacementLocus( ExtractionLocusList& locusList ) const;
-		const CMRCompiler::LatexFormulas * getLocusValue(const ExtractionLocus & locus) const;
+		const LatexFormulas * getLocusValue(const ExtractionLocus & locus) const;
 	private:
-		CMRCompiler::LatexFormulasVector args;
-		CMRCompiler::LatexFormulasVector autoArgs;
+		LatexFormulasVector args;
+		LatexFormulasVector autoArgs;
 		std::string code;
 };
 

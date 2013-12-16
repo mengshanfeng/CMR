@@ -28,7 +28,7 @@ class ProjectCallAction
 		ProjectCallAction(const std::string & actionName);
 		ProjectCallAction & addZone(const std::string & zone);
 		ProjectCallAction & addParameter(const std::string & name,const std::string & value);
-		void genCode( std::ostream& out, CMRCompiler::LangDef& lang, const std::string& addFName, int id, int indent ) const;
+		void genCode( std::ostream& out, LangDef& lang, const std::string& addFName, int id, int indent ) const;
 	private:
 		std::string actionName;
 		CallActionZoneVector zones;
