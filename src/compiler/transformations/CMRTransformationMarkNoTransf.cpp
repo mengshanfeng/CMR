@@ -10,7 +10,7 @@
 /********************  HEADERS  *********************/
 #include <string>
 #include "CMRTransformationMarkNoTransf.h"
-#include "../definitions/ProjectEntity.h"
+#include "../definitions/ProjectEntityOld.h"
 #include "../definitions/CMRProjectCode.h"
 
 /********************  NAMESPACE  *******************/
@@ -27,15 +27,16 @@ CMRTransformationMarkNoTransf::CMRTransformationMarkNoTransf(void )
 void CMRTransformationMarkNoTransf::transform(CMRProjectCodeEquation& equation, LatexEntity& entity)
 {
 	//find entity
-	const ProjectEntity * definition = equation.getContext().find(entity);
+	const IProjectEntity * definition = equation.getContext().find(entity);
 	
-	//do it for all childs if def is OK
-	if(definition != NULL)
-	{
-		markChildElements(entity.getIndices()   ,definition->getIndices());
-		markChildElements(entity.getExponents() ,definition->getExponents());
-		markChildElements(entity.getParameters(),definition->getParameters());
-	}
+#pragma TODO rewrite this
+// 	//do it for all childs if def is OK
+// 	if(definition != NULL)
+// 	{
+// 		markChildElements(entity.getIndices()   ,definition->getIndices());
+// 		markChildElements(entity.getExponents() ,definition->getExponents());
+// 		markChildElements(entity.getParameters(),definition->getParameters());
+// 	}
 	
 	CMRTransformationBasic::transform(equation, entity);
 }

@@ -20,7 +20,7 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 ProjectIterator::ProjectIterator ( const string& latexName, const string& longName, int start, int end ) 
-	: ProjectEntity ( latexName, longName )
+	: ProjectEntityOld ( latexName, longName )
 {
 	this->start = start;
 	this->end = end;
@@ -29,7 +29,7 @@ ProjectIterator::ProjectIterator ( const string& latexName, const string& longNa
 /*******************  FUNCTION  *********************/
 void ProjectIterator::printDebug ( std::ostream & out ) const
 {
-	ProjectEntity::printDebug(out);
+	ProjectEntityOld::printDebug(out);
 	out << "    - values     : "<< start << " .. " << end << endl;
 }
 

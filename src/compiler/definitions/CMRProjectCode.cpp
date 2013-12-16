@@ -25,7 +25,7 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 CMRProjectLocalVariable::CMRProjectLocalVariable ( const std::string& latexName, const std::string& longName , const std::string & type,const std::string & defaultValue) 
-	: ProjectEntity ( latexName, longName )
+	: ProjectEntityOld ( latexName, longName )
 	, defaultValue(defaultValue)
 {
 	this->type = type;
@@ -164,7 +164,7 @@ CMRProjectCodeIteratorLoop::CMRProjectCodeIteratorLoop ( const std::string & ite
 void CMRProjectCodeIteratorLoop::genCCode ( ostream& out, int padding ) const
 {
 	//search iterator info
-	const ProjectEntity * iteratorEntity = context.find(iterator);
+	const IProjectEntity * iteratorEntity = context.find(iterator);
 	assert(iteratorEntity != NULL);
 	
 	//gen loop
@@ -179,7 +179,7 @@ void CMRProjectCodeIteratorLoop::genCCode ( ostream& out, int padding ) const
 const ProjectIterator& CMRProjectCodeIteratorLoop::getIterator(void ) const
 {
 	//build iterator loop
-	const ProjectEntity * entity = context.findInParent(iterator);
+	const IProjectEntity * entity = context.findInParent(iterator);
 	if (entity == NULL)
 		throw LatexException("Invalid iterator name : "+iterator);
 
@@ -323,7 +323,7 @@ void CMRProjectCodeEquation::printDebug ( ostream& out, int padding ) const
 /*******************  FUNCTION  *********************/
 void CMRProjectCodeEquation::genCCode ( ostream& out, int padding ) const
 {
-	const ProjectEntity * outputEntity = context.find(output);
+	const IProjectEntity * outputEntity = context.find(output);
 	cmrAssume(outputEntity != NULL,"Fail to find definition for latex entity : '%s'",output.getString().c_str());
 	
 	doIndent(out,padding);

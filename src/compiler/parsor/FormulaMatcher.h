@@ -101,6 +101,7 @@ class FormulaMatcher
 		void capture(const LatexFormulas & f,LatexFormulas::const_iterator & startIt,FormulaMatcherResult & result,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
 		void printDebug(std::ostream & out) const;
 		std::string toString(void) const;
+		std::string toDebugString(void) const;
 		void setOptionalExponent(bool force = true);
 		
 		//some internal ops

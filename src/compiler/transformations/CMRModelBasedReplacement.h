@@ -12,14 +12,14 @@
 
 /********************  HEADERS  *********************/
 #include <string>
-#include "../definitions/ProjectEntity.h"
+#include "../definitions/ProjectEntityOld.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
 {
 
 /*********************  CLASS  **********************/
-class CMRModelBasedReplacement : public ProjectEntity
+class CMRModelBasedReplacement : public ProjectEntityOld
 {
 	public:
 		CMRModelBasedReplacement(const std::string & model,const std::string result, bool captureAll = true);

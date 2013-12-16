@@ -58,7 +58,7 @@ typedef std::list<ExtractionLocus> ExtractionLocusList;
 typedef std::vector<int> DimVector;
 
 /*********************  CLASS  **********************/
-class CMRProjectLocalVariable : public ProjectEntity
+class CMRProjectLocalVariable : public ProjectEntityOld
 {
 	public:
 		CMRProjectLocalVariable( const std::string& latexName, const std::string& longName, const std::string& type, const std::string& defaultValue = "0");

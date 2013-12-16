@@ -3,7 +3,7 @@
 #define CMR_COMPILER_PROJECT_CONSTANT_H
 
 /********************  HEADERS  *********************/
-#include "ProjectEntity.h"
+#include "ProjectEntityOld.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -17,7 +17,7 @@ class CMRModelBasedReplacement;
 typedef std::vector<LatexFormulas> ConstantFormulaVector;
 
 /*********************  CLASS  **********************/
-class ProjectConstant : public ProjectEntity
+class ProjectConstant : public ProjectEntityOld
 {
 	public:
 		ProjectConstant( const std::string& latexName, const std::string& longName, const std::string & type );

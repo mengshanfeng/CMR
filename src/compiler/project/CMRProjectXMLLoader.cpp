@@ -372,14 +372,10 @@ bool CMRProjectXMLLoader::loadCodeNode ( CMRProject2& project, T& parent, CMRXml
 	} else if (node.isNamed(CMR_NODE_ALIAS)) {
 		string aliasMathName = node.getNonEmptyProperty(CMR_PROP_MATHNAME);
 		string aliasBody = node.getContent();
-		bool aliasWildcardName = node.getProperty("capturename") == "true";
 		string aliasCaptureAllStr = node.getProperty("captureall");
 		bool aliasCaptureAll = (aliasCaptureAllStr.empty() || aliasCaptureAllStr == "true");
 		cmrDebug("    -> Alias : %s",aliasMathName.c_str());
-		if (aliasWildcardName)
-			parent.getContext().addEntry(new ProjectMathAlias(aliasMathName,aliasBody,aliasCaptureAll)).captureName();
-		else
-			parent.getContext().addEntry(new ProjectMathAlias(aliasMathName,aliasBody,aliasCaptureAll));
+		parent.getContext().addEntry(new ProjectMathAlias(aliasMathName,aliasBody,aliasCaptureAll));
 	} else if (node.isNamed(CMR_NODE_CCODE)) {
 		string codeContent = node.getContent();
 		cmrDebug("    -> CCode : %s",codeContent.c_str());

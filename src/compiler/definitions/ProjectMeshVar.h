@@ -11,7 +11,7 @@
 #define CMR_COMPILER_PROJECT_VARIABLE_H
 
 /********************  HEADERS  *********************/
-#include "ProjectEntity.h"
+#include "ProjectEntityNew.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
@@ -30,7 +30,7 @@ struct ProjectMeshVarDef
 typedef std::vector<ProjectMeshVarDef> ProjectMeshVarDefVector;
 
 /*********************  CLASS  **********************/
-class ProjectMeshVar : public ProjectEntity
+class ProjectMeshVar : public ProjectEntityNew
 {
 	public:
 		ProjectMeshVar ( const std::string& latexName, const std::string& longName, const std::string& type, int ghost );

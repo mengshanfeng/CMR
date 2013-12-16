@@ -44,4 +44,12 @@ void ProjectEntityNew::printDebug ( std::ostream& out ) const
 	FormulaMatcher::printDebug(out);
 }
 
+/*******************  FUNCTION  *********************/
+bool ProjectEntityNew::match ( const LatexEntity& entity ) const
+{
+	#warning Maybe remove
+	return FormulaMatcher::match(entity);
+}
+
+
 }

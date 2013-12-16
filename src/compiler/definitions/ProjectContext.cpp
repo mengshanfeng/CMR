@@ -32,10 +32,10 @@ ProjectContext::ProjectContext(const ProjectContext* parent)
 }
 
 /*******************  FUNCTION  *********************/
-ProjectEntity & ProjectContext::addEntry(ProjectEntity* entry)
+IProjectEntity & ProjectContext::addEntry(IProjectEntity* entry)
 {
 	//vars
-	ProjectEntity * conflict;
+	IProjectEntity * conflict;
 	
 	//errors
 	assert(entry != NULL);
@@ -58,7 +58,7 @@ ProjectEntity & ProjectContext::addEntry(ProjectEntity* entry)
 }
 
 /*******************  FUNCTION  *********************/
-ProjectEntity * ProjectContext::checkUnique(const ProjectEntity & entry)
+IProjectEntity * ProjectContext::checkUnique(const IProjectEntity & entry)
 {
 	//search in list
 	for (ProjectEntityList::iterator it = entities.begin() ; it != entities.end() ; ++it)
@@ -81,7 +81,7 @@ ProjectEntity * ProjectContext::checkUnique(const ProjectEntity & entry)
 }
 
 /*******************  FUNCTION  *********************/
-const ProjectEntity* ProjectContext::findInParent(const LatexEntity& entity, bool onlyWildCardNames) const
+const IProjectEntity* ProjectContext::findInParent(const LatexEntity& entity, bool onlyWildCardNames) const
 {
 	if (parent == NULL)
 		return NULL;
@@ -90,7 +90,7 @@ const ProjectEntity* ProjectContext::findInParent(const LatexEntity& entity, boo
 }
 
 /*******************  FUNCTION  *********************/
-const ProjectEntity* ProjectContext::find( const LatexEntity & entity , bool onlyWildCardNames) const
+const IProjectEntity* ProjectContext::find( const LatexEntity & entity , bool onlyWildCardNames) const
 {
 // 	#warning "Do some stuff on priority rules when found multiple matches (similar to what CSS dores)"
 // 	//check wildcard name in parent
@@ -100,14 +100,16 @@ const ProjectEntity* ProjectContext::find( const LatexEntity & entity , bool onl
 // 		if (res != NULL)
 // 			return res;
 // 	}
+	
+	#warning "TODO : rewrite this to use CSS like system for specialisation matching on number of wildcards"
 
 	//searh in list
 	for (ProjectEntityList::const_iterator it = entities.begin() ; it != entities.end() ; ++it)
 	{
-		if ((onlyWildCardNames == false || (*it)->isWildcardName()) && (*it)->match(entity))
+		if ((*it)->match(entity))
 			return *it;
 	}
-	
+
 	//if not found, search in parent
 	if (parent != NULL)
 		return parent->find(entity);

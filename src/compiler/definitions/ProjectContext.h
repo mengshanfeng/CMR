@@ -13,14 +13,14 @@
 /********************  HEADERS  *********************/
 #include <vector>
 #include <iostream>
-#include "ProjectEntity.h"
+#include "ProjectEntityOld.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
 {
 
 /*********************  TYPES  **********************/
-typedef std::vector <ProjectEntity*> ProjectEntityList;
+typedef std::vector <IProjectEntity*> ProjectEntityList;
 typedef std::map<std::string,std::string> ProjectContextKeyMap;
 
 /*********************  STRUCT  *********************/
@@ -37,10 +37,10 @@ class ProjectContext
 		ProjectContext(const ProjectContext * parent = NULL);
 		int countTotalEntries(void) const;
 		void printDebug(std::ostream & out = std::cerr) const;
-		ProjectEntity & addEntry(ProjectEntity * entry);
-		ProjectEntity* checkUnique( const ProjectEntity& entry );
-		const ProjectEntity * find( const LatexEntity& entity, bool onlyWildCardNames = false ) const;
-		const ProjectEntity * findInParent( const LatexEntity& entity, bool onlyWildCardNames = false ) const;
+		IProjectEntity & addEntry(IProjectEntity * entry);
+		IProjectEntity* checkUnique( const IProjectEntity& entry );
+		const IProjectEntity * find( const LatexEntity& entity, bool onlyWildCardNames = false ) const;
+		const IProjectEntity * findInParent( const LatexEntity& entity, bool onlyWildCardNames = false ) const;
 		std::string readKey(const std::string & key) const;
 		void setKey(const std::string & key, const std::string & value);
 		int getDepth(void) const;

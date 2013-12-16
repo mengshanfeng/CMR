@@ -45,11 +45,29 @@ typedef std::map<std::string,const LatexFormulas *> ProjectCaptureMap;
 typedef std::vector<CaptureDef> ProjectCaptureDefMap;
 
 /*********************  CLASS  **********************/
-class ProjectEntity
+class IProjectEntity
 {
 	public:
-		ProjectEntity(const std::string & latexName,const std::string & longName);
-		virtual ~ProjectEntity(void);
+		IProjectEntity(void) {};
+		virtual ~IProjectEntity(void){};
+		
+		//to provide in first level impl
+		virtual std::string getLatexName(void) const = 0;
+		virtual const std::string & getLongName(void) const = 0;
+		virtual bool match(const LatexEntity & entity) const = 0;
+		
+		//to overload
+		virtual void genDefinitionCCode(std::ostream& out, const ProjectContext& context, int padding = 0) const = 0;
+		virtual void genUsageCCode(std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false) const = 0;
+		virtual void printDebug(std::ostream & out) const =  0;
+};
+
+/*********************  CLASS  **********************/
+class ProjectEntityOld : public IProjectEntity
+{
+	public:
+		ProjectEntityOld(const std::string & latexName,const std::string & longName);
+		virtual ~ProjectEntityOld(void);
 		void addIndice(const std::string & name,CaptureType captureType = CAPTURE_NONE);
 		void addExponent(const std::string & name,CaptureType captureType = CAPTURE_NONE);
 		void addParameter(const std::string & name,CaptureType captureType = CAPTURE_NONE);
@@ -74,7 +92,7 @@ class ProjectEntity
 		virtual void genUsageCCode(std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false) const = 0;
 		virtual void printDebug(std::ostream & out) const;
 	public:
-		friend std::ostream & operator << (std::ostream & out,const ProjectEntity & value);
+		friend std::ostream & operator << (std::ostream & out,const ProjectEntityOld & value);
 	protected:
 		virtual void onUpdateCaptureType(const std::string & name,CaptureType captureType);
 		bool internalMatch(const LatexEntity & entity,ProjectCaptureMap * capture) const;

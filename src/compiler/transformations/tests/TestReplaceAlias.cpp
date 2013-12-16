@@ -201,7 +201,9 @@ TEST(TestReplaceAlias,testRun_wildcard_alias_expo_1)
 	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
-	context.addEntry(new ProjectMathAlias("x^4","x*x*x*x",false)).captureName();
+	ProjectMathAlias * alias = new ProjectMathAlias("x^4","x*x*x*x",false);
+	alias->captureName();
+	context.addEntry(alias);
 	CMRProjectCodeEquation & eq = root.addEquation("a","a^4");
 	
 	transf.run(root);
@@ -217,7 +219,9 @@ TEST(TestReplaceAlias,testRun_wildcard_alias_expo_2)
 	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
-	context.addEntry(new ProjectMathAlias("x^4","x*x*x*x",false)).captureName();
+	ProjectMathAlias * alias = new ProjectMathAlias("x^4","x*x*x*x",false);
+	alias->captureName();
+	context.addEntry(alias);
 	CMRProjectCodeEquation & eq = root.addEquation("a","(a+b)^4");
 	
 	transf.run(root);
@@ -233,7 +237,9 @@ TEST(TestReplaceAlias,testRun_wildcard_alias_expo_3)
 	ProjectContext context;
 	CMRProjectCodeNode root(&context);
 	root.addLocalVariable("a","testA","int","0");
-	context.addEntry(new ProjectMathAlias("x^4","x*x*x*x",false)).captureName();
+	ProjectMathAlias * alias = new ProjectMathAlias("x^4","x*x*x*x",false);
+	alias->captureName();
+	context.addEntry(alias);
 	CMRProjectCodeEquation & eq = root.addEquation("a","(\\frac{a}{2})^4");
 	
 	transf.run(root);

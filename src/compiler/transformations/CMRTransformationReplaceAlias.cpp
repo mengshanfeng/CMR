@@ -27,7 +27,7 @@ CMRTransformationReplaceAlias::CMRTransformationReplaceAlias ( void )
 void CMRTransformationReplaceAlias::transform ( CMRProjectCodeEquation& equation, LatexEntity& entity )
 {
 	//search entity
-	const ProjectEntity * match = equation.getContext().find(entity);
+	const IProjectEntity * match = equation.getContext().find(entity);
 	
 	//if found, check if alias
 	const ProjectMathAlias * alias = dynamic_cast<const ProjectMathAlias*>(match);

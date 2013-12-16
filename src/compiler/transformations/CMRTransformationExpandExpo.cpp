@@ -42,12 +42,13 @@ void CMRTransformationExpandExpo::transform ( CMRProjectCodeEquation& equation, 
 	cmrDebug("May Expend expend => %s",entity.getString().c_str());
 	
 	//find the definition
-	const ProjectEntity * projectEntity = equation.getContext().find(entity);
+	const IProjectEntity * projectEntity = equation.getContext().find(entity);
 	if (projectEntity == NULL)
 	{
 		exponent = entity.exponents[0];
-	} else if (projectEntity->getExponents().empty()) {
-		exponent = entity.exponents[0];	
+#warning "Maybe remove this now"
+// 	} else if (projectEntity->getExponents().empty()) {
+// 		exponent = entity.exponents[0];	
 	} else  {
 		//loop on childs
 		CMRTransformationBasic::transform ( equation, entity );

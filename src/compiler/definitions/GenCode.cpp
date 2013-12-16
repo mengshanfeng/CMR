@@ -99,7 +99,7 @@ std::ostream&  cmrGenEqCCode(ostream& out, const ProjectContext& context, const 
 		out << ")";
 	} else {
 		//search matching in context
-		const ProjectEntity * def = context.find(entity);
+		const IProjectEntity * def = context.find(entity);
 		if (def == NULL)
 		{
 			stringstream out;

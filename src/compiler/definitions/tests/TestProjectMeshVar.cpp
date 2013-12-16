@@ -36,18 +36,14 @@ TEST(TestProjectMeshVar,testConstructor)
 TEST(TestProjectMeshVar,testAddDim_1)
 {
 	ProjectMeshVar variable("A_{i,j,k}","testA","int",0);
-	EXPECT_EQ(2,variable.getCapturedIndices().size());
 	variable.addDim("k",5);
-	EXPECT_EQ("i",variable.getCapturedIndices()[0]);
-	EXPECT_EQ("j",variable.getCapturedIndices()[1]);
-	EXPECT_EQ("k",variable.getCapturedIndices()[2]);
+	EXPECT_EQ("A_{[i],[j],[k]}",variable.toDebugString());
 }
 
 /*******************  FUNCTION  *********************/
 TEST(TestProjectMeshVar,testAddDim_2)
 {
 	ProjectMeshVar variable("A_{i,j}","testA","int",0);
-	EXPECT_EQ(2,variable.getCapturedIndices().size());
 	EXPECT_THROW(variable.addDim("k",5),LatexException);
 }
 

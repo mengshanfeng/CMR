@@ -12,7 +12,7 @@
 
 /********************  HEADERS  *********************/
 #include <vector>
-#include "../definitions/ProjectEntity.h"
+#include "../definitions/ProjectEntityOld.h"
 #include "../definitions/ProjectContext.h"
 #include "../definitions/ProjectConstant.h"
 #include "../definitions/ProjectMeshVar.h"

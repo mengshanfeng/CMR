@@ -23,7 +23,7 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 ProjectDefinition::ProjectDefinition ( const string& latexName, const string& longName, ProjectContext* parentContext ) 
-	: ProjectEntity ( latexName, longName )
+	: ProjectEntityOld ( latexName, longName )
 	,parametersContext(parentContext), ops(&parametersContext)
 {
 	this->ops.addLocalVariable(latexName,"result","double","0");
@@ -33,7 +33,7 @@ ProjectDefinition::ProjectDefinition ( const string& latexName, const string& lo
 void ProjectDefinition::printDebug ( std::ostream& out ) const
 {
 	out << "/*********************** Entity info ******************************" << endl;
-	ProjectEntity::printDebug ( out );
+	ProjectEntityOld::printDebug ( out );
 	out << "-------------------------------------------------------------------" << endl;
 	out << "Parameter context : " << endl;
 	this->parametersContext.printDebug(out);
@@ -74,7 +74,7 @@ void ProjectDefinition::genParameterListForDef ( ostream& out, const ProjectCapt
 			string name = it->name;
 			if (sizes.find(name) != sizes.end())
 				name += "_*";
-			const ProjectEntity * entity = parametersContext.find(name);
+			const IProjectEntity * entity = parametersContext.find(name);
 			assert(entity != NULL);
 			if (types.find(it->name) == types.end())
 				out << ", int " << entity->getLongName();

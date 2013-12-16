@@ -132,7 +132,7 @@ ProjectActionParameter& ProjectAction::addParameter ( const string& latexName, c
 
 /*******************  FUNCTION  *********************/
 ProjectActionParameter::ProjectActionParameter ( const string& latexName, const string& longName, const string& type ) 
-	: ProjectEntity ( latexName, longName )
+	: ProjectEntityOld ( latexName, longName )
 {
 	this->type = type;
 }

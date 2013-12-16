@@ -11,7 +11,7 @@
 #define CMR_PROJECT_DEFINITION_H
 
 /********************  HEADERS  *********************/
-#include "ProjectEntity.h"
+#include "ProjectEntityOld.h"
 #include "CMRProjectCode.h"
 // #include "ProjectIterator.h"
 
@@ -24,7 +24,7 @@ class CMRTransformation;
 class ProjectIterator;
 
 /*********************  CLASS  **********************/
-class ProjectDefinition : public ProjectEntity
+class ProjectDefinition : public ProjectEntityOld
 {
 	public:
 		ProjectDefinition ( const std::string& latexName, const std::string& longName,ProjectContext * parentContext = NULL);

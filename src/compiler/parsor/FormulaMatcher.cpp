@@ -418,6 +418,14 @@ std::string FormulaMatcher::toString ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
+string FormulaMatcher::toDebugString ( void ) const
+{
+	stringstream out;
+	printDebug(out);
+	return out.str();
+}
+
+/*******************  FUNCTION  *********************/
 FormulaMatcher::operator std::string() const
 {
 	return toString();

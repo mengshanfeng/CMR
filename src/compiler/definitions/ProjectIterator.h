@@ -11,14 +11,14 @@
 #define CMR_COMPILER_PROJECT_ITERATOR_H
 
 /********************  HEADERS  *********************/
-#include "ProjectEntity.h"
+#include "ProjectEntityOld.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler
 {
 
 /*********************  CLASS  **********************/
-class ProjectIterator : public ProjectEntity
+class ProjectIterator : public ProjectEntityOld
 {
 	public:
 		ProjectIterator ( const std::string& latexName, const std::string& longName ,int start, int end);

@@ -24,15 +24,13 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 ProjectMeshVar::ProjectMeshVar ( const string& latexName, const string& longName, const string& type, int ghost ) 
-	: ProjectEntity ( latexName, longName )
+	: ProjectEntityNew ( latexName, longName )
 {
 	//setup capture
-	changeCaptureType("i",CAPTURE_REQUIRED);
-	changeCaptureType("j",CAPTURE_REQUIRED);
+	markForCapture("i");
+	markForCapture("j");
 	
 	//check that we have i/j for capture
-	assert(haveCapture("i"));
-	assert(haveCapture("j"));
 	assert(type.empty() == false);
 	assert(ghost >= 0);
 	
@@ -47,7 +45,7 @@ void ProjectMeshVar::addDim ( const string& name,int size,int start )
 	assert(size > 0);
 	assert(name.empty() == false);
 	defs.push_back(ProjectMeshVarDef(name,size,start));
-	changeCaptureType(name,CAPTURE_REQUIRED);
+	markForCapture(name);
 }
 
 /*******************  FUNCTION  *********************/
@@ -102,7 +100,7 @@ string ProjectMeshVar::getTypeWithDims ( void ) const
 /*******************  FUNCTION  *********************/
 void ProjectMeshVar::genUsageCCode( ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write ) const
 {
-	ProjectCaptureMap capture;
+	FormulaMatcherResult capture;
 	const std::string & loopType = context.readKey("CMRActionLoopType");
 	
 	//select out mode
@@ -122,16 +120,15 @@ void ProjectMeshVar::genUsageCCode( ostream& out, const ProjectContext& context,
 	this->capture(entity,capture);
 	
 	out << getLongName() << "( ";
-	cmrGenEqCCode(out,context,*capture["i"]) << ", ";
-	cmrGenEqCCode(out,context,*capture["j"]) << "))";
+	cmrGenEqCCode(out,context,*capture.captures["i"]) << ", ";
+	cmrGenEqCCode(out,context,*capture.captures["j"]) << "))";
 	
-	StringVector indices = getCapturedIndices();
-	for (StringVector::iterator it = indices.begin() ; it != indices.end() ; ++it)
+	for (ProjectMeshVarDefVector::const_iterator it = defs.begin() ; it != defs.end() ; ++it)
 	{
-		if ( *it != "i" && *it != "j")
+		if ( it->name != "i" && it->name != "j")
 		{
 			out << "[ ";
-			cmrGenEqCCode(out,context,*capture[*it]) << "]";
+			cmrGenEqCCode(out,context,*capture.captures[it->name]) << "]";
 		}
 	}
 }

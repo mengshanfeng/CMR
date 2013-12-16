@@ -25,7 +25,7 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 ProjectConstant::ProjectConstant ( const string& latexName, const string& longName, const string& type ) 
-	: ProjectEntity ( latexName, longName )
+	: ProjectEntityOld ( latexName, longName )
 {
 	this->type = type;
 }
@@ -150,7 +150,7 @@ void ProjectConstant::addDimension ( int size )
 void ProjectConstant::printDebug ( std::ostream & out ) const
 {
 	//default
-	ProjectEntity::printDebug(out);
+	ProjectEntityOld::printDebug(out);
 	
 	//dims
 	out << "    - dims       : " << dims.size() << " : [ ";

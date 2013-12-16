@@ -12,15 +12,15 @@
 /********************  HEADERS  *********************/
 #include <ostream>
 #include <string>
-#include <ProjectEntity.h>
+#include <ProjectEntityOld.h>
 
 using namespace CMRCompiler;
 
 /*********************  CLASS  **********************/
-class MockProjectEntity : public ProjectEntity
+class MockProjectEntity : public ProjectEntityOld
 {
 	public:
-		MockProjectEntity ( const std::string& latexName, const std::string& longName ) : ProjectEntity(latexName,longName) {};
+		MockProjectEntity ( const std::string& latexName, const std::string& longName ) : ProjectEntityOld(latexName,longName) {};
 		virtual void genDefinitionCCode ( std::ostream& out, const ProjectContext& context, int indent ) const {out << "double " << getLongName()<< ";" << std::endl;};
 		virtual void genUsageCCode ( std::ostream& out, const ProjectContext& context, const LatexEntity& entity, bool write = false ) const {out << getLongName() ;};
 };

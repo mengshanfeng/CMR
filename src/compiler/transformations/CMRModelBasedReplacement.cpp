@@ -20,7 +20,7 @@ namespace CMRCompiler
 
 /*******************  FUNCTION  *********************/
 CMRModelBasedReplacement::CMRModelBasedReplacement(const std::string& model, const std::string result, bool captureAll)
-	:ProjectEntity(model,"model")
+	:ProjectEntityOld(model,"model")
 {
 	//errors
 	assert(model.empty() == false);

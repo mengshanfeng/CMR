@@ -25,7 +25,7 @@ namespace CMRCompiler
 class LangDef;
 
 /*********************  CLASS  **********************/
-class ProjectActionParameter : public ProjectEntity
+class ProjectActionParameter : public ProjectEntityOld
 {
 	public:
 		ProjectActionParameter ( const std::string& latexName, const std::string& longName, const std::string & type );

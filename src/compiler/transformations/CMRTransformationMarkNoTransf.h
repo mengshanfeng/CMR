@@ -12,7 +12,7 @@
 
 /********************  HEADERS  *********************/
 #include "CMRTransformationBasic.h"
-#include "../definitions/ProjectEntity.h"
+#include "../definitions/ProjectEntityOld.h"
 
 /********************  NAMESPACE  *******************/
 namespace CMRCompiler

@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include "parsor/LatexFormula.h"
-#include "ProjectEntity.h"
+#include "ProjectEntityOld.h"
 
 /**********************  USING  *********************/
 using namespace std;
@@ -22,7 +22,7 @@ namespace CMRCompiler
 {
 
 /*******************  FUNCTION  *********************/
-ProjectEntity::ProjectEntity ( const string& latexName, const string& longName )
+ProjectEntityOld::ProjectEntityOld ( const string& latexName, const string& longName )
 {
 	this->capName = false;
 	this->longName = longName;
@@ -30,13 +30,13 @@ ProjectEntity::ProjectEntity ( const string& latexName, const string& longName )
 }
 
 /*******************  FUNCTION  *********************/
-ProjectEntity::~ProjectEntity ( void )
+ProjectEntityOld::~ProjectEntityOld ( void )
 {
 	//do nothing, but virtual for inheritance
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::applyLatexName ( const string& latexName )
+void ProjectEntityOld::applyLatexName ( const string& latexName )
 {
 	//check if empty
 	if (latexName.empty())
@@ -59,7 +59,7 @@ void ProjectEntity::applyLatexName ( const string& latexName )
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::fillCapture ( ProjectCaptureDefMap& capture, LatexFormulasVector& formulaList )
+void ProjectEntityOld::fillCapture ( ProjectCaptureDefMap& capture, LatexFormulasVector& formulaList )
 {
 	//clear old list
 	capture.clear();
@@ -72,25 +72,25 @@ void ProjectEntity::fillCapture ( ProjectCaptureDefMap& capture, LatexFormulasVe
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::addIndice ( const string& name, CaptureType captureType )
+void ProjectEntityOld::addIndice ( const string& name, CaptureType captureType )
 {
 	addCapture(indices,name,captureType);
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::addExponent ( const string& name, CaptureType captureType )
+void ProjectEntityOld::addExponent ( const string& name, CaptureType captureType )
 {
 	addCapture(exponents,name,captureType);
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::addParameter ( const string& name, CaptureType captureType )
+void ProjectEntityOld::addParameter ( const string& name, CaptureType captureType )
 {
 	addCapture(parameters,name,captureType);
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::addCapture ( ProjectCaptureDefMap& capture, const string& value, CaptureType captureType )
+void ProjectEntityOld::addCapture ( ProjectCaptureDefMap& capture, const string& value, CaptureType captureType )
 {
 	assert(captureType != CAPTURE_OPTIONS);
 	LatexFormulas f(value);
@@ -98,7 +98,7 @@ void ProjectEntity::addCapture ( ProjectCaptureDefMap& capture, const string& va
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::addCapture ( ProjectCaptureDefMap& capture, const LatexFormulas& formula, CaptureType captureType )
+void ProjectEntityOld::addCapture ( ProjectCaptureDefMap& capture, const LatexFormulas& formula, CaptureType captureType )
 {
 	assert(captureType != CAPTURE_OPTIONS);
 	//check if get a uniq entity
@@ -111,7 +111,7 @@ void ProjectEntity::addCapture ( ProjectCaptureDefMap& capture, const LatexFormu
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::changeCaptureType ( const string& name, CaptureType captureType )
+void ProjectEntityOld::changeCaptureType ( const string& name, CaptureType captureType )
 {
 	bool res;
 	
@@ -142,7 +142,7 @@ void ProjectEntity::changeCaptureType ( const string& name, CaptureType captureT
 }
 
 /*******************  FUNCTION  *********************/
-bool ProjectEntity::changeCaptureType ( ProjectCaptureDefMap& capture, const string& name, CaptureType captureType )
+bool ProjectEntityOld::changeCaptureType ( ProjectCaptureDefMap& capture, const string& name, CaptureType captureType )
 {
 	CaptureDef * def = findCaptureDef(capture,name);
 	assert(captureType != CAPTURE_OPTIONS);
@@ -157,7 +157,7 @@ bool ProjectEntity::changeCaptureType ( ProjectCaptureDefMap& capture, const str
 }
 
 /*******************  FUNCTION  *********************/
-std::string ProjectEntity::formatCaptureList ( const ProjectCaptureDefMap& value, const string& sep, const string& open, const string& close, bool forceOpenClose )
+std::string ProjectEntityOld::formatCaptureList ( const ProjectCaptureDefMap& value, const string& sep, const string& open, const string& close, bool forceOpenClose )
 {
 	//vars
 	string res;
@@ -186,7 +186,7 @@ std::string ProjectEntity::formatCaptureList ( const ProjectCaptureDefMap& value
 }
 
 /*******************  FUNCTION  *********************/
-string ProjectEntity::getLatexName ( void ) const
+string ProjectEntityOld::getLatexName ( void ) const
 {
 	string res = shortName;
 	
@@ -208,25 +208,25 @@ string ProjectEntity::getLatexName ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-const string& ProjectEntity::getLongName ( void ) const
+const string& ProjectEntityOld::getLongName ( void ) const
 {
 	return longName;
 }
 
 /*******************  FUNCTION  *********************/
-const string& ProjectEntity::getShortName ( void ) const
+const string& ProjectEntityOld::getShortName ( void ) const
 {
 	return shortName;
 }
 
 /*******************  FUNCTION  *********************/
-bool ProjectEntity::match ( const LatexEntity& entity ) const
+bool ProjectEntityOld::match ( const LatexEntity& entity ) const
 {
 	return internalMatch(entity,NULL);
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::capture ( const LatexEntity& entity, ProjectCaptureMap& capture ) const
+void ProjectEntityOld::capture ( const LatexEntity& entity, ProjectCaptureMap& capture ) const
 {
 	bool res = internalMatch(entity,&capture);
 	if (res == false)
@@ -234,20 +234,20 @@ void ProjectEntity::capture ( const LatexEntity& entity, ProjectCaptureMap& capt
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::onUpdateCaptureType ( const string& name, CaptureType captureType )
+void ProjectEntityOld::onUpdateCaptureType ( const string& name, CaptureType captureType )
 {
 	assert(captureType != CAPTURE_OPTIONS);
 }
 
 /*******************  FUNCTION  *********************/
-ostream& operator<< ( ostream& out, const ProjectEntity& value )
+ostream& operator<< ( ostream& out, const ProjectEntityOld& value )
 {
 	out << value.getLatexName();
 	return out;
 }
 
 /*******************  FUNCTION  *********************/
-bool ProjectEntity::internalMatch ( const LatexEntity& entity, ProjectCaptureMap* capture ) const
+bool ProjectEntityOld::internalMatch ( const LatexEntity& entity, ProjectCaptureMap* capture ) const
 {
 	//check name
 	if (entity.name != this->shortName && this->capName == false)
@@ -283,7 +283,7 @@ bool ProjectEntity::internalMatch ( const LatexEntity& entity, ProjectCaptureMap
 }
 
 /*******************  FUNCTION  *********************/
-bool ProjectEntity::internalMatch ( const LatexFormulasVector& formulaList, const ProjectCaptureDefMap& captureDef, ProjectCaptureMap* captureOut ) const
+bool ProjectEntityOld::internalMatch ( const LatexFormulasVector& formulaList, const ProjectCaptureDefMap& captureDef, ProjectCaptureMap* captureOut ) const
 {
 	//trivial
 	if (formulaList.size() != captureDef.size())
@@ -320,7 +320,7 @@ CaptureDef::CaptureDef ( const string& name, CaptureType captureType )
 }
 
 /*******************  FUNCTION  *********************/
-CaptureDef* ProjectEntity::findCaptureDef ( ProjectCaptureDefMap& value, const string& name, bool beCaptured )
+CaptureDef* ProjectEntityOld::findCaptureDef ( ProjectCaptureDefMap& value, const string& name, bool beCaptured )
 {
 	for (ProjectCaptureDefMap::iterator it = value.begin() ; it != value.end() ; ++it)
 		if (name == it->name && (beCaptured == false || it->captureType != CAPTURE_NONE))
@@ -330,7 +330,7 @@ CaptureDef* ProjectEntity::findCaptureDef ( ProjectCaptureDefMap& value, const s
 }
 
 /*******************  FUNCTION  *********************/
-CaptureDef* ProjectEntity::findCaptureDef ( const string& name, bool beCaptured )
+CaptureDef* ProjectEntityOld::findCaptureDef ( const string& name, bool beCaptured )
 {
 	//vars
 	CaptureDef * res;
@@ -347,7 +347,7 @@ CaptureDef* ProjectEntity::findCaptureDef ( const string& name, bool beCaptured 
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::ensureUniqCapture ( const LatexFormulas& f )
+void ProjectEntityOld::ensureUniqCapture ( const LatexFormulas& f )
 {
 	//vars
 	std::string value = f.getString();
@@ -361,7 +361,7 @@ void ProjectEntity::ensureUniqCapture ( const LatexFormulas& f )
 }
 
 /*******************  FUNCTION  *********************/
-bool ProjectEntity::match ( const string& value ) const
+bool ProjectEntityOld::match ( const string& value ) const
 {
 	//convert
 	LatexEntity e(value);
@@ -371,7 +371,7 @@ bool ProjectEntity::match ( const string& value ) const
 }
 
 /*******************  FUNCTION  *********************/
-bool ProjectEntity::haveCapture ( const string& name )
+bool ProjectEntityOld::haveCapture ( const string& name )
 {
 	//do capture
 	CaptureDef * def = this->findCaptureDef(name,true);
@@ -380,7 +380,7 @@ bool ProjectEntity::haveCapture ( const string& name )
 }
 
 /*******************  FUNCTION  *********************/
-StringVector ProjectEntity::getCapturedIndices ( void ) const
+StringVector ProjectEntityOld::getCapturedIndices ( void ) const
 {
 	//vars
 	StringVector res;
@@ -397,7 +397,7 @@ StringVector ProjectEntity::getCapturedIndices ( void ) const
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::printDebug ( ostream& out, const string& name, const ProjectCaptureDefMap& map ) 
+void ProjectEntityOld::printDebug ( ostream& out, const string& name, const ProjectCaptureDefMap& map ) 
 {
 	out << "    - " << setw(11) << left << name << ": ";
 	for (int i = 0 ; i < map.size() ; i++)
@@ -413,7 +413,7 @@ void ProjectEntity::printDebug ( ostream& out, const string& name, const Project
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::printDebug ( ostream& out ) const
+void ProjectEntityOld::printDebug ( ostream& out ) const
 {
 	out << "Entity :" << endl;
 	out << "    - latexName  : " << getLatexName() << endl;
@@ -427,25 +427,25 @@ void ProjectEntity::printDebug ( ostream& out ) const
 }
 
 /*******************  FUNCTION  *********************/
-const ProjectCaptureDefMap& ProjectEntity::getExponents(void ) const
+const ProjectCaptureDefMap& ProjectEntityOld::getExponents(void ) const
 {
 	return exponents;
 }
 
 /*******************  FUNCTION  *********************/
-const ProjectCaptureDefMap& ProjectEntity::getIndices(void ) const
+const ProjectCaptureDefMap& ProjectEntityOld::getIndices(void ) const
 {
 	return indices;
 }
 
 /*******************  FUNCTION  *********************/
-const ProjectCaptureDefMap& ProjectEntity::getParameters(void ) const
+const ProjectCaptureDefMap& ProjectEntityOld::getParameters(void ) const
 {
 	return parameters;
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::markAllCaptureAs(CaptureType capture)
+void ProjectEntityOld::markAllCaptureAs(CaptureType capture)
 {
 	markAllCaptureAs(indices,capture);
 	markAllCaptureAs(exponents,capture);
@@ -453,20 +453,20 @@ void ProjectEntity::markAllCaptureAs(CaptureType capture)
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::markAllCaptureAs(ProjectCaptureDefMap& map, CaptureType capture)
+void ProjectEntityOld::markAllCaptureAs(ProjectCaptureDefMap& map, CaptureType capture)
 {
 	for (ProjectCaptureDefMap::iterator it = map.begin() ; it != map.end() ; ++it)
 		it->captureType = capture;
 }
 
 /*******************  FUNCTION  *********************/
-void ProjectEntity::captureName ( void )
+void ProjectEntityOld::captureName ( void )
 {
 	this->capName = true;
 }
 
 /*******************  FUNCTION  *********************/
-bool ProjectEntity::isWildcardName ( void )
+bool ProjectEntityOld::isWildcardName ( void )
 {
 	return this->capName;
 }
