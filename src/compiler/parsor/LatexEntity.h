@@ -26,6 +26,14 @@ class LatexFormulas;
 typedef std::vector<LatexFormulas*> LatexFormulasVector;
 typedef std::map<std::string,void *> CMRLatexExtraInfo;
 
+/********************  ENUM  ************************/
+enum LatexEntityChilds
+{
+	LATEX_EXPONENTS,
+	LATEX_INDICES,
+	LATEX_PARAMETERS
+};
+
 /*********************  CLASS  **********************/
 class LatexEntity
 {
@@ -48,9 +56,11 @@ class LatexEntity
 		LatexFormulasVector & getIndices(void);
 		LatexFormulasVector & getExponents(void);
 		LatexFormulasVector & getParameters(void);
+		LatexFormulasVector & getChilds(LatexEntityChilds mode);
 		const LatexFormulasVector & getIndices(void) const ;
 		const LatexFormulasVector & getExponents(void) const ;
 		const LatexFormulasVector & getParameters(void) const ;
+		const LatexFormulasVector & getChilds(LatexEntityChilds mode) const;
 		void addExponent( const std::string& value );
 		void parse( const std::string& value ) throw(LatexException);
 		void parse( LatexParsorContext & context);

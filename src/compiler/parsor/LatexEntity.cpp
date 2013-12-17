@@ -663,4 +663,32 @@ void LatexEntity::addExponent ( const string& value )
 	this->exponents.push_back(f);
 }
 
+/*******************  FUNCTION  *********************/
+LatexFormulasVector& LatexEntity::getChilds ( LatexEntityChilds mode )
+{
+	switch(mode)
+	{
+		case LATEX_EXPONENTS:
+			return exponents;
+		case LATEX_INDICES:
+			return indices;
+		case LATEX_PARAMETERS:
+			return parameters;
+	}
+}
+
+/*******************  FUNCTION  *********************/
+const LatexFormulasVector& LatexEntity::getChilds ( LatexEntityChilds mode ) const
+{
+	switch(mode)
+	{
+		case LATEX_EXPONENTS:
+			return exponents;
+		case LATEX_INDICES:
+			return indices;
+		case LATEX_PARAMETERS:
+			return parameters;
+	}
+}
+
 }

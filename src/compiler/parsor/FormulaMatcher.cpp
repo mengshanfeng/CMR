@@ -24,6 +24,7 @@ namespace CMRCompiler
 /*********************  CONSTS  *********************/
 static const std::string CAPTURE_TAG = "FormulaMatcher::captureFlag";
 static const std::string OPTIONAL_TAG = "FormulaMatcher::optionalFlag";
+static const std::string WILDCARD_TAG = "FormulaMatcher::wildcardFlag";
 
 /*******************  FUNCTION  *********************/
 FormulaMatcherResult::FormulaMatcherResult ( void )
@@ -56,7 +57,13 @@ FormulaMatcher::FormulaMatcher ( const string& model, bool allowMultipleRootElmt
 }
 
 /*******************  FUNCTION  *********************/
-void FormulaMatcher::markForCapture ( const string& value, const CMRCompiler::FormulaMatcherFilter* filter, bool optional )
+void FormulaMatcher::markForCapture ( const string& value, unsigned int filter,bool optional, bool wildcard )
+{
+	this->markForCapture(value,new FormulaMatcherFilterDefault(filter),optional,wildcard);
+}
+
+/*******************  FUNCTION  *********************/
+void FormulaMatcher::markForCapture ( const string& value, const FormulaMatcherFilter* filter, bool optional, bool wildcard)
 {
 	//errors
 	assert(value.empty() == false);
@@ -66,12 +73,12 @@ void FormulaMatcher::markForCapture ( const string& value, const CMRCompiler::Fo
 	cmrAssume(entity.isOnlyOneName(),"Caution, you provide a complex entity (with exponent, indices...) for capture. Not supported up to now. ('%s')",value.c_str());
 	
 	//put capture flags on formula childs
-	if ( ! setupCaptureFlag(formula,entity,filter,optional) )
+	if ( ! setupCaptureFlag(formula,entity,filter,optional,wildcard) )
 		throw LatexException(string("Invalid name to change capture type (") + value + string(") in : ") + this->toString());
 }
 
 /*******************  FUNCTION  *********************/
-bool FormulaMatcher::setupCaptureFlag ( LatexEntity& entity, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional )
+bool FormulaMatcher::setupCaptureFlag ( LatexEntity& entity, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional, bool wildcard )
 {
 	bool res = false;
 	//check if entity is equal
@@ -80,30 +87,32 @@ bool FormulaMatcher::setupCaptureFlag ( LatexEntity& entity, const LatexEntity& 
 		entity.setExtraInfo(CAPTURE_TAG,(void*)filter);
 		if (optional)
 			entity.setExtraInfo(OPTIONAL_TAG,(void*)filter);
+		if (optional)
+			entity.setExtraInfo(WILDCARD_TAG,(void*)filter);
 		res = true;
 	}
 	//loop on childs
-	res = setupCaptureFlag(entity.getIndices(),what,filter,optional) || res;
-	res = setupCaptureFlag(entity.getExponents(),what,filter,optional) || res;
-	res = setupCaptureFlag(entity.getParameters(),what,filter,optional) || res;
+	res = setupCaptureFlag(entity.getIndices(),what,filter,optional,wildcard) || res;
+	res = setupCaptureFlag(entity.getExponents(),what,filter,optional,wildcard) || res;
+	res = setupCaptureFlag(entity.getParameters(),what,filter,optional,wildcard) || res;
 	return res;
 }
 
 /*******************  FUNCTION  *********************/
-bool FormulaMatcher::setupCaptureFlag ( LatexFormulasVector& formula, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional )
+bool FormulaMatcher::setupCaptureFlag ( LatexFormulasVector& formula, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional ,bool wildcard)
 {
 	bool res = false;
 	for (LatexFormulasVector::iterator it = formula.begin() ; it != formula.end() ; ++it)
-		res = setupCaptureFlag(**it,what,filter,optional) || res;
+		res = setupCaptureFlag(**it,what,filter,optional,wildcard) || res;
 	return res;
 }
 
 /*******************  FUNCTION  *********************/
-bool FormulaMatcher::setupCaptureFlag ( LatexFormulas& formula, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional )
+bool FormulaMatcher::setupCaptureFlag ( LatexFormulas& formula, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional,bool wildcard )
 {
 	bool res = false;
 	for (LatexFormulas::iterator it = formula.begin() ; it != formula.end() ; ++it)
-		res = setupCaptureFlag(**it,what,filter,optional) || res;
+		res = setupCaptureFlag(**it,what,filter,optional,wildcard) || res;
 
 	return res;
 }
@@ -144,35 +153,35 @@ bool FormulaMatcher::match ( const LatexFormulas& f, FormulaMatcherResult& resul
 /*******************  FUNCTION  *********************/
 bool FormulaMatcher::match ( const LatexFormulas& f, LatexFormulas::const_iterator& startIt, FormulaMatcherResult& result, unsigned int mode ) const
 {
-	return internalMatch(formula,f,startIt,result,mode);
+	FormulaMatcherContext context(mode,&formula,&f);
+	return internalMatchSubFormula(result,context,startIt);
 }
 
 /*******************  FUNCTION  *********************/
-bool FormulaMatcher::internalMatch ( const LatexFormulas& ref, const LatexFormulas& f, LatexFormulas::const_iterator & startIt, FormulaMatcherResult& result, unsigned int mode ) const
+bool FormulaMatcher::internalMatchSubFormula ( FormulaMatcherResult& result,const FormulaMatcherContext &context, LatexFormulas::const_iterator& itStart) const
 {
 	//check for root partial
-	bool rootPartial = mode & FORMULA_MATCHER_ROOT_PARTIAL;
-	mode &= ~FORMULA_MATCHER_ROOT_PARTIAL;
+	bool rootPartial = context.hasRootPartial();
 	bool res;
+	
+	//errors
+	assert(context.ref != NULL);
+	assert(context.cur != NULL);
+	
+	//quicker access
+	const LatexFormulas & ref = *context.ref;
+	const LatexFormulas & f = *context.cur;
 
 	//loop and copare all elemnts
 	LatexFormulas::const_iterator itRef = ref.begin();
-	LatexFormulas::const_iterator itF = startIt;
-	while (itRef != ref.end() && itF != f.end())
+	LatexFormulas::const_iterator itCur = itStart;
+	while (itRef != ref.end() && itCur != f.end())
 	{
 		//compare current entity, otherwise fail
-		if ( ! internalMatch(**itRef,**itF,result,mode))
-		{
-			//if optional, move forward only on ref, otherwise it's failure
-			if ((*itRef)->hasInfo(OPTIONAL_TAG))
-				++itRef;
-			else
-				return false;
-		} else {
-			//move all
-			++itRef;
-			++itF;
-		}
+		if ( internalMatchNextRefEntity(result,context,itRef,itCur))
+			itRef++;
+		else
+			return false;
 	}
 	
 	//skip optional ref if have some
@@ -180,7 +189,7 @@ bool FormulaMatcher::internalMatch ( const LatexFormulas& ref, const LatexFormul
 		itRef++;
 
 	//check final status
-	if (itRef == ref.end() && itF == f.end())
+	if (itRef == ref.end() && itCur == f.end())
 		res = true;
 	else if (itRef == ref.end())
 		res = ((result.cntExactMatch + result.cntCaptureMatch) > 0 && rootPartial);
@@ -189,19 +198,44 @@ bool FormulaMatcher::internalMatch ( const LatexFormulas& ref, const LatexFormul
 	
 	//update startit
 	if (res)
-		startIt = itF;
+		itStart = itCur;
 
 	return res;
 }
 
 /*******************  FUNCTION  *********************/
-bool FormulaMatcher::internalMatch ( const LatexEntity& ref, const LatexEntity& f, FormulaMatcherResult& result, unsigned int mode ) const
+bool FormulaMatcher::internalMatchNextRefEntityWildCard ( FormulaMatcherResult& result, const FormulaMatcherContext &context,LatexFormulas::const_iterator& itRef,LatexFormulas::const_iterator& itCur ) const
+{
+	bool isWildcard = (*itRef)->getExtraInfo(CAPTURE_TAG) && (*itRef)->getExtraInfo(WILDCARD_TAG);
+	bool res;
+	bool next;
+	FormulaMatcherResult tmp;
+	LatexFormulas::const_iterator itNextRef = itRef+1;
+	
+	//go forward unit no match or match next
+	do {
+		res = internalMatchNextRefEntity(result,context,itRef,itCur);
+		if (itNextRef != context.ref->end())
+			next = internalMatchNextRefEntity(tmp,context,itNextRef,itCur);
+	} while (isWildcard && res && !next);
+	
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+bool FormulaMatcher::internalMatchNextRefEntity ( FormulaMatcherResult& result, const FormulaMatcherContext &context,LatexFormulas::const_iterator& itRef,LatexFormulas::const_iterator& itCur ) const
 {
 	bool skipParameters = false;
+	bool skipExpo = false;
+	bool skipIndices = false;
 	bool okForCapture = false;
-	unsigned int modeForExp = mode;
-	//remove flag for childs, this is only for root element
-	mode &= ~FORMULA_MATCHER_ROOT_OP_EXPO;
+	
+	//quicker access
+	const LatexEntity & ref = **itRef;
+	const LatexEntity & f = **itCur;
+	
+	//go forward to eat current entry
+	itCur++;
 	
 	//if capture check filter
 	if (ref.hasInfo(CAPTURE_TAG))
@@ -215,15 +249,38 @@ bool FormulaMatcher::internalMatch ( const LatexEntity& ref, const LatexEntity& 
 	if (okForCapture)
 	{
 		//if capture mode, extract the value
-		if (mode & FORMULA_MATCHER_DO_CAPTURE)
+		if (context.mode & FORMULA_MATCHER_DO_CAPTURE)
 		{
 			cmrAssume(!result.hasExtract(ref.getName()),"Try to capture two time the same parameter ! (%s => %s)",
 			          ref.getName().c_str(),f.getString().c_str());
 			//check for () sub grouping or direct value
 			if (f.getName() == "()")
+			{
 				result.captures[ref.getName()] = new LatexFormulas(f.getParameter(0)->getString());
-			else
-				result.captures[ref.getName()] = new LatexFormulas(f.getName());
+			} else {
+				LatexEntity * copy = new LatexEntity(f.getString());
+				if (ref.countExponents() > 0)
+				{
+					copy->getExponents().clear();
+				} else {
+					skipExpo = true;
+				}
+				if (ref.countIndices() >0)
+				{
+					copy->getIndices().clear();
+				} else {
+					skipIndices = true;
+				}
+				if (ref.countParameters() > 0)
+				{
+					copy->getParameters().clear();
+				} else {
+					skipParameters = true;
+				}
+				LatexFormulas * f = new LatexFormulas();
+				f->push_back(copy);
+				result.captures[ref.getName()] = f;
+			}
 		}
 		
 		//avoid to check parameters is () as by convention it contain the data
@@ -232,15 +289,15 @@ bool FormulaMatcher::internalMatch ( const LatexEntity& ref, const LatexEntity& 
 	} else {
 		//check for name
 		if (ref.getName() != f.getName())
-			return false;
+			return ref.hasInfo(OPTIONAL_TAG);
 	}
 
 	//check for params
-	if (!internalMatch(ref.getIndices(),f.getIndices(),result,mode))
+	if (!skipIndices && !internalMatchChilds(result,context,ref,f,LATEX_INDICES))
 		return false;
-	if (!internalMatch(ref.getExponents(),f.getExponents(),result,modeForExp))
+	if (!skipExpo && !internalMatchChilds(result,context,ref,f,LATEX_EXPONENTS))
 		return false;
-	if (!skipParameters && !internalMatch(ref.getParameters(),f.getParameters(),result,mode))
+	if (!skipParameters && !internalMatchChilds(result,context,ref,f,LATEX_PARAMETERS))
 		return false;
 	
 	//update counts
@@ -254,22 +311,27 @@ bool FormulaMatcher::internalMatch ( const LatexEntity& ref, const LatexEntity& 
 }
 
 /*******************  FUNCTION  *********************/
-bool FormulaMatcher::internalMatch ( const LatexFormulasVector& ref, const LatexFormulasVector& f, FormulaMatcherResult& result, unsigned int mode ) const
+bool FormulaMatcher::internalMatchChilds ( FormulaMatcherResult& result, const FormulaMatcherContext& context,const LatexEntity & ref,const LatexEntity & cur,LatexEntityChilds childMode) const
 {
 	//check for root partial
-	bool rootPartial = mode & FORMULA_MATCHER_ROOT_PARTIAL;
-	mode &= ~FORMULA_MATCHER_ROOT_PARTIAL;
-	bool optionalExpo = (mode & FORMULA_MATCHER_ROOT_OP_EXPO) && allowExponent;
-	mode &= ~FORMULA_MATCHER_ROOT_OP_EXPO;
+	//bool rootPartial = mode & FORMULA_MATCHER_ROOT_PARTIAL;
+// 	mode &= ~FORMULA_MATCHER_ROOT_PARTIAL;
+	bool optionalExpo =  (childMode == LATEX_EXPONENTS) && allowExponent && context.hasRootOptionalExpo();
 
-	//loop and copare all elemnts
-	LatexFormulasVector::const_iterator itRef = ref.begin();
-	LatexFormulasVector::const_iterator itF = f.begin();
-	while (itRef != ref.end() && itF != f.end())
+	//extract vectors
+	const LatexFormulasVector & refVec = ref.getChilds(childMode);
+	const LatexFormulasVector & curVec = cur.getChilds(childMode);
+	
+	//loop on all childs by going forward
+	LatexFormulasVector::const_iterator itRef = refVec.begin();
+	LatexFormulasVector::const_iterator itCur = curVec.begin();
+	while (itRef != refVec.end() && itCur != curVec.end())
 	{
+		//construct child context
+		FormulaMatcherContext childContext(&context,*itRef,*itCur);
 		//compare current entity, otherwise fail
-		LatexFormulas::const_iterator it = (*itF)->begin();
-		if ( ! internalMatch(**itRef,**itF,it,result,mode))
+		LatexFormulas::const_iterator itCurBegin = (*itCur)->begin();
+		if ( ! internalMatchSubFormula(result,childContext,itCurBegin))
 		{
 			//if optional, move forward only on ref, otherwise it's failure
 			if (isOptionalFormula (**itRef))
@@ -279,29 +341,29 @@ bool FormulaMatcher::internalMatch ( const LatexFormulasVector& ref, const Latex
 		} else {
 			//move all
 			++itRef;
-			++itF;
+			++itCur;
 		}
 	}
 	
 	//skip optional ref if have some
-	while (itRef != ref.end() && isOptionalFormula(**itRef))
+	while (itRef != refVec.end() && isOptionalFormula(**itRef))
 		itRef++;
 	
 	//manage optional exponent
-	if (optionalExpo && itRef == ref.end() && itF != f.end())
+	if (optionalExpo && itRef == refVec.end() && itCur != curVec.end())
 	{
-		if (mode & FORMULA_MATCHER_DO_CAPTURE)
-			result.exponent = new LatexFormulas((*itF)->getString());
+		if ( context.mode & FORMULA_MATCHER_DO_CAPTURE)
+			result.exponent = new LatexFormulas((*itCur)->getString());
 		result.cntCaptureMatch++;
 		result.cntCompared++;
-		itF++;
+		itCur++;
 	}
 
 	//check final status
-	if (itRef == ref.end() && itF == f.end())
+	if (itRef == refVec.end() && itCur == curVec.end())
 		return true;
-	else if (itRef == ref.end())
-		return ((result.cntExactMatch + result.cntCaptureMatch) > 0 && rootPartial);
+// 	else if (itRef == ref.end())
+// 		return ((result.cntExactMatch + result.cntCaptureMatch) > 0 && rootPartial);
 	else
 		return false;
 }
@@ -499,6 +561,45 @@ string FormulaMatcherResult::toString ( void ) const
 bool FormulaMatcherResult::hasExponent ( void ) const
 {
 	return exponent != NULL;
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcherContext::FormulaMatcherContext ( unsigned int mode, const LatexFormulas* ref, const LatexFormulas* formula )
+{
+	this->parent = NULL;
+	this->ref = ref;
+	this->cur = formula;
+	this->mode = mode;
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcherContext::FormulaMatcherContext ( const FormulaMatcherContext* parent, const LatexFormulas* ref, const LatexFormulas* formula )
+{
+	assert(parent != NULL);
+	this->parent = parent;
+	this->ref = ref;
+	this->cur = formula;
+	this->mode = this->parent->mode;
+}
+
+/*******************  FUNCTION  *********************/
+bool FormulaMatcherContext::hasRootPartial() const
+{
+	return ((parent == NULL) && (mode & FORMULA_MATCHER_ROOT_PARTIAL));
+}
+
+/*******************  FUNCTION  *********************/
+bool FormulaMatcherContext::hasRootOptionalExpo ( void ) const
+{
+	bool hasFlag = (parent == NULL) && (mode & FORMULA_MATCHER_ROOT_OP_EXPO);
+
+	if (hasFlag && ref->size() > 1)
+	{
+		cmrWarning("Caution, you try to use FORMULA_MATCHER_ROOT_OP_EXPO on composed reference, ignoring the flag.");
+		hasFlag = false;
+	}
+
+	return hasFlag;
 }
 
 };

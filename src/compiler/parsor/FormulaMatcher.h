@@ -59,6 +59,7 @@ enum EntityCategory
 	ENTITY_CAT_MEMBER = 0x1<<0,
 	ENTITY_CAT_OPERATOR = 0x1 <<1,
 	ENTITY_CAT_GROUP = 0x1 <<2,
+	ENTITY_CAT_WILDCARD = 0x1 << 3,
 	ENTITY_CAT_STD = ENTITY_CAT_MEMBER | ENTITY_CAT_GROUP,
 	ENTITY_CAT_ALL = ENTITY_CAT_MEMBER | ENTITY_CAT_OPERATOR | ENTITY_CAT_GROUP
 };
@@ -83,6 +84,19 @@ class FormulaMatcherFilterDefault : public FormulaMatcherFilter
 		unsigned int accepted;
 };
 
+/*********************  STRUCT  *********************/
+struct FormulaMatcherContext
+{
+	FormulaMatcherContext(unsigned int mode,const LatexFormulas * ref,const LatexFormulas * formula);
+	FormulaMatcherContext(const FormulaMatcherContext * parent,const LatexFormulas * ref,const LatexFormulas * formula);
+	bool hasRootPartial(void) const;
+	bool hasRootOptionalExpo(void) const;
+	const FormulaMatcherContext * parent;
+	const LatexFormulas * ref;
+	const LatexFormulas * cur;
+	unsigned int mode;
+};
+
 /*********************  CLASS  **********************/
 class FormulaMatcher
 {
@@ -90,7 +104,8 @@ class FormulaMatcher
 	public:
 		FormulaMatcher(const std::string & model, bool allowMultipleRootElmts = true);
 		virtual ~FormulaMatcher(void);
-		void markForCapture( const std::string& value, const FormulaMatcherFilter* filter = CMR_FORMULA_MATCHER_FILTER_DEFAULT, bool optional = false );
+		void markForCapture( const std::string& value, unsigned int filter = ENTITY_CAT_STD, bool optional = false, bool wildcard = false);
+		void markForCapture( const std::string& value, const FormulaMatcherFilter* filter, bool optional = false, bool wildcard = false );
 		void dumpAsTree ( std::ostream& buffer, int indent = 0 ) const;
 		void dumpAsXml(std::ostream & out, int depth = 0) const;
 		bool match(const LatexFormulas & f,unsigned int mode = FORMULA_MATCHER_DEFAULT) const;
@@ -110,12 +125,13 @@ class FormulaMatcher
 		//friend ops
 		friend std::ostream & operator << (std::ostream & out,const FormulaMatcher & value);
 	protected:
-		bool setupCaptureFlag( CMRCompiler::LatexEntity& entity, const CMRCompiler::LatexEntity& what, const CMRCompiler::FormulaMatcherFilter* filter, bool optional );
-		bool setupCaptureFlag( CMRCompiler::LatexFormulas& formula, const CMRCompiler::LatexEntity& what, const CMRCompiler::FormulaMatcherFilter* filter , bool optional);
-		bool setupCaptureFlag( CMRCompiler::LatexFormulasVector& formula, const CMRCompiler::LatexEntity& what, const CMRCompiler::FormulaMatcherFilter* filter , bool optional);
-		bool internalMatch( const LatexFormulas& ref, const LatexFormulas& f, LatexFormulas::const_iterator & startIt, FormulaMatcherResult& result, unsigned int mode ) const;
-		bool internalMatch( const LatexEntity& ref, const LatexEntity& f, FormulaMatcherResult& result, unsigned int mode ) const;
-		bool internalMatch(const LatexFormulasVector & ref,const LatexFormulasVector & f,FormulaMatcherResult & result,unsigned int mode) const;
+		bool setupCaptureFlag( LatexEntity& entity, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional, bool wildcard );
+		bool setupCaptureFlag( LatexFormulas& formula, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional, bool wildcard );
+		bool setupCaptureFlag( LatexFormulasVector& formula, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional, bool wildcard );
+		bool internalMatchSubFormula( FormulaMatcherResult& result, const FormulaMatcherContext& context, LatexFormulas::const_iterator& startIt ) const;
+		bool internalMatchNextRefEntityWildCard( FormulaMatcherResult& result, const FormulaMatcherContext& context, LatexFormulas::const_iterator& itRef, LatexFormulas::const_iterator& itF ) const;
+		bool internalMatchNextRefEntity( FormulaMatcherResult& result, const FormulaMatcherContext& context, LatexFormulas::const_iterator& itRef, LatexFormulas::const_iterator& itF ) const;
+		bool internalMatchChilds( FormulaMatcherResult& result, const FormulaMatcherContext& context, const LatexEntity& ref, const LatexEntity& cur, LatexEntityChilds childMode ) const;
 		bool isOptionalFormula(const LatexFormulas& f) const;
 		void printDebug(std::ostream & out,const LatexFormulas & f) const;
 		void printDebug(std::ostream & out,const LatexEntity & entity) const;

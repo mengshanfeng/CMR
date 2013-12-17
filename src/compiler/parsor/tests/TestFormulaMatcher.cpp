@@ -494,3 +494,81 @@ TEST(TestFormulaMatcher,testCaptureOptionalExponent3)
 	FormulaMatcherResult res;
 	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
 }
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureWildcard1)
+{
+	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture("x",ENTITY_CAT_STD,false,true);
+	
+	//check matching
+	LatexFormulas test("a_{i+\\frac{1}{2}}");
+	FormulaMatcherResult res;
+	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+	ASSERT_TRUE(res.hasExtract("x"));
+	EXPECT_EQ("i",res.captures["x"]->getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureWildcard2)
+{
+	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture("x",ENTITY_CAT_STD,false,true);
+	
+	//check matching
+	LatexFormulas test("a_{i+\\frac{2}{2}}");
+	FormulaMatcherResult res;
+	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureWildcard3)
+{
+	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture("x",ENTITY_CAT_STD,false,true);
+	
+	//check matching
+	LatexFormulas test("a_{\\frac{1}{2}}");
+	FormulaMatcherResult res;
+	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureWildcard4)
+{
+	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture("x",ENTITY_CAT_STD,true,true);
+	
+	//check matching
+	LatexFormulas test("a_{\\frac{1}{2}}");
+	FormulaMatcherResult res;
+	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureWildcard5)
+{
+	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture("x",ENTITY_CAT_ALL,false,true);
+	
+	//check matching
+	LatexFormulas test("a_{i+1+\\frac{1}{2}}");
+	FormulaMatcherResult res;
+	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+	ASSERT_TRUE(res.hasExtract("x"));
+	EXPECT_EQ("i+1",res.captures["x"]->getString());
+}
+
+/*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureWithParams)
+{
+	FormulaMatcher matcher("a_{x}");
+	matcher.markForCapture("x");
+	
+	//check matching
+	LatexFormulas test("a_{\\frac{1}{2}}");
+	FormulaMatcherResult res;
+	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+	ASSERT_TRUE(res.hasExtract("x"));
+	EXPECT_EQ("\\frac{1}{2}",res.captures["x"]->getString());
+}
