@@ -10,6 +10,7 @@
 /********************  HEADERS  *********************/
 #include <cassert>
 #include <sstream>
+#include <cstdio>
 #include "common/Debug.h"
 #include "FormulaMatcher.h"
 #include "ParsorBasics.h"
@@ -87,7 +88,7 @@ bool FormulaMatcher::setupCaptureFlag ( LatexEntity& entity, const LatexEntity& 
 		entity.setExtraInfo(CAPTURE_TAG,(void*)filter);
 		if (optional)
 			entity.setExtraInfo(OPTIONAL_TAG,(void*)filter);
-		if (optional)
+		if (wildcard)
 			entity.setExtraInfo(WILDCARD_TAG,(void*)filter);
 		res = true;
 	}
@@ -160,6 +161,12 @@ bool FormulaMatcher::match ( const LatexFormulas& f, LatexFormulas::const_iterat
 /*******************  FUNCTION  *********************/
 bool FormulaMatcher::internalMatchSubFormula ( FormulaMatcherResult& result,const FormulaMatcherContext &context, LatexFormulas::const_iterator& itStart) const
 {
+	return internalMatchSubFormula(result,context,itStart,context.ref->begin());
+}
+
+/*******************  FUNCTION  *********************/
+bool FormulaMatcher::internalMatchSubFormula ( FormulaMatcherResult& result,const FormulaMatcherContext &context, LatexFormulas::const_iterator& itStart,const LatexFormulas::const_iterator& refStart) const
+{
 	//check for root partial
 	bool rootPartial = context.hasRootPartial();
 	bool res;
@@ -173,12 +180,12 @@ bool FormulaMatcher::internalMatchSubFormula ( FormulaMatcherResult& result,cons
 	const LatexFormulas & f = *context.cur;
 
 	//loop and copare all elemnts
-	LatexFormulas::const_iterator itRef = ref.begin();
+	LatexFormulas::const_iterator itRef = refStart;
 	LatexFormulas::const_iterator itCur = itStart;
 	while (itRef != ref.end() && itCur != f.end())
 	{
 		//compare current entity, otherwise fail
-		if ( internalMatchNextRefEntity(result,context,itRef,itCur))
+		if ( internalMatchNextRefEntityWildCard(result,context,itRef,itCur))
 			itRef++;
 		else
 			return false;
@@ -206,18 +213,25 @@ bool FormulaMatcher::internalMatchSubFormula ( FormulaMatcherResult& result,cons
 /*******************  FUNCTION  *********************/
 bool FormulaMatcher::internalMatchNextRefEntityWildCard ( FormulaMatcherResult& result, const FormulaMatcherContext &context,LatexFormulas::const_iterator& itRef,LatexFormulas::const_iterator& itCur ) const
 {
-	bool isWildcard = (*itRef)->getExtraInfo(CAPTURE_TAG) && (*itRef)->getExtraInfo(WILDCARD_TAG);
+	bool isWildcard = (*itRef)->hasInfo(CAPTURE_TAG) && (*itRef)->hasInfo(WILDCARD_TAG);
 	bool res;
-	bool next;
-	FormulaMatcherResult tmp;
 	LatexFormulas::const_iterator itNextRef = itRef+1;
+	bool tryNext;
 	
 	//go forward unit no match or match next
 	do {
 		res = internalMatchNextRefEntity(result,context,itRef,itCur);
-		if (itNextRef != context.ref->end())
-			next = internalMatchNextRefEntity(tmp,context,itNextRef,itCur);
-	} while (isWildcard && res && !next);
+		tryNext = (isWildcard && res && itCur != context.cur->end());
+		if (tryNext)
+		{
+			FormulaMatcherResult tmp;
+			LatexFormulas::const_iterator tmpItCur = itCur;
+			LatexFormulas::const_iterator tmpItRef = itNextRef;
+			//check if next refs entry can eat the cur values, if true stop capturing wildcards
+			//tryNext = !internalMatchNextRefEntity(tmp,context,itNextRef,tmpItCur);
+			tryNext = !internalMatchSubFormula(tmp,context,tmpItCur,tmpItRef);
+		}
+	} while (tryNext);
 	
 	return res;
 }
@@ -251,13 +265,14 @@ bool FormulaMatcher::internalMatchNextRefEntity ( FormulaMatcherResult& result, 
 		//if capture mode, extract the value
 		if (context.mode & FORMULA_MATCHER_DO_CAPTURE)
 		{
-			cmrAssume(!result.hasExtract(ref.getName()),"Try to capture two time the same parameter ! (%s => %s)",
+			cmrAssume(!result.hasExtract(ref.getName()) || ref.hasInfo(WILDCARD_TAG),"Try to capture two time the same parameter ! (%s => %s)",
 			          ref.getName().c_str(),f.getString().c_str());
 			//check for () sub grouping or direct value
 			if (f.getName() == "()")
 			{
 				result.captures[ref.getName()] = new LatexFormulas(f.getParameter(0)->getString());
 			} else {
+				#warning TODO cleanup this
 				LatexEntity * copy = new LatexEntity(f.getString());
 				if (ref.countExponents() > 0)
 				{
@@ -279,7 +294,10 @@ bool FormulaMatcher::internalMatchNextRefEntity ( FormulaMatcherResult& result, 
 				}
 				LatexFormulas * f = new LatexFormulas();
 				f->push_back(copy);
-				result.captures[ref.getName()] = f;
+				if (result.hasExtract(ref.getName()))
+					result.captures[ref.getName()]->push_back((*f)[0]);
+				else
+					result.captures[ref.getName()] = f;
 			}
 		}
 		

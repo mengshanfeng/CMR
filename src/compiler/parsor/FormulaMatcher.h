@@ -129,6 +129,7 @@ class FormulaMatcher
 		bool setupCaptureFlag( LatexFormulas& formula, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional, bool wildcard );
 		bool setupCaptureFlag( LatexFormulasVector& formula, const LatexEntity& what, const FormulaMatcherFilter* filter, bool optional, bool wildcard );
 		bool internalMatchSubFormula( FormulaMatcherResult& result, const FormulaMatcherContext& context, LatexFormulas::const_iterator& startIt ) const;
+		bool internalMatchSubFormula( FormulaMatcherResult& result, const FormulaMatcherContext& context, LatexFormulas::const_iterator& startIt,  const LatexFormulas::const_iterator& refStart ) const;
 		bool internalMatchNextRefEntityWildCard( FormulaMatcherResult& result, const FormulaMatcherContext& context, LatexFormulas::const_iterator& itRef, LatexFormulas::const_iterator& itF ) const;
 		bool internalMatchNextRefEntity( FormulaMatcherResult& result, const FormulaMatcherContext& context, LatexFormulas::const_iterator& itRef, LatexFormulas::const_iterator& itF ) const;
 		bool internalMatchChilds( FormulaMatcherResult& result, const FormulaMatcherContext& context, const LatexEntity& ref, const LatexEntity& cur, LatexEntityChilds childMode ) const;

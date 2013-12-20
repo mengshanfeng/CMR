@@ -560,6 +560,20 @@ TEST(TestFormulaMatcher,testCaptureWildcard5)
 }
 
 /*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureWildcard6)
+{
+	FormulaMatcher matcher("a_{x}");
+	matcher.markForCapture("x",ENTITY_CAT_ALL,false,true);
+	
+	//check matching
+	LatexFormulas test("a_{i+1+\\frac{1}{2}}");
+	FormulaMatcherResult res;
+	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+	ASSERT_TRUE(res.hasExtract("x"));
+	EXPECT_EQ("i+1+\\frac{1}{2}",res.captures["x"]->getString());
+}
+
+/*******************  FUNCTION  *********************/
 TEST(TestFormulaMatcher,testCaptureWithParams)
 {
 	FormulaMatcher matcher("a_{x}");
