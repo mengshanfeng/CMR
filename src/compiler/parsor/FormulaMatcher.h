@@ -104,6 +104,7 @@ class FormulaMatcher
 	public:
 		FormulaMatcher(const std::string & model, bool allowMultipleRootElmts = true);
 		virtual ~FormulaMatcher(void);
+		void markForWildcadCapture(const std::string & value);
 		void markForCapture( const std::string& value, unsigned int filter = ENTITY_CAT_STD, bool optional = false, bool wildcard = false);
 		void markForCapture( const std::string& value, const FormulaMatcherFilter* filter, bool optional = false, bool wildcard = false );
 		void dumpAsTree ( std::ostream& buffer, int indent = 0 ) const;

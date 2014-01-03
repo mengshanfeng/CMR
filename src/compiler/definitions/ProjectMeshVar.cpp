@@ -27,8 +27,8 @@ ProjectMeshVar::ProjectMeshVar ( const string& latexName, const string& longName
 	: ProjectEntityNew ( latexName, longName )
 {
 	//setup capture
-	markForCapture("i");
-	markForCapture("j");
+	markForWildcadCapture("i");
+	markForWildcadCapture("j");
 	
 	//check that we have i/j for capture
 	assert(type.empty() == false);
@@ -45,7 +45,7 @@ void ProjectMeshVar::addDim ( const string& name,int size,int start )
 	assert(size > 0);
 	assert(name.empty() == false);
 	defs.push_back(ProjectMeshVarDef(name,size,start));
-	markForCapture(name);
+	markForWildcadCapture(name);
 }
 
 /*******************  FUNCTION  *********************/

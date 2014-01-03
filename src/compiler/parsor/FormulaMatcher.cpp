@@ -274,7 +274,7 @@ bool FormulaMatcher::internalMatchNextRefEntity ( FormulaMatcherResult& result, 
 			} else {
 				#warning TODO cleanup this
 				LatexEntity * copy = new LatexEntity(f.getString());
-				if (ref.countExponents() > 0)
+				if (ref.countExponents() > 0 || (allowExponent && context.hasRootOptionalExpo()))
 				{
 					copy->getExponents().clear();
 				} else {
@@ -390,6 +390,12 @@ bool FormulaMatcher::internalMatchChilds ( FormulaMatcherResult& result, const F
 FormulaMatcherFilterDefault::FormulaMatcherFilterDefault ( unsigned int accepted )
 {
 	this->accepted = accepted;
+}
+
+/*******************  FUNCTION  *********************/
+void FormulaMatcher::markForWildcadCapture(const string& value)
+{
+	this->markForCapture(value,ENTITY_CAT_ALL,false,true);
 }
 
 /*******************  FUNCTION  *********************/

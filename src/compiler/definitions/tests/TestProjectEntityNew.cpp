@@ -177,17 +177,18 @@ TEST(TestProjectEntityNew,testCapture_4)
 TEST(TestProjectEntityNew,testCapture_wildcard_1)
 {
 	MockProjectEntityNew entity("x_{eq,k}","test");
-	entity.markForCapture("k");
+	entity.markForWildcadCapture("k");
 	entity.markForCapture("x");
+	entity.setOptionalExponent();
 	LatexEntity le("A_{eq,42}^2");
 	
 	FormulaMatcherResult capture;
 	entity.capture(le,capture);
 	
 	EXPECT_EQ(3,capture.cntCaptureMatch);
+	EXPECT_EQ("A",capture.captures["x"]->getString());
 	ASSERT_TRUE(capture.hasExponent());
 	EXPECT_EQ("2",capture.exponent->getString());
-	EXPECT_EQ("A",capture.captures["x"]->getString());
 }
 
 /*******************  FUNCTION  *********************/
