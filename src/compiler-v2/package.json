@@ -1,0 +1,24 @@
+{
+  "name": "cmrc",
+  "version": "0.0.0-dev",
+  "description": "Compiler to generate C++ code from CMR DSL.",
+  "main": "main.js",
+  "scripts": {
+    "test": "main.js"
+  },
+  "keywords": [
+    "compiler",
+    "DSL",
+    "latex",
+    "math",
+    "cartesian",
+    "mesh",
+    "parallel"
+  ],
+  "author": "Sébastien Valat",
+  "licence": "CeCILL-C",
+  "dependencies": {
+    "jison": "~0.4.13",
+    "nodeunit": "~0.8.6"
+  }
+}
