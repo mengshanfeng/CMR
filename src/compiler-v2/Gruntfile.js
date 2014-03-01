@@ -10,12 +10,18 @@ module.exports = function(grunt) {
 				options: {moduleType : 'commonjs'},
 				files: {'build/latex-parser.js':'latex-parser.jison'}
 			}
+		},
+		
+		nodeunit: {
+			all: ['./*-test.js'],
 		}
 	})
 	
 	//load plugins
 	grunt.loadNpmTasks('grunt-jison');
+	grunt.loadNpmTasks('grunt-contrib-nodeunit');
 	
 	//register tasks
+	grunt.registerTask('test', ['nodeunit']);
 	grunt.registerTask('default', ['jison']);
 }

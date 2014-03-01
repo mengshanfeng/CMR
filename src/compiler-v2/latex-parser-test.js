@@ -1,30 +1,36 @@
 /******************************************************************************/
 //import latex parser
-var parser = require('./latex-parser').parser;
+var parser = require('./build/latex-parser').parser;
 
 /******************************************************************************/
 //Describe all unit tests
 var testData =  {
 	"basics":[
-		{ input:"a",          output:"a",              name:"Simple variable name"},
-		{ input:"\\pi",       output:"\\pi",           name:"Composed variable name"}
+		{ input:"a",                output:"a",                            name:"Simple variable name"},
+		{ input:"\\pi",             output:"\\pi",                         name:"Composed variable name"},
+		{ input:"33",               output:"33",                           name:"Integers"},
+		{ input:"33.5",             output:"33.5",                         name:"Floats"}
+	],
+	"functions":[
+		{ input:"\\cos",            output:"\\cos",                        name:"Function name"},
+		{ input:"\\cos{i}",         output:"\\cos->params(i)",             name:"Function with 1 simple arg"},
+		{ input:"\\cos{i}{j}",      output:"\\cos->params(i,j)",           name:"Function with 1 simple arg"},
+		{ input:"\\cos{i}{j}{k}",   output:"\\cos->params(i,j,k)",         name:"Function with 1 simple arg"}
+	],
+	"exponents": [
+		{ input:"a^b",              output:"a->exp(b)",                    name:"Simple power"},
+		{ input:"a^{b}",            output:"a->exp(b)",                    name:"Simple protected power"},
+		{ input:"a^{b,c}",          output:"a->exp(b,c)",                  name:"Multiple simple power"},
+		{ input:"a^{b,c,d}",        output:"a->exp(b,c,d)",                name:"Another multiple simple power to check resurse"}
+	],
+	"indices": [
+		{ input:"a_i",              output:"a->ind(i)",                    name:"Simple indice"},
+		{ input:"a_{i}",            output:"a->ind(i)",                    name:"Simple protected indice"},
+		{ input:"a_{i,j}",          output:"a->ind(i,j)",                  name:"Multiple simple indices"},
+		{ input:"a_{i,j,k}",        output:"a->ind(i,j,k)",                name:"Another multiple simple indices to check resurse"}
 	]
 };
 /*
-33                            %% Integers
-33.5                          %% Float
-\cos                          %% Function name
-\cos{i}                       %% Function with 1 simple arg
-\cos{i}{j}                    %% Function with 2 simple args
-\cos{i}{j}{k}                 %% Function with 3 simple args
-a^b                           %% Simple power
-a^{b}                         %% Simple protected power
-a^{b,c}                       %% Multiple simple power
-a^{b,c,d}                     %% Another multiple simple power check recurse
-a@i                           %% Simple indice
-a@{i}                         %% Simple protected indice
-a@{i,j}                       %% Multiple simple indices
-a@{i,j,k}                     %% Another multiple simple indices to check recurse
 (a)                           %% Simple group
 (a+b)                         %% Composed group
 (a+b)*(c+d)                   %% More complex composed group
@@ -60,9 +66,9 @@ a	  	b                     %% Check mix space + tabs
 */
 
 /******************************************************************************/
-function runTest(test,def,i)
+function runTest(test,def)
 {
-	console.log(i);
+// 	console.log(i);
 	var res = parser.parse(def.input);
 	test.equal(res,def.output,"Get error in parsor !");
 	test.done();
@@ -81,9 +87,17 @@ for (var g in testData)
 	for (var i in testData[g])
 	{
 		var cur = testData[g][i];
-		list[cur.name] = function(test) {
-			runTest(test,cur,i);
-		};
+		
+		list[cur.name + " : " + cur.input] = (function(d){
+            return function(test) {
+                runTest(test, d);
+            };
+        })(cur);
+		
+		
+// 		list[cur.name] = function(test) {
+// 			runTest(test,cur,i);
+// 		};
 	}
 	exports[g] = list;
 }

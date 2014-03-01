@@ -19,7 +19,7 @@
 "{"                        return '{';                         /* Start protected parameter  */
 "}"                        return '}';                         /* End protected parameter    */
 "^"                        return '^';                         /* Start exponent decoration  */
-"@"                        return '_';                         /* Start indice decoration    */
+[_]                        return '_';                         /* Start indice decoration    */
 ","                        return ',';                         /* Parameter separator        */
 <<EOF>>                    return 'EOF';
 
@@ -109,7 +109,7 @@ decoParameterValue
 	: eq
 		{$$ = $1}
 	| decoParameterValue "," eq
-		{$$ = $1 + " , " + $3}
+		{$$ = $1 + "," + $3}
 	;
 
 /* Function parameters */
@@ -117,7 +117,7 @@ funcParameters
 	: funcParameterValue
 		{$$ = $1}
 	| funcParameters funcParameterValue
-		{$$ = $1 + " , " + $2}
+		{$$ = $1 + "," + $2}
 	;
 
 /* Function parameter protected by {} */
