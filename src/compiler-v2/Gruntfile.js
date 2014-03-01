@@ -14,14 +14,17 @@ module.exports = function(grunt) {
 		
 		nodeunit: {
 			all: ['./*-test.js'],
-		}
+		},
+		
+		clean: ['build/latex-parser.js','build']
 	})
 	
 	//load plugins
 	grunt.loadNpmTasks('grunt-jison');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
+	grunt.loadNpmTasks('grunt-contrib-clean');
 	
 	//register tasks
-	grunt.registerTask('test', ['nodeunit']);
+	grunt.registerTask('test', ['default','nodeunit']);
 	grunt.registerTask('default', ['jison']);
 }

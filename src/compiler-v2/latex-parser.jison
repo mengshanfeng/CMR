@@ -47,7 +47,7 @@ eq
 	: decoWord                               /* Simple uniq decoWord */
 		{$$ = $1}
 	| '-' decoWord %prec UMINUS              /* Invert sign */
-		{$$ = "[-]" + $2}
+		{$$ = "[-] " + $2}
 	| eq decoWord                           /* Composed with implicit mult */
 		{$$ = $1 + " [*] " + $2}
 	| eq 'OPERATOR' decoWord               /* Composed by math operators */
@@ -89,9 +89,9 @@ decoWord
 	: word
 		{$$ = $1}
 	| word '^' decoParameter
-		{$$ = $1 + '->exp(' + $3 +')'}
+		{$$ = $1 + '->exp( ' + $3 +' )'}
 	| word '_' decoParameter
-		{$$ = $1 + '->ind(' + $3 +')'}
+		{$$ = $1 + '->ind( ' + $3 +' )'}
 	;
 
 /* Add decoration on words (exp, indices) */
@@ -99,7 +99,7 @@ decoParameter
 	: decoWord
 		{$$ = $1}
 	| '-' decoWord %prec UMINUS
-		{$$ = "[-]" + $2}
+		{$$ = "[-] " + $2}
 	| "{" decoParameterValue "}"
 		{$$ = $2}
 	;
@@ -109,7 +109,7 @@ decoParameterValue
 	: eq
 		{$$ = $1}
 	| decoParameterValue "," eq
-		{$$ = $1 + "," + $3}
+		{$$ = $1 + " , " + $3}
 	;
 
 /* Function parameters */
@@ -117,7 +117,7 @@ funcParameters
 	: funcParameterValue
 		{$$ = $1}
 	| funcParameters funcParameterValue
-		{$$ = $1 + "," + $2}
+		{$$ = $1 + " , " + $2}
 	;
 
 /* Function parameter protected by {} */
@@ -139,5 +139,5 @@ function
 	: FUNC_NAME
 		{$$ = $1}
 	| FUNC_NAME funcParameters
-		{$$ = $1 + '->params(' + $2 + ')'}
+		{$$ = $1 + '->params( ' + $2 + ' )'}
 	;
