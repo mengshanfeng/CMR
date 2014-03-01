@@ -1,5 +1,5 @@
 // mymodule.js
-var parser = require("./latex-parser").parser;
+var parser = require("./build/latex-parser").parser;
 
 function exec (input) {
     return parser.parse(input);

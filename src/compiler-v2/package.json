@@ -19,6 +19,10 @@
   "licence": "CeCILL-C",
   "dependencies": {
     "jison": "~0.4.13",
-    "nodeunit": "~0.8.6"
+    "nodeunit": "~0.8.6",
+    "grunt": "~0.4.2",
+    "grunt-contrib-nodeunit": "~0.3.2",
+    "grunt-cli": "~0.1.13",
+    "grunt-jison": "~1.2.1"
   }
 }
