@@ -62,6 +62,9 @@ var testData =  {
 		{ input:"a_{a+b}",          output:"a->ind( a + b )",                   name:"Use composed as indice"},
 		{ input:"a_{a+b,c+d}",      output:"a->ind( a + b , c + d )",           name:"Use composed as multi-indices"},
 		{ input:"a_{a+b,c+d,e+f}",  output:"a->ind( a + b , c + d , e + f )",   name:"Use another composed as multi-indices"},
+		{ input:"a^{b}_{c}",        output:"a->exp( b )->ind( c )",             name:"Mixed exp/ind protected"},
+		{ input:"a^b_c",            output:"a->exp( b )->ind( c )",             name:"Mixed exp/ind not protected"},
+		{ input:"a^bc_d",           output:"a->exp( b ) [*] c->ind( d )",       name:"Mixed exp/ind sep"},
 	],
 	"minus": [
 		{ input:"-33",              output:"[-] 33",                           name:"First minus"},

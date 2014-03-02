@@ -88,17 +88,17 @@ word
 decoWord
 	: word
 		{$$ = $1}
-	| word '^' decoParameter
+	| decoWord '^' decoParameter
 		{$$ = $1 + '->exp( ' + $3 +' )'}
-	| word '_' decoParameter
+	| decoWord '_' decoParameter
 		{$$ = $1 + '->ind( ' + $3 +' )'}
 	;
 
 /* Add decoration on words (exp, indices) */
 decoParameter
-	: decoWord
+	: word
 		{$$ = $1}
-	| '-' decoWord %prec UMINUS
+	| '-' word %prec UMINUS
 		{$$ = "[-] " + $2}
 	| "{" decoParameterValue "}"
 		{$$ = $2}
@@ -108,7 +108,7 @@ decoParameter
 decoParameterValue
 	: eq
 		{$$ = $1}
-	| decoParameterValue "," eq
+	| eq "," decoParameterValue
 		{$$ = $1 + " , " + $3}
 	;
 
