@@ -45,39 +45,39 @@ expression
 /* equation is composed of multiple decoWord with optional operators to separate them, if not => implici mult */
 eq
 	: decoWord                               /* Simple uniq decoWord */
-		{$$ = $1}
+		{$$ = {content:[$1]}}
 	| '-' decoWord %prec UMINUS              /* Invert sign */
-		{$$ = "[-] " + $2}
+		{$$ = {content:[{name:"[-]"},$2]}}
 	| eq decoWord                           /* Composed with implicit mult */
-		{$$ = $1 + " [*] " + $2}
+		{$$ = $1; $$.content.push({name:"[*]"}); $$.content.push($2);}
 	| eq 'OPERATOR' decoWord               /* Composed by math operators */
-		{$$ = $1 + " " + $2 + " " + $3}
+		{$$ = $1; $$.content.push({name:$2}); $$.content.push($3);}
 	| eq '-' decoWord                       /* Composed by - operator, not in operator otherwise invert sign don't work */
-		{$$ = $1 + " - " + $3}
+		{$$ = $1; $$.content.push({name:'-'}); $$.content.push($3);}
 	;
 
 /* Old def previously used instead of 'OPERATOR', need to remove this */
 NOTUSED
 	: eq '+' decoWord                       /* Composed by + operator */
-		{$$ = $1 + " + " + $3}
+		{$$ = $1; $$.content.push({name:'+'}); $$.content.push($3);}
 	| eq '-' decoWord                       /* Composed by - operator */
-		{$$ = $1 + " - " + $3}
+		{$$ = $1; $$.content.push({name:'-'}); $$.content.push($3);}
 	| eq '*' decoWord                       /* Composed by * operator */
-		{$$ = $1 + " * " + $3}
+		{$$ = $1; $$.content.push({name:'*'}); $$.content.push($3);}
 	| eq '/' decoWord                       /* Composed by / operator */
-		{$$ = $1 + " / " + $3}
+		{$$ = $1; $$.content.push({name:'-'}); $$.content.push($3);}
 	;
 
 /* group permit to control priority of composed decoWords and protected by () */
 group
 	: '(' eq ')'
-		{$$ = "( " + $2 + " )"}
+		{$$ = {name:'()',groupContent:$2}}
 	;
 
 /* Define a word which if a simple name, a group of a unction. An entity will get some decoration in 'decoWord' definition. **/
 word
 	: name
-		{$$ = $1}
+		{$$ = {name:$1}}
 	| group
 		{$$ = $1}
 	| function
@@ -89,17 +89,17 @@ decoWord
 	: word
 		{$$ = $1}
 	| decoWord '^' decoParameter
-		{$$ = $1 + '->exp( ' + $3 +' )'}
+		{$$ = $1; if ($$.exponents == undefined) $$.exponents = $3; else $$.exponents.concat($3);}
 	| decoWord '_' decoParameter
-		{$$ = $1 + '->ind( ' + $3 +' )'}
+		{$$ = $1; if ($$.indices == undefined) $$.indices = $3; else $$.indices.concat($3);}
 	;
 
 /* Add decoration on words (exp, indices) */
 decoParameter
 	: word
-		{$$ = $1}
+		{$$ = [{content:[$1]}]}
 	| '-' word %prec UMINUS
-		{$$ = "[-] " + $2}
+		{$$ = [{content:[{name:"[-]"},$2]}]}
 	| "{" decoParameterValue "}"
 		{$$ = $2}
 	;
@@ -107,17 +107,17 @@ decoParameter
 /* Decoration values */
 decoParameterValue
 	: eq
-		{$$ = $1}
-	| eq "," decoParameterValue
-		{$$ = $1 + " , " + $3}
+		{$$ = [$1]}
+	| decoParameterValue "," eq
+		{$$ = $1; $$.push($3);}
 	;
 
 /* Function parameters */
 funcParameters 
 	: funcParameterValue
-		{$$ = $1}
+		{$$ = [$1]}
 	| funcParameters funcParameterValue
-		{$$ = $1 + " , " + $2}
+		{$$ = $1; $$.push($2)}
 	;
 
 /* Function parameter protected by {} */
@@ -137,7 +137,7 @@ name
 /* Define a function which can be a simple function name with or without parameters */
 function
 	: FUNC_NAME
-		{$$ = $1}
+		{$$ = {name:$1}}
 	| FUNC_NAME funcParameters
-		{$$ = $1 + '->params( ' + $2 + ' )'}
+		{$$ = {name:$1, parameters:$2}}
 	;

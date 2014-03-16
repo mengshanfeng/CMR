@@ -1,6 +1,8 @@
 /******************************************************************************/
 //import latex parser
-var parser = require('./build/latex-parser').parser;
+var LatexEntity  = require('./latex-entity');
+var LatexFormula = require('./latex-formula');
+var parser       = require('./build/latex-parser').parser;
 
 /******************************************************************************/
 //Describe all unit tests
@@ -98,7 +100,7 @@ var testData =  {
 function runTest(test,def)
 {
 // 	console.log(i);
-	var res = parser.parse(def.input);
+	var res = JSON.stringify(parser.parse(def.input));
 	test.equal(res,def.output,"Get error in parsor !");
 	test.done();
 }
