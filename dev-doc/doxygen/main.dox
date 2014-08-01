@@ -1,0 +1,19 @@
+/*****************************************************
+             PROJECT  : CartesinMeshRuntime
+             VERSION  : 0.0.0
+             DATE     : 02/2013
+             AUTHOR   : Valat Sébastien
+             LICENSE  : CeCILL-C
+*****************************************************/
+
+/**
+
+@mainpage
+
+The main goal of this proof of concept project is to answer some questions where writting numerical simulations :
+   - When starting we decide a memory layout wich may not be optimal at then end with new features support. How to change it easily ?
+   - On current architecture, efficient usage of cluster maye require cache blocking, communication overlapping, vectorisation, usage of optimized libraries... How to manage all those questions while 
+hard codding things directely in C ?
+   - People working on math are not expert in computer science and vise versa, how to deal with those two required capabilities ? 
+
+**/
