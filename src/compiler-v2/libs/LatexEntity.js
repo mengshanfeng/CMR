@@ -163,4 +163,4 @@ module.exports = LatexEntity;
 
 /******************************************************************************/
 //import latex parser
-var LatexFormula  = require('./latex-formula');
+var LatexFormula  = require('./LatexFormula');

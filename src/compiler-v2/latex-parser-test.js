@@ -1,7 +1,7 @@
 /******************************************************************************/
 //import latex parser
-var LatexEntity  = require('./latex-entity');
-var LatexFormula = require('./latex-formula');
+var LatexEntity  = require('./libs/LatexEntity');
+var LatexFormula = require('./libs/LatexFormula');
 var parser       = require('./build/latex-parser').parser;
 
 /******************************************************************************/

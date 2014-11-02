@@ -87,4 +87,4 @@ module.exports = LatexFormula;
 
 /********************  GLOBALS  *********************/
 //post load latex entity to cut cycles
-var LatexEntity  = require('./latex-entity');
+var LatexEntity  = require('./LatexEntity');
