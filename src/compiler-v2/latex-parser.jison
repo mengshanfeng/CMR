@@ -45,33 +45,33 @@ expression
 /* equation is composed of multiple decoWord with optional operators to separate them, if not => implici mult */
 eq
 	: decoWord                               /* Simple uniq decoWord */
-		{$$ = {content:[$1]}}
+		{$$ = {childs:[$1]}}
 	| '-' decoWord %prec UMINUS              /* Invert sign */
-		{$$ = {content:[{name:"[-]"},$2]}}
+		{$$ = {childs:[{name:"[-]"},$2]}}
 	| eq decoWord                           /* Composed with implicit mult */
-		{$$ = $1; $$.content.push({name:"[*]"}); $$.content.push($2);}
+		{$$ = $1; $$.childs.push({name:"[*]"}); $$.childs.push($2);}
 	| eq 'OPERATOR' decoWord               /* Composed by math operators */
-		{$$ = $1; $$.content.push({name:$2}); $$.content.push($3);}
+		{$$ = $1; $$.childs.push({name:$2}); $$.childs.push($3);}
 	| eq '-' decoWord                       /* Composed by - operator, not in operator otherwise invert sign don't work */
-		{$$ = $1; $$.content.push({name:'-'}); $$.content.push($3);}
+		{$$ = $1; $$.childs.push({name:'-'}); $$.childs.push($3);}
 	;
 
 /* Old def previously used instead of 'OPERATOR', need to remove this */
 NOTUSED
 	: eq '+' decoWord                       /* Composed by + operator */
-		{$$ = $1; $$.content.push({name:'+'}); $$.content.push($3);}
+		{$$ = $1; $$.childs.push({name:'+'}); $$.childs.push($3);}
 	| eq '-' decoWord                       /* Composed by - operator */
-		{$$ = $1; $$.content.push({name:'-'}); $$.content.push($3);}
+		{$$ = $1; $$.childs.push({name:'-'}); $$.childs.push($3);}
 	| eq '*' decoWord                       /* Composed by * operator */
-		{$$ = $1; $$.content.push({name:'*'}); $$.content.push($3);}
+		{$$ = $1; $$.childs.push({name:'*'}); $$.childs.push($3);}
 	| eq '/' decoWord                       /* Composed by / operator */
-		{$$ = $1; $$.content.push({name:'-'}); $$.content.push($3);}
+		{$$ = $1; $$.childs.push({name:'-'}); $$.childs.push($3);}
 	;
 
 /* group permit to control priority of composed decoWords and protected by () */
 group
 	: '(' eq ')'
-		{$$ = {name:'()',groupContent:$2}}
+		{$$ = {name:'()',groupChild:$2}}
 	;
 
 /* Define a word which if a simple name, a group of a unction. An entity will get some decoration in 'decoWord' definition. **/
@@ -97,9 +97,9 @@ decoWord
 /* Add decoration on words (exp, indices) */
 decoParameter
 	: word
-		{$$ = [{content:[$1]}]}
+		{$$ = [{childs:[$1]}]}
 	| '-' word %prec UMINUS
-		{$$ = [{content:[{name:"[-]"},$2]}]}
+		{$$ = [{childs:[{name:"[-]"},$2]}]}
 	| "{" decoParameterValue "}"
 		{$$ = $2}
 	;
