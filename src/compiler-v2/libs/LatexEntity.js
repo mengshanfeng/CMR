@@ -13,16 +13,29 @@ var assert = require('assert');
 /*********************  CLASS  **********************/
 /**
  * Class to represent a latex entity.
+ * @param value Optional parameter to build the entitiy from a latex string (must be a uniq element, not a composed formula).
 **/
-function LatexEntity(name)
+function LatexEntity(value)
 {
 	//setup internal vars
-	this.name = name;
+	this.name = "";
 	this.exponents = [];
 	this.indices = [];
 	this.parameters = [];
 	this.groupChild = null;
 	this.tags = {};
+
+	//parse and load if a string is provided in Latex format
+	if (value != undefined && typeof value == 'string')
+	{
+		//parse to IR
+		var ir = LatexParsor.parse(value);
+		assert.ok(ir != undefined,"Invalid parsing of latex : "+value);
+		assert.ok(ir.childs.length == 1,"LatexEntity must be initialized with a simple latex entitiy, not with a composed one : "+value);
+
+		//load
+		this.loadFromIR(ir.childs[0]);
+	}
 }
 
 /*******************  FUNCTION  *********************/
@@ -158,9 +171,60 @@ LatexEntity.prototype.loadFromIR = function(irEntity)
 	}
 }
 
+/*******************  FUNCTION  *********************/
+LatexEntity.prototype.childsEquals = function(a,b)
+{
+	//quick check of size
+	if (a.length != b.length)
+		return false;
+
+	//check all content one by one
+	for (var i in a)
+		if (a[i].equal(b[i]) == false)
+			return false;
+
+	//ok all equals
+	return true;
+}
+
+/*******************  FUNCTION  *********************/
+/**
+ * Check if two entities are equals (strictly).
+**/
+LatexEntity.prototype.equal = function(entity)
+{
+	//check type
+	assert.ok(entity instanceof LatexEntity);
+	
+	//check name
+	if (this.name != entity.name)
+		return false;
+	
+	//check 
+	if (this.childsEquals(this.indices,entity.indices) == false)
+		return false;
+	if (this.childsEquals(this.exponents,entity.exponents) == false)
+		return false;
+	if (this.childsEquals(this.parameters,entity.parameters) == false)
+		return false;
+	
+	//group child
+	if (this.groupChild == null && entity.groupChild != null)
+		return false;
+	if (this.groupChild != null && entity.groupChild == null)
+		return false;
+	if (this.groupChild != null)
+		if (this.groupChild.equal(entity.groupChild) == false)
+			return false;
+
+	//ok all equal
+	return true;
+}
+
 /********************  GLOBALS  *********************/
 module.exports = LatexEntity;
 
 /******************************************************************************/
 //import latex parser
 var LatexFormula  = require('./LatexFormula');
+var LatexParsor  = require('../build/latex-parser').parser;

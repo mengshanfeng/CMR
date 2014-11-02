@@ -94,6 +94,28 @@ LatexFormula.prototype.loadFromIR = function(irFormula)
 		this.tags = irFormula.tags;
 }
 
+/*******************  FUNCTION  *********************/
+/**
+ * Check if a given formula is equal (stricly) to the current one.
+**/
+LatexFormula.prototype.equal = function(formula)
+{
+	//check
+	assert.ok(formula instanceof LatexFormula);
+	
+	//check child number
+	if (this.childs.length != formula.childs.length)
+		return false;
+	
+	//check all childs one by one
+	for (var i in this.childs)
+		if (this.childs[i].equal(formula.childs[i]) == false)
+			return false;
+	
+	//ok all equal
+	return true;
+}
+
 /********************  GLOBALS  *********************/
 module.exports = LatexFormula;
 
