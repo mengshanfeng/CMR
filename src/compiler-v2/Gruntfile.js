@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 		},
 		
 		nodeunit: {
-			all: ['./tests/*-test.js'],
+			all: ['./tests/*-test.js','./tests/Test*.js'],
 		},
 		
 		clean: ['build/latex-parser.js','build']

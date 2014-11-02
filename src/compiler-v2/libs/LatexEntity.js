@@ -6,7 +6,7 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-/******************************************************************************/
+/********************  HEADERS  *********************/
 //import latex parser
 var assert = require('assert');
 
@@ -99,6 +99,31 @@ LatexEntity.prototype.setTag = function(tagName,tagValue)
 	
 	//return current to chain
 	return this;
+}
+
+/*******************  FUNCTION  *********************/
+LatexEntity.prototype.forEachChilds = function(handler)
+{
+	//loop on each expo
+	this.exponents.forEach(function(value) {
+		handler(value);
+	});
+
+	//loop on each indices
+	this.indices.forEach(function(value) {
+		handler(value);
+	});
+
+	//loop on each parameters
+	this.parameters.forEach(function(value) {
+		handler(value);
+	});
+
+	//loop on each group childs
+	if (this.groupChild != undefined)
+	{
+		handler(this.groupChild);
+	}
 }
 
 /*******************  FUNCTION  *********************/
@@ -221,10 +246,40 @@ LatexEntity.prototype.equal = function(entity)
 	return true;
 }
 
+/*******************  FUNCTION  *********************/
+var latexEntityOperators = ['*','+','=','/',',','>','<','[*]','[-]'];
+LatexEntity.prototype.isOperator = function()
+{
+	return (latexEntityOperators.indexOf(this.name) >= 0);
+}
+
+/*******************  FUNCTION  *********************/
+LatexEntity.prototype.isOnlyOneName = function()
+{
+	var cnt = this.indices.length + this.exponents.length + this.parameters.length;
+	if (this.groupChild != null)
+		cnt++;
+	return cnt == 0;
+}
+
+/*******************  FUNCTION  *********************/
+LatexEntity.prototype.getKind = function()
+{
+	if (this.isOperator())
+	{
+		assert.ok(this.isOnlyOneName());
+		return 'operator';
+	} else if (this.name == "()" && this.groupChild != null) {
+		return 'group';
+	} else {
+		return 'member';
+	}
+}
+
 /********************  GLOBALS  *********************/
 module.exports = LatexEntity;
 
-/******************************************************************************/
+/********************  HEADERS  *********************/
 //import latex parser
 var LatexFormula  = require('./LatexFormula');
 var LatexParsor  = require('../build/latex-parser').parser;

@@ -6,7 +6,7 @@
              LICENSE  : CeCILL-C
 *****************************************************/
 
-/******************************************************************************/
+/********************  HEADERS  *********************/
 //import latex parser
 var assert = require('assert');
 
@@ -119,7 +119,7 @@ LatexFormula.prototype.equal = function(formula)
 /********************  GLOBALS  *********************/
 module.exports = LatexFormula;
 
-/********************  GLOBALS  *********************/
+/********************  HEADERS  *********************/
 //post load latex entity to cut cycles
 var LatexEntity  = require('./LatexEntity');
 var LatexParsor  = require('../build/latex-parser').parser;
