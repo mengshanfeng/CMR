@@ -1,8 +1,8 @@
 /******************************************************************************/
 //import latex parser
-var LatexEntity  = require('./libs/LatexEntity');
-var LatexFormula = require('./libs/LatexFormula');
-var parser       = require('./build/latex-parser').parser;
+var LatexEntity  = require('../libs/LatexEntity');
+var LatexFormula = require('../libs/LatexFormula');
+var parser       = require('../build/latex-parser').parser;
 
 /******************************************************************************/
 //Describe all unit tests
@@ -193,5 +193,6 @@ for (var g in testData)
 			};
 		})(cur);
 	}
+
 	exports[g] = list;
 }

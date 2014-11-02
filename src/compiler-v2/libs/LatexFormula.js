@@ -14,11 +14,23 @@ var assert = require('assert');
 /**
  * Object representation of a latex formula, mostly composed
  * of a list of LatexEntity as childs stored into this.childs.
+ * @param value Optional parameter to provide a formula as a latex string
 **/
-function LatexFormula()
+function LatexFormula(value)
 {
 	this.childs = [];
 	this.tags = {};
+	
+	//parse and load if a string is provided in Latex format
+	if (value != undefined && typeof value == 'string')
+	{
+		//parse to IR
+		var ir = LatexParsor.parse(value);
+		assert.ok(ir != undefined);
+
+		//load
+		this.loadFromIR(ir);
+	}
 }
 
 /*******************  FUNCTION  *********************/
@@ -88,3 +100,4 @@ module.exports = LatexFormula;
 /********************  GLOBALS  *********************/
 //post load latex entity to cut cycles
 var LatexEntity  = require('./LatexEntity');
+var LatexParsor  = require('../build/latex-parser').parser;
