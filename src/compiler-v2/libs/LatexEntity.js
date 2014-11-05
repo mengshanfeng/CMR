@@ -9,6 +9,7 @@
 /********************  HEADERS  *********************/
 //import latex parser
 var assert = require('assert');
+var clone = require('clone');
 
 /*********************  CLASS  **********************/
 /**
@@ -247,7 +248,7 @@ LatexEntity.prototype.equal = function(entity)
 }
 
 /*******************  FUNCTION  *********************/
-var latexEntityOperators = ['*','+','=','/',',','>','<','[*]','[-]'];
+var latexEntityOperators = ['*','-','+','=','/',',','>','<','[*]','[-]'];
 LatexEntity.prototype.isOperator = function()
 {
 	return (latexEntityOperators.indexOf(this.name) >= 0);
@@ -274,6 +275,54 @@ LatexEntity.prototype.getKind = function()
 	} else {
 		return 'member';
 	}
+}
+
+/*******************  FUNCTION  *********************/
+LatexEntity.prototype.exportToIRList = function(list)
+{
+	//trivial
+	if (list.length == 0)
+		return undefined;
+	
+	//convert inner
+	var ret = [];
+	list.forEach(function(e) {
+		ret.push(e.exportToIR());
+	});
+	
+	//return
+	return ret;
+}
+
+/*******************  FUNCTION  *********************/
+/**
+ * Short function to export a simplified view of the entity (IR representation).
+ * Its only for unit tests to only get non empty fields while using stringify methods.
+**/
+LatexEntity.prototype.exportToIR = function()
+{
+	var ret = {
+		name:this.name,
+	};
+	
+	//export childs
+	if (this.exponents.length > 0)
+		ret.exponents = this.exportToIRList(this.exponents);
+	if (this.indices.length > 0)
+		ret.indices = this.exportToIRList(this.indices);
+	if (this.parameters.length > 0)
+		ret.parameters = this.exportToIRList(this.parameters);
+	
+	//goupchild
+	if (this.groupChild != null)
+		ret.groupChild = this.groupChild.exportToIR();
+	
+	//tags (cloned via slice)
+	if (Object.keys(this.tags).length > 0)
+		ret.tags = clone(this.tags);
+	
+	//export
+	return ret;
 }
 
 /********************  GLOBALS  *********************/

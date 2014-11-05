@@ -9,6 +9,7 @@
 /********************  HEADERS  *********************/
 //import latex parser
 var assert = require('assert');
+var clone = require('clone');
 
 /*********************  CLASS  **********************/
 /**
@@ -71,6 +72,40 @@ LatexFormula.prototype.toDebugString = function()
 	
 	//return
 	return ret;
+}
+
+/*******************  FUNCTION  *********************/
+/**
+ * Short function to export a simplified view of the formula (IR representation).
+ * Its only for unit tests to only get non empty fields while using stringify methods.
+**/
+LatexFormula.prototype.exportToIR = function()
+{
+	var ret = {
+		childs:[]
+	};
+	
+	//convert childs
+	this.childs.forEach(function(c) {
+		ret.childs.push(c.exportToIR());
+	});
+	
+	//tags (cloned via slice)
+	if (Object.keys(this.tags).length > 0)
+		ret.tags = clone(this.tags);
+	
+	//export
+	return ret;
+}
+
+/*******************  FUNCTION  *********************/
+LatexFormula.prototype.setTag = function(tagName,tagValue)
+{
+	//setup
+	this.tags[tagName] = tagValue;
+	
+	//return current to chain
+	return this;
 }
 
 /*******************  FUNCTION  *********************/

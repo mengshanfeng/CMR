@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "grunt test",
-	"postinstall": "grunt"
+    "postinstall": "grunt"
   },
   "keywords": [
     "compiler",
@@ -19,12 +19,13 @@
   "author": "Sébastien Valat",
   "licence": "CeCILL-C",
   "dependencies": {
-    "jison": "~0.4.13",
-    "nodeunit": "~0.8.6",
+    "clone": "^0.1.18",
     "grunt": "~0.4.2",
-    "grunt-contrib-nodeunit": "~0.3.2",
     "grunt-cli": "~0.1.13",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-nodeunit": "~0.3.2",
     "grunt-jison": "~1.2.1",
-    "grunt-contrib-clean": "~0.5.0"
+    "jison": "~0.4.13",
+    "nodeunit": "~0.8.6"
   }
 }
