@@ -9,6 +9,7 @@
 /********************  HEADERS  *********************/
 //import latex parser
 var assert = require('assert');
+var clone = require('clone');
 var LatexFormula = require('./LatexFormula.js');
 var LatexEntity = require('./LatexEntity.js');
 
@@ -48,6 +49,14 @@ function FormulaMatcher(model)
 **/
 FormulaMatcher.prototype.markForCapture = function(value,filter,optional,wildcard)
 {
+	//setup defaults
+	if (filter == undefined)
+		filter = 'std';
+	if (optional == undefined)
+		optional = false;
+	if (wildcard == undefined)
+		wildcard = false;
+	
 	//errors
 	assert.ok(value != undefined);
 	assert.ok(filter instanceof FormulaMatcherFilter || typeof filter == 'string');
@@ -115,7 +124,8 @@ FormulaMatcher.prototype.internalMarkForCapture = function(model,value,filter,op
 		});
 	} else if (model instanceof LatexEntity) {
 		//check if equal, otherwise, loop on childs
-		if (model.equal(value))
+		//if (model.equal(value))
+		if (model.name == value.name)
 		{
 			//ok mark it for capture
 			model.setTag('CMR_MATCHER_CAPTURE',{filter:filter,optional:optional,wildcard:wildcard});
@@ -137,7 +147,7 @@ FormulaMatcher.prototype.internalMarkForCapture = function(model,value,filter,op
 }
 
 /*******************  FUNCTION  *********************/
-FormulaMatcher.prototype.match = function(formula)
+FormulaMatcher.prototype.match = function(formula,options)
 {
 	//prepare capture
 	var status = {
@@ -145,8 +155,12 @@ FormulaMatcher.prototype.match = function(formula)
 		capture:{}
 	};
 	
+	//setup options if not set
+	if (options == undefined)
+		options = {rootPartial:false};
+	
 	//run
-	var res = this.matchFormula(this.model,formula,status);
+	var res = this.matchFormula(this.model,formula,status,options);
 	
 	//ok return
 	if (res)
@@ -174,7 +188,7 @@ FormulaMatcher.prototype.isWildcardEntity = function(entity)
 /**
  * 
 **/
-FormulaMatcher.prototype.matchFormula = function(model,formula,status)
+FormulaMatcher.prototype.matchFormula = function(model,formula,status,options)
 {
 	//check type
 	assert.ok(formula instanceof LatexFormula);
@@ -184,13 +198,21 @@ FormulaMatcher.prototype.matchFormula = function(model,formula,status)
 	if (formula.childs.length < model.childs.length)
 		return false;
 	
+	//setup options if not set
+	var rootPartial = options.rootPartial;
+	if (rootPartial)
+	{
+		options = clone(options);
+		options.rootPartial = false;
+	}
+	
 	//loop on all elements of formula
 	var f = 0;
 	var m = 0;
 	while (f < model.childs.length && m < formula.childs.length)	
 	{
 		//check matching of entity
-		var res = this.matchEntity(model.childs[m],formula.childs[f],status);
+		var res = this.matchEntity(model.childs[m],formula.childs[f],status,options);
 		
 		//not match so exit now
 		if (res == false)
@@ -201,8 +223,8 @@ FormulaMatcher.prototype.matchFormula = function(model,formula,status)
 		{
 			//check matching of next
 			var ignored = {matched:0,capture:{}};
-			var resNextWithCur  = this.matchEntity(model.childs[m],formula.childs[f+1],ignored);
-			var resNextWithNext = this.matchEntity(model.childs[m+1],formula.childs[f+1],idnored);
+			var resNextWithCur  = this.matchEntity(model.childs[m],formula.childs[f+1],ignored,options);
+			var resNextWithNext = this.matchEntity(model.childs[m+1],formula.childs[f+1],idnored,options);
 			//inc if next can be captured
 			if (resNextWithNext == true)
 				m++;
@@ -214,11 +236,11 @@ FormulaMatcher.prototype.matchFormula = function(model,formula,status)
 		f++;
 	}
 	
-	return (f == formula.childs.length && m == model.childs.length);
+	return ((f == formula.childs.length || rootPartial == true) && m == model.childs.length);
 }
 
 /*******************  FUNCTION  *********************/
-FormulaMatcher.prototype.matchEntityChild = function(modelList,formulaList,status)
+FormulaMatcher.prototype.matchEntityChild = function(modelList,formulaList,status,options)
 {
 	//check sizes
 	if (modelList.length != formulaList.length)
@@ -227,7 +249,7 @@ FormulaMatcher.prototype.matchEntityChild = function(modelList,formulaList,statu
 	//loop
 	for (var i in modelList)
 	{
-		if (this.matchFormula(modelList[i],formulaList[i],status) == false)
+		if (this.matchFormula(modelList[i],formulaList[i],status,options) == false)
 			return false;
 	}
 	
@@ -235,7 +257,7 @@ FormulaMatcher.prototype.matchEntityChild = function(modelList,formulaList,statu
 }
 
 /*******************  FUNCTION  *********************/
-FormulaMatcher.prototype.matchEntity = function(model,entity,status)
+FormulaMatcher.prototype.matchEntity = function(model,entity,status,options)
 {
 	//if all undefined return ok
 	if (model == undefined && entity == undefined)
@@ -245,28 +267,30 @@ FormulaMatcher.prototype.matchEntity = function(model,entity,status)
 	assert.ok(model instanceof LatexEntity);
 	assert.ok(entity instanceof LatexEntity);
 	
+	//match childs
+	if (this.matchEntityChild(model.exponents,entity.exponents,status,options) == false)
+		return false;
+	if (this.matchEntityChild(model.indices,entity.indices,status,options) == false)
+		return false;
+	if (this.matchEntityChild(model.parameters,entity.parameters,status,options) == false)
+		return false;
+	if (this.matchEntity(model.groupChilds,entity.groupChilds,status,options) == false)
+		return false;
+	
 	//check if capture
 	var tags = model.tags['CMR_MATCHER_CAPTURE'];
 	if (tags == undefined)
 	{
 		if (model.name != entity.name)
 			return false;
-		if (this.matchEntityChild(model.exponents,entity.exponents,status) == false)
-			return false;
-		if (this.matchEntityChild(model.indices,entity.indices,status) == false)
-			return false;
-		if (this.matchEntityChild(model.parameters,entity.parameters,status) == false)
-			return false;
-		if (this.matchEntity(model.groupChilds,entity.groupChilds,status) == false)
-			return false;
 		status.matched++;
 	} else {
-		return this.doCaptureEntity(model,entity,status);
+		return this.doCaptureEntity(model,entity,status,options);
 	}
 }
 
 /*******************  FUNCTION  *********************/
-FormulaMatcher.prototype.doCaptureEntity = function(model,entity,status)
+FormulaMatcher.prototype.doCaptureEntity = function(model,entity,status,options)
 {
 	//get tags
 	var tags = model.tags['CMR_MATCHER_CAPTURE'];
