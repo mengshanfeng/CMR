@@ -12,6 +12,26 @@ var assert = require('assert');
 var clone = require('clone');
 
 /*********************  CLASS  **********************/
+function FormulaIterator()
+{
+	this.position = 0;
+};
+
+/*******************  FUNCTION  *********************/
+FormulaIterator.prototype.diff = function(it)
+{
+	assert.ok(it instanceof FormulaIterator);
+	return this.position - it.position;
+}
+
+/*******************  FUNCTION  *********************/
+FormulaIterator.prototype.move = function(delta)
+{
+	this.position += delta;
+	return this;
+}
+
+/*********************  CLASS  **********************/
 /**
  * Object representation of a latex formula, mostly composed
  * of a list of LatexEntity as childs stored into this.childs.
@@ -32,6 +52,20 @@ function LatexFormula(value)
 		//load
 		this.loadFromIR(ir);
 	}
+}
+
+/*******************  FUNCTION  *********************/
+LatexFormula.prototype.begin = function()
+{
+	return new FormulaIterator();
+}
+
+/*******************  FUNCTION  *********************/
+LatexFormula.prototype.end = function()
+{
+	var tmp = new FormulaIterator();
+	tmp.position = this.childs.length;
+	return tmp;
 }
 
 /*******************  FUNCTION  *********************/

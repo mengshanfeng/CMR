@@ -40,6 +40,8 @@
 expression
 	: eq EOF
 		{return $1;}
+	| OPERATOR EOF
+		{return {childs:[{name:$1}]};}
 	;
 
 /* equation is composed of multiple decoWord with optional operators to separate them, if not => implici mult */

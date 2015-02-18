@@ -222,3 +222,241 @@ exports.testFromOldVersionMarchCapture_1 = function(test)
 	
 	test.done();
 }
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionMarchCapture_2 = function(test)
+{
+	var matcher = new FormulaMatcher("a^b");
+	matcher.markForCapture('b');
+	
+	var ok1 = new LatexFormula("a^3");
+	var nok1 = new LatexFormula("a^3+2");
+	var nok2 = new LatexFormula("b^3");
+	var nok3 = new LatexFormula("b^2");
+	var nok4 = new LatexFormula("c^{3+2}+2");
+	
+	test.ok(matcher.match(ok1) != false);
+	test.equal(false,matcher.match(nok1));
+	test.equal(false,matcher.match(nok2));
+	test.equal(false,matcher.match(nok3));
+	test.equal(false,matcher.match(nok4));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionMatchCapture_3 = function(test)
+{
+	var matcher =  new FormulaMatcher("a_{i+\\frac{1}{2}}");
+	matcher.markForCapture("i");
+	
+	var test1 = new LatexFormula("a_{k+\\frac{1}{2}}");
+	var test2 = new LatexFormula("a_{j+\\frac{1}{2}}");
+	var test3 = new LatexFormula("a_{j+1+\\frac{1}{2}}");
+	var test4 = new LatexFormula("a_{(j+1)+\\frac{1}{2}}");
+	var test5 = new LatexFormula("b_{i+\\frac{1}{2}}");
+	var test6 = new LatexFormula("a_{i+\\frac{1}{4}}");
+	
+	test.ok(matcher.match(test1));
+	test.ok(matcher.match(test2));
+	test.ok(!matcher.match(test3));
+	test.ok(matcher.match(test4));
+	test.ok(!matcher.match(test5));
+	test.ok(!matcher.match(test6));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFomrOldVersionMatchCapture_4 = function(test)
+{
+	var matcher =  new FormulaMatcher("x^y");
+	matcher.markForCapture("x");
+	matcher.markForCapture("y");
+	
+	var test1 = new LatexFormula("a^2");
+	var test2 = new LatexFormula("b^c");
+	var test3 = new LatexFormula("a^{2,4}");
+	
+	test.ok(matcher.match(test1));
+	test.ok(matcher.match(test2));
+	test.ok(!matcher.match(test3));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionMatchCapture_5 = function(test)
+{
+	var matcher = new FormulaMatcher("xyz");
+	matcher.markForCapture("x");
+	matcher.markForCapture("y");
+	matcher.markForCapture("z");
+	
+	var test1 = new LatexFormula("a+b");
+	var test2 = new LatexFormula("abc");
+	var test3 = new LatexFormula("a+cd");
+	var test4 = new LatexFormula("a*b*c");
+	
+	test.ok(!matcher.match(test1));
+	test.ok(matcher.match(test2));
+	test.ok(!matcher.match(test3));
+	test.ok(!matcher.match(test4));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionMatchCapture_6 = function(test)
+{
+	var matcher = new FormulaMatcher("x+z");
+	matcher.markForCapture("x");
+	matcher.markForCapture("+",'operator');
+	matcher.markForCapture("z");
+	
+	var test1 = new LatexFormula("a+b");
+	var test2 = new LatexFormula("abc");
+	var test3 = new LatexFormula("a+cd");
+	var test4 = new LatexFormula("a*b*c");
+	
+	test.ok(matcher.match(test1));
+	test.ok(!matcher.match(test2));
+	test.ok(!matcher.match(test3));
+	test.ok(!matcher.match(test4));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionMiddleMatch_1 = function(test)
+{
+	var matcher = new FormulaMatcher("a^b");
+	matcher.markForCapture("b");
+	
+	var test1 = new LatexFormula("a^3");
+	
+	var it = test1.begin();
+	test.ok(matcher.match(test1,{},it));
+	test.equal(0,it.diff(test1.end()));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionMiddleMatch_2 = function(test)
+{
+	var matcher = new FormulaMatcher("a^b");
+	matcher.markForCapture("b");
+	
+	var test2 = new LatexFormula("cc+a^3");
+	var test3 = new LatexFormula("dd+a^(3+2)+rerer");
+	
+	var it = test2.begin();
+	var itRef = test2.begin();
+	test.ok(!matcher.match(test2,{},it));
+	test.equal(0,it.diff(itRef) );
+	it = test2.begin().move(4);
+	test.ok(matcher.match(test2,{},it));
+	test.equal(5,it.diff(itRef) );
+	test.equal(0,it.diff(test2.end()) );
+
+	test.done();
+}
+
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionMiddleMatch_3 = function(test)
+{
+	var matcher = new FormulaMatcher("a^b");
+	matcher.markForCapture("b");
+
+	var test3 = new LatexFormula("dd+a^(3+2)+rerer");
+	
+	var it = test3.begin();
+	test.ok(!matcher.match(test3,{rootPartial:true},it));
+	test.equal(0,it.diff(test3.begin()));
+	it = test3.begin().move(4);
+	test.ok(matcher.match(test3,{rootPartial:true},it));
+	test.equal(5,it.diff(test3.begin()));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionToDebugString = function(test)
+{
+	var matcher = new FormulaMatcher("d d + a^( 3 + 2 ) + r ");
+	out = matcher.toDebugString();
+	test.equal("d [*] d + a->exp( ( 3 + 2 ) ) + r",out);
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionToDebugString = function(test)
+{
+	var matcher = new FormulaMatcher("d d + a^( 3 + 2 ) + r ");
+	out = matcher.toDebugString();
+	test.equal("d [*] d + a->exp( ( 3 + 2 ) ) + r",out);
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionOptionalExponent_1 = function(test)
+{
+	var matcher = new FormulaMatcher("a^b");
+	matcher.markForCapture("b","std",true);
+	
+	var test1 = new LatexFormula("a");
+	var test2 = new LatexFormula("a^16");
+	var test3 = new LatexFormula("a^{16,18}");
+	
+	test.ok(matcher.match(test1));
+	test.ok(matcher.match(test2));
+	test.ok(!matcher.match(test3));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionOptionalExponent_2 = function(test)
+{
+	var matcher = new FormulaMatcher("a");
+	matcher.markOptionalExponent();
+	
+	var test1 = new LatexFormula("a");
+	var test2 = new LatexFormula("a^16");
+	var test3 = new LatexFormula("a^{16,18}");
+
+	debugger;	
+	test.ok(matcher.match(test1));
+	test.ok(matcher.match(test2));
+	test.ok(!matcher.match(test3));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionOptionalExponent_3 = function(test)
+{
+	var matcher = new FormulaMatcher("(ab)");
+	matcher.markOptionalExponent();
+	
+	var test1 = new LatexFormula("(ab)");
+	var test2 = new LatexFormula("(ab)^16");
+	var test3 = new LatexFormula("(ab)^{16,18}");
+	
+	test.ok(matcher.match(test1));
+	test.ok(matcher.match(test2));
+	test.ok(!matcher.match(test3));
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testFromOldVersionOptionalExponent_3 = function(test)
+{
+	var matcher = new FormulaMatcher("ab");
+	test.throws(function(){matcher.markOptionalExponent()},Error);
+	
+	test.done();
+}

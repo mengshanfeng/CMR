@@ -10,6 +10,7 @@
 //import latex parser
 var assert = require('assert');
 var clone = require('clone');
+var override = require('json-override');
 var LatexFormula = require('./LatexFormula.js');
 var LatexEntity = require('./LatexEntity.js');
 
@@ -29,6 +30,18 @@ function FormulaMatcher(model)
 {
 	//build the latex formula
 	this.model = new LatexFormula(model);
+}
+
+/*******************  FUNCTION  *********************/
+/**
+ * Add an optional external exponent to manage exponent on all elements.
+**/
+FormulaMatcher.prototype.markOptionalExponent = function()
+{
+	if (this.model.childs.length != 1)
+		throw new Error("Unexpected composed entity");
+	this.model.childs[0].addExponent(new LatexFormula("\\CMRExponent"));
+	this.markForCapture("\\CMRExponent","std",true);
 }
 
 /*******************  FUNCTION  *********************/
@@ -147,20 +160,30 @@ FormulaMatcher.prototype.internalMarkForCapture = function(model,value,filter,op
 }
 
 /*******************  FUNCTION  *********************/
-FormulaMatcher.prototype.match = function(formula,options)
+FormulaMatcher.prototype.match = function(formula,options,iterator)
 {
 	//prepare capture
 	var status = {
 		matched:0,
-		capture:{}
+		capture:{},
 	};
 	
-	//setup options if not set
+	var defaultOptions = {
+		rootPartial:false,
+	};
+	
+	//override
 	if (options == undefined)
-		options = {rootPartial:false};
+		options = defaultOptions;
+	else
+		options = override(defaultOptions,options,true);
+
+	//iterator
+	if (iterator == undefined)
+		iterator = formula.begin();
 	
 	//run
-	var res = this.matchFormula(this.model,formula,status,options);
+	var res = this.matchFormula(this.model,formula,status,options,iterator);
 	
 	//ok return
 	if (res)
@@ -188,11 +211,12 @@ FormulaMatcher.prototype.isWildcardEntity = function(entity)
 /**
  * 
 **/
-FormulaMatcher.prototype.matchFormula = function(model,formula,status,options)
+FormulaMatcher.prototype.matchFormula = function(model,formula,status,options,iterator)
 {
 	//check type
 	assert.ok(formula instanceof LatexFormula);
 	assert.ok(model instanceof LatexFormula);
+	assert.ok(options != undefined);
 	
 	//trivial
 	if (formula.childs.length < model.childs.length)
@@ -206,10 +230,14 @@ FormulaMatcher.prototype.matchFormula = function(model,formula,status,options)
 		options.rootPartial = false;
 	}
 	
+	//iterator
+	if (iterator == undefined)
+		iterator = formula.begin();
+	
 	//loop on all elements of formula
-	var f = 0;
+	var f = iterator.position;
 	var m = 0;
-	while (f < model.childs.length && m < formula.childs.length)	
+	while (m < model.childs.length && f < formula.childs.length)	
 	{
 		//check matching of entity
 		var res = this.matchEntity(model.childs[m],formula.childs[f],status,options);
@@ -236,18 +264,64 @@ FormulaMatcher.prototype.matchFormula = function(model,formula,status,options)
 		f++;
 	}
 	
-	return ((f == formula.childs.length || rootPartial == true) && m == model.childs.length);
+	//check final status
+	ret = ((f == formula.childs.length || rootPartial == true) && m == model.childs.length)
+	
+	//update iterator if needed
+	if (ret)
+		iterator.position = f;
+	
+	//return
+	return ret;
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcher.prototype.isOptionalEntity = function(model)
+{
+	assert.ok(model instanceof LatexFormula);
+	if (model.childs == undefined)
+		return false;
+	if (model.childs.length > 1)
+		return false;
+	if (model.childs[0].tags == undefined)
+		return false;
+	var tag = model.childs[0].tags['CMR_MATCHER_CAPTURE'];
+	if (tag == undefined)
+		return false;
+	return tag.optional;
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcher.prototype.isValidOptionalLenth = function(modelList,formuaList)
+{
+	//setup vars
+	var min = 0;
+	var max = modelList.length;
+	
+	//count optional and required
+	for (var i in modelList)
+	{
+		if (this.isOptionalEntity(modelList[i]) == false)
+		{
+			min++;
+		} else if (min > 0) {
+			throw new Error("Invalid use of optional followed by non optional members !");
+		}
+	}
+	
+	return formuaList.length >= min && formuaList.length <= max;
 }
 
 /*******************  FUNCTION  *********************/
 FormulaMatcher.prototype.matchEntityChild = function(modelList,formulaList,status,options)
 {
 	//check sizes
-	if (modelList.length != formulaList.length)
+	//if (modelList.length != formulaList.length)
+	if (this.isValidOptionalLenth(modelList,formulaList) == false)
 		return false;
 
 	//loop
-	for (var i in modelList)
+	for (var i in formulaList)
 	{
 		if (this.matchFormula(modelList[i],formulaList[i],status,options) == false)
 			return false;
@@ -313,6 +387,12 @@ FormulaMatcher.prototype.doCaptureEntity = function(model,entity,status,options)
 	
 	//return ok
 	return true;
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcher.prototype.toDebugString = function()
+{
+	return this.model.toDebugString();
 }
 
 /********************  GLOBALS  *********************/

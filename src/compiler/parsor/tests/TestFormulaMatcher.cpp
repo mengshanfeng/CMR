@@ -457,6 +457,18 @@ TEST(TestFormulaMatcher,testCaptureOptionalExponent2)
 }
 
 /*******************  FUNCTION  *********************/
+TEST(TestFormulaMatcher,testCaptureOptionalExponent3)
+{
+	FormulaMatcher matcher("a");
+	matcher.setOptionalExponent();
+	
+	//check matching
+	LatexFormulas test("a^{3,2}");
+	FormulaMatcherResult res;
+	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
+}
+
+/*******************  FUNCTION  *********************/
 TEST(TestFormulaMatcher,testCaptureOptionalCapture1)
 {
 	FormulaMatcher matcher("a^e");
@@ -481,18 +493,6 @@ TEST(TestFormulaMatcher,testCaptureOptionalCapture2)
 	FormulaMatcherResult res;
 	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
 	ASSERT_FALSE(res.hasExtract("e"));
-}
-
-/*******************  FUNCTION  *********************/
-TEST(TestFormulaMatcher,testCaptureOptionalExponent3)
-{
-	FormulaMatcher matcher("a");
-	matcher.setOptionalExponent();
-	
-	//check matching
-	LatexFormulas test("a^{3,2}");
-	FormulaMatcherResult res;
-	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
 }
 
 /*******************  FUNCTION  *********************/
