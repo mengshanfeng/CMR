@@ -162,11 +162,27 @@ FormulaMatcher.prototype.internalMarkForCapture = function(model,value,filter,op
 /*******************  FUNCTION  *********************/
 FormulaMatcher.prototype.match = function(formula,options,iterator)
 {
+	var status = {};
+	return this.matchAndCapture(status,formula,options,iterator);
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcher.prototype.capture = function(formula,options,iterator)
+{
+	var status = {};
+	var res = this.matchAndCapture(status,formula,options,iterator);
+	if (res)
+		return status;
+	else
+		return false;
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcher.prototype.matchAndCapture = function(status,formula,options,iterator)
+{
 	//prepare capture
-	var status = {
-		matched:0,
-		capture:{},
-	};
+	status.matched = 0;
+	status.capture = {};
 	
 	var defaultOptions = {
 		rootPartial:false,
