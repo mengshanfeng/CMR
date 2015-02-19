@@ -203,7 +203,7 @@ exports.testFromOldVersionMarchPartialRoot_1 = function(test)
 }
 
 /*******************  FUNCTION  *********************/
-exports.testFromOldVersionMarchCapture_1 = function(test)
+exports.testFromOldVersionMatchCapture_1 = function(test)
 {
 	var matcher = new FormulaMatcher("a^3");
 	matcher.markForCapture('a');
@@ -427,7 +427,6 @@ exports.testFromOldVersionOptionalExponent_2 = function(test)
 	var test2 = new LatexFormula("a^16");
 	var test3 = new LatexFormula("a^{16,18}");
 
-	debugger;	
 	test.ok(matcher.match(test1));
 	test.ok(matcher.match(test2));
 	test.ok(!matcher.match(test3));
@@ -538,95 +537,131 @@ exports.testCaptureOptionalCapture2 = function(test)
 	test.done();
 }
 
-// 
-// /*******************  FUNCTION  *********************/
-// TEST(TestFormulaMatcher,testCaptureWildcard1)
-// {
-// 	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
-// 	matcher.markForCapture("x",ENTITY_CAT_STD,false,true);
-// 	
-// 	//check matching
-// 	LatexFormulas test("a_{i+\\frac{1}{2}}");
-// 	FormulaMatcherResult res;
-// 	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
-// 	ASSERT_TRUE(res.hasExtract("x"));
-// 	EXPECT_EQ("i",res.captures["x"]->getString());
-// }
-// 
-// /*******************  FUNCTION  *********************/
-// TEST(TestFormulaMatcher,testCaptureWildcard2)
-// {
-// 	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
-// 	matcher.markForCapture("x",ENTITY_CAT_STD,false,true);
-// 	
-// 	//check matching
-// 	LatexFormulas test("a_{i+\\frac{2}{2}}");
-// 	FormulaMatcherResult res;
-// 	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
-// }
-// 
-// /*******************  FUNCTION  *********************/
-// TEST(TestFormulaMatcher,testCaptureWildcard3)
-// {
-// 	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
-// 	matcher.markForCapture("x",ENTITY_CAT_STD,false,true);
-// 	
-// 	//check matching
-// 	LatexFormulas test("a_{\\frac{1}{2}}");
-// 	FormulaMatcherResult res;
-// 	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
-// }
-// 
-// /*******************  FUNCTION  *********************/
-// TEST(TestFormulaMatcher,testCaptureWildcard4)
-// {
-// 	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
-// 	matcher.markForCapture("x",ENTITY_CAT_STD,true,true);
-// 	
-// 	//check matching
-// 	LatexFormulas test("a_{\\frac{1}{2}}");
-// 	FormulaMatcherResult res;
-// 	EXPECT_FALSE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
-// }
-// 
-// /*******************  FUNCTION  *********************/
-// TEST(TestFormulaMatcher,testCaptureWildcard5)
-// {
-// 	FormulaMatcher matcher("a_{x+\\frac{1}{2}}");
-// 	matcher.markForCapture("x",ENTITY_CAT_ALL,false,true);
-// 	
-// 	//check matching
-// 	LatexFormulas test("a_{i+1+\\frac{1}{2}}");
-// 	FormulaMatcherResult res;
-// 	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
-// 	ASSERT_TRUE(res.hasExtract("x"));
-// 	EXPECT_EQ("i+1",res.captures["x"]->getString());
-// }
-// 
-// /*******************  FUNCTION  *********************/
-// TEST(TestFormulaMatcher,testCaptureWildcard6)
-// {
-// 	FormulaMatcher matcher("a_{x}");
-// 	matcher.markForCapture("x",ENTITY_CAT_ALL,false,true);
-// 	
-// 	//check matching
-// 	LatexFormulas test("a_{i+1+\\frac{1}{2}}");
-// 	FormulaMatcherResult res;
-// 	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
-// 	ASSERT_TRUE(res.hasExtract("x"));
-// 	EXPECT_EQ("i+1+\\frac{1}{2}",res.captures["x"]->getString());
-// }
-// 
-// /*******************  FUNCTION  *********************/
-// TEST(TestFormulaMatcher,testCaptureWithParams)
-// {
-// 	FormulaMatcher matcher("a_{x}");
-// 	matcher.markForCapture("x");
-// 	
-// 	//check matching
-// 	LatexFormulas test("a_{\\frac{1}{2}}");
-// 	FormulaMatcherResult res;
-// 	EXPECT_TRUE(matcher.match(test,res,FORMULA_MATCHER_DEFAULT|FORMULA_MATCHER_DO_CAPTURE));
-// 	ASSERT_TRUE(res.hasExtract("x"));
-// 	EXPECT_EQ("\\frac{1}{2}",res.captures["x"]->getString());
-// }
+/*******************  FUNCTION  *********************/
+exports.testCaptureWildcard0 = function(test)
+{
+	var matcher = new FormulaMatcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture('x');
+	
+	//check matching
+	var value = new LatexFormula("a_{i+\\frac{1}{2}}");
+	var status = matcher.capture(value);
+	
+	test.ok(status.capture["x"] != undefined);
+	test.equal('i',status.capture["x"].toDebugString());
+	test.equal(5,status.matched);
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testCaptureWildcard1 = function(test)
+{
+	var matcher = new FormulaMatcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture('x','std',false,true);
+	
+	//check matching
+	var value = new LatexFormula("a_{i+\\frac{1}{2}}");
+	var status = matcher.capture(value);
+	
+	test.ok(status.capture["x"] != undefined);
+	test.equal('i',status.capture["x"].toDebugString());
+	test.equal(5,status.matched);
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testCaptureWildcard2 = function(test)
+{
+	var matcher = new FormulaMatcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture('x','wildcard',false,true);
+	
+	//check matching
+	var value = new LatexFormula("a_{i+\\frac{2}{2}}");
+	var status = matcher.capture(value);
+	test.ok(!status);
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testCaptureWildcard3 = function(test)
+{
+	var matcher = new FormulaMatcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture('x','wildcard',false,true);
+	
+	//check matching
+	var value = new LatexFormula("a_{\\frac{2}{2}}");
+	var status = matcher.capture(value);
+	test.ok(!status);
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testCaptureWildcard3 = function(test)
+{
+	var matcher = new FormulaMatcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture('x','wildcard',true,true);
+	
+	//check matching
+	var value = new LatexFormula("a_{\\frac{2}{2}}");
+	var status = matcher.capture(value);
+	test.ok(!status);
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testCaptureWildcard5 = function(test)
+{
+	var matcher = new FormulaMatcher("a_{x+\\frac{1}{2}}");
+	matcher.markForCapture('x','wildcard',false,true);
+	
+	//check matching
+	var value = new LatexFormula("a_{i+\\frac{1}{2}}");
+	var status = matcher.capture(value);
+	
+	test.ok(status.capture["x"] != undefined);
+	test.equal('i',status.capture["x"].toDebugString());
+	test.equal(5,status.matched);
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testCaptureWildcard6 = function(test)
+{
+	var matcher = new FormulaMatcher("a_{x}");
+	matcher.markForCapture('x','wildcard',false,true);
+	
+	//check matching
+	var value = new LatexFormula("a_{i+\\frac{1}{2}}");
+	var status = matcher.capture(value);
+	
+	test.ok(status != false);
+	test.ok(status.capture["x"] != undefined);
+	test.equal('i + \\frac->params( 1 , 2 )',status.capture["x"].toDebugString());
+	test.equal(1,status.matched);
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testCaptureWithParams = function(test)
+{
+	var matcher = new FormulaMatcher("a_{x}");
+	matcher.markForCapture('x');
+	
+	//check matching
+	var value = new LatexFormula("a_{\\frac{1}{2}}");
+	debugger;
+	var status = matcher.capture(value);
+	
+	test.ok(status != false);
+	test.ok(status.capture["x"] != undefined);
+	test.equal('\\frac->params( 1 , 2 )',status.capture["x"].toDebugString());
+	test.equal(1,status.matched);
+	
+	test.done();
+}
+
+

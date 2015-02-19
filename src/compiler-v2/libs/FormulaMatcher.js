@@ -69,6 +69,8 @@ FormulaMatcher.prototype.markForCapture = function(value,filter,optional,wildcar
 		optional = false;
 	if (wildcard == undefined)
 		wildcard = false;
+// 	if (wildcard && filter != 'wildcard')
+// 		throw new Error("Wildcard capture require 'wildcard' filter !");
 	
 	//errors
 	assert.ok(value != undefined);
@@ -224,6 +226,21 @@ FormulaMatcher.prototype.isWildcardEntity = function(entity)
 }
 
 /*******************  FUNCTION  *********************/
+FormulaMatcher.prototype.isOptionalEntity = function(entity)
+{
+	//check type
+	assert.ok(entity instanceof LatexEntity);
+	
+	//check if has tags
+	var tags = entity.tags['CMR_MATCHER_CAPTURE'];
+	if (tags == undefined)
+		return false;
+	
+	//return status
+	return tags.optional;
+}
+
+/*******************  FUNCTION  *********************/
 /**
  * 
 **/
@@ -268,10 +285,12 @@ FormulaMatcher.prototype.matchFormula = function(model,formula,status,options,it
 			//check matching of next
 			var ignored = {matched:0,capture:{}};
 			var resNextWithCur  = this.matchEntity(model.childs[m],formula.childs[f+1],ignored,options);
-			var resNextWithNext = this.matchEntity(model.childs[m+1],formula.childs[f+1],idnored,options);
+			var resNextWithNext = this.matchEntity(model.childs[m+1],formula.childs[f+1],ignored,options);
 			//inc if next can be captured
 			if (resNextWithNext == true)
 				m++;
+		} else if (this.isWildcardEntity(model.childs[m]) && m == model.childs.length - 1 && f < formula.childs.length - 1) {
+			
 		} else {
 			m++;
 		}
@@ -292,19 +311,14 @@ FormulaMatcher.prototype.matchFormula = function(model,formula,status,options,it
 }
 
 /*******************  FUNCTION  *********************/
-FormulaMatcher.prototype.isOptionalEntity = function(model)
+FormulaMatcher.prototype.isOptionalFormula = function(model)
 {
 	assert.ok(model instanceof LatexFormula);
 	if (model.childs == undefined)
 		return false;
 	if (model.childs.length > 1)
 		return false;
-	if (model.childs[0].tags == undefined)
-		return false;
-	var tag = model.childs[0].tags['CMR_MATCHER_CAPTURE'];
-	if (tag == undefined)
-		return false;
-	return tag.optional;
+	return this.isOptionalEntity(model.childs[0]);
 }
 
 /*******************  FUNCTION  *********************/
@@ -317,7 +331,7 @@ FormulaMatcher.prototype.isValidOptionalLenth = function(modelList,formuaList)
 	//count optional and required
 	for (var i in modelList)
 	{
-		if (this.isOptionalEntity(modelList[i]) == false)
+		if (this.isOptionalFormula(modelList[i]) == false)
 		{
 			min++;
 		} else if (min > 0) {
@@ -356,10 +370,29 @@ FormulaMatcher.prototype.matchEntity = function(model,entity,status,options)
 	//check types
 	assert.ok(model instanceof LatexEntity);
 	assert.ok(entity instanceof LatexEntity);
+
+	//check tags
+	var tags = model.tags['CMR_MATCHER_CAPTURE'];
 	
-	//match childs
+	//wildcard
+	if (this.isWildcardEntity(model))
+	{
+		if (tags == undefined)
+			return true;
+		else
+			return this.doCaptureEntity(model,entity,status,options);
+	}
+	
+	//match exponents
 	if (this.matchEntityChild(model.exponents,entity.exponents,status,options) == false)
 		return false;
+	
+	//capture (TODO improve capture position, this is not really correct to capture
+	//at 3 position in this function)
+	if (tags != undefined)
+		return this.doCaptureEntity(model,entity,status,options);
+	
+	//indicies, params and ()
 	if (this.matchEntityChild(model.indices,entity.indices,status,options) == false)
 		return false;
 	if (this.matchEntityChild(model.parameters,entity.parameters,status,options) == false)
@@ -368,12 +401,12 @@ FormulaMatcher.prototype.matchEntity = function(model,entity,status,options)
 		return false;
 	
 	//check if capture
-	var tags = model.tags['CMR_MATCHER_CAPTURE'];
 	if (tags == undefined)
 	{
 		if (model.name != entity.name)
 			return false;
 		status.matched++;
+		return true;
 	} else {
 		return this.doCaptureEntity(model,entity,status,options);
 	}
