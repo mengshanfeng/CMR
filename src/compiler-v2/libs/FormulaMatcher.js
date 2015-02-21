@@ -425,7 +425,7 @@ FormulaMatcher.prototype.doCaptureEntity = function(model,entity,status,options)
 	
 	//extraact capture name
 	//TODO implement toLatex()
-	var name = model.toDebugString();
+	var name = model.toLatexString();
 	
 	//capture
 	if (status.capture[name] == undefined)
@@ -442,6 +442,12 @@ FormulaMatcher.prototype.doCaptureEntity = function(model,entity,status,options)
 FormulaMatcher.prototype.toDebugString = function()
 {
 	return this.model.toDebugString();
+}
+
+/*******************  FUNCTION  *********************/
+FormulaMatcher.prototype.toLatexString = function()
+{
+	return this.model.toLatexString();
 }
 
 /********************  GLOBALS  *********************/

@@ -20,6 +20,7 @@
   "licence": "CeCILL-C",
   "dependencies": {
     "clone": "^0.1.19",
+    "ejs": "^2.2.4",
     "grunt": "~0.4.2",
     "grunt-cli": "~0.1.13",
     "grunt-contrib-clean": "^0.5.0",

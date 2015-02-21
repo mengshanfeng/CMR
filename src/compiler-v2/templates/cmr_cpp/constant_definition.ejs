@@ -1,0 +1,37 @@
+<%
+//generate [1][2]...
+function genDelcDimsString(dims)
+{
+	var ret = "";
+	for (var i in dims)
+		ret += "[" + dims[i] + "]";
+	return ret;
+}
+
+function genValueString(dims,values)
+{
+	if (dims.length == 0)
+	{
+		//cmrGenEqCCode(out,context,formulas[i]);
+		return values[0].toLatexString();
+	} else {
+		var ret = "{";
+		for (var i in values)
+		{
+			if (dims.length ==2 && i % dims[0] == 0 && i > 0)
+				ret += "},";
+			if (dims.length==2 && i % dims[0] == 0 && i < values.length - 1)
+				ret += "{";
+			ret+=values[i].toLatexString();
+			//cmrGenEqCCode(out,context,formulas[i]);
+			ret += ",";
+		}
+		if (dims.length == 2)
+			ret += "}";
+		ret += "}";
+		return ret;
+	}
+}
+%>
+//Definition of constant <%= object.latexName %>
+static const <%= object.type %> <%= object.longName %><%= genDelcDimsString(object.dims) %> = <%= genValueString(object.dims,object.formulas) %>;

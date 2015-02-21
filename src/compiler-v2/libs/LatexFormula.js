@@ -51,6 +51,8 @@ function LatexFormula(value)
 
 		//load
 		this.loadFromIR(ir);
+	} else if (value instanceof LatexEntity) {
+		this.addChildEntity(value);
 	}
 }
 

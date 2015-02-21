@@ -162,7 +162,12 @@ function latexFormulaListToLatexString(name,formulaList)
 	var ret = '';
 	formulaList.forEach(function(f) {
 		if (ret != '')
-			ret += ' , ';
+		{
+			if (name == "params")
+				ret += '}{';
+			else
+				ret += ',';
+		}
 		ret += f.toLatexString();
 	});
 	if (formulaList.length == 0)
@@ -199,15 +204,15 @@ function latexFormulaListToLatexString(name,formulaList)
 LatexEntity.prototype.toLatexString = function()
 {
 	var ret = "";
-	if (this.name = '[*]')
-		return;
+	if (this.name == '[*]')
+		return "";
 	if (this.name != '()')
 		ret += this.name;
 	if (this.groupChild != null && this.name == '()')
 		ret += '( '+this.groupChild.toDebugString() + ' )';
-	ret += latexFormulaListToString('params',this.parameters);
-	ret += latexFormulaListToString('exp',this.exponents);
-	ret += latexFormulaListToString('ind',this.indices);
+	ret += latexFormulaListToLatexString('params',this.parameters);
+	ret += latexFormulaListToLatexString('exp',this.exponents);
+	ret += latexFormulaListToLatexString('ind',this.indices);
 	return ret;
 }
 
