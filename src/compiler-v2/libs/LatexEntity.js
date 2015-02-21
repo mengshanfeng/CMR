@@ -157,6 +157,61 @@ LatexEntity.prototype.toDebugString = function()
 }
 
 /*******************  FUNCTION  *********************/
+function latexFormulaListToLatexString(name,formulaList)
+{
+	var ret = '';
+	formulaList.forEach(function(f) {
+		if (ret != '')
+			ret += ' , ';
+		ret += f.toLatexString();
+	});
+	if (formulaList.length == 0)
+	{
+		return '';
+	} else if (formulaList.length == 1) {
+		switch(name)
+		{
+			case "params":
+				return '{'+ret+'}';
+			case "exp":
+				return '^'+ret;
+			case "ind":
+				return '_'+ret;
+			default:
+				throw new Error("Invalid name");
+		}
+	} else {
+		switch(name)
+		{
+			case "params":
+				return '{'+ret+'}';
+			case "exp":
+				return '^{'+ret+'}';
+			case "ind":
+				return '_{'+ret+'}';
+			default:
+				throw new Error("Invalid name");
+		}
+	}
+}
+
+/*******************  FUNCTION  *********************/
+LatexEntity.prototype.toLatexString = function()
+{
+	var ret = "";
+	if (this.name = '[*]')
+		return;
+	if (this.name != '()')
+		ret += this.name;
+	if (this.groupChild != null && this.name == '()')
+		ret += '( '+this.groupChild.toDebugString() + ' )';
+	ret += latexFormulaListToString('params',this.parameters);
+	ret += latexFormulaListToString('exp',this.exponents);
+	ret += latexFormulaListToString('ind',this.indices);
+	return ret;
+}
+
+/*******************  FUNCTION  *********************/
 LatexEntity.prototype.loadFromIR = function(irEntity)
 {
 	var cur = this;

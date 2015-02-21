@@ -653,12 +653,31 @@ exports.testCaptureWithParams = function(test)
 	
 	//check matching
 	var value = new LatexFormula("a_{\\frac{1}{2}}");
-	debugger;
 	var status = matcher.capture(value);
 	
 	test.ok(status != false);
 	test.ok(status.capture["x"] != undefined);
 	test.equal('\\frac->params( 1 , 2 )',status.capture["x"].toDebugString());
+	test.equal(1,status.matched);
+	
+	test.done();
+}
+
+/*******************  FUNCTION  *********************/
+exports.testCaptureWithParams2 = function(test)
+{
+	var matcher = new FormulaMatcher("a_{\\cmr{\\id}{i}}");
+	matcher.markForCapture('\\cmr{\\cmrid}{i}',"wildcard",false,true);
+	
+	//check matching
+	var value = new LatexFormula("a_{\\frac{1}{2}}");
+	var status = matcher.capture(value);
+	
+	test.ok(status != false);
+	var tmp = new LatexFormula("\\cmr{\\id}{i}");
+	tmp = tmp.toDebugString();
+	test.ok(status.capture[tmp] != undefined);
+	test.equal('\\frac->params( 1 , 2 )',status.capture[tmp].toDebugString());
 	test.equal(1,status.matched);
 	
 	test.done();

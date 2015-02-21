@@ -48,3 +48,21 @@ exports.testExportToIR = function(test)
 	
 	test.done();
 }
+
+/*******************  FUNCTION  *********************/
+exports.testToLatexString = function(test)
+{
+	var s1 = "a+b^2+c^{1,2}";
+	var s2 = "a+b_2+c_{1,2}";
+	var s3 = "a+\\frac{1}+\\frac{1}{2}";
+	
+	var f1 = new LatexFormula(s1);
+	var f2 = new LatexFormula(s2);
+	var f3 = new LatexFormula(s3);
+	
+	test.ok(s1,f1.toLatexString());
+	test.ok(s2,f2.toLatexString());
+	test.ok(s3,f3.toLatexString());
+	
+	test.done();
+}

@@ -109,6 +109,21 @@ LatexFormula.prototype.toDebugString = function()
 }
 
 /*******************  FUNCTION  *********************/
+LatexFormula.prototype.toLatexString = function()
+{
+	//vars
+	var ret = '';
+	
+	//loop in all chidls
+	this.childs.forEach(function(value) {
+		ret += value.toDebugString();
+	});
+	
+	//return
+	return ret;
+}
+
+/*******************  FUNCTION  *********************/
 /**
  * Short function to export a simplified view of the formula (IR representation).
  * Its only for unit tests to only get non empty fields while using stringify methods.
