@@ -2,6 +2,7 @@
 //import latex parser
 var FormulaMatcher = require('./libs/FormulaMatcher.js');
 var LatexFormula = require('./libs/LatexFormula.js');
+var Project = require("./libs/Project.js");
 
 // /*******************  FUNCTION  *********************/
 // exports.testConstructorString = function(test)
@@ -24,6 +25,11 @@ var LatexFormula = require('./libs/LatexFormula.js');
 	var formula = new LatexFormula("a");
 	
 	console.log(matcher.match(formula));
+	
+	var project = new Project("test");
+	project.addConstant("A","constA","int").loadValuesVector("10 & 20 & 30 & 40");
+	
+	console.log(project.render("cmr_cpp"));
 	
 // 	test.done();
 // }

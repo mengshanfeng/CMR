@@ -21,6 +21,7 @@ function ProjectConstant(latexName,longName,type)
 	this.matcher = new FormulaMatcher(latexName);
 	this.formulas = [];
 	this.dims = [];
+	this.group = 'constant';
 };
 
 /*******************  FUNCTION  *********************/
@@ -171,15 +172,16 @@ ProjectConstant.prototype.toDebugString = function( data )
 }
 
 /*******************  FUNCTION  *********************/
-ProjectConstant.prototype.genCode = function( codeName , context, latexEntity, write)
+ProjectConstant.prototype.render = function( templateFactory , codeType , context, latexEntity)
 {
 	var data = {
 		object: this,
 		context:context,
-		latexEntity: latexEntity,
-		write:write
+		latexEntity: latexEntity
 	};
-	return TemplateFactory.render("constant",codeName,data);
+	if (codeType == "write_access")
+		throw new Error("Unsupported write access on constant !");
+	return templateFactory.render("constant",codeType,data);
 }
 
 /*******************  FUNCTION  *********************/
