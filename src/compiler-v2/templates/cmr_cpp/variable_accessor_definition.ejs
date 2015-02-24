@@ -1,0 +1,10 @@
+<%
+function extraDefs(defs)
+{
+	var ret = "";
+	for (var i in defs)
+		ret += "["+defs[i].size+"]";
+	return ret;
+}
+%>
+CMRCellAccessor< <%= object.type %><%= extraDefs(object.defs) %> , <%= object.memoryModel %> > <%= object.longName %> ;

@@ -43,7 +43,9 @@ ProjectConstant.prototype.loadValues = function(data,dimensions)
 			throw new Error("Unsupported constent dimension : "+ dimensions);
 			break;
 	}
-	transform();
+	//transform();
+	
+	return this;
 }
 
 /*******************  FUNCTION  *********************/
@@ -62,6 +64,8 @@ ProjectConstant.prototype.loadValuesScalar = function(data)
 		throw new Error("Caution, you say scalar but provide vector or matrix as data !");
 	
 	this.formulas.push(new LatexFormula(data));
+	
+	return this;
 }
 
 /*******************  FUNCTION  *********************/
@@ -88,6 +92,8 @@ ProjectConstant.prototype.loadValuesVector = function( data )
 
  	if (self.formulas == 1)
 		console.log("Warning, you get a unique 0.0 value for a vector, maybe this is a mistake !\n");
+	
+	return this;
 }
 
 /*******************  FUNCTION  *********************/

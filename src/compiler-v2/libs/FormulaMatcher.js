@@ -171,6 +171,9 @@ FormulaMatcher.prototype.match = function(formula,options,iterator)
 /*******************  FUNCTION  *********************/
 FormulaMatcher.prototype.capture = function(formula,options,iterator)
 {
+	if (formula instanceof LatexEntity)
+		formula = new LatexFormula(formula);
+	assert.ok(formula instanceof LatexFormula);
 	var status = {};
 	var res = this.matchAndCapture(status,formula,options,iterator);
 	if (res)
