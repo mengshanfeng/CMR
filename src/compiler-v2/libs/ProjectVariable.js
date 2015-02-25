@@ -13,44 +13,180 @@ var TemplateFactory = require('./TemplateFactory.js');
 var assert = require('assert');
 
 /*********************  CLASS  **********************/
-function ProjectVariable(latexName, longName, type, ghostCnt, id )
+function ProjectVariable(latexName,longName,type,constant)
 {
-	if (id == undefined)
-		id = 0;
-	this.id = id;
 	this.longName = longName;
 	this.latexName = latexName;
 	this.type = type;
-	this.ghostCnt = ghostCnt;
 	this.matcher = new FormulaMatcher(latexName);
-	this.group = 'variable';
-	this.memoryModel = "CMRMemoryModelColMajor";
-	this.defs = [];
-	
-	this.matcher.markForCapture("i","wildcard",false,true);
-	this.matcher.markForCapture("j","wildcard",false,true);
+	this.formulas = [];
+	this.dims = [];
+	this.setConst(constant);
 };
 
-/*******************  FUNCTION  *********************/
-ProjectVariable.prototype.addDimension = function( name,size,start )
+ProjectVariable.prototype.setConst = function(status)
 {
-	assert.ok(size > 0);
-	assert.ok(name != "");
-	if (start == undefined)
-		start = 0;
-	this.defs.push({
-		name:name,
-		size:size,
-		start:start
+	if (status == undefined || status == true)
+	{
+		this.group = 'constant';
+		this.constant = true;
+	} else {
+		this.group = 'variable';
+		this.constant = false;
+	}
+}
+
+/*******************  FUNCTION  *********************/
+ProjectVariable.prototype.loadValues = function(data,dimensions)
+{
+	assert.ok(formulas.empty());
+	switch(dimensions)
+	{
+		case 0:
+			this.loadValuesScalar(data);
+			break;
+		case 1:
+			this.loadValuesVector(data);
+			break;
+		case 2:
+			this.loadValuesMatrix(data);
+			break;
+		default:
+			throw new Error("Unsupported variable dimension : "+ dimensions);
+			break;
+	}
+	//transform();
+	
+	return this;
+}
+
+/*******************  FUNCTION  *********************/
+ProjectVariable.prototype.loadValuesScalar = function(data)
+{
+	//errors
+		//errors
+	if(data == undefined || data == "")
+		throw new Error("Invalid empty data to be loaded as scalar !");
+	
+	//error
+	vs1 = data.split(';');
+	vs2 = data.split('\\\\');
+	
+	if (vs1.length > 1 || vs2.length > 1) 
+		throw new Error("Caution, you say scalar but provide vector or matrix as data !");
+	
+	this.formulas.push(new LatexFormula(data));
+	
+	return this;
+}
+
+/*******************  FUNCTION  *********************/
+ProjectVariable.prototype.loadValuesVector = function( data )
+{
+	//errors
+	if(data == "")
+		throw new Error("Invalid empty data to be loaded as scalar !");
+	
+	//error
+	vs2 = data.split("\\\\");
+	if (vs2.length > 1)
+		throw new Error("Caution, you say vector but provide matrix as data !");
+	
+	//split
+	vs = data.split("&");
+	this.addDimension(vs.length);
+	
+	//push all
+	var self = this;
+	vs.forEach(function(value) {
+		self.formulas.push(new LatexFormula(value));
 	});
-	this.matcher.markForCapture(name,"wildcard",false,true);
+
+ 	if (self.formulas == 1)
+		console.log("Warning, you get a unique 0.0 value for a vector, maybe this is a mistake !\n");
+	
+	return this;
+}
+
+/*******************  FUNCTION  *********************/
+ProjectVariable.prototype.loadValuesMatrix = function( data )
+{
+	//vars
+	var dim1 = -1;
+	var dim2 = -1;
+	
+	//errors
+	if(data == "")
+		throw new Error("Invalid empty data to be loaded as scalar !");
+	
+	var ms = data.split("\\\\");
+	dim1 = ms.length;
+	
+	self = this;
+	ms.forEach(function(value) {
+		var vs = value.split("&");
+		if (dim2 == -1)
+		{
+			dim2 = vs.length;
+		} else if(dim2 != vs.length) {
+			throw new Error("Caution you prides lines which do not have the same size !");
+		}
+		vs.forEach(function(serValue) {
+			self.formulas.push(new LatexFormula(serValue));
+		});
+	});
+	
+	this.addDimension(dim2);
+	this.addDimension(dim1);
+	
+	if (this.formulas.length == 1 && this.formulas[0] == 0.0)
+		console.log("Warning, you get a unique 0.0 value for a matrix, maybe this is a mistake !\n");
+}
+
+/*******************  FUNCTION  *********************/
+ProjectVariable.prototype.addDimension = function( size )
+{
+	this.dims.push(size);
+	switch(this.dims.length)
+	{
+		case 1:
+			this.matcher.model.childs[0].addIndice(new LatexFormula("\\cmr{\\id}{i}"));
+			this.matcher.markForCapture("\\cmr{\\id}{i}","wildcard",false,true);
+			break;
+		case 2:
+			this.matcher.model.childs[0].addIndice(new LatexFormula("\\cmr{\\id}{j}"));
+			this.matcher.markForCapture("\\cmr{\\id}{j}","wildcard",false,true);
+			break;
+		default:
+			throw new Error("Unsupported constent dimension : " + size);
+	}
 }
 
 /*******************  FUNCTION  *********************/
 ProjectVariable.prototype.toDebugString = function( data )
 {
 	//default
-	return this.matcher.toDebugString();
+	var ret = this.matcher.toDebugString()+"\n";
+		
+	//dims
+	ret += "    - dims       : " + dims.size() + " : [ ";
+	for (var i in dims)
+	{
+		if ( i > 0 )
+			ret += ", ";
+		ret += dims[i];
+	};
+	ret += " ]\n";
+	
+	//values
+	ret += "    - values     :";
+	for (var i in dims)
+	{
+		if ( i > 0 )
+			ret += ", ";
+		ret += formulas[i];
+	}
+	ret += "\n";
 }
 
 /*******************  FUNCTION  *********************/
@@ -61,6 +197,8 @@ ProjectVariable.prototype.render = function( templateFactory , codeType , contex
 		context:context,
 		latexEntity: latexEntity
 	};
+	if (codeType == "write_access" && this.constant)
+		throw new Error("Unsupported write access on constant !");
 	return templateFactory.render("variable",codeType,data);
 }
 
@@ -74,48 +212,25 @@ ProjectVariable.prototype.getUsageOps = function(context,latexEntity,write)
 	//extract matching
 	var f = new LatexFormula(latexEntity);
 	var status = this.matcher.capture(f);
-	var ret = [
-		status.capture["i"],
-		status.capture["j"]
-	];
-	
-	return ret;
-}
+	var ret = [];
 
-/*******************  FUNCTION  *********************/
-ProjectVariable.prototype.genAccessCCode = function(context,entity,write)
-{
-	var ret = {
-		longName:this.longName
-	};
-	var loopType = context.readKey("CMRActionLoopType");
+	//not managed
+	assert.ok(this.dims.length <= 2);
 	
-	//select out mode
-	if (loopType == "CMRMeshOperationSimpleLoop" || loopType == "CMRMeshOperationSimpleLoopWithPos" || loopType == "")
+	//vector
+	if (this.dims.length >= 1)
 	{
-		if (write)
-			ret.varName = "out";
-		else
-			ret.varName = "in";
-	} else if (loopType == "CMRMeshOperationSimpleLoopInPlace" || loopType == "CMRMeshOperationSimpleLoopInPlaceWithPos") {
-		ret.varName = "cell";
-	} else {
-		throw new Error("Invalid action loop type : "+loopType);
+		assert.ok(status.capture["\\cmr{\\id}{i}"] != undefined);
+		ret.push(status.capture["\\cmr{\\id}{i}"]);
 	}
-
-	//tmp.name = shortName;
-	var status = this.matcher.capture(entity);
-	assert.ok(status != false);
 	
-	ret.array = [
-		//TODO to CCode
-		status.capture["i"].toLatexString(),
-		status.capture["j"].toLatexString()
-	];
+	//matrix
+	if (this.dims.length >= 2)
+	{
+		assert.ok(status.capture["\\cmr{\\id}{j}"] != undefined);
+		ret.push(status.capture["\\cmr{\\id}{j}"]);
+	}
 	
-	this.defs.forEach(function(value) {
-		ret.array.push(status.capture[value].toLatexString());
-	});
 	return ret;
 }
 

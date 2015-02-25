@@ -1,4 +1,76 @@
 //Project : <%= project.name %>
+#include <application/CMRApplicationSeq.h>
+#include <CMR.h>
+//user headers
+<% project.headers.forEach(function(header) { %>
+#include "<%=header%>"
+<% }); %>
+//system setup
+#define WIDTH 800
+#define HEIGHT 100
+#define WRITE_STEP_INTERVAL 50
+#define ITERATIONS 8000
+
 
 /*********************  CONSTS  *********************/
 <%= project.renderGroup('constant','definition') %>
+
+
+/********************** VARIABLES *********************/
+class VarSystem : public CMRVarSystem
+{
+	public:
+		struct CellAccessor
+		{
+			CellAccessor(CMRVarSystem & sys,int tstep,int x,int y,bool absolute = true);
+			CellAccessor(CellAccessor & acc,int x,int y,bool absolute = false);
+			<%- project.renderGroup('mesh_variable','accessor_definition') %>
+		}
+	public:	
+		VarSystem(CMRDomainBuilder * builder = NULL);		
+}
+	
+VarSystem::VarSystem ( CMRDomainBuilder * builder)
+	:CMRVarSystem(builder)
+{
+	<%-project.renderGroup('mesh_variable','accessor_add_var') %>
+}
+
+VarSystem::CellAccessor::CellAccessor (CMRVarSystem & sys,int tstep,int x,int y,bool absolute)
+	:<%-project.renderGroup('mesh_variable','accessor_constr_sys') %>
+{}
+
+VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y,bool absolute)
+	:<%-project.renderGroup('mesh_variable','accessor_constr_acc') %>
+{
+}
+
+/********************* DEFINITIONS ********************/
+<%- project.renderGroup('definition','definition') %>
+
+
+/*********************** ACTIONS *********************/
+<%- project.renderGroup('action','definition') %>
+
+/************************* MAIN **********************/
+int main(int argc, char ** argv)
+{
+	CMRApplicationSeq app(argc,argv,new VarSystem,WIDTH,HEIGHT,WRITE_STEP_INTERVAL);
+
+	CMRRect local = app.getLocalRect();
+	CMRRect global = app.getGlobalRect();
+
+	//setup write system
+	app.addPrepareWriteAction(new ActionUpdateFileout::LoopType(),app.getLocalRect());
+
+	//setup init actions
+	<%- project.renderGroup('action','init') %>
+	
+	//setup compute actions
+	<%- project.renderGroup('action','call') %>
+
+	//runner
+	//run
+	app.run();
+	return EXIT_SUCCESS;
+}

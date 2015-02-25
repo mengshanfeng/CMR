@@ -8,7 +8,8 @@
 
 /********************  HEADERS  *********************/
 var TemplateFactory = require('./TemplateFactory.js');
-var ProjectConstant = require('./ProjectConstant.js');
+var ProjectConstant = require('./ProjectVariable.js');
+var ProjectMeshVariable = require('./ProjectMeshVariable.js');
 var Context = require('./Context.js');
 
 /*********************  CLASS  **********************/
@@ -16,6 +17,8 @@ function Project(name)
 {
 	this.name = name;
 	this.context = new Context();
+	this.headers = [];
+	this.variableId = 0;
 }
 
 /*******************  FUNCTION  *********************/
@@ -27,9 +30,18 @@ Project.prototype.addEntity = function(entity)
 /*******************  FUNCTION  *********************/
 Project.prototype.addConstant = function(latexName,longName,type)
 {
-	var cst = new ProjectConstant(latexName,longName,type);
+	var cst = new ProjectConstant(latexName,longName,type,true);
 	this.addEntity(cst);
 	return cst;
+}
+
+/*******************  FUNCTION  *********************/
+Project.prototype.addMeshVariable = function(latexName, longName, type, ghostCnt)
+{
+	var variable = new ProjectMeshVariable(latexName,longName,type,ghostCnt,this.variableId);
+	this.addEntity(variable);
+	this.variableId++;
+	return variable;
 }
 
 /*******************  FUNCTION  *********************/
@@ -46,13 +58,19 @@ Project.prototype.render = function(lang)
 }
 
 /*******************  FUNCTION  *********************/
-Project.prototype.renderGroup = function(group,type)
+Project.prototype.renderGroup = function(group,type,sep)
 {
 	var res = "";
 	var self = this;
+	var first = true;
 	this.context.entities.forEach(function(value){
 		if (value.group == group)
+		{
+			if (first == false)
+				res+=",";
 			res += value.render(self.templateFactory,type,this.entities,null);
+			first = false;
+		}
 	});
 	return res;
 }

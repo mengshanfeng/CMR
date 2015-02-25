@@ -28,6 +28,7 @@ var Project = require("./libs/Project.js");
 	
 	var project = new Project("test");
 	project.addConstant("A","constA","int").loadValuesVector("10 & 20 & 30 & 40");
+	project.addMeshVariable("d", "density", "int", 1);
 	
 	console.log(project.render("cmr_cpp"));
 	
