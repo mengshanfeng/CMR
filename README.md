@@ -14,7 +14,11 @@ rewrite-compiler-in-js).
 Pictures
 --------
 
+An example of html report generated for LBM:
+
 ![Report](./src/screens/html-view.png?raw=true "An example of html report generated for LBM")
+
+Example of rendering with gnuplot for LBM:
 
 ![LBM](./src/screens/lbm.png?raw=true "Example of rendering with gnuplot for LBM")
 
