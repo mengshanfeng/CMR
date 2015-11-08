@@ -1,6 +1,8 @@
 Cartesian Mesh Runtime
 ======================
 
+[![Build Status](https://travis-ci.org/svalat/CMR.svg?branch=master)](https://travis-ci.org/svalat/CMR)
+
 What it is
 ----------
 
