@@ -24,7 +24,7 @@ exports.test_setup_2 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_accessor_definition_1 = function(test)
 {
-	var expected = "CMRCellAccessor< int , CMRMemoryModelColMajor > longNameA ;";
+	var expected = "\nCMRCellAccessor< int , CMRMemoryModelColMajor > longNameA ;\n";
 	var variable = new ProjectMeshVariable("A_{i,j}","longNameA","int",1);
 	test.equal(expected,variable.render(factory,'accessor_definition'));
 	test.done();
@@ -33,7 +33,7 @@ exports.test_accessor_definition_1 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_accessor_definition_2 = function(test)
 {
-	var expected = "CMRCellAccessor< int[9] , CMRMemoryModelColMajor > longNameA ;";
+	var expected = "\nCMRCellAccessor< int[9] , CMRMemoryModelColMajor > longNameA ;\n";
 	var variable = new ProjectMeshVariable("A_{i,j}","longNameA","int",1);
 	variable.addDimension('k',9,0);
 	test.equal(expected,variable.render(factory,'accessor_definition'));
@@ -43,7 +43,7 @@ exports.test_accessor_definition_2 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_accessor_add_var_1 = function(test)
 {
-	var expected = "//define variable A_{i,j}\nthis->addVariable(\"longNameA\",sizeof( int ), 1 );";
+	var expected = "\n//define variable A_{i,j}\nthis->addVariable(\"longNameA\",sizeof( int ), 1 );";
 	var variable = new ProjectMeshVariable("A_{i,j}","longNameA","int",1);
 	test.equal(expected,variable.render(factory,'accessor_add_var'));
 	test.done();
@@ -52,7 +52,7 @@ exports.test_accessor_add_var_1 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_accessor_add_var_2 = function(test)
 {
-	var expected = "//define variable A_{i,j}\nthis->addVariable(\"longNameA\",sizeof( int[9] ), 1 );";
+	var expected = "\n//define variable A_{i,j}\nthis->addVariable(\"longNameA\",sizeof( int[9] ), 1 );";
 	var variable = new ProjectMeshVariable("A_{i,j}","longNameA","int",1);
 	variable.addDimension('k',9,0);
 	test.equal(expected,variable.render(factory,'accessor_add_var'));
@@ -71,7 +71,7 @@ exports.test_accessor_add_constr_sys = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_read_access_1 = function(test)
 {
-	var expected = "(*in.longNameA(i+1,j+1))";
+	var expected = "\n(*in.longNameA(i+1,j+1))";
 	var context = new Context();
 	context.setKey('CMRActionLoopType','CMRMeshOperationSimpleLoop');
 	var latexEntity = new LatexEntity("A_{i+1,j+1}");
@@ -83,7 +83,7 @@ exports.test_read_access_1 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_read_access_2 = function(test)
 {
-	var expected = "(*cell.longNameA(i+1,j+1))";
+	var expected = "\n(*cell.longNameA(i+1,j+1))";
 	var context = new Context();
 	context.setKey('CMRActionLoopType','CMRMeshOperationSimpleLoopInPlace');
 	var latexEntity = new LatexEntity("A_{i+1,j+1}");
@@ -95,7 +95,7 @@ exports.test_read_access_2 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_write_access_1 = function(test)
 {
-	var expected = "(*out.longNameA(i+1,j+1))";
+	var expected = "\n(*out.longNameA(i+1,j+1))";
 	var context = new Context();
 	context.setKey('CMRActionLoopType','CMRMeshOperationSimpleLoop');
 	var latexEntity = new LatexEntity("A_{i+1,j+1}");
@@ -107,7 +107,7 @@ exports.test_write_access_1 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_write_access_2 = function(test)
 {
-	var expected = "(*cell.longNameA(i+1,j+1))";
+	var expected = "\n(*cell.longNameA(i+1,j+1))";
 	var context = new Context();
 	context.setKey('CMRActionLoopType','CMRMeshOperationSimpleLoopInPlace');
 	var latexEntity = new LatexEntity("A_{i+1,j+1}");
