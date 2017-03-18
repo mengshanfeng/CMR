@@ -24,7 +24,7 @@ exports.test_setup_2 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_accessor_definition_1 = function(test)
 {
-	var expected = "CMRCellAccessor< int , CMRMemoryModelColMajor > longNameA ;\n";
+	var expected = "//TODO : doc\n\t\t\tCMRCellAccessor< int , CMRMemoryModelColMajor > longNameA ;\n";
 	var variable = new ProjectMeshVariable("A_{i,j}","longNameA","int",1);
 	test.equal(expected,variable.render(factory,'accessor_definition'));
 	test.done();
@@ -33,7 +33,7 @@ exports.test_accessor_definition_1 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_accessor_definition_2 = function(test)
 {
-	var expected = "CMRCellAccessor< int[9] , CMRMemoryModelColMajor > longNameA ;\n";
+	var expected = "//TODO : doc\n\t\t\tCMRCellAccessor< int[9] , CMRMemoryModelColMajor > longNameA ;\n";
 	var variable = new ProjectMeshVariable("A_{i,j}","longNameA","int",1);
 	variable.addDimension('k',9,0);
 	test.equal(expected,variable.render(factory,'accessor_definition'));
@@ -71,7 +71,7 @@ exports.test_accessor_add_constr_sys = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_read_access_1 = function(test)
 {
-	var expected = "\n(*in.longNameA(i+1,j+1))\n";
+	var expected = "(*in.longNameA(i+1,j+1))\n";
 	var context = new Context();
 	context.setKey('CMRActionLoopType','CMRMeshOperationSimpleLoop');
 	var latexEntity = new LatexEntity("A_{i+1,j+1}");
@@ -83,7 +83,7 @@ exports.test_read_access_1 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_read_access_2 = function(test)
 {
-	var expected = "\n(*cell.longNameA(i+1,j+1))\n";
+	var expected = "(*cell.longNameA(i+1,j+1))\n";
 	var context = new Context();
 	context.setKey('CMRActionLoopType','CMRMeshOperationSimpleLoopInPlace');
 	var latexEntity = new LatexEntity("A_{i+1,j+1}");
@@ -95,7 +95,7 @@ exports.test_read_access_2 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_write_access_1 = function(test)
 {
-	var expected = "\n(*out.longNameA(i+1,j+1))\n";
+	var expected = "(*out.longNameA(i+1,j+1))\n";
 	var context = new Context();
 	context.setKey('CMRActionLoopType','CMRMeshOperationSimpleLoop');
 	var latexEntity = new LatexEntity("A_{i+1,j+1}");
@@ -107,7 +107,7 @@ exports.test_write_access_1 = function(test)
 /*******************  FUNCTION  *********************/
 exports.test_write_access_2 = function(test)
 {
-	var expected = "\n(*cell.longNameA(i+1,j+1))\n";
+	var expected = "(*cell.longNameA(i+1,j+1))\n";
 	var context = new Context();
 	context.setKey('CMRActionLoopType','CMRMeshOperationSimpleLoopInPlace');
 	var latexEntity = new LatexEntity("A_{i+1,j+1}");
