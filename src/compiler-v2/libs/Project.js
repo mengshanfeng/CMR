@@ -19,6 +19,42 @@ function Project(name)
 	this.context = new Context();
 	this.headers = [];
 	this.variableId = 0;
+	this.authors = [];
+	this.version = "1.0";
+	this.doc = "TODO : Document";
+}
+
+/*******************  FUNCTION  *********************/
+Project.prototype.setDoc = function(doc)
+{
+	this.doc = doc;
+}
+
+/*******************  FUNCTION  *********************/
+Project.prototype.setVersion = function (version)
+{
+	this.version = version;
+}
+
+/*******************  FUNCTION  *********************/
+Project.prototype.setName = function(name)
+{
+	this.name = name;
+}
+
+/*******************  FUNCTION  *********************/
+Project.prototype.addHeader = function(header)
+{
+	this.headers.push(header);
+}
+
+/*******************  FUNCTION  *********************/
+Project.prototype.addAuthor = function(name,mail)
+{
+	this.authors.push({
+		name:name,
+		mail:mail
+	});
 }
 
 /*******************  FUNCTION  *********************/
@@ -63,11 +99,13 @@ Project.prototype.renderGroup = function(group,type,sep)
 	var res = "";
 	var self = this;
 	var first = true;
+	if (sep == undefined)
+		sep = "";
 	this.context.entities.forEach(function(value){
 		if (value.group == group)
 		{
 			if (first == false)
-				res+=",";
+				res+=sep;
 			res += value.render(self.templateFactory,type,this.entities,null);
 			first = false;
 		}

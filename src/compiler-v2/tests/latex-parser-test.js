@@ -88,6 +88,9 @@ var testData =  {
 			name:"First minus in more complex"
 		},
 	],
+/*	"precPlus": [
+		{ input:"+33",              output:"[+] 33",                           name:"First plus"},
+	],*/
 	"whitespaces": [
 		{ input:"a b",              output:"a [*] b",                          name:"Check one spaces"},
 		{ input:"a  b",             output:"a [*] b",                          name:"Check multiple spaces"},

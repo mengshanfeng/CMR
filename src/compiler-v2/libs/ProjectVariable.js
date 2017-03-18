@@ -24,6 +24,7 @@ function ProjectVariable(latexName,longName,type,constant)
 	this.setConst(constant);
 };
 
+/******************* FUNCTION *********************/
 ProjectVariable.prototype.setConst = function(status)
 {
 	if (status == undefined || status == true)
@@ -39,7 +40,7 @@ ProjectVariable.prototype.setConst = function(status)
 /*******************  FUNCTION  *********************/
 ProjectVariable.prototype.loadValues = function(data,dimensions)
 {
-	assert.ok(formulas.empty());
+	assert.ok(this.formulas.length == 0);
 	switch(dimensions)
 	{
 		case 0:

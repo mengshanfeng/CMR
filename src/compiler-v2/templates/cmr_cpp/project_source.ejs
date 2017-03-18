@@ -1,10 +1,28 @@
-//Project : <%= project.name %>
+<%
+function authorList()
+{
+	var ret = "";
+	for (var i in project.authors)
+		ret += "Author : "+project.authors[i].name;
+	return ret;
+}
+%>/***************************************************
+Project : <%- project.name %>
+<%- authorList() %>
+Version : <%- project.version %>
+***************************************************/
+
+/***************************************************
+<%- project.doc %>
+***************************************************/
+
+/******************** HEADERS *********************/
 #include <application/CMRApplicationSeq.h>
 #include <CMR.h>
 //user headers
-<% project.headers.forEach(function(header) { %>
-#include "<%=header%>"
-<% }); %>
+<% project.headers.forEach(function(header) { %>#include "<%-header%>"<% }); %>
+
+/******************** MACRO ***********************/
 //system setup
 #define WIDTH 800
 #define HEIGHT 100
@@ -12,11 +30,11 @@
 #define ITERATIONS 8000
 
 
-/*********************  CONSTS  *********************/
-<%= project.renderGroup('constant','definition') %>
+/********************* CONSTS *********************/
+<%- project.renderGroup('constant','definition') %>
 
 
-/********************** VARIABLES *********************/
+/********************* VARIABLES ******************/
 class VarSystem : public CMRVarSystem
 {
 	public:
@@ -24,7 +42,7 @@ class VarSystem : public CMRVarSystem
 		{
 			CellAccessor(CMRVarSystem & sys,int tstep,int x,int y,bool absolute = true);
 			CellAccessor(CellAccessor & acc,int x,int y,bool absolute = false);
-			<%- project.renderGroup('mesh_variable','accessor_definition') %>
+			<%- project.renderGroup('mesh_variable','accessor_definition',"\t\t\t") %>
 		}
 	public:	
 		VarSystem(CMRDomainBuilder * builder = NULL);		
@@ -33,15 +51,15 @@ class VarSystem : public CMRVarSystem
 VarSystem::VarSystem ( CMRDomainBuilder * builder)
 	:CMRVarSystem(builder)
 {
-	<%-project.renderGroup('mesh_variable','accessor_add_var') %>
+	<%-project.renderGroup('mesh_variable','accessor_add_var',"\t") %>
 }
 
 VarSystem::CellAccessor::CellAccessor (CMRVarSystem & sys,int tstep,int x,int y,bool absolute)
-	:<%-project.renderGroup('mesh_variable','accessor_constr_sys') %>
+	:<%-project.renderGroup('mesh_variable','accessor_constr_sys',"\t") %>
 {}
 
 VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y,bool absolute)
-	:<%-project.renderGroup('mesh_variable','accessor_constr_acc') %>
+	:<%-project.renderGroup('mesh_variable','accessor_constr_acc',"\t") %>
 {
 }
 

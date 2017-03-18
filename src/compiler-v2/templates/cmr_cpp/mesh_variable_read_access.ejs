@@ -1,4 +1,4 @@
 <%
 info = object.genAccessCCode(context,latexEntity,false);
 %>
-(*<%= info.varName %>.<%= info.longName %>(<%=info.array.join(',')%>))
+(*<%- info.varName %>.<%- info.longName %>(<%-info.array.join(',')%>))

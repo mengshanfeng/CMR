@@ -6,6 +6,5 @@ function extraDefs(type,defs)
 		ret += "["+defs[i].size+"]";
 	return ret;
 }
-%>
-//define variable <%= object.latexName %>
-this->addVariable("<%= object.longName %>",sizeof( <%= extraDefs(object.type,object.defs) %> ), <%= object.ghostCnt %> );
+%>//define variable <%- object.latexName %>
+	this->addVariable("<%- object.longName %>",sizeof( <%- extraDefs(object.type,object.defs) %> ), <%- object.ghostCnt %> );

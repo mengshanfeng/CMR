@@ -33,5 +33,5 @@ function genValueString(dims,values)
 	}
 }
 %>
-//Definition of constant <%= object.latexName %>
-static const <%= object.type %> <%= object.longName %><%= genDelcDimsString(object.dims) %> = <%= genValueString(object.dims,object.formulas) %>;
+//Definition of constant <%- object.latexName %>
+static const <%- object.type %> <%- object.longName %><%- genDelcDimsString(object.dims) %> = <%- genValueString(object.dims,object.formulas) %>;
