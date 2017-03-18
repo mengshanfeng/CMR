@@ -22,7 +22,15 @@ function ProjectVariable(latexName,longName,type,constant)
 	this.formulas = [];
 	this.dims = [];
 	this.setConst(constant);
+	this.doc = "";
 };
+
+/******************* FUNCTION *********************/
+ProjectVariable.prototype.setDoc = function(doc)
+{
+	if (doc != undefined)
+		this.doc = doc;
+}
 
 /******************* FUNCTION *********************/
 ProjectVariable.prototype.setConst = function(status)

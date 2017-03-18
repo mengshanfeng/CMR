@@ -31,6 +31,7 @@ function loadProjectXml(project,xml)
 		if (dims == undefined)
 			dims = 1;
 		cst.loadValues(child.val,parseInt(dims));
+		cst.setDoc(child.attr["doc"]);
 	});
 	
 	//load mesh vars
@@ -40,6 +41,7 @@ function loadProjectXml(project,xml)
 		if (ghost == undefined)
 			ghost = 0;
 		var v = project.addMeshVariable(child.attr["mathname"],child.attr["longname"],child.attr["type"], ghost);
+		v.setDoc(child.attr["doc"]);
 	});
 }
 

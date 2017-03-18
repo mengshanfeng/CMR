@@ -26,10 +26,18 @@ function ProjectMeshVariable(latexName, longName, type, ghostCnt, id )
 	this.group = 'mesh_variable';
 	this.memoryModel = "CMRMemoryModelColMajor";
 	this.defs = [];
+	this.doc = "TODO : doc";
 	
 	this.matcher.markForCapture("i","wildcard",false,true);
 	this.matcher.markForCapture("j","wildcard",false,true);
 };
+
+/*******************  FUNCTION  *********************/
+ProjectMeshVariable.prototype.setDoc = function(doc)
+{
+	if (doc != undefined)
+		this.doc = doc;
+}
 
 /*******************  FUNCTION  *********************/
 ProjectMeshVariable.prototype.addDimension = function( name,size,start )
