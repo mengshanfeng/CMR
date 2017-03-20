@@ -13,7 +13,7 @@ function genValueString(dims,values)
 	if (dims.length == 0)
 	{
 		//cmrGenEqCCode(out,context,formulas[i]);
-		return values[0].toLatexString();
+		return values[0].toCString();
 	} else {
 		var ret = "{";
 		for (var i in values)
@@ -22,8 +22,7 @@ function genValueString(dims,values)
 				ret += "},";
 			if (dims.length==2 && i % dims[0] == 0 && i < values.length - 1)
 				ret += "{";
-			ret+=values[i].toLatexString();
-			//cmrGenEqCCode(out,context,formulas[i]);
+			ret+=values[i].toCString();
 			ret += ",";
 		}
 		if (dims.length == 2)
@@ -32,6 +31,14 @@ function genValueString(dims,values)
 		return ret;
 	}
 }
+
+function isConst(group)
+{
+	if (group == "constant")
+		return "static const ";
+	else
+		return "";
+}
 %>
-//Definition of constant <%- object.latexName %>
-static const <%- object.type %> <%- object.longName %><%- genDelcDimsString(object.dims) %> = <%- genValueString(object.dims,object.formulas) %>;
+//Definition of <%- object.latexName %>
+<%- isConst(object.group) %><%- object.type %> <%- object.longName %><%- genDelcDimsString(object.dims) %> = <%- genValueString(object.dims,object.formulas) %>;

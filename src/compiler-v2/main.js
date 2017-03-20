@@ -29,7 +29,7 @@ function loadProjectXml(project,xml)
 		var cst = project.addConstant(child.attr["mathname"],child.attr["longname"],child.attr["type"]);
 		var dims = child.attr["dims"];
 		if (dims == undefined)
-			dims = 1;
+			dims = 0;
 		cst.loadValues(child.val,parseInt(dims));
 		cst.setDoc(child.attr["doc"]);
 	});

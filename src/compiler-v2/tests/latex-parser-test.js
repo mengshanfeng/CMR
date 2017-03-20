@@ -153,7 +153,9 @@ var longObjectRepr = {
 	"a b":                {"childs":[{"name":"a"},{"name":"[*]"},{"name":"b"}]},
 	"a  b":               {"childs":[{"name":"a"},{"name":"[*]"},{"name":"b"}]},
 	"a		b":           {"childs":[{"name":"a"},{"name":"[*]"},{"name":"b"}]},
-	"a	 b":              {"childs":[{"name":"a"},{"name":"[*]"},{"name":"b"}]}
+	"a	 b":              {"childs":[{"name":"a"},{"name":"[*]"},{"name":"b"}]},
+	"\\mathrm{ab+cd}":    {"childs":[{"name":"\\mathrm", "parameters":"ab+cd"}]},
+	"\\mathrm{(ab+cd)}":  {"childs":[{"name":"\\mathrm", "parameters":"(ab+cd)"}]},
 };
 
 /******************************************************************************/

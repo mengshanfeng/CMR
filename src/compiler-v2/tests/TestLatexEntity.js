@@ -120,3 +120,14 @@ exports.testExportToIR = function(test)
 	
 	test.done();
 }
+
+/*******************  FUNCTION  *********************/
+exports.testMathRM = function(test)
+{
+	var entity = new LatexEntity("\\mathrm{(aa+bb_cc)}");
+	var ref = "(aa+bb_cc)";
+	
+	test.equal(ref,entity.toCString());
+	
+	test.done();
+}

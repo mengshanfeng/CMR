@@ -7,6 +7,8 @@ var assert = new ('assert');
 function ProjectCodeTree(parentContext)
 {
 	this.context = new Context(parentContext);
+	this.indend = 0;
+	this.entries = [];
 };
 
 /*******************  FUNCTION  *********************/

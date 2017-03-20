@@ -25,17 +25,26 @@ function LatexEntity(value)
 	this.parameters = [];
 	this.groupChild = null;
 	this.tags = {};
+	this.mathrm = "";
 
 	//parse and load if a string is provided in Latex format
 	if (value != undefined && typeof value == 'string')
 	{
-		//parse to IR
-		var ir = LatexParsor.parse(value);
-		assert.ok(ir != undefined,"Invalid parsing of latex : "+value);
-		assert.ok(ir.childs.length == 1,"LatexEntity must be initialized with a simple latex entitiy, not with a composed one : "+value);
+		if (value.indexOf("\\mathrm",0) == 0)
+		{
+			this.name = "\\mathrm";
+			var start = value.indexOf("{",0);
+			var end = value.lastIndexOf("}");
+			this.mathrm = value.substring(start+1,end);
+		} else {
+			//parse to IR
+			var ir = LatexParsor.parse(value);
+			assert.ok(ir != undefined,"Invalid parsing of latex : "+value);
+			assert.ok(ir.childs.length == 1,"LatexEntity must be initialized with a simple latex entitiy, not with a composed one : "+value);
 
-		//load
-		this.loadFromIR(ir.childs[0]);
+			//load
+			this.loadFromIR(ir.childs[0]);
+		}
 	}
 }
 
@@ -150,6 +159,8 @@ LatexEntity.prototype.toDebugString = function()
 		ret += this.name;
 	if (this.groupChild != null && this.name == '()')
 		ret += '( '+this.groupChild.toDebugString() + ' )';
+	if (this.name == "\\mathrm")
+		ret += "->params("+this.mathrm+")";
 	ret += latexFormulaListToString('params',this.parameters);
 	ret += latexFormulaListToString('exp',this.exponents);
 	ret += latexFormulaListToString('ind',this.indices);
@@ -201,15 +212,82 @@ function latexFormulaListToLatexString(name,formulaList)
 }
 
 /*******************  FUNCTION  *********************/
+function latexFormulaListToCString(name,formulaList)
+{
+	var ret = '';
+	formulaList.forEach(function(f) {
+		if (ret != '')
+			ret += ',';
+		ret += f.toCString();
+	});
+	if (formulaList.length == 0)
+	{
+		return '';
+	} else if (formulaList.length == 1) {
+		switch(name)
+		{
+			case "params":
+				return '('+ret+')';
+			case "exp":
+				return '^'+ret + " /* INVALID LATEX EXP. */";
+			case "ind":
+				return '_'+ret + " /* INVALID LATEX EXP. */";
+			case "mathrm":
+				return ret;
+			default:
+				throw new Error("Invalid name");
+		}
+	} else {
+		switch(name)
+		{
+			case "params":
+				return '('+ret+')';
+			case "exp":
+				return '^{'+ret+'} /* INVALID LATEX EXP. */';
+			case "ind":
+				return '_{'+ret+'} /* INVALID LATEX IND. */';
+			case "mathrm":
+				throw new Error("mathrm might not get many childs !");
+			default:
+				throw new Error("Invalid name");
+		}
+	}
+}
+
+/*******************  FUNCTION  *********************/
+LatexEntity.prototype.toCString = function()
+{
+	var ret = "";
+	if (this.name == '[*]')
+		return "*";
+	if (this.name == '[-]')
+		return "-";
+	if (this.name == "\\mathrm")
+		return this.mathrm;
+	else if (this.name != '()')
+		ret += this.name.replace('\\','');
+	if (this.groupChild != null && this.name == '()')
+		ret += '( '+this.groupChild.toCString() + ' )';
+	ret += latexFormulaListToCString('params',this.parameters);
+	ret += latexFormulaListToCString('exp',this.exponents);
+	ret += latexFormulaListToCString('ind',this.indices);
+	return ret;
+}
+
+/*******************  FUNCTION  *********************/
 LatexEntity.prototype.toLatexString = function()
 {
 	var ret = "";
 	if (this.name == '[*]')
 		return "";
+	if (this.name == '[-]')
+		return "-";
+	if (this.name == "\\mathrm")
+		return "\\mathrm{"+this.mathrm+"}";
 	if (this.name != '()')
 		ret += this.name;
 	if (this.groupChild != null && this.name == '()')
-		ret += '( '+this.groupChild.toDebugString() + ' )';
+		ret += '( '+this.groupChild.toLatexString() + ' )';
 	ret += latexFormulaListToLatexString('params',this.parameters);
 	ret += latexFormulaListToLatexString('exp',this.exponents);
 	ret += latexFormulaListToLatexString('ind',this.indices);
@@ -247,6 +325,14 @@ LatexEntity.prototype.loadFromIR = function(irEntity)
 			formula.loadFromIR(value);
 			cur.addParameter(formula);
 		});
+	
+	if (this.name == "\\mathrm") {
+		var val = "";
+		this.parameters.forEach(function(value) {
+			val += value.toLatexString().replace(/ \[\*\] /g,"");
+		});
+		this.mathrm = val;
+	}
 	
 	//loop on each group childs
 	if (irEntity.groupChild != undefined)

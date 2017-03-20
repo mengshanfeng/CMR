@@ -118,7 +118,22 @@ LatexFormula.prototype.toLatexString = function()
 	
 	//loop in all chidls
 	this.childs.forEach(function(value) {
-		ret += value.toDebugString();
+		ret += value.toLatexString();
+	});
+	
+	//return
+	return ret;
+}
+
+/*******************  FUNCTION  *********************/
+LatexFormula.prototype.toCString = function()
+{
+	//vars
+	var ret = '';
+	
+	//loop in all chidls
+	this.childs.forEach(function(value) {
+		ret += value.toCString();
 	});
 	
 	//return
