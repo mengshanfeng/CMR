@@ -43,6 +43,19 @@ function loadProjectXml(project,xml)
 		var v = project.addMeshVariable(child.attr["mathname"],child.attr["longname"],child.attr["type"], ghost);
 		v.setDoc(child.attr["doc"]);
 	});
+	
+	//load definitions
+	xml.descendantWithPath("elements.defs").eachChild(function(child,index,array) {
+		var def = project.addDefinition(child.attr["mathname"],child.attr["longname"],child.attr["type"]);
+		def.setDoc(child.attr["doc"]);
+		
+		//extract extra parameters
+		child.eachChild(function(c,i,a) {
+			if (c.name == "defparameter") {
+				def.addParameter(c.attr["mathname"],c.attr["longname"],c.attr["type"],c.attr["doc"]);
+			}
+		});
+	});
 }
 
 // /*******************  FUNCTION  *********************/

@@ -1,7 +1,7 @@
-var LatexEntity = new ("./LatexEntity.js");
-var ProjectVariable = new ('./ProjectVariable.js');
+var LatexEntity = require ("./LatexEntity.js");
+var ProjectVariable = require ('./ProjectVariable.js');
 var Context = require('./Context.js');
-var assert = new ('assert');
+var assert = require ('assert');
 
 /*********************  CLASS  **********************/
 function ProjectCodeTree(parentContext)
@@ -12,7 +12,7 @@ function ProjectCodeTree(parentContext)
 };
 
 /*******************  FUNCTION  *********************/
-ProjectCodeTree.prototype.addLocalVariable = function(latexName.longName,type,defaultValue,dim)
+ProjectCodeTree.prototype.addLocalVariable = function(latexName,longName,type,defaultValue,dim)
 {
 	if (dim == undefined)
 		dim = 0;
@@ -23,9 +23,12 @@ ProjectCodeTree.prototype.addLocalVariable = function(latexName.longName,type,de
 }
 
 /*******************  FUNCTION  *********************/
-ProjectVariable.prototype.render = function( templateFactory , codeType , context, latexEntity)
+ProjectCodeTree.prototype.render = function( templateFactory , codeType , context, latexEntity)
 {
 	this.context.entries.forEach(function(entry){
 		entry.render(templateFactory , codeType , this.context, latexEntity);
 	});
 }
+
+/********************  GLOBALS  *********************/
+module.exports = ProjectCodeTree;

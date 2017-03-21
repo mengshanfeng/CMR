@@ -10,6 +10,7 @@
 var TemplateFactory = require('./TemplateFactory.js');
 var ProjectConstant = require('./ProjectVariable.js');
 var ProjectMeshVariable = require('./ProjectMeshVariable.js');
+var ProjectDefinition = require('./ProjectDefinition.js');
 var Context = require('./Context.js');
 
 /*********************  CLASS  **********************/
@@ -78,6 +79,14 @@ Project.prototype.addMeshVariable = function(latexName, longName, type, ghostCnt
 	this.addEntity(variable);
 	this.variableId++;
 	return variable;
+}
+
+/*******************  FUNCTION  *********************/
+Project.prototype.addDefinition = function(latexName, longName)
+{
+	var def = new ProjectDefinition(this.context,latexName,longName);
+	this.addEntity(def);
+	return def;
 }
 
 /*******************  FUNCTION  *********************/

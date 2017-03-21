@@ -1,0 +1,13 @@
+<%
+function extraParam()
+{
+	var ret = "";
+	for (var i in object.parameters)
+		ret += ","+object.parameters[i].type+" "+object.parameters[i].longName;
+	return ret;
+}
+%>//Definition of <%- object.latexName %>
+<%- object.type %> <%- object.longName %>(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y<%- extraParam() %>)
+{
+}
+
