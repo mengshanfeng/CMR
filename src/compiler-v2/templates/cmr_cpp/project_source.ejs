@@ -6,6 +6,14 @@ function authorList()
 		ret += "Author : "+project.authors[i].name;
 	return ret;
 }
+
+function includes()
+{
+	var out = "";
+	for (var i in project.headers)
+		out += "#include <"+project.headers[i]+">\n";
+	return out;
+}
 %>/***************************************************
 Project : <%- project.name %>
 <%- authorList() %>
@@ -20,15 +28,13 @@ Version : <%- project.version %>
 #include <application/CMRApplicationSeq.h>
 #include <CMR.h>
 //user headers
-<% project.headers.forEach(function(header) { %>#include "<%-header%>"<% }); %>
-
+<%- includes() %>
 /******************** MACRO ***********************/
 //system setup
 #define WIDTH 800
 #define HEIGHT 100
 #define WRITE_STEP_INTERVAL 50
 #define ITERATIONS 8000
-
 
 /********************* CONSTS *********************/
 <%- project.renderGroup('constant','definition','\n') %>
@@ -41,7 +47,7 @@ class VarSystem : public CMRVarSystem
 		{
 			CellAccessor(CMRVarSystem & sys,int tstep,int x,int y,bool absolute = true);
 			CellAccessor(CellAccessor & acc,int x,int y,bool absolute = false);
-			<%- project.renderGroup('mesh_variable','accessor_definition',"\t\t\t") %>
+			<%- project.renderGroup('mesh_variable','accessor_definition',"\n\t\t\t") %>
 		}
 	public:	
 		VarSystem(CMRDomainBuilder * builder = NULL);		
@@ -50,15 +56,15 @@ class VarSystem : public CMRVarSystem
 VarSystem::VarSystem ( CMRDomainBuilder * builder)
 	:CMRVarSystem(builder)
 {
-	<%-project.renderGroup('mesh_variable','accessor_add_var',"\t") %>
+	<%-project.renderGroup('mesh_variable','accessor_add_var',"\n\t") %>
 }
 
 VarSystem::CellAccessor::CellAccessor (CMRVarSystem & sys,int tstep,int x,int y,bool absolute)
-	:<%-project.renderGroup('mesh_variable','accessor_constr_sys',"\t") %>
+	:<%-project.renderGroup('mesh_variable','accessor_constr_sys',"\n\t") %>
 {}
 
 VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y,bool absolute)
-	:<%-project.renderGroup('mesh_variable','accessor_constr_acc',"\t") %>
+	:<%-project.renderGroup('mesh_variable','accessor_constr_acc',"\n\t") %>
 {
 }
 
