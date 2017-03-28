@@ -3,7 +3,7 @@ function formatAccessor(accessors)
 {
 	var res = "";
 	for (var i in accessors)
-		res += "[" + accessors[i].toLatexString() + "]";
+		res += "[" + accessors[i].toCString() + "]";
 	return res;
 }
 %>

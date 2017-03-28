@@ -9,5 +9,5 @@ function extraParam()
 %>//Definition of <%- object.latexName %>
 <%- object.type %> <%- object.longName %>(const VarSystem::CellAccessor & in,VarSystem::CellAccessor & out,int x,int y<%- extraParam() %>)
 {
+<%- object.code.render(templateFactory,"block") %>
 }
-

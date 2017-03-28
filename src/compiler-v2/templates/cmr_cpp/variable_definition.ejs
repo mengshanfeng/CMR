@@ -10,10 +10,16 @@ function genDelcDimsString(dims)
 
 function genValueString(dims,values)
 {
+	if (values == undefined)
+		return "";
+
 	if (dims.length == 0)
 	{
 		//cmrGenEqCCode(out,context,formulas[i]);
-		return values[0].toCString();
+		if (values[0] == undefined)
+			return "0";
+		else
+			return values[0].toCString();
 	} else {
 		var ret = "{";
 		for (var i in values)
@@ -39,6 +45,5 @@ function isConst(group)
 	else
 		return "";
 }
-%>
-//Definition of <%- object.latexName %>
+%>//Definition of <%- object.latexName %>
 <%- isConst(object.group) %><%- object.type %> <%- object.longName %><%- genDelcDimsString(object.dims) %> = <%- genValueString(object.dims,object.formulas) %>;

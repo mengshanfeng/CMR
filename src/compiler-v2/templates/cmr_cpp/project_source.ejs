@@ -31,7 +31,8 @@ Version : <%- project.version %>
 
 
 /********************* CONSTS *********************/
-<%- project.renderGroup('constant','definition') %>
+<%- project.renderGroup('constant','definition','\n') %>
+
 /********************* VARIABLES ******************/
 class VarSystem : public CMRVarSystem
 {
@@ -62,9 +63,11 @@ VarSystem::CellAccessor::CellAccessor ( CellAccessor& acc, int x, int y,bool abs
 }
 
 /********************* DEFINITIONS ********************/
-<%- project.renderGroup('definition','definition') %>
+<%- project.renderGroup('definition','definition',"\n\n") %>
+
 /*********************** ACTIONS *********************/
-<%- project.renderGroup('action','definition') %>
+<%- project.renderGroup('action','definition',"\n\n") %>
+
 /************************* MAIN **********************/
 int main(int argc, char ** argv)
 {

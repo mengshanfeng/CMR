@@ -41,7 +41,7 @@ TemplateFactory.prototype.render = function(element , action , data)
 	var cache = this.cache[element+"_"+action];
 	var code = "";
 	code = ejs.render(this.get(element,action),data);
-	return code;
+	return code.replace(/\n$/,"");
 }
 
 /********************  GLOBALS  *********************/

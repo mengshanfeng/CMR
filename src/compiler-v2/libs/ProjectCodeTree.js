@@ -4,10 +4,13 @@ var Context = require('./Context.js');
 var assert = require ('assert');
 
 /*********************  CLASS  **********************/
-function ProjectCodeTree(parentContext)
+function ProjectCodeTree(parentContext,indent)
 {
 	this.context = new Context(parentContext);
-	this.indend = 0;
+	if (indent == undefined)
+		this.indent = 0;
+	else
+		this.indent = indent;
 	this.entries = [];
 };
 
@@ -16,8 +19,9 @@ ProjectCodeTree.prototype.addLocalVariable = function(latexName,longName,type,de
 {
 	if (dim == undefined)
 		dim = 0;
-	ret = new ProjectVariable(latexName,longName,type);
-	ret.loadValues(defaultValue,dim);
+	ret = new ProjectVariable(latexName,longName,type,false);
+	if (defaultValue != undefined)
+		ret.loadValues(defaultValue,dim);
 	this.context.registerEntity(ret);
 	return ret;
 }
@@ -25,9 +29,37 @@ ProjectCodeTree.prototype.addLocalVariable = function(latexName,longName,type,de
 /*******************  FUNCTION  *********************/
 ProjectCodeTree.prototype.render = function( templateFactory , codeType , context, latexEntity)
 {
-	this.context.entries.forEach(function(entry){
-		entry.render(templateFactory , codeType , this.context, latexEntity);
+	var data = {
+		code: this,
+		templateFactory: templateFactory
+	};
+	var out = templateFactory.render("code",codeType,data);
+	
+	//indent
+	var lines = out.split("\n");
+	var indent = "\t".repeat(this.indent);
+	
+	//return join
+	return indent+lines.join("\n"+indent);
+}
+
+/*******************  FUNCTION  *********************/
+ProjectCodeTree.prototype.renderGroup = function(templateFactory,group,type,sep)
+{
+	var res = "";
+	var first = true;
+	if (sep == undefined)
+		sep = "";
+	this.context.entities.forEach(function(value){
+		if (value.group == group)
+		{
+			if (first == false)
+				res+=sep;
+			res += value.render(templateFactory,type,this.entities,null);
+			first = false;
+		}
 	});
+	return res;
 }
 
 /********************  GLOBALS  *********************/

@@ -51,8 +51,18 @@ function loadProjectXml(project,xml)
 		
 		//extract extra parameters
 		child.eachChild(function(c,i,a) {
-			if (c.name == "defparameter") {
-				def.addParameter(c.attr["mathname"],c.attr["longname"],c.attr["type"],c.attr["doc"]);
+			switch (c.name) {
+				case "defparameter":
+					def.addParameter(c.attr["mathname"],c.attr["longname"],c.attr["type"],c.attr["doc"]);
+					break;
+				case "declvar":
+					var cst = def.getCode().addLocalVariable(c.attr["mathname"],c.attr["longname"],c.attr["type"]);
+					var dims = c.attr["dims"];
+					if (dims == undefined)
+						dims = 0;
+					//cst.loadValues(c.val,parseInt(dims));
+					cst.setDoc(c.attr["doc"]);
+					break;
 			}
 		});
 	});
