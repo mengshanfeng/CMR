@@ -85,6 +85,21 @@ function loadProjectXml(project,xml)
 		//load inner bolck
 		loadCodeBlock(def.getCode(),child);
 	});
+	
+	//load actions
+	xml.descendantWithPath("elements.cellactions").eachChild(function(child,index,array) {
+		var action = project.addAction(child.attr["name"],child.attr["loop"]);
+		action.setDoc(child.attr["doc"]);
+		
+		//extract extra parameters
+		child.eachChild(function(c,i,a) {
+			if (c.name == "actionparameter")
+				action.addParameter(c.attr["mathname"],c.attr["longname"],c.attr["type"],c.attr["doc"]);
+		});
+		
+		//load inner bolck
+		loadCodeBlock(action.getCode(),child);
+	});
 }
 
 // /*******************  FUNCTION  *********************/

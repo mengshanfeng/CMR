@@ -86,10 +86,10 @@ int main(int argc, char ** argv)
 	app.addPrepareWriteAction(new ActionUpdateFileout::LoopType(),app.getLocalRect());
 
 	//setup init actions
-	<%- project.renderGroup('action','init') %>
+	<- project.renderGroup('action','init') >
 	
 	//setup compute actions
-	<%- project.renderGroup('action','call') %>
+	<- project.renderGroup('action','call') >
 
 	//runner
 	//run

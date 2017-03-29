@@ -25,7 +25,7 @@ function CodeTreeNativeCode(context,code)
 			entry.mathrm = parts[i];
 			this.formula.childs.push(entry);
 		} else {
-			this.formula.childs.push(new LatexEntity(parts[i]));
+			this.formula.childs.push(new LatexFormula(parts[i]));
 		}
 	}
 }

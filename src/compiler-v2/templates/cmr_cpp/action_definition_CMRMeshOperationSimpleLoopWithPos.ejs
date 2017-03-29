@@ -1,0 +1,17 @@
+<%
+function extraParam()
+{
+	var ret = "";
+	for (var i in object.parameters)
+		ret += "\t"+object.parameters[i].type+" "+object.parameters[i].longName+"\n";
+	return ret;
+}
+%>//<%- object.doc %>
+struct Action<%- object.name %>
+{
+	void cellAction(const VarSystem::CellAccessor & in,VarSystem::CellAccessor& out,const CMRCellPosition & pos,int x,int y) const
+	{<%- object.code.render(templateFactory,"block") %>
+	}
+	<%- extraParam() %>
+	typedef CMRMeshOperationSimpleLoopWithPos< VarSystem , Action<%-object.name %> > LoopType;
+};

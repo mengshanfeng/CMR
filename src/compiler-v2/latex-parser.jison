@@ -106,6 +106,8 @@ decoParameter
 		{$$ = [{childs:[{name:"[-]"},$2]}]}
 	| "{" decoParameterValue "}"
 		{$$ = $2}
+	| OPERATOR
+		{$$ = [{childs:[{name:$1}]}]}
 	;
 
 /* Decoration values */
