@@ -1,5 +1,15 @@
+/*****************************************************
+             PROJECT  : CartesinMeshRuntime
+             VERSION  : 0.0.0
+             DATE     : 11/2014
+             AUTHOR   : Valat Sébastien
+             LICENSE  : CeCILL-C
+*****************************************************/
+
+/********************  HEADERS  *********************/
 var LatexEntity = require ("./LatexEntity.js");
 var ProjectVariable = require ('./ProjectVariable.js');
+var CodeTreeMathStep = require('./CodeTreeMathStep.js');
 var Context = require('./Context.js');
 var assert = require ('assert');
 
@@ -60,6 +70,30 @@ ProjectCodeTree.prototype.renderGroup = function(templateFactory,group,type,sep)
 		}
 	});
 	return res;
+}
+
+/*******************  FUNCTION  *********************/
+ProjectCodeTree.prototype.renderCode = function(templateFactory,type,sep)
+{
+	var res = "";
+	var first = true;
+	if (sep == undefined)
+		sep = "";
+	this.entries.forEach(function(value){
+		if (first == false)
+			res+=sep;
+		res += value.render(templateFactory,type);
+		first = false;
+	});
+	return res;
+}
+
+/*******************  FUNCTION  *********************/
+ProjectCodeTree.prototype.addMathStep = function(latex)
+{
+	var step = new CodeTreeMathStep(this.context,latex);
+	this.entries.push(step);
+	return step;
 }
 
 /********************  GLOBALS  *********************/

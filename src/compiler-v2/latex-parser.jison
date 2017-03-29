@@ -94,6 +94,8 @@ decoWord
 		{$$ = $1; if ($$.exponents == undefined) $$.exponents = $3; else $$.exponents.concat($3);}
 	| decoWord '_' decoParameter
 		{$$ = $1; if ($$.indices == undefined) $$.indices = $3; else $$.indices.concat($3);}
+// 	| decoWord funcParameters
+// 		{$$.parameters = $2}
 	;
 
 /* Add decoration on words (exp, indices) */
@@ -140,6 +142,10 @@ name
 function
 	: FUNC_NAME
 		{$$ = {name:$1}}
-	| FUNC_NAME funcParameters
-		{$$ = {name:$1, parameters:$2}}
+	| function funcParameters
+		{$$.parameters = $2}
+	| function '^' decoParameter
+		{$$ = $1; if ($$.exponents == undefined) $$.exponents = $3; else $$.exponents.concat($3);}
+	| function '_' decoParameter
+		{$$ = $1; if ($$.indices == undefined) $$.indices = $3; else $$.indices.concat($3);}
 	;

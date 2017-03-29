@@ -63,6 +63,9 @@ function loadProjectXml(project,xml)
 					//cst.loadValues(c.val,parseInt(dims));
 					cst.setDoc(c.attr["doc"]);
 					break;
+				case "mathstep":
+					def.getCode().addMathStep(c.val);
+					break;
 			}
 		});
 	});

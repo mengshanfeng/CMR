@@ -96,6 +96,9 @@ var testData =  {
 		{ input:"a  b",             output:"a [*] b",                          name:"Check multiple spaces"},
 		{ input:"a		b",         output:"a [*] b",                          name:"Check tabs"},
 		{ input:"a	 b",            output:"a [*] b",                          name:"Check mix tab + space"},
+	],
+	"sum" : [
+		{ input: "\\sum_k{x_k}",     output:"\\sum->params( x->ind( k ) )->ind( k )", name:"sum with indice"},
 	]
 };
 
@@ -156,6 +159,7 @@ var longObjectRepr = {
 	"a	 b":              {"childs":[{"name":"a"},{"name":"[*]"},{"name":"b"}]},
 	"\\mathrm{ab+cd}":    {"childs":[{"name":"\\mathrm", "parameters":"ab+cd"}]},
 	"\\mathrm{(ab+cd)}":  {"childs":[{"name":"\\mathrm", "parameters":"(ab+cd)"}]},
+	"\\sum_k{x_k}": {"childs":[{"name":"\\sum","indices":[{"childs":[{"name":"k"}]}],"parameters":[{"childs":[{"name":"x","indices":[{"childs":[{"name":"k"}]}]}]}]}]}
 };
 
 /******************************************************************************/
