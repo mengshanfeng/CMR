@@ -11,6 +11,7 @@ var LatexEntity = require ("./LatexEntity.js");
 var ProjectVariable = require ('./ProjectVariable.js');
 var CodeTreeMathStep = require('./CodeTreeMathStep.js');
 var CodeTreeForLoop = require('./CodeTreeForLoop.js');
+var CodeTreeNativeCode = require('./CodeTreeNativeCode.js');
 var Context = require('./Context.js');
 var assert = require ('assert');
 
@@ -101,6 +102,14 @@ ProjectCodeTree.prototype.addForEach = function(iterator)
 ProjectCodeTree.prototype.addMathStep = function(latex)
 {
 	var step = new CodeTreeMathStep(this.context,latex);
+	this.entries.push(step);
+	return step;
+}
+
+/*******************  FUNCTION  *********************/
+ProjectCodeTree.prototype.addNativeCode = function(latex)
+{
+	var step = new CodeTreeNativeCode(this.context,latex);
 	this.entries.push(step);
 	return step;
 }

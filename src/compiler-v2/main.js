@@ -22,6 +22,9 @@ function loadCodeBlock(parentCode,parentXml)
 			case "mathstep":
 				parentCode.addMathStep(c.val);
 				break;
+			case "ccode":
+				parentCode.addNativeCode(c.val);
+				break;
 			case "foreach":
 				var block = parentCode.addForEach(c.attr["iterator"]);
 				loadCodeBlock(block.getCode(),c);
