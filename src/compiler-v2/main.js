@@ -7,6 +7,30 @@ var xmldoc = require("xmldoc");
 var fs = require('fs');
 
 /*******************  FUNCTION  *********************/
+function loadCodeBlock(parentCode,parentXml)
+{
+	parentXml.eachChild(function(c,i,a) {
+		switch (c.name) {
+			case "declvar":
+				var cst = parentCode.addLocalVariable(c.attr["mathname"],c.attr["longname"],c.attr["type"]);
+				var dims = c.attr["dims"];
+				if (dims == undefined)
+					dims = 0;
+				//cst.loadValues(c.val,parseInt(dims));
+				cst.setDoc(c.attr["doc"]);
+				break;
+			case "mathstep":
+				parentCode.addMathStep(c.val);
+				break;
+			case "foreach":
+				var block = parentCode.addForEach(c.attr["iterator"]);
+				loadCodeBlock(block.getCode(),c);
+				break;
+		}
+	});
+}
+
+/*******************  FUNCTION  *********************/
 function loadProjectXml(project,xml)
 {
 	//load name
@@ -51,23 +75,12 @@ function loadProjectXml(project,xml)
 		
 		//extract extra parameters
 		child.eachChild(function(c,i,a) {
-			switch (c.name) {
-				case "defparameter":
-					def.addParameter(c.attr["mathname"],c.attr["longname"],c.attr["type"],c.attr["doc"]);
-					break;
-				case "declvar":
-					var cst = def.getCode().addLocalVariable(c.attr["mathname"],c.attr["longname"],c.attr["type"]);
-					var dims = c.attr["dims"];
-					if (dims == undefined)
-						dims = 0;
-					//cst.loadValues(c.val,parseInt(dims));
-					cst.setDoc(c.attr["doc"]);
-					break;
-				case "mathstep":
-					def.getCode().addMathStep(c.val);
-					break;
-			}
+			if (c.name == "defparameter")
+				def.addParameter(c.attr["mathname"],c.attr["longname"],c.attr["type"],c.attr["doc"]);
 		});
+		
+		//load inner bolck
+		loadCodeBlock(def.getCode(),child);
 	});
 }
 

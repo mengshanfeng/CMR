@@ -10,6 +10,7 @@
 var LatexEntity = require ("./LatexEntity.js");
 var ProjectVariable = require ('./ProjectVariable.js');
 var CodeTreeMathStep = require('./CodeTreeMathStep.js');
+var CodeTreeForLoop = require('./CodeTreeForLoop.js');
 var Context = require('./Context.js');
 var assert = require ('assert');
 
@@ -86,6 +87,14 @@ ProjectCodeTree.prototype.renderCode = function(templateFactory,type,sep)
 		first = false;
 	});
 	return res;
+}
+
+/******************* FUNCTION *********************/
+ProjectCodeTree.prototype.addForEach = function(iterator)
+{
+	var loop = new CodeTreeForLoop(ProjectCodeTree,this.context,this.indent+1,iterator);
+	this.entries.push(loop);
+	return loop;
 }
 
 /*******************  FUNCTION  *********************/
