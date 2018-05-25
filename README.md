@@ -13,6 +13,8 @@ It currently support thread bases paralle code, MPI is a work in progress, get m
 There is a work in progress to rewire the compiler in full JS instead of C++ to make the code smaller and more simple (see branch 
 rewrite-compiler-in-js).
 
+You can find slides to explain the idea here : https://svalat.github.io/docs/2015-04-cmr.pdf.
+
 Pictures
 --------
 
